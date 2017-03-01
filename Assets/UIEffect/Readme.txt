@@ -28,6 +28,8 @@ Composite Effect for uGUI.
 
 [WebGL Demo](https://mob-sakai.github.io/UIEffect/demo/)
 
+[WebGL Performance Test](https://mob-sakai.github.io/UIEffect/performance_test/)
+
 
 
 ## Release Notes
