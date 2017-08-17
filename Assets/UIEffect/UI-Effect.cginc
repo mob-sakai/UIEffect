@@ -6,7 +6,7 @@
 //################################
 #define PACKER_STEP 64
 
-#if UI_TONE_GRAYSCALE | UI_TONE_SEPIA | UI_TONE_NEGA
+#if UI_TONE_GRAYSCALE | UI_TONE_SEPIA | UI_TONE_NEGA | UI_TONE_PIXEL | UI_TONE_MONO | UI_TONE_CUTOFF
 #define UI_TONE
 #endif
 

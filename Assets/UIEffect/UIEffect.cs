@@ -40,6 +40,9 @@ namespace UnityEngine.UI
 			Grayscale,
 			Sepia,
 			Nega,
+			Pixel,
+			Mono,
+			Cutoff,
 		}
 
 		/// <summary>
@@ -386,13 +389,16 @@ namespace UnityEngine.UI
 				const int TONE_GRAYSCALE = (int)ToneMode.Grayscale;
 				const int TONE_SEPIA = (int)ToneMode.Sepia;
 				const int TONE_NEGA = (int)ToneMode.Nega;
+				const int TONE_PIXEL = (int)ToneMode.Pixel;
+				const int TONE_MONO = (int)ToneMode.Mono;
+				const int TONE_CUTOFF = (int)ToneMode.Cutoff;
 
-				const int COLOR_SHIFT = 2;
+				const int COLOR_SHIFT = 3;
 				const int COLOR_SET = (int)ColorMode.Set;
 				const int COLOR_ADD = (int)ColorMode.Add;
 				const int COLOR_SUB = (int)ColorMode.Sub;
 
-				const int BLUR_SHIFT = 4;
+				const int BLUR_SHIFT = 5;
 				const int BLUR_FAST = (int)BlurMode.Fast;
 				const int BLUR_DETAIL = (int)BlurMode.Detail;
 
@@ -419,7 +425,10 @@ namespace UnityEngine.UI
 					// Bits for tone effect.
 					int toneBits = identifier >> TONE_SHIFT;
 					mat.EnableKeyword(
-						TONE_NEGA == (toneBits & TONE_NEGA) ? "UI_TONE_NEGA" 
+						TONE_CUTOFF == (toneBits & TONE_CUTOFF) ? "UI_TONE_CUTOFF" 
+						: TONE_MONO == (toneBits & TONE_MONO) ? "UI_TONE_MONO" 
+						: TONE_PIXEL == (toneBits & TONE_PIXEL) ? "UI_TONE_PIXEL" 
+						: TONE_NEGA == (toneBits & TONE_NEGA) ? "UI_TONE_NEGA" 
 						: TONE_SEPIA == (toneBits & TONE_SEPIA) ? "UI_TONE_SEPIA" 
 						: TONE_GRAYSCALE == (toneBits & TONE_GRAYSCALE) ? "UI_TONE_GRAYSCALE" 
 						: "UI_TONE_OFF" 

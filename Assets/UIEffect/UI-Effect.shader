@@ -59,7 +59,7 @@ Shader "UI/Hidden/UIEffect"
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
 
 			// vvvv [For UIEffect] vvvv : Define keyword and include.
-			#pragma multi_compile __ UI_TONE_GRAYSCALE UI_TONE_SEPIA UI_TONE_NEGA
+			#pragma multi_compile __ UI_TONE_GRAYSCALE UI_TONE_SEPIA UI_TONE_NEGA UI_TONE_PIXEL UI_TONE_MONO UI_TONE_CUTOFF 
 			#pragma multi_compile __ UI_COLOR_ADD UI_COLOR_SUB UI_COLOR_SET
 			#pragma multi_compile __ UI_BLUR_FAST UI_BLUR_DETAIL
 			#include "UI-Effect.cginc"
@@ -148,29 +148,36 @@ Shader "UI/Hidden/UIEffect"
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
-				// vvvv [For UIEffect] vvvv : Sample texture with blurring.
+				#if UI_TONE_PIXEL
+				float pixelRate = max(1,(1-IN.effectFactor.x) * 256);
+				IN.texcoord = floor(IN.texcoord * pixelRate) / pixelRate;
+				#endif
+
 				#if defined (UI_BLUR)
 				half4 color = (Tex2DBlurring(_MainTex, IN.texcoord, IN.effectFactor.y) + _TextureSampleAdd) * IN.color;
 				#else
 				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
 				#endif
-				// ^^^^ [For UIEffect] ^^^^
-				
 				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
-				
-				#ifdef UNITY_UI_ALPHACLIP
+
+				#ifdef UI_TONE_CUTOFF
+				clip (color.a - IN.effectFactor.x * 1.001);
+				#elif UNITY_UI_ALPHACLIP
 				clip (color.a - 0.001);
 				#endif
 
-				// vvvv [For UIEffect] vvvv : Apply tone and color effect.
 				#if defined (UI_TONE)
+				#if UI_TONE_MONO
+				color.rgb = IN.color.rgb;
+				color.a = color.a * tex2D(_MainTex, IN.texcoord).a + IN.effectFactor.x * 2 - 1;
+				#elif !UI_TONE_CUTOFF
 				color = ApplyToneEffect(color, IN.effectFactor.x);	// Tone effect.
+				#endif
 				#endif
 
 				#if defined (UI_COLOR)
 				color = ApplyColorEffect(color, IN.colorFactor);	// Color effect.
 				#endif
-				// ^^^^ [For UIEffect] ^^^^
 
 				return color;
 			}
