@@ -1,26 +1,34 @@
 UIEffect
 ===
 
-Easy to use effects for uGUI. Supports following effects.
+![image](https://user-images.githubusercontent.com/12690315/34617503-054e958e-f27f-11e7-89d5-9cced222883a.png)
 
-![image](https://user-images.githubusercontent.com/12690315/34595716-695a3bee-f21d-11e7-9a34-7a089ab7f6ea.gif)
+Easy to use effects for uGUI. Supports following effects.
 
 * Grayscale tone
 * Sepia tone
 * Nega tone
 * Pixelation
 * Cutoff (alpha-based)
-* Mono tone (alpha-based)
+* Mono (alpha-based)
 * Color setting
 * Color additive
 * Color subtract
 * Blur fast(3x4)
 * Blur medium(6x4)
 * Blur detail(6x8)
+
+
+#### And, more features!
+
+* Animation  
+![1 -06-2018 01-21-15](https://user-images.githubusercontent.com/12690315/34617750-cf2c9464-f27f-11e7-8ee9-e6be3b209943.gif)
 * Use for transition  
-![image](https://user-images.githubusercontent.com/12690315/34595717-6b00e8c6-f21d-11e7-98b6-798cf03f2ed5.gif)
-* Supports multiple shadow effect for reduce rendering vertices  
+![image](https://user-images.githubusercontent.com/12690315/34618554-71a32e40-f282-11e7-8b78-6948c50c6b58.gif)
+* Multiple shadow effect to reduce rendering vertices  
 ![image](https://user-images.githubusercontent.com/12690315/34552373-600fdab2-f164-11e7-8565-21c15af92a93.png)
+* Capture image with effect, like post effect  
+![image](https://user-images.githubusercontent.com/12690315/34619147-868cb36a-f284-11e7-8122-b924ff09077f.gif)
 
 
 
@@ -45,6 +53,22 @@ Easy to use effects for uGUI. Supports following effects.
 
 
 
+## UIEffect for CapturedImage
+
+![image](https://user-images.githubusercontent.com/12690315/34619147-868cb36a-f284-11e7-8122-b924ff09077f.gif)
+
+`UIEffectCapturedImage` is like post effects, but it only provides effects on the rendered result (= captured image) of a frame.
+This effect is non-realtime, light-weight, less-camera, blit only once, but effective.
+
+* Camera for processing effect is unnecessary.
+* Process effect only once after `UIEffectCapturedImage.Capture`.
+* Using reduction buffer, keep used memory size small and keep rendering load are small.
+* When GameObjects with motion are on the screen, a result texture may be stirred.
+* You can overlay and display like as: [Screen] | [UIEffectCapturedImage] | [Dialog A] | [UIEffectCapturedImage] | [Dialog B]. See also demo.
+
+
+
+
 ## Note: Unity 5.6+
 
 In Unity 5.6+, Canvas supports **Additional Shader Channels**.  
@@ -57,12 +81,24 @@ Please enable `TexCoord1` to use UIEffect.
 
 ## Demo
 
-[WebGL Demo](https://developer.cloud.unity3d.com/share/b1Ow2w4KbX/webgl/)
+[WebGL Demo](https://developer.cloud.unity3d.com/share/-y4XQpqcZm/webgl/)
+
+* Effect sample
+* Transition
+* Dialog window with blur background
+* Included in unitypackage
 
 
 
 
 ## Release Notes
+
+### ver.1.3.0
+
+* Feature: Capture image with effect, like post effect.
+* Demo: Add transition blur button & dialog with captured image effect.  
+![image](https://user-images.githubusercontent.com/12690315/34619468-97e3c134-f285-11e7-90b2-3a75bde13911.gif)
+
 
 ### ver.1.2.0
 
@@ -83,7 +119,7 @@ Please enable `TexCoord1` to use UIEffect.
 
 * Feature: Add Pixelaration effect.
 * Feature: Add Cutoff/Mono effect for patterned alpha images. It can be used for masks and transitions!  
-![image](https://user-images.githubusercontent.com/12690315/34595717-6b00e8c6-f21d-11e7-98b6-798cf03f2ed5.gif)
+![image](https://user-images.githubusercontent.com/12690315/34618554-71a32e40-f282-11e7-8b78-6948c50c6b58.gif)
 
 
 ### ver.1.0.0
