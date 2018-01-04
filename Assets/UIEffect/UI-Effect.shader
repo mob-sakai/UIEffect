@@ -112,11 +112,7 @@ Shader "UI/Hidden/UIEffect"
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
 				#endif
 				OUT.worldPosition = IN.vertex;
-				#if UNITY_VERSION >= 540
-				OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
-				#else
 				OUT.vertex = mul(UNITY_MATRIX_MVP, OUT.worldPosition);
-				#endif
 
 				OUT.texcoord = IN.texcoord;
 				
@@ -124,7 +120,7 @@ Shader "UI/Hidden/UIEffect"
 				#if UNITY_VERSION >= 540
 				OUT.vertex.xy += (_ScreenParams.zw-1.0) * float2(-1,1) * OUT.vertex.w;
 				#else
-				OUT.vertex.xy += (_ScreenParams.zw-1.0)*float2(-1,1);
+				OUT.vertex.xy += (_ScreenParams.zw-1.0) * float2(-1,1);
 				#endif
 				#endif
 				
