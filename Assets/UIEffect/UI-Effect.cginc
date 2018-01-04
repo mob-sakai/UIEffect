@@ -149,6 +149,10 @@ fixed4 ApplyColorEffect(fixed4 color, fixed4 factor)
 	color.rgb -= factor.rgb * factor.a;
 	#endif
 
+	#if UI_TONE_CUTOFF
+	color.a = factor.a;
+	#endif
+
 	return color;
 }
 
