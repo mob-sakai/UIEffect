@@ -44,7 +44,7 @@ namespace UnityEditor.UI
 			if (spColorMode.intValue != (int)UIEffect.ColorMode.None)
 			{
 				EditorGUI.indentLevel++;
-				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Color"));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_EffectColor"));
 				EditorGUI.indentLevel--;
 			}
 

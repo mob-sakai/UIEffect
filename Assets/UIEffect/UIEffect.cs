@@ -178,9 +178,15 @@ namespace UnityEngine.UI
 		/// <summary>
 		/// Color for the color effect.
 		/// </summary>
-		public Color color { get { return m_Color; } set { m_Color = value; SetDirty(); } }
-		
-		[SerializeField] Color m_Color = Color.white;
+		[Obsolete("UIEffect.color is obsolete, use UIEffect.effectColor instead. (UnityUpgradable) -> effectColor")]
+		public Color color { get { return m_EffectColor; } set { m_EffectColor = value; SetDirty(); } }
+
+		/// <summary>
+		/// Color for the color effect.
+		/// </summary>
+		public Color effectColor { get { return m_EffectColor; } set { m_EffectColor = value; SetDirty(); } }
+
+		[SerializeField][FormerlySerializedAs("m_Color")] Color m_EffectColor = Color.white;
 
 		/// <summary>
 		/// Effect shader.
@@ -252,7 +258,7 @@ namespace UnityEngine.UI
 				// Pack some effect factors to 1 float.
 				Vector2 factor = new Vector2(
 									 PackToFloat(toneLevel, 0, blur / graphic.mainTexture.width * 4),
-									 PackToFloat(color.r, color.g, color.b, color.a)
+									 PackToFloat(effectColor.r, effectColor.g, effectColor.b, effectColor.a)
 								 );
 
 				for (int i = 0; i < s_Verts.Count; i++)
