@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using UnityEngine.Serialization;
 
 namespace UnityEngine.UI
 {
@@ -9,28 +9,45 @@ namespace UnityEngine.UI
 	/// </summary>
 	[ExecuteInEditMode]
 	[RequireComponent(typeof(Graphic))]
+	[DisallowMultipleComponent]
 	public class UIEffect : MonoBehaviour, IMeshModifier
 	{
+		/// <summary>
+		/// Additional shadow.
+		/// </summary>
+		[System.Serializable]
+		public class AdditionalShadow
+		{
+			/// <summary>
+			/// How far is the blurring shadow from the graphic.
+			/// </summary>
+			[Range(0, 2)]
+			public float shadowBlur = 0.25f;
+
+			/// <summary>
+			/// Shadow effect mode.
+			/// </summary>
+			public ShadowMode shadowMode = ShadowMode.Shadow;
+
+			/// <summary>
+			/// Color for the shadow effect.
+			/// </summary>
+			public Color shadowColor = Color.black;
+
+			/// <summary>
+			/// How far is the shadow from the graphic.
+			/// </summary>
+			public Vector2 effectDistance = new Vector2(1f, -1f);
+
+			/// <summary>
+			/// Should the shadow inherit the alpha from the graphic?
+			/// </summary>
+			public bool useGraphicAlpha = true;
+		}
+
 		//################################
 		// Constant Members.
 		//################################
-		/// <summary>
-		/// Precision shift. Each value has 6 bits.
-		/// </summary>
-		const int PACKER_SHIFT_1 = 6;
-		const int PACKER_SHIFT_2 = PACKER_SHIFT_1 * 2;
-		const int PACKER_SHIFT_3 = PACKER_SHIFT_1 * 3;
-
-		/// <summary>
-		/// Precision bits. Each value [0-1] has 64 steps.
-		/// </summary>
-		const int PACKER_PRECISION = (1 << PACKER_SHIFT_1) - 1;
-
-		/// <summary>
-		/// Effect shader name.
-		/// </summary>
-		const string ShaderName = "UI/Hidden/UIEffect";
-
 		/// <summary>
 		/// Tone effect mode.
 		/// </summary>
@@ -74,6 +91,7 @@ namespace UnityEngine.UI
 		{
 			None = 0,
 			Fast,
+			Medium,
 			Detail,
 		}
 
@@ -82,10 +100,7 @@ namespace UnityEngine.UI
 		// Static Members.
 		//################################
 		static readonly List<UIVertex> s_Verts = new List<UIVertex>();
-
-		static readonly List<UIEffect> s_UIEffects = new List<UIEffect>();
-
-		static readonly Material[] s_SharedMaterials = new Material[128];
+		static readonly Dictionary<Shader, Material[]> s_SharedMaterials = new Dictionary<Shader, Material[]>();
 
 		//################################
 		// Public or Serialize Members.
@@ -95,21 +110,21 @@ namespace UnityEngine.UI
 		/// </summary>
 		public float toneLevel{ get { return m_ToneLevel; } set { m_ToneLevel = Mathf.Clamp(value, 0, 1); SetDirty(); } }
 
-		[SerializeField][Range(0, 1)]protected float m_ToneLevel = 1;
+		[SerializeField][Range(0, 1)] float m_ToneLevel = 1;
 
 		/// <summary>
 		/// How far is the blurring from the graphic.
 		/// </summary>
 		public float blur { get { return m_Blur; } set { m_Blur = Mathf.Clamp(value, 0, 4); SetDirty(); } }
 
-		[SerializeField][Range(0, 4)]protected float m_Blur = 0;
+		[SerializeField][Range(0, 4)] float m_Blur = 0.25f;
 
 		/// <summary>
 		/// How far is the blurring shadow from the graphic.
 		/// </summary>
 		public float shadowBlur { get { return m_ShadowBlur; } set { m_ShadowBlur = Mathf.Clamp(value, 0, 4); SetDirty(); } }
 
-		[SerializeField][Range(0, 4)]protected float m_ShadowBlur = 0;
+		[SerializeField][Range(0, 4)] float m_ShadowBlur = 0.25f;
 
 		/// <summary>
 		/// Shadow effect mode.
@@ -144,7 +159,7 @@ namespace UnityEngine.UI
 		/// </summary>
 		public Color shadowColor { get { return m_ShadowColor; } set { m_ShadowColor = value; SetDirty(); } }
 
-		[SerializeField] Color m_ShadowColor = Color.white;
+		[SerializeField] Color m_ShadowColor = Color.black;
 
 		/// <summary>
 		/// How far is the shadow from the graphic.
@@ -164,13 +179,13 @@ namespace UnityEngine.UI
 		/// Color for the color effect.
 		/// </summary>
 		public Color color { get { return m_Color; } set { m_Color = value; SetDirty(); } }
-
+		
 		[SerializeField] Color m_Color = Color.white;
 
 		/// <summary>
 		/// Effect shader.
 		/// </summary>
-		public virtual Shader shader { get { if (m_Shader == null) m_Shader = Shader.Find(ShaderName); return m_Shader; } }
+		public virtual Shader shader { get { if (m_Shader == null) m_Shader = Shader.Find("UI/Hidden/UIEffect"); return m_Shader; } }
 
 		[SerializeField] Shader m_Shader;
 
@@ -182,10 +197,12 @@ namespace UnityEngine.UI
 		Graphic m_Graphic;
 
 		/// <summary>
-		/// Main effect in the gameobject.
-		/// * It is top most UIEffect component in inspector.
+		/// Additional Shadows.
 		/// </summary>
-		public UIEffect mainEffect{ get; private set; }
+		public List<AdditionalShadow> additionalShadows { get { return m_AdditionalShadows; } }
+
+		[SerializeField] List<AdditionalShadow> m_AdditionalShadows = new List<AdditionalShadow>();
+
 
 		//################################
 		// MonoBehaior Callbacks.
@@ -195,7 +212,7 @@ namespace UnityEngine.UI
 		/// </summary>
 		protected virtual void OnEnable()
 		{
-			SetDirty(this);
+			SetDirty(true);
 		}
 
 		/// <summary>
@@ -203,14 +220,7 @@ namespace UnityEngine.UI
 		/// </summary>
 		protected virtual void OnDisable()
 		{
-			// When all effect modes are disable, graphic uses default material.
-			GetComponents<UIEffect>(s_UIEffects);
-			if (s_UIEffects.All(effect => !effect.enabled))
-			{
-				graphic.material = null;
-				graphic.SetVerticesDirty();
-			}
-			s_UIEffects.Clear();
+			graphic.material = null;
 			SetDirty();
 		}
 
@@ -236,18 +246,14 @@ namespace UnityEngine.UI
 			vh.GetUIVertexStream(s_Verts);
 
 			//================================
-			// Only main effect modify original vertices.
+			// Effect modify original vertices.
 			//================================
-			if (mainEffect == this)
 			{
-				// Calcurate bluring uv from blur factor and texture size.
-				float blurringUv = m_Blur / graphic.mainTexture.width;
-
 				// Pack some effect factors to 1 float.
 				Vector2 factor = new Vector2(
-					                 PackToFloat(m_ToneLevel, 0, blurringUv * 4),
-					                 PackToFloat(m_Color.r, m_Color.g, m_Color.b, m_Color.a)
-				                 );
+									 PackToFloat(toneLevel, 0, blur / graphic.mainTexture.width * 4),
+									 PackToFloat(color.r, color.g, color.b, color.a)
+								 );
 
 				for (int i = 0; i < s_Verts.Count; i++)
 				{
@@ -262,40 +268,20 @@ namespace UnityEngine.UI
 			//================================
 			// Append shadow vertices.
 			//================================
-			if (ShadowMode.Shadow <= m_ShadowMode)
 			{
 				var inputVertCount = s_Verts.Count;
 				var start = 0;
 				var end = inputVertCount;
 
-				// Calcurate bluring uv from blur factor and texture size.
-				float blurringUv = m_ShadowBlur / graphic.mainTexture.width;
-
-				// Pack some effect factors to 1 float.
-				Vector2 factor = new Vector2(
-					                 PackToFloat(m_ToneLevel, 0, blurringUv * 4),
-					                 PackToFloat(m_ShadowColor.r, m_ShadowColor.g, m_ShadowColor.b, 1)
-				                 );
-
-				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, m_EffectDistance.x, m_EffectDistance.y, factor);
-
-
-				// Append shadow for Outline.
-				if (ShadowMode.Outline <= m_ShadowMode)
+				// Additional Shadows.
+				for (int i = additionalShadows.Count - 1; 0 <= i; i--)
 				{
-					ApplyShadowZeroAlloc(s_Verts, ref start, ref end, m_EffectDistance.x, -m_EffectDistance.y, factor);
-					ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -m_EffectDistance.x, m_EffectDistance.y, factor);
-					ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -m_EffectDistance.x, -m_EffectDistance.y, factor);
+					AdditionalShadow shadow = additionalShadows[i];
+					ApplyShadow(s_Verts, ref start, ref end, shadow.shadowMode, toneLevel, shadow.shadowBlur / graphic.mainTexture.width * 4, shadow.effectDistance, shadow.shadowColor, shadow.useGraphicAlpha);
 				}
 
-				// Append shadow for Outline8.
-				if (ShadowMode.Outline8 <= m_ShadowMode)
-				{
-					ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -m_EffectDistance.x, 0, factor);
-					ApplyShadowZeroAlloc(s_Verts, ref start, ref end, 0, -m_EffectDistance.y, factor);
-					ApplyShadowZeroAlloc(s_Verts, ref start, ref end, m_EffectDistance.x, 0, factor);
-					ApplyShadowZeroAlloc(s_Verts, ref start, ref end, 0, m_EffectDistance.y, factor);
-				}
+				// Shadow.
+				ApplyShadow(s_Verts, ref start, ref end, shadowMode, toneLevel, shadowBlur / graphic.mainTexture.width * 4, effectDistance, shadowColor, useGraphicAlpha);
 			}
 
 			vh.Clear();
@@ -318,7 +304,7 @@ namespace UnityEngine.UI
 		/// </summary>
 		protected virtual void OnValidate()
 		{
-			SetDirty(this);
+			SetDirty(true);
 		}
 #endif
 
@@ -329,7 +315,42 @@ namespace UnityEngine.UI
 		/// Append shadow vertices.
 		/// * It is similar to Shadow component implementation.
 		/// </summary>
-		protected void ApplyShadowZeroAlloc(List<UIVertex> verts, ref int start, ref int end, float x, float y, Vector2 factor)
+		static void ApplyShadow(List<UIVertex> verts, ref int start, ref int end, ShadowMode mode, float toneLevel, float blur, Vector2 effectDistance, Color color, bool useGraphicAlpha)
+		{
+			if (ShadowMode.None == mode)
+				return;
+
+			var factor = new Vector2(
+							 PackToFloat(toneLevel, 0, blur),
+							 PackToFloat(color.r, color.g, color.b, 1)
+						 );
+
+			// Append Shadow.
+			ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
+
+			// Append Outline.
+			if (ShadowMode.Outline <= mode)
+			{
+				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
+				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
+				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
+			}
+
+			// Append Outline8.
+			if (ShadowMode.Outline8 <= mode)
+			{
+				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -effectDistance.x, 0, factor, color, useGraphicAlpha);
+				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, 0, -effectDistance.y, factor, color, useGraphicAlpha);
+				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, 0, factor, color, useGraphicAlpha);
+				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, 0, effectDistance.y, factor, color, useGraphicAlpha);
+			}
+		}
+
+		/// <summary>
+		/// Append shadow vertices.
+		/// * It is similar to Shadow component implementation.
+		/// </summary>
+		static void ApplyShadowZeroAlloc(List<UIVertex> verts, ref int start, ref int end, float x, float y, Vector2 factor, Color color, bool useGraphicAlpha)
 		{
 			// Check list capacity.
 			var neededCapacity = verts.Count + end - start;
@@ -347,8 +368,8 @@ namespace UnityEngine.UI
 				Vector3 v = vt.position;
 				vt.position.Set(v.x + x, v.y + y, v.z);
 
-				Color vertColor = m_ShadowColor;
-				vertColor.a = m_UseGraphicAlpha ? m_ShadowColor.a * vt.color.a / 255 : m_ShadowColor.a;
+				Color vertColor = color;
+				vertColor.a = useGraphicAlpha ? color.a * vt.color.a / 255 : color.a;
 				vt.color = vertColor;
 
 				// Set UIEffect prameters to vertex.
@@ -367,121 +388,137 @@ namespace UnityEngine.UI
 		/// <param name="isMaterialDirty">If set to true material dirty.</param>
 		void SetDirty(bool isMaterialDirty = false)
 		{
-			//
-			if (!mainEffect)
-			{
-				mainEffect = GetComponent<UIEffect>();
-			}
-
-			// Only main effect update material.
-			if (mainEffect != this)
-			{
-				m_ToneMode = mainEffect.m_ToneMode;
-				m_ColorMode = mainEffect.m_ColorMode;
-				m_BlurMode = mainEffect.m_BlurMode;
-				return;
-			}
 
 			// Update material if needed.
-			if (isMaterialDirty && mainEffect == this)
+			if (isMaterialDirty)
 			{
-				const int TONE_SHIFT = 0;
-				const int TONE_GRAYSCALE = (int)ToneMode.Grayscale;
-				const int TONE_SEPIA = (int)ToneMode.Sepia;
-				const int TONE_NEGA = (int)ToneMode.Nega;
-				const int TONE_PIXEL = (int)ToneMode.Pixel;
-				const int TONE_MONO = (int)ToneMode.Mono;
-				const int TONE_CUTOFF = (int)ToneMode.Cutoff;
-
-				const int COLOR_SHIFT = 3;
-				const int COLOR_SET = (int)ColorMode.Set;
-				const int COLOR_ADD = (int)ColorMode.Add;
-				const int COLOR_SUB = (int)ColorMode.Sub;
-
-				const int BLUR_SHIFT = 5;
-				const int BLUR_FAST = (int)BlurMode.Fast;
-				const int BLUR_DETAIL = (int)BlurMode.Detail;
-
-				// Calculate shader keyword identifier from effect modes.
-				int identifier = ((int)m_ToneMode << TONE_SHIFT) | ((int)m_ColorMode << COLOR_SHIFT) | ((int)m_BlurMode << BLUR_SHIFT);
-
-				// When all effect modes are disable(None), graphic uses default material.
-				if (identifier == 0)
-				{
-					graphic.material = null;
-					graphic.SetVerticesDirty();
-					return;
-				}
-
-				// Generate and cache new material by given identifier.
-				if (!s_SharedMaterials[identifier])
-				{
-					if (!s_SharedMaterials[0])
-					{
-						s_SharedMaterials[0] = new Material(shader);
-					}
-					Material mat = new Material(s_SharedMaterials[0]);
-
-					// Bits for tone effect.
-					int toneBits = identifier >> TONE_SHIFT;
-					mat.EnableKeyword(
-						TONE_CUTOFF == (toneBits & TONE_CUTOFF) ? "UI_TONE_CUTOFF" 
-						: TONE_MONO == (toneBits & TONE_MONO) ? "UI_TONE_MONO" 
-						: TONE_PIXEL == (toneBits & TONE_PIXEL) ? "UI_TONE_PIXEL" 
-						: TONE_NEGA == (toneBits & TONE_NEGA) ? "UI_TONE_NEGA" 
-						: TONE_SEPIA == (toneBits & TONE_SEPIA) ? "UI_TONE_SEPIA" 
-						: TONE_GRAYSCALE == (toneBits & TONE_GRAYSCALE) ? "UI_TONE_GRAYSCALE" 
-						: "UI_TONE_OFF" 
-					);
-
-					// Bits for color effect.
-					int colorBits = identifier >> COLOR_SHIFT;
-					mat.EnableKeyword(
-						COLOR_SUB == (colorBits & COLOR_SUB) ? "UI_COLOR_SUB" 
-						: COLOR_ADD == (colorBits & COLOR_ADD) ? "UI_COLOR_ADD" 
-						: COLOR_SET == (colorBits & COLOR_SET) ? "UI_COLOR_SET" 
-						: "UI_COLOR_OFF" 
-					);
-
-					// Bits for blur effect.
-					int blurBits = identifier >> BLUR_SHIFT;
-					mat.EnableKeyword(
-						BLUR_DETAIL == (blurBits & BLUR_DETAIL) ? "UI_BLUR_DETAIL" 
-						: BLUR_FAST == (blurBits & BLUR_FAST) ? "UI_BLUR_FAST"
-						: "UI_BLUR_OFF" 
-					);
-
-					mat.name += identifier.ToString();
-					s_SharedMaterials[identifier] = mat;
-				}
-
-				graphic.material = s_SharedMaterials[identifier];
+				graphic.material = GetSharedMaterial(shader, toneMode, colorMode, blurMode);
 			}
 			graphic.SetVerticesDirty();
 		}
 
+
+		/// <summary>
+		/// Get shared material for identifier.
+		/// </summary>
+		/// <param name="isMaterialDirty">If set to true material dirty.</param>
+		public static Material GetSharedMaterial(Shader shader, ToneMode toneMode, ColorMode colorMode, BlurMode blurMode, bool nullDefault = true)
+		{
+			// Update material if needed.
+			const int TONE_SHIFT = 0;
+			const int TONE_GRAYSCALE = (int)ToneMode.Grayscale;
+			const int TONE_SEPIA = (int)ToneMode.Sepia;
+			const int TONE_NEGA = (int)ToneMode.Nega;
+			const int TONE_PIXEL = (int)ToneMode.Pixel;
+			const int TONE_MONO = (int)ToneMode.Mono;
+			const int TONE_CUTOFF = (int)ToneMode.Cutoff;
+
+			const int COLOR_SHIFT = 3;
+			const int COLOR_SET = (int)ColorMode.Set;
+			const int COLOR_ADD = (int)ColorMode.Add;
+			const int COLOR_SUB = (int)ColorMode.Sub;
+
+			const int BLUR_SHIFT = 5;
+			const int BLUR_FAST = (int)BlurMode.Fast;
+			const int BLUR_MEDIUM = (int)BlurMode.Medium;
+			const int BLUR_DETAIL = (int)BlurMode.Detail;
+
+			// Calculate shader keyword identifier from effect modes.
+			int identifier = ((int)toneMode << TONE_SHIFT)
+				| ((int)colorMode << COLOR_SHIFT)
+				| ((int)blurMode << BLUR_SHIFT);
+
+			// When all effect modes are disable(None), graphic uses default material.
+			if (nullDefault && identifier == 0)
+			{
+				return null;
+			}
+
+			Material[] materials;
+
+			if (!s_SharedMaterials.TryGetValue(shader, out materials))
+			{
+				materials = new Material[128];
+				s_SharedMaterials.Add(shader, materials);
+			}
+
+			// Generate and cache new material by given identifier.
+			if (!materials[identifier])
+			{
+				if (!materials[0])
+				{
+					materials[0] = new Material(shader);
+					materials[0].name += identifier.ToString();
+				}
+				if (identifier == 0)
+				{
+					return materials[0];
+				}
+
+				Material mat = new Material(materials[0]);
+
+				// Bits for tone effect.
+				int toneBits = identifier >> TONE_SHIFT;
+				mat.EnableKeyword(
+					TONE_CUTOFF == (toneBits & TONE_CUTOFF) ? "UI_TONE_CUTOFF"
+					: TONE_MONO == (toneBits & TONE_MONO) ? "UI_TONE_MONO"
+					: TONE_PIXEL == (toneBits & TONE_PIXEL) ? "UI_TONE_PIXEL"
+					: TONE_NEGA == (toneBits & TONE_NEGA) ? "UI_TONE_NEGA"
+					: TONE_SEPIA == (toneBits & TONE_SEPIA) ? "UI_TONE_SEPIA"
+					: TONE_GRAYSCALE == (toneBits & TONE_GRAYSCALE) ? "UI_TONE_GRAYSCALE"
+					: "UI_TONE_OFF"
+				);
+
+				// Bits for color effect.
+				int colorBits = identifier >> COLOR_SHIFT;
+				mat.EnableKeyword(
+					COLOR_SUB == (colorBits & COLOR_SUB) ? "UI_COLOR_SUB"
+					: COLOR_ADD == (colorBits & COLOR_ADD) ? "UI_COLOR_ADD"
+					: COLOR_SET == (colorBits & COLOR_SET) ? "UI_COLOR_SET"
+					: "UI_COLOR_OFF"
+				);
+
+				// Bits for blur effect.
+				int blurBits = identifier >> BLUR_SHIFT;
+				mat.EnableKeyword(
+					BLUR_DETAIL == (blurBits & BLUR_DETAIL) ? "UI_BLUR_DETAIL"
+					: BLUR_MEDIUM == (blurBits & BLUR_MEDIUM) ? "UI_BLUR_MEDIUM"
+					: BLUR_FAST == (blurBits & BLUR_FAST) ? "UI_BLUR_FAST"
+					: "UI_BLUR_OFF"
+				);
+
+				mat.name += identifier.ToString();
+				materials[identifier] = mat;
+			}
+			return materials[identifier];
+		}
+
 		/// <summary>
 		/// Pack 4 low-precision [0-1] floats values to a float.
+		/// Each value [0-1] has 64 steps(6 bits).
 		/// </summary>
 		static float PackToFloat(float x, float y, float z, float w)
-		{   
-			return (Mathf.FloorToInt(w * PACKER_PRECISION) << PACKER_SHIFT_3)
-			+ (Mathf.FloorToInt(z * PACKER_PRECISION) << PACKER_SHIFT_2)
-			+ (Mathf.FloorToInt(y * PACKER_PRECISION) << PACKER_SHIFT_1)
-			+ Mathf.FloorToInt(x * PACKER_PRECISION);
+		{
+			const int PRECISION = (1 << 6) - 1;
+			return (Mathf.FloorToInt(w * PRECISION) << 18)
+			+ (Mathf.FloorToInt(z * PRECISION) << 12)
+			+ (Mathf.FloorToInt(y * PRECISION) << 6)
+			+ Mathf.FloorToInt(x * PRECISION);
 		}
 
 		/// <summary>
 		/// Pack 3 low-precision [0-1] floats values to a float.
-		/// The z value is a little high precision(12 bits).
+		/// The x and y values [0-1] have 64 steps(6 bits).
+		/// The z value [0-1] is a little high precision(12 bits).
 		/// </summary>
 		static float PackToFloat(float x, float y, float z)
-		{   
-			const int PRECISION_BITS_HIGH = (1 << PACKER_SHIFT_2) - 1;
+		{
+			const int PRECISION = (1 << 6) - 1;
+			const int PRECISION_HIGH = (1 << 12) - 1;
 
-			return (Mathf.FloorToInt(z * PRECISION_BITS_HIGH) << PACKER_SHIFT_2)
-			+ (Mathf.FloorToInt(y * PACKER_PRECISION) << PACKER_SHIFT_1)
-			+ Mathf.FloorToInt(x * PACKER_PRECISION);
+			return (Mathf.FloorToInt(z * PRECISION_HIGH) << 12)
+			+ (Mathf.FloorToInt(y * PRECISION) << 6)
+			+ Mathf.FloorToInt(x * PRECISION);
 		}
 	}
 }
