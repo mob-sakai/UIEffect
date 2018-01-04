@@ -117,14 +117,14 @@ namespace UnityEngine.UI
 		/// </summary>
 		public float blur { get { return m_Blur; } set { m_Blur = Mathf.Clamp(value, 0, 4); SetDirty(); } }
 
-		[SerializeField][Range(0, 4)] float m_Blur = 0.25f;
+		[SerializeField][Range(0, 2)] float m_Blur = 0.25f;
 
 		/// <summary>
 		/// How far is the blurring shadow from the graphic.
 		/// </summary>
 		public float shadowBlur { get { return m_ShadowBlur; } set { m_ShadowBlur = Mathf.Clamp(value, 0, 4); SetDirty(); } }
 
-		[SerializeField][Range(0, 4)] float m_ShadowBlur = 0.25f;
+		[SerializeField][Range(0, 2)] float m_ShadowBlur = 0.25f;
 
 		/// <summary>
 		/// Shadow effect mode.
