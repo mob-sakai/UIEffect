@@ -14,7 +14,7 @@
 #define UI_COLOR
 #endif
 
-#if UI_BLUR_FAST | UI_BLUR_DETAIL
+#if UI_BLUR_FAST | UI_BLUR_MEDIUM | UI_BLUR_DETAIL
 #define UI_BLUR
 #endif
 
@@ -65,46 +65,52 @@ half3 UnpackToVec3(float value)
 //################################
 // Calculate blur effect.
 // Sample texture by blured uv, with bias.
-fixed4 Blur(sampler2D tex, half2 uv, half2 addUv, half bias)
+fixed4 Blur(sampler2D tex, half2 uv, half addUv, half bias)
 {
-	half4 color = tex2D( tex, uv + addUv);
-	color += tex2D( tex, uv - addUv);
-
-	addUv.x *= -1;
-	color += tex2D( tex, uv + addUv);
-	color += tex2D( tex, uv - addUv);
-
-	return color * bias;
+	return 
+		(
+		tex2D(tex, uv + half2(addUv, addUv))
+		+ tex2D(tex, uv + half2(-addUv, addUv))
+		+ tex2D(tex, uv + half2(addUv, -addUv))
+		+ tex2D(tex, uv + half2(-addUv, -addUv))
+#if UI_BLUR_DETAIL
+		+ tex2D(tex, uv + half2(addUv, 0))
+		+ tex2D(tex, uv + half2(-addUv, 0))
+		+ tex2D(tex, uv + half2(0, addUv))
+		+ tex2D(tex, uv + half2(0, -addUv))
+		)
+		* bias / 2;
+#else
+		)
+		* bias;
+#endif
 }
 
 // Sample texture with blurring.
 // * Fast: Sample texture with 3x4 blurring.
-// * Detail: Sample texture with 6x4 blurring.
-fixed4 Tex2DBlurring(sampler2D tex, half2 uv, fixed blurring)
+// * Medium: Sample texture with 6x4 blurring.
+// * Detail: Sample texture with 6x8 blurring.
+fixed4 Tex2DBlurring(sampler2D tex, half2 uv, half blur)
 {
 	half4 color = tex2D(tex, uv);
-	half2 dir = half2( blurring, blurring);
-	fixed4 blurring_color;
 
-	#if UI_BLUR_FAST		// Blur(Fast)
-	const half originalBias = 0.41511;
-	blurring_color
-		= Blur( tex, uv, dir * 3, 0.12924 )
-		+ Blur( tex, uv, dir * 5, 0.01343 )
-		+ Blur( tex, uv, dir * 6, 0.00353 );
+	#if UI_BLUR_FAST
+	return color * 0.41511
+		+ Blur( tex, uv, blur * 3, 0.12924 )
+		+ Blur( tex, uv, blur * 5, 0.01343 )
+		+ Blur( tex, uv, blur * 6, 0.00353 );
 
-	#elif UI_BLUR_DETAIL	// Blur(Detail)
-	const half originalBias = 0.14387;
-	blurring_color
-		= Blur( tex, uv, dir * 1, 0.06781 )
-		+ Blur( tex, uv, dir * 2, 0.05791 )
-		+ Blur( tex, uv, dir * 3, 0.04360 )
-		+ Blur( tex, uv, dir * 4, 0.02773 )
-		+ Blur( tex, uv, dir * 5, 0.01343 )
-		+ Blur( tex, uv, dir * 6, 0.00353 );
+	#elif UI_BLUR_MEDIUM | UI_BLUR_DETAIL
+	return color * 0.14387
+		+ Blur( tex, uv, blur * 1, 0.06781 )
+		+ Blur( tex, uv, blur * 2, 0.05791 )
+		+ Blur( tex, uv, blur * 3, 0.04360 )
+		+ Blur( tex, uv, blur * 4, 0.02773 )
+		+ Blur( tex, uv, blur * 5, 0.01343 )
+		+ Blur( tex, uv, blur * 6, 0.00353 );
+	#else
+	return color;
 	#endif
-	
-	return color * originalBias + blurring_color;
 }
 
 //################################
