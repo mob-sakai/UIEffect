@@ -150,7 +150,7 @@ Shader "UI/Hidden/UIEffect"
 			{
 				#if UI_TONE_PIXEL
 				float pixelRate = max(1,(1-IN.effectFactor.x) * 256);
-				IN.texcoord = floor(IN.texcoord * pixelRate) / pixelRate;
+				IN.texcoord = round(IN.texcoord * pixelRate) / pixelRate;
 				#endif
 
 				#if defined (UI_BLUR)

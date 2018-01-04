@@ -21,7 +21,6 @@
 //################################
 // Unpacker to vector
 //################################
-#if defined (UI_COLOR)
 // Unpack float to low-precision [0-1] fixed4. 
 fixed4 UnpackToVec4(float value)
 {   
@@ -40,9 +39,7 @@ fixed4 UnpackToVec4(float value)
     color.a = (value % PACKER_STEP) / PRECISION;
     return color;
 }
-#endif
 
-#if defined (UI_TONE) || defined (UI_BLUR)
 // Unpack float to low-precision [0-1] half3.
 // The z value is a little high precision.
 half3 UnpackToVec3(float value)
@@ -62,12 +59,10 @@ half3 UnpackToVec3(float value)
 
     return color;
 }
-#endif
 
 //################################
 // Blur effect
 //################################
-#if defined (UI_BLUR)
 // Calculate blur effect.
 // Sample texture by blured uv, with bias.
 fixed4 Blur(sampler2D tex, half2 uv, half2 addUv, half bias)
@@ -111,12 +106,10 @@ fixed4 Tex2DBlurring(sampler2D tex, half2 uv, fixed blurring)
 	
 	return color * originalBias + blurring_color;
 }
-#endif
 
 //################################
 // Tone effect
 //################################
-#if defined (UI_TONE)
 // Apply tone effect.
 fixed4 ApplyToneEffect(fixed4 color, fixed factor)
 {
@@ -132,13 +125,11 @@ fixed4 ApplyToneEffect(fixed4 color, fixed factor)
 
 	return color;
 }
-#endif
 
 
 //################################
 // Color effect
 //################################
-#if defined (UI_COLOR)
 // Apply color effect.
 fixed4 ApplyColorEffect(fixed4 color, fixed4 factor)
 {
@@ -154,6 +145,5 @@ fixed4 ApplyColorEffect(fixed4 color, fixed4 factor)
 
 	return color;
 }
-#endif
 
 #endif // UI_EFFECT_INCLUDED
