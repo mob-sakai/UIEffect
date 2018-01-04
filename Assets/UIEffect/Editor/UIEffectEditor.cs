@@ -158,6 +158,19 @@ namespace UnityEditor.UI
 			roAdditionalShadows.DoLayoutList();
 
 			serializedObject.ApplyModifiedProperties();
+
+#if UNITY_5_6_OR_NEWER
+			var canvas = (target as UIEffect).graphic.canvas;
+			if( 0 == (canvas.additionalShaderChannels & AdditionalCanvasShaderChannels.TexCoord1))
+			{
+				using (new GUILayout.HorizontalScope())
+				{
+					EditorGUILayout.HelpBox("[Unity5.6+] Enable TexCoord1 of Canvas.additionalShaderChannels to use UIEffect.", MessageType.Warning);
+					if (GUILayout.Button("Fix"))
+						canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord1;
+				}
+			}
+#endif
 		}
 	}
 }
