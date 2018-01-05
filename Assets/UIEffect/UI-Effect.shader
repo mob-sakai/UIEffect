@@ -2,7 +2,7 @@ Shader "UI/Hidden/UIEffect"
 {
 	Properties
 	{
-		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
+		[PerRendererData] _MainTex ("Main Texture", 2D) = "white" {}
 		_Color ("Tint", Color) = (1,1,1,1)
 		
 		_StencilComp ("Stencil Comparison", Float) = 8
@@ -46,6 +46,7 @@ Shader "UI/Hidden/UIEffect"
 		Pass
 		{
 			Name "Default"
+
 		CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
@@ -162,13 +163,11 @@ Shader "UI/Hidden/UIEffect"
 				clip (color.a - 0.001);
 				#endif
 
-				#if defined (UI_TONE)
 				#if UI_TONE_MONO
 				color.rgb = IN.color.rgb;
 				color.a = color.a * tex2D(_MainTex, IN.texcoord).a + IN.effectFactor.x * 2 - 1;
-				#elif !UI_TONE_CUTOFF
+				#elif defined (UI_TONE) & !UI_TONE_CUTOFF
 				color = ApplyToneEffect(color, IN.effectFactor.x);	// Tone effect.
-				#endif
 				#endif
 
 				#if defined (UI_COLOR)
