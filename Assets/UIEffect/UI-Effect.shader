@@ -1,4 +1,4 @@
-Shader "UI/Hidden/UIEffect"
+Shader "UI/Hidden/UI-Effect"
 {
 	Properties
 	{
@@ -60,9 +60,9 @@ Shader "UI/Hidden/UIEffect"
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
 
 			// vvvv [For UIEffect] vvvv : Define keyword and include.
-			#pragma multi_compile __ UI_TONE_GRAYSCALE UI_TONE_SEPIA UI_TONE_NEGA UI_TONE_PIXEL UI_TONE_MONO UI_TONE_CUTOFF 
-			#pragma multi_compile __ UI_COLOR_ADD UI_COLOR_SUB UI_COLOR_SET
-			#pragma multi_compile __ UI_BLUR_FAST UI_BLUR_MEDIUM UI_BLUR_DETAIL
+			#pragma shader_feature __ UI_TONE_GRAYSCALE UI_TONE_SEPIA UI_TONE_NEGA UI_TONE_PIXEL UI_TONE_MONO UI_TONE_CUTOFF 
+			#pragma shader_feature __ UI_COLOR_ADD UI_COLOR_SUB UI_COLOR_SET
+			#pragma shader_feature __ UI_BLUR_FAST UI_BLUR_MEDIUM UI_BLUR_DETAIL
 			#include "UI-Effect.cginc"
 			// ^^^^ [For UIEffect] ^^^^
 			
@@ -158,7 +158,7 @@ Shader "UI/Hidden/UIEffect"
 				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
 
 				#ifdef UI_TONE_CUTOFF
-				clip (color.a - IN.effectFactor.x * 1.001);
+				clip (color.a - 1 + IN.effectFactor.x * 1.001);
 				#elif UNITY_UI_ALPHACLIP
 				clip (color.a - 0.001);
 				#endif

@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor;
 
 namespace UnityEditor.UI
 {
@@ -30,7 +30,7 @@ namespace UnityEditor.UI
 			//================
 			GUILayout.Space(10);
 			EditorGUILayout.LabelField("Capture Effect", EditorStyles.boldLabel);
-			UIEffectEditor.DrawEffectProperties(serializedObject);
+			UIEffectEditor.DrawEffectProperties(UIEffectCapturedImage.shaderName, serializedObject);
 
 			//================
 			// Advanced option.
@@ -87,10 +87,10 @@ namespace UnityEditor.UI
 			bool enable = current.enabled;
 			current.enabled = false;
 			current.Release();
-			if(capture)
+			if (capture)
 				current.Capture();
 			
-			EditorApplication.delayCall += ()=>current.enabled = enable;
+			EditorApplication.delayCall += () => current.enabled = enable;
 		}
 	}
 }

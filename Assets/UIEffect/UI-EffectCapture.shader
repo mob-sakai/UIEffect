@@ -1,4 +1,4 @@
-Shader "UI/Hidden/UIEffectCapturedImage"
+Shader "UI/Hidden/UI-EffectCapture"
 {
 	Properties
 	{
@@ -26,9 +26,9 @@ Shader "UI/Hidden/UIEffectCapturedImage"
 			#include "UnityCG.cginc"
 			
 			// vvvv [For UIEffect] vvvv : Define keyword and include.
-			#pragma multi_compile __ UI_TONE_GRAYSCALE UI_TONE_SEPIA UI_TONE_NEGA UI_TONE_PIXEL
-			#pragma multi_compile __ UI_COLOR_ADD UI_COLOR_SUB UI_COLOR_SET
-			#pragma multi_compile __ UI_BLUR_FAST UI_BLUR_MEDIUM UI_BLUR_DETAIL
+			#pragma shader_feature __ UI_TONE_GRAYSCALE UI_TONE_SEPIA UI_TONE_NEGA UI_TONE_PIXEL
+			#pragma shader_feature __ UI_COLOR_ADD UI_COLOR_SUB UI_COLOR_SET
+			#pragma shader_feature __ UI_BLUR_FAST UI_BLUR_MEDIUM UI_BLUR_DETAIL
 			#include "UI-Effect.cginc"
 			// ^^^^ [For UIEffect] ^^^^
 

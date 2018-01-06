@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine.Serialization;
 
+#if UNITY_EDITOR
+using System.IO;
+using System.Linq;
+using UnityEditor;
+#endif
+
 namespace UnityEngine.UI
 {
 	/// <summary>
@@ -11,6 +17,9 @@ namespace UnityEngine.UI
 	[RequireComponent(typeof(Graphic))]
 	[DisallowMultipleComponent]
 	public class UIEffect : MonoBehaviour, IMeshModifier
+#if UNITY_EDITOR
+		, ISerializationCallbackReceiver
+#endif
 	{
 		/// <summary>
 		/// Additional shadow.
@@ -48,6 +57,8 @@ namespace UnityEngine.UI
 		//################################
 		// Constant Members.
 		//################################
+		public const string shaderName = "UI/Hidden/UI-Effect";
+
 		/// <summary>
 		/// Tone effect mode.
 		/// </summary>
@@ -100,7 +111,6 @@ namespace UnityEngine.UI
 		// Static Members.
 		//################################
 		static readonly List<UIVertex> s_Verts = new List<UIVertex>();
-		static readonly Dictionary<Shader, Material[]> s_SharedMaterials = new Dictionary<Shader, Material[]>();
 
 		//################################
 		// Public or Serialize Members.
@@ -115,14 +125,14 @@ namespace UnityEngine.UI
 		/// <summary>
 		/// How far is the blurring from the graphic.
 		/// </summary>
-		public float blur { get { return m_Blur; } set { m_Blur = Mathf.Clamp(value, 0, 4); SetDirty(); } }
+		public float blur { get { return m_Blur; } set { m_Blur = Mathf.Clamp(value, 0, 2); SetDirty(); } }
 
 		[SerializeField][Range(0, 2)] float m_Blur = 0.25f;
 
 		/// <summary>
 		/// How far is the blurring shadow from the graphic.
 		/// </summary>
-		public float shadowBlur { get { return m_ShadowBlur; } set { m_ShadowBlur = Mathf.Clamp(value, 0, 4); SetDirty(); } }
+		public float shadowBlur { get { return m_ShadowBlur; } set { m_ShadowBlur = Mathf.Clamp(value, 0, 2); SetDirty(); } }
 
 		[SerializeField][Range(0, 2)] float m_ShadowBlur = 0.25f;
 
@@ -136,21 +146,21 @@ namespace UnityEngine.UI
 		/// <summary>
 		/// Tone effect mode.
 		/// </summary>
-		public ToneMode toneMode { get { return m_ToneMode; } set { m_ToneMode = value; SetDirty(true); } }
+		public ToneMode toneMode { get { return m_ToneMode; } }
 
 		[SerializeField] ToneMode m_ToneMode;
 
 		/// <summary>
 		/// Color effect mode.
 		/// </summary>
-		public ColorMode colorMode { get { return m_ColorMode; } set { m_ColorMode = value; SetDirty(true); } }
+		public ColorMode colorMode { get { return m_ColorMode; } }
 
 		[SerializeField] ColorMode m_ColorMode;
 
 		/// <summary>
 		/// Blur effect mode.
 		/// </summary>
-		public BlurMode blurMode { get { return m_BlurMode; } set { m_BlurMode = value; SetDirty(true); } }
+		public BlurMode blurMode { get { return m_BlurMode; } }
 
 		[SerializeField] BlurMode m_BlurMode;
 
@@ -189,11 +199,11 @@ namespace UnityEngine.UI
 		[SerializeField][FormerlySerializedAs("m_Color")] Color m_EffectColor = Color.white;
 
 		/// <summary>
-		/// Effect shader.
+		/// Effect material.
 		/// </summary>
-		public virtual Shader shader { get { if (m_Shader == null) m_Shader = Shader.Find("UI/Hidden/UIEffect"); return m_Shader; } }
+		public virtual Material effectMaterial { get { return m_EffectMaterial; } }
 
-		[SerializeField] Shader m_Shader;
+		[SerializeField] Material m_EffectMaterial;
 
 		/// <summary>
 		/// Graphic affected by the UIEffect.
@@ -312,6 +322,41 @@ namespace UnityEngine.UI
 		{
 			SetDirty(true);
 		}
+
+		public void OnBeforeSerialize()
+		{
+		}
+
+		public void OnAfterDeserialize()
+		{
+			EditorApplication.delayCall += () =>
+			{
+				var old = m_EffectMaterial;
+				m_EffectMaterial = GetMaterial(Shader.Find(shaderName), toneMode, colorMode, blurMode);
+				if (old != m_EffectMaterial)
+				{
+					EditorUtility.SetDirty(this);
+					EditorApplication.delayCall +=AssetDatabase.SaveAssets;
+				}
+				graphic.material = m_EffectMaterial;
+			};
+		}
+
+		public static Material GetMaterial(Shader shader, UIEffect.ToneMode tone, UIEffect.ColorMode color, UIEffect.BlurMode blur)
+		{
+			string variantName = Path.GetFileName(shader.name)
+			                     + (0 < tone ? "-" + tone : "")
+			                     + (0 < color ? "-" + color : "")
+			                     + (0 < blur ? "-" + blur : "");
+
+			var path = AssetDatabase.FindAssets("t:Material " + variantName)
+				.Select(x => AssetDatabase.GUIDToAssetPath(x))
+				.SingleOrDefault(x => Path.GetFileNameWithoutExtension(x) == variantName);
+
+			return path != null
+				? AssetDatabase.LoadAssetAtPath<Material>(path)
+					: null;
+		}
 #endif
 
 		//################################
@@ -394,109 +439,12 @@ namespace UnityEngine.UI
 		/// <param name="isMaterialDirty">If set to true material dirty.</param>
 		void SetDirty(bool isMaterialDirty = false)
 		{
-
 			// Update material if needed.
 			if (isMaterialDirty)
 			{
-				graphic.material = GetSharedMaterial(shader, toneMode, colorMode, blurMode);
+				graphic.material = effectMaterial;
 			}
 			graphic.SetVerticesDirty();
-		}
-
-
-		/// <summary>
-		/// Get shared material for identifier.
-		/// </summary>
-		/// <param name="isMaterialDirty">If set to true material dirty.</param>
-		public static Material GetSharedMaterial(Shader shader, ToneMode toneMode, ColorMode colorMode, BlurMode blurMode, bool nullDefault = true)
-		{
-			// Update material if needed.
-			const int TONE_SHIFT = 0;
-			const int TONE_GRAYSCALE = (int)ToneMode.Grayscale;
-			const int TONE_SEPIA = (int)ToneMode.Sepia;
-			const int TONE_NEGA = (int)ToneMode.Nega;
-			const int TONE_PIXEL = (int)ToneMode.Pixel;
-			const int TONE_MONO = (int)ToneMode.Mono;
-			const int TONE_CUTOFF = (int)ToneMode.Cutoff;
-
-			const int COLOR_SHIFT = 3;
-			const int COLOR_SET = (int)ColorMode.Set;
-			const int COLOR_ADD = (int)ColorMode.Add;
-			const int COLOR_SUB = (int)ColorMode.Sub;
-
-			const int BLUR_SHIFT = 5;
-			const int BLUR_FAST = (int)BlurMode.Fast;
-			const int BLUR_MEDIUM = (int)BlurMode.Medium;
-			const int BLUR_DETAIL = (int)BlurMode.Detail;
-
-			// Calculate shader keyword identifier from effect modes.
-			int identifier = ((int)toneMode << TONE_SHIFT)
-				| ((int)colorMode << COLOR_SHIFT)
-				| ((int)blurMode << BLUR_SHIFT);
-
-			// When all effect modes are disable(None), graphic uses default material.
-			if (nullDefault && identifier == 0)
-			{
-				return null;
-			}
-
-			Material[] materials;
-
-			if (!s_SharedMaterials.TryGetValue(shader, out materials))
-			{
-				materials = new Material[128];
-				s_SharedMaterials.Add(shader, materials);
-			}
-
-			// Generate and cache new material by given identifier.
-			if (!materials[identifier])
-			{
-				if (!materials[0])
-				{
-					materials[0] = new Material(shader);
-					materials[0].name += identifier.ToString();
-				}
-				if (identifier == 0)
-				{
-					return materials[0];
-				}
-
-				Material mat = new Material(materials[0]);
-
-				// Bits for tone effect.
-				int toneBits = identifier >> TONE_SHIFT;
-				mat.EnableKeyword(
-					TONE_CUTOFF == (toneBits & TONE_CUTOFF) ? "UI_TONE_CUTOFF"
-					: TONE_MONO == (toneBits & TONE_MONO) ? "UI_TONE_MONO"
-					: TONE_PIXEL == (toneBits & TONE_PIXEL) ? "UI_TONE_PIXEL"
-					: TONE_NEGA == (toneBits & TONE_NEGA) ? "UI_TONE_NEGA"
-					: TONE_SEPIA == (toneBits & TONE_SEPIA) ? "UI_TONE_SEPIA"
-					: TONE_GRAYSCALE == (toneBits & TONE_GRAYSCALE) ? "UI_TONE_GRAYSCALE"
-					: "UI_TONE_OFF"
-				);
-
-				// Bits for color effect.
-				int colorBits = identifier >> COLOR_SHIFT;
-				mat.EnableKeyword(
-					COLOR_SUB == (colorBits & COLOR_SUB) ? "UI_COLOR_SUB"
-					: COLOR_ADD == (colorBits & COLOR_ADD) ? "UI_COLOR_ADD"
-					: COLOR_SET == (colorBits & COLOR_SET) ? "UI_COLOR_SET"
-					: "UI_COLOR_OFF"
-				);
-
-				// Bits for blur effect.
-				int blurBits = identifier >> BLUR_SHIFT;
-				mat.EnableKeyword(
-					BLUR_DETAIL == (blurBits & BLUR_DETAIL) ? "UI_BLUR_DETAIL"
-					: BLUR_MEDIUM == (blurBits & BLUR_MEDIUM) ? "UI_BLUR_MEDIUM"
-					: BLUR_FAST == (blurBits & BLUR_FAST) ? "UI_BLUR_FAST"
-					: "UI_BLUR_OFF"
-				);
-
-				mat.name += identifier.ToString();
-				materials[identifier] = mat;
-			}
-			return materials[identifier];
 		}
 
 		/// <summary>

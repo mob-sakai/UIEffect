@@ -1,4 +1,5 @@
-﻿using UnityEditorInternal;
+﻿using System.IO;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,13 +19,25 @@ namespace UnityEditor.UI
 		/// <summary>
 		/// Implement this function to make a custom inspector.
 		/// </summary>
-		public static void DrawEffectProperties(SerializedObject serializedObject)
+		public static void DrawEffectProperties(string shaderName, SerializedObject serializedObject)
 		{
+			bool changed = false;
+
+			//================
+			// Effect material.
+			//================
+			var spMaterial = serializedObject.FindProperty("m_EffectMaterial");
+			EditorGUI.BeginDisabledGroup(true);
+			EditorGUILayout.PropertyField(spMaterial);
+			EditorGUI.EndDisabledGroup();
+
 			//================
 			// Tone setting.
 			//================
 			var spToneMode = serializedObject.FindProperty("m_ToneMode");
+			EditorGUI.BeginChangeCheck();
 			EditorGUILayout.PropertyField(spToneMode);
+			changed |= EditorGUI.EndChangeCheck();
 
 			// When tone is enable, show parameters.
 			if (spToneMode.intValue != (int)UIEffect.ToneMode.None)
@@ -38,7 +51,9 @@ namespace UnityEditor.UI
 			// Color setting.
 			//================
 			var spColorMode = serializedObject.FindProperty("m_ColorMode");
+			EditorGUI.BeginChangeCheck();
 			EditorGUILayout.PropertyField(spColorMode);
+			changed |= EditorGUI.EndChangeCheck();
 
 			// When color is enable, show parameters.
 			if (spColorMode.intValue != (int)UIEffect.ColorMode.None)
@@ -52,7 +67,9 @@ namespace UnityEditor.UI
 			// Blur setting.
 			//================
 			var spBlurMode = serializedObject.FindProperty("m_BlurMode");
+			EditorGUI.BeginChangeCheck();
 			EditorGUILayout.PropertyField(spBlurMode);
+			changed |= EditorGUI.EndChangeCheck();
 
 			// When blur is enable, show parameters.
 			if (spBlurMode.intValue != (int)UIEffect.BlurMode.None)
@@ -61,6 +78,46 @@ namespace UnityEditor.UI
 				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Blur"));
 				EditorGUI.indentLevel--;
 			}
+
+			// Set effect material.
+			if (!serializedObject.isEditingMultipleObjects && spToneMode.intValue == 0 && spColorMode.intValue == 0 && spBlurMode.intValue == 0)
+			{
+				spMaterial.objectReferenceValue = null;
+			}
+			else if (changed || !serializedObject.isEditingMultipleObjects)
+			{
+				spMaterial.objectReferenceValue = UIEffect.GetMaterial(Shader.Find(shaderName),
+					(UIEffect.ToneMode)spToneMode.intValue,
+					(UIEffect.ColorMode)spColorMode.intValue,
+					(UIEffect.BlurMode)spBlurMode.intValue
+				);
+			}
+		}
+
+		public static Material GetOrCreateMaterial(Shader shader, UIEffect.ToneMode tone, UIEffect.ColorMode color, UIEffect.BlurMode blur)
+		{
+			Material mat = UIEffect.GetMaterial(shader, tone, color, blur);
+			if (!mat)
+			{
+				mat = new Material(shader);
+
+				if (0 < tone)
+					mat.EnableKeyword("UI_TONE_" + tone.ToString().ToUpper());
+				if (0 < color)
+					mat.EnableKeyword("UI_COLOR_" + color.ToString().ToUpper());
+				if (0 < blur)
+					mat.EnableKeyword("UI_BLUR_" + blur.ToString().ToUpper());
+
+				mat.name = Path.GetFileName(shader.name)
+				+ (0 < tone ? "-" + tone : "")
+				+ (0 < color ? "-" + color : "")
+				+ (0 < blur ? "-" + blur : "");
+				mat.hideFlags = HideFlags.NotEditable;
+
+				Directory.CreateDirectory("Assets/UIEffect/Materials");
+				AssetDatabase.CreateAsset(mat, "Assets/UIEffect/Materials/" + mat.name + ".mat");
+			}
+			return mat;
 		}
 
 		void OnEnable()
@@ -129,7 +186,7 @@ namespace UnityEditor.UI
 		public override void OnInspectorGUI()
 		{
 			serializedObject.Update();
-			DrawEffectProperties(serializedObject);
+			DrawEffectProperties(UIEffect.shaderName, serializedObject);
 
 			//================
 			// Shadow setting.
