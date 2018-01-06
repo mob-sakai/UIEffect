@@ -29,6 +29,8 @@ Easy to use effects for uGUI. Supports following effects.
 ![image](https://user-images.githubusercontent.com/12690315/34552373-600fdab2-f164-11e7-8565-21c15af92a93.png)
 * Capture image with effect, like post effect  
 ![image](https://user-images.githubusercontent.com/12690315/34619147-868cb36a-f284-11e7-8122-b924ff09077f.gif)
+* Dialog with captured image effect.  
+![image](https://user-images.githubusercontent.com/12690315/34619468-97e3c134-f285-11e7-90b2-3a75bde13911.gif)
 
 
 
@@ -81,7 +83,7 @@ Please enable `TexCoord1` to use UIEffect.
 
 ## Demo
 
-[WebGL Demo](https://developer.cloud.unity3d.com/share/-y4XQpqcZm/webgl/)
+[WebGL Demo](https://developer.cloud.unity3d.com/share/b18LwIciWX/webgl/)
 
 * Effect sample
 * Transition
@@ -92,6 +94,22 @@ Please enable `TexCoord1` to use UIEffect.
 
 
 ## Release Notes
+
+### ver.1.4.0
+
+* Changed: ToneMode, ColorMode, BlurMode can be changed only in editor.
+* Changed: Cutoff's level is reversed.
+* Feature: Exclude unused shader variant from build.
+* Add: Add many materials for shader variant, but exclude unused materials from build.  
+Build report of demo project is as following.
+
+|  | ver.1.3.0 | ver.1.4.0 |
+|--|-----------|-----------|
+| UI-Effect.shader | All 112 variants, 170.7 kb | 21 variants, 31.4 kb |
+| UI-EffectCapturedImage.shader | All 80 variants, 49.0 kb | 2 variants, 7.3 kb |
+| Materials in build | Instantiate on play, 0 kb | 23 items, about 5.0 kb |
+| Total | 219.7 kb | 43.7 kb |
+
 
 ### ver.1.3.0
 
