@@ -3,6 +3,8 @@ UIEffect
 
 ![image](https://user-images.githubusercontent.com/12690315/34617503-054e958e-f27f-11e7-89d5-9cced222883a.png)
 
+[WebGL Demo](https://developer.cloud.unity3d.com/share/WyQetw3p-X/webgl/)
+
 Easy to use effects for uGUI. Supports following effects.
 
 * Grayscale tone
@@ -29,7 +31,7 @@ Easy to use effects for uGUI. Supports following effects.
 ![image](https://user-images.githubusercontent.com/12690315/34552373-600fdab2-f164-11e7-8565-21c15af92a93.png)
 * Capture image with effect, like post effect  
 ![image](https://user-images.githubusercontent.com/12690315/34619147-868cb36a-f284-11e7-8122-b924ff09077f.gif)
-* Dialog with captured image effect.  
+* Dialog with captured image effect  
 ![image](https://user-images.githubusercontent.com/12690315/34619468-97e3c134-f285-11e7-90b2-3a75bde13911.gif)
 
 
@@ -66,7 +68,8 @@ This effect is non-realtime, light-weight, less-camera, blit only once, but effe
 * Process effect only once after `UIEffectCapturedImage.Capture`.
 * Using reduction buffer, keep used memory size small and keep rendering load are small.
 * When GameObjects with motion are on the screen, a result texture may be stirred.
-* You can overlay and display like as: [Screen] | [UIEffectCapturedImage] | [Dialog A] | [UIEffectCapturedImage] | [Dialog B]. See also demo.
+* You can overlay and display like as: [Screen] | [UIEffectCapturedImage] | [Dialog A] | [UIEffectCapturedImage] | [Dialog B].  
+See also [WebGL Demo](https://developer.cloud.unity3d.com/share/WyQetw3p-X/webgl/).
 
 
 
@@ -83,7 +86,7 @@ Please enable `TexCoord1` to use UIEffect.
 
 ## Demo
 
-[WebGL Demo](https://developer.cloud.unity3d.com/share/b18LwIciWX/webgl/)
+[WebGL Demo](https://developer.cloud.unity3d.com/share/WyQetw3p-X/webgl/)
 
 * Effect sample
 * Transition
@@ -94,6 +97,10 @@ Please enable `TexCoord1` to use UIEffect.
 
 
 ## Release Notes
+
+### ver.1.4.1
+
+* Fixed: Demo link in `readme.md` is broken.
 
 ### ver.1.4.0
 
