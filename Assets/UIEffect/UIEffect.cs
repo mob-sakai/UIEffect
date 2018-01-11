@@ -71,6 +71,7 @@ namespace UnityEngine.UI
 			Pixel,
 			Mono,
 			Cutoff,
+			Hue,
 		}
 
 		/// <summary>

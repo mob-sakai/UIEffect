@@ -26,7 +26,7 @@ Shader "UI/Hidden/UI-EffectCapture"
 			#include "UnityCG.cginc"
 			
 			// vvvv [For UIEffect] vvvv : Define keyword and include.
-			#pragma shader_feature __ UI_TONE_GRAYSCALE UI_TONE_SEPIA UI_TONE_NEGA UI_TONE_PIXEL
+			#pragma shader_feature __ UI_TONE_GRAYSCALE UI_TONE_SEPIA UI_TONE_NEGA UI_TONE_PIXEL UI_TONE_HUE
 			#pragma shader_feature __ UI_COLOR_ADD UI_COLOR_SUB UI_COLOR_SET
 			#pragma shader_feature __ UI_BLUR_FAST UI_BLUR_MEDIUM UI_BLUR_DETAIL
 			#include "UI-Effect.cginc"
@@ -47,7 +47,7 @@ Shader "UI/Hidden/UI-EffectCapture"
 			}
 
 			sampler2D _MainTex;
-			half2 _EffectFactor;
+			half3 _EffectFactor;
 			fixed4 _ColorFactor;
 
 			fixed4 frag(v2f_img IN) : SV_Target
@@ -58,12 +58,14 @@ Shader "UI/Hidden/UI-EffectCapture"
 				#endif
 				
 				#if defined (UI_BLUR)
-				half4 color = Tex2DBlurring(_MainTex, IN.uv, _EffectFactor.y);
+				half4 color = Tex2DBlurring(_MainTex, IN.uv, _EffectFactor.z);
 				#else
 				half4 color = tex2D(_MainTex, IN.uv);
 				#endif
-				
-				#if defined (UI_TONE)
+
+				#if UI_TONE_HUE
+				color.rgb = shift_hue(color.rgb, _EffectFactor.x, _EffectFactor.y);
+				#elif defined (UI_TONE)
 				color = ApplyToneEffect(color, _EffectFactor.x);	// Tone effect.
 				#endif
 				

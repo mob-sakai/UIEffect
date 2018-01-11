@@ -60,7 +60,7 @@ Shader "UI/Hidden/UI-Effect"
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
 
 			// vvvv [For UIEffect] vvvv : Define keyword and include.
-			#pragma shader_feature __ UI_TONE_GRAYSCALE UI_TONE_SEPIA UI_TONE_NEGA UI_TONE_PIXEL UI_TONE_MONO UI_TONE_CUTOFF 
+			#pragma shader_feature __ UI_TONE_GRAYSCALE UI_TONE_SEPIA UI_TONE_NEGA UI_TONE_PIXEL UI_TONE_MONO UI_TONE_CUTOFF UI_TONE_HUE 
 			#pragma shader_feature __ UI_COLOR_ADD UI_COLOR_SUB UI_COLOR_SET
 			#pragma shader_feature __ UI_BLUR_FAST UI_BLUR_MEDIUM UI_BLUR_DETAIL
 			#include "UI-Effect.cginc"
@@ -130,7 +130,12 @@ Shader "UI/Hidden/UI-Effect"
 				// vvvv [For UIEffect] vvvv : Calculate effect parameter.
 				#if defined (UI_TONE) || defined (UI_BLUR)
 				OUT.effectFactor = UnpackToVec3(IN.uv1.x);
-				OUT.effectFactor.y = OUT.effectFactor.z / 4;
+				#if UI_TONE_HUE
+				OUT.effectFactor.y = sin(OUT.effectFactor.x*3.14159265359*2);
+				OUT.effectFactor.x = cos(OUT.effectFactor.x*3.14159265359*2);
+				#endif
+
+				OUT.effectFactor.z = OUT.effectFactor.z / 4;
 				#endif
 				
 				#if defined (UI_COLOR)
@@ -151,7 +156,7 @@ Shader "UI/Hidden/UI-Effect"
 				#endif
 
 				#if defined (UI_BLUR)
-				half4 color = (Tex2DBlurring(_MainTex, IN.texcoord, IN.effectFactor.y) + _TextureSampleAdd) * IN.color;
+				half4 color = (Tex2DBlurring(_MainTex, IN.texcoord, IN.effectFactor.z) + _TextureSampleAdd) * IN.color;
 				#else
 				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
 				#endif
@@ -166,6 +171,8 @@ Shader "UI/Hidden/UI-Effect"
 				#if UI_TONE_MONO
 				color.rgb = IN.color.rgb;
 				color.a = color.a * tex2D(_MainTex, IN.texcoord).a + IN.effectFactor.x * 2 - 1;
+				#elif UI_TONE_HUE
+				color.rgb = shift_hue(color.rgb, IN.effectFactor.x, IN.effectFactor.y);
 				#elif defined (UI_TONE) & !UI_TONE_CUTOFF
 				color = ApplyToneEffect(color, IN.effectFactor.x);	// Tone effect.
 				#endif

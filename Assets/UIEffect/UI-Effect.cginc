@@ -6,7 +6,7 @@
 //################################
 #define PACKER_STEP 64
 
-#if UI_TONE_GRAYSCALE | UI_TONE_SEPIA | UI_TONE_NEGA | UI_TONE_PIXEL | UI_TONE_MONO | UI_TONE_CUTOFF
+#if UI_TONE_GRAYSCALE | UI_TONE_SEPIA | UI_TONE_NEGA | UI_TONE_PIXEL | UI_TONE_MONO | UI_TONE_CUTOFF | UI_TONE_HUE
 #define UI_TONE
 #endif
 
@@ -116,6 +116,24 @@ fixed4 Tex2DBlurring(sampler2D tex, half2 uv, half blur)
 //################################
 // Tone effect
 //################################
+fixed3 shift_hue(fixed3 RGB, half VSU, half VSW)
+{
+	fixed3 RESULT;
+	RESULT.x = (0.299 + 0.701*VSU + 0.168*VSW)*RGB.x
+		+ (0.587 - 0.587*VSU + 0.330*VSW)*RGB.y
+		+ (0.114 - 0.114*VSU - 0.497*VSW)*RGB.z;
+
+	RESULT.y = (0.299 - 0.299*VSU - 0.328*VSW)*RGB.x
+		+ (0.587 + 0.413*VSU + 0.035*VSW)*RGB.y
+		+ (0.114 - 0.114*VSU + 0.292*VSW)*RGB.z;
+
+	RESULT.z = (0.299 - 0.3*VSU + 1.25*VSW)*RGB.x
+		+ (0.587 - 0.588*VSU - 1.05*VSW)*RGB.y
+		+ (0.114 + 0.886*VSU - 0.203*VSW)*RGB.z;
+
+	return (RESULT);
+}
+
 // Apply tone effect.
 fixed4 ApplyToneEffect(fixed4 color, fixed factor)
 {

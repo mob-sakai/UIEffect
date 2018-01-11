@@ -183,7 +183,11 @@ namespace UnityEngine.UI
 				_buffer.Blit(BuiltinRenderTextureType.CurrentActive, s_CopyId);
 
 				// Set properties.
-				_buffer.SetGlobalVector("_EffectFactor", new Vector4(toneLevel, blur / w));
+				if(toneMode == UIEffect.ToneMode.Hue)
+					_buffer.SetGlobalVector("_EffectFactor", new Vector4(Mathf.Cos(toneLevel* Mathf.PI * 2), Mathf.Sin(toneLevel * Mathf.PI * 2), blur / w));
+				else
+					_buffer.SetGlobalVector("_EffectFactor", new Vector4(toneLevel, 0, blur / w));
+
 				_buffer.SetGlobalVector("_ColorFactor", new Vector4(effectColor.r, effectColor.g, effectColor.b, effectColor.a));
 
 				// Blit without effect.
