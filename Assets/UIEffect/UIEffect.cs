@@ -329,8 +329,12 @@ namespace UnityEngine.UI
 
 		public void OnAfterDeserialize()
 		{
+			var obj = this;
 			EditorApplication.delayCall += () =>
 			{
+				if (!obj)
+					return;
+
 				var old = m_EffectMaterial;
 				m_EffectMaterial = GetMaterial(Shader.Find(shaderName), toneMode, colorMode, blurMode);
 				if (old != m_EffectMaterial)
