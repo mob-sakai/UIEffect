@@ -98,6 +98,10 @@ Please enable `TexCoord1` to use UIEffect.
 
 ## Release Notes
 
+### ver.1.4.2
+
+* Fixed: Error has occur on after deserialize.
+
 ### ver.1.4.1
 
 * Fixed: Demo link in `readme.md` is broken.
