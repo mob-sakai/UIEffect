@@ -171,7 +171,7 @@ Shader "UI/Hidden/UI-Effect"
 				#endif
 
 				#if defined (UI_COLOR)
-				color = ApplyColorEffect(color, IN.colorFactor);	// Color effect.
+				color = ApplyColorEffect(color, IN.colorFactor) * IN.color;	// Color effect.
 				#endif
 
 				return color;
