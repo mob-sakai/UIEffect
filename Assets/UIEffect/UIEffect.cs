@@ -94,6 +94,7 @@ namespace UnityEngine.UI
 			Shadow,
 			Outline,
 			Outline8,
+			Shadow3,
 		}
 
 		/// <summary>
@@ -384,8 +385,15 @@ namespace UnityEngine.UI
 			// Append Shadow.
 			ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
 
+			// Append Shadow3.
+			if (ShadowMode.Shadow3 == mode)
+			{
+				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, 0, factor, color, useGraphicAlpha);
+				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, 0, effectDistance.y, factor, color, useGraphicAlpha);
+			}
+
 			// Append Outline.
-			if (ShadowMode.Outline <= mode)
+			else if (ShadowMode.Outline == mode)
 			{
 				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
 				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
@@ -393,8 +401,11 @@ namespace UnityEngine.UI
 			}
 
 			// Append Outline8.
-			if (ShadowMode.Outline8 <= mode)
+			else if (ShadowMode.Outline8 == mode)
 			{
+				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
+				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
+				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
 				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -effectDistance.x, 0, factor, color, useGraphicAlpha);
 				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, 0, -effectDistance.y, factor, color, useGraphicAlpha);
 				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, 0, factor, color, useGraphicAlpha);
