@@ -98,9 +98,13 @@ Please enable `TexCoord1` to use UIEffect.
 
 ## Release Notes
 
+### ver.1.4.3
+
+* Fixed: Color effect is incorrect. [#19](https://github.com/mob-sakai/UIEffect/issues/19)
+
 ### ver.1.4.2
 
-* Fixed: Error has occur on after deserialize.
+* Fixed: Error has occur on after deserialize. [#16](https://github.com/mob-sakai/UIEffect/issues/16)
 
 ### ver.1.4.1
 
