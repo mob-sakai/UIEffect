@@ -1,31 +1,40 @@
 UIEffect
 ===
 
-![image](https://user-images.githubusercontent.com/12690315/34617503-054e958e-f27f-11e7-89d5-9cced222883a.png)
-
-[WebGL Demo](https://developer.cloud.unity3d.com/share/WyQetw3p-X/webgl/)
+![image](https://user-images.githubusercontent.com/12690315/34973050-c7f3b262-fac8-11e7-8feb-64b656190532.png)
 
 Easy to use effects for uGUI. Supports following effects.
 
-* Grayscale tone
+* Grayscale
 * Sepia tone
 * Nega tone
 * Pixelation
+* Hue shift
 * Cutoff (alpha-based)
 * Mono (alpha-based)
-* Color setting
+* Color override
 * Color additive
 * Color subtract
 * Blur fast(3x4)
 * Blur medium(6x4)
 * Blur detail(6x8)
+* Shadow with effect
+    * Shadow
+    * Shadow3
+    * Outline
+    * Outline8
+* Gradient vertex color
+    * Horizontal
+    * Vertical
+    * Angle
+    * Diagonal
 
 
 #### And, more features!
 
-* Animation  
-![1 -06-2018 01-21-15](https://user-images.githubusercontent.com/12690315/34617750-cf2c9464-f27f-11e7-8ee9-e6be3b209943.gif)
-* Use for transition  
+* Control effect parameter with Animation  
+![image](https://user-images.githubusercontent.com/12690315/34617750-cf2c9464-f27f-11e7-8ee9-e6be3b209943.gif)
+* Use for screen transition  
 ![image](https://user-images.githubusercontent.com/12690315/34618554-71a32e40-f282-11e7-8b78-6948c50c6b58.gif)
 * Multiple shadow effect to reduce rendering vertices  
 ![image](https://user-images.githubusercontent.com/12690315/34552373-600fdab2-f164-11e7-8565-21c15af92a93.png)
@@ -33,6 +42,9 @@ Easy to use effects for uGUI. Supports following effects.
 ![image](https://user-images.githubusercontent.com/12690315/34619147-868cb36a-f284-11e7-8122-b924ff09077f.gif)
 * Dialog with captured image effect  
 ![image](https://user-images.githubusercontent.com/12690315/34619468-97e3c134-f285-11e7-90b2-3a75bde13911.gif)
+* Change vertex color as gradient, with rotation, offset, color correction  
+![image](https://user-images.githubusercontent.com/12690315/34931353-b1824df2-fa11-11e7-9dda-18aba10a8607.gif)
+![image](https://user-images.githubusercontent.com/12690315/34930676-000c41d4-fa0e-11e7-825b-d5a1e757fea8.png)
 
 
 
@@ -47,7 +59,7 @@ Easy to use effects for uGUI. Supports following effects.
 
 ## Usage
 
-1. Download [UIEffect.unitypackage](https://github.com/mob-sakai/UIEffect/raw/master/UIEffect.unitypackage) and install to your project.
+1. Download UIEffect.unitypackage from [Releases](https://github.com/mob-sakai/UIEffect/releases) and install to your project.
 1. Import the package into your Unity project. Select `Import Package > Custom Package` from the `Assets` menu.
 1. Add `UIEffect` component to UI element (Image, RawImage, Text, etc...) from `Add Component` in inspector.
 1. Choose effect type and adjust values in inspector.  
@@ -56,12 +68,13 @@ Easy to use effects for uGUI. Supports following effects.
 
 
 
+## Development Note
 
-## UIEffect for CapturedImage
+### How does UIEffectCapturedImage work?
 
 ![image](https://user-images.githubusercontent.com/12690315/34619147-868cb36a-f284-11e7-8122-b924ff09077f.gif)
 
-`UIEffectCapturedImage` is like post effects, but it only provides effects on the rendered result (= captured image) of a frame.
+`UIEffectCapturedImage` is similar to post effect, but uses `CommandBuffer` to give effect only on the rendering result (= captured image) of a specific frame.
 This effect is non-realtime, light-weight, less-camera, blit only once, but effective.
 
 * Camera for processing effect is unnecessary.
@@ -70,6 +83,32 @@ This effect is non-realtime, light-weight, less-camera, blit only once, but effe
 * When GameObjects with motion are on the screen, a result texture may be stirred.
 * You can overlay and display like as: [Screen] | [UIEffectCapturedImage] | [Dialog A] | [UIEffectCapturedImage] | [Dialog B].  
 See also [WebGL Demo](https://developer.cloud.unity3d.com/share/WyQetw3p-X/webgl/).
+
+
+
+
+## Why is UIEffect lightweight?
+
+* UIEffect pre-generates material from a combination of effects. This has the following benefits.
+    * Draw call batching If possible, draw calls will decrease.
+    * Since only the required material and shader variants are included in the build, the build size will be smaller.
+
+
+
+
+## How to control effect parameters for uGUI element WITHOUT MaterialPropertyBlock?
+
+* In general, you can use [MaterialPropertyBlock](https://docs.unity3d.com/ScriptReference/MaterialPropertyBlock.html) for renderers to control minor changes in the material without different batches.
+* However, changing the [MaterialPropertyBlock](https://docs.unity3d.com/ScriptReference/MaterialPropertyBlock.html) of the uGUI element from the script will cause different batches and draw calls to increase.
+* So UIEffect encodes multiple effect parameters to UV1 channel with [IMeshModifier](https://docs.unity3d.com/ScriptReference/UI.IMeshModifier.html).
+* Up to four [0-1] parameters are packed in one float.
+* 6 bit has 64 steps and 12 bit has 4096 steps.
+* Effect parameters are low precision, but sufficient.
+
+| uv1 | - | - | - | - |
+|-|-|-|-|-|
+| x(32bit float) | Tone[0-1] (6bit) | Empty (6bit) | Blur[0-1] (12bit) | - |
+| y(32bit float) | Red[0-1] (6bit) | Green[0-1] (6bit) | Blue[0-1] (6bit) | Alpha[0-1] (6bit) |
 
 
 
@@ -86,7 +125,7 @@ Please enable `TexCoord1` to use UIEffect.
 
 ## Demo
 
-[WebGL Demo](https://developer.cloud.unity3d.com/share/WyQetw3p-X/webgl/)
+[WebGL Demo](https://developer.cloud.unity3d.com/share/WJTY06hfG7/webgl/)
 
 * Effect sample
 * Transition
@@ -97,6 +136,31 @@ Please enable `TexCoord1` to use UIEffect.
 
 
 ## Release Notes
+
+### ver.1.5.0
+
+* Feature: Add ToneMode `Hue Shift`.  
+![image](https://user-images.githubusercontent.com/12690315/34830409-18114e44-f727-11e7-849a-0d61a35f03ea.png)
+* Feature: Add ShadowMode `Shadow3`.  
+![image](https://user-images.githubusercontent.com/12690315/34930812-cb87dc24-fa0e-11e7-90a7-0013e2ba55d1.png)
+* Feature: Add `UIGradient` component to change vertex color as gradient.
+    * Gradient direction
+        * Horizontal
+        * Vertical
+        * Angle
+        * Diagonal
+    * Rotation and offset
+    * Text gradient style
+        * Rect
+        * Fit
+        * Split
+    * Color space
+        * Uninitialized
+        * Gammma
+        * Linear
+    * Ignore aspect ratio  
+    ![image](https://user-images.githubusercontent.com/12690315/34930676-000c41d4-fa0e-11e7-825b-d5a1e757fea8.png)
+
 
 ### ver.1.4.4
 
@@ -109,7 +173,7 @@ Please enable `TexCoord1` to use UIEffect.
 
 
 ### ver.1.4.2
-
+ 
 * Fixed: Error has occur on after deserialize. [#16](https://github.com/mob-sakai/UIEffect/issues/16)
 
 
@@ -130,8 +194,8 @@ Build report of demo project is as following.
 |--|-----------|-----------|
 | UI-Effect.shader | All 112 variants, 170.7 kb | 21 variants, 31.4 kb |
 | UI-EffectCapturedImage.shader | All 80 variants, 49.0 kb | 2 variants, 7.3 kb |
-| Materials in build | Instantiate on play, 0 kb | 23 items, about 5.0 kb |
-| Total | 219.7 kb | 43.7 kb |
+| Materials in build | Instantiate on play, 0 kb | 23 items, about 6.9 kb |
+| Total | 219.7 kb | 45.6 kb |
 
 
 ### ver.1.3.0
@@ -205,4 +269,6 @@ Build report of demo project is as following.
 ## See Also
 
 * GitHub Page : https://github.com/mob-sakai/UIEffect
+* Releases : https://github.com/mob-sakai/UIEffect/releases
 * Issue tracker : https://github.com/mob-sakai/UIEffect/issues
+* Current Project : https://github.com/mob-sakai/UIEffect/projects/1
