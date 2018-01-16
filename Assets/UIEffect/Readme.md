@@ -98,17 +98,25 @@ Please enable `TexCoord1` to use UIEffect.
 
 ## Release Notes
 
+### ver.1.4.4
+
+* Fixed: Error has occur on edit prefab. [#27](https://github.com/mob-sakai/UIEffect/issues/27)
+
+
 ### ver.1.4.3
 
 * Fixed: Color effect is incorrect. [#19](https://github.com/mob-sakai/UIEffect/issues/19)
+
 
 ### ver.1.4.2
 
 * Fixed: Error has occur on after deserialize. [#16](https://github.com/mob-sakai/UIEffect/issues/16)
 
+
 ### ver.1.4.1
 
 * Fixed: Demo link in `readme.md` is broken.
+
 
 ### ver.1.4.0
 

@@ -334,17 +334,16 @@ namespace UnityEngine.UI
 			var obj = this;
 			EditorApplication.delayCall += () =>
 			{
-				if (!obj)
+				if (Application.isPlaying || !obj)
 					return;
-
-				var old = m_EffectMaterial;
-				m_EffectMaterial = GetMaterial(Shader.Find(shaderName), toneMode, colorMode, blurMode);
-				if (old != m_EffectMaterial)
-				{
-					EditorUtility.SetDirty(this);
-					EditorApplication.delayCall +=AssetDatabase.SaveAssets;
-				}
-				graphic.material = m_EffectMaterial;
+				
+				var mat = GetMaterial(Shader.Find(shaderName), toneMode, colorMode, blurMode);
+				if(m_EffectMaterial == mat)
+					return;
+					
+				graphic.material = m_EffectMaterial = mat;
+				EditorUtility.SetDirty(this);
+				EditorApplication.delayCall +=AssetDatabase.SaveAssets;
 			};
 		}
 

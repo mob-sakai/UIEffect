@@ -112,7 +112,7 @@ namespace UnityEditor.UI
 				+ (0 < tone ? "-" + tone : "")
 				+ (0 < color ? "-" + color : "")
 				+ (0 < blur ? "-" + blur : "");
-				mat.hideFlags = HideFlags.NotEditable;
+				//mat.hideFlags = HideFlags.NotEditable;
 
 				Directory.CreateDirectory("Assets/UIEffect/Materials");
 				AssetDatabase.CreateAsset(mat, "Assets/UIEffect/Materials/" + mat.name + ".mat");
@@ -217,14 +217,17 @@ namespace UnityEditor.UI
 			serializedObject.ApplyModifiedProperties();
 
 #if UNITY_5_6_OR_NEWER
-			var canvas = (target as UIEffect).graphic.canvas;
-			if( 0 == (canvas.additionalShaderChannels & AdditionalCanvasShaderChannels.TexCoord1))
+			if((target as UIEffect).graphic)
 			{
-				using (new GUILayout.HorizontalScope())
+				var canvas = (target as UIEffect).graphic.canvas;
+				if( canvas && 0 == (canvas.additionalShaderChannels & AdditionalCanvasShaderChannels.TexCoord1))
 				{
-					EditorGUILayout.HelpBox("[Unity5.6+] Enable TexCoord1 of Canvas.additionalShaderChannels to use UIEffect.", MessageType.Warning);
-					if (GUILayout.Button("Fix"))
-						canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord1;
+					using (new GUILayout.HorizontalScope())
+					{
+						EditorGUILayout.HelpBox("[Unity5.6+] Enable TexCoord1 of Canvas.additionalShaderChannels to use UIEffect.", MessageType.Warning);
+						if (GUILayout.Button("Fix"))
+							canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord1;
+					}
 				}
 			}
 #endif
