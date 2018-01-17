@@ -132,11 +132,13 @@ Shader "UI/Hidden/UI-Effect"
 				// vvvv [For UIEffect] vvvv : Calculate effect parameter.
 				#if defined (UI_TONE) || defined (UI_BLUR)
 				OUT.effectFactor = UnpackToVec3(IN.uv1.x);
+				#endif
+
 				#if UI_TONE_HUE
 				OUT.effectFactor.y = sin(OUT.effectFactor.x*3.14159265359*2);
 				OUT.effectFactor.x = cos(OUT.effectFactor.x*3.14159265359*2);
-				#endif
-
+				#elif UI_TONE_PIXEL && UNITY_VERSION >= 540
+				OUT.effectFactor.xy = max(2, (1-OUT.effectFactor.x) * _MainTex_TexelSize.zw);
 				#endif
 				
 				#if defined (UI_COLOR)
@@ -150,7 +152,9 @@ Shader "UI/Hidden/UI-Effect"
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
-				#if UI_TONE_PIXEL
+				#if UI_TONE_PIXEL && UNITY_VERSION >= 540
+				IN.texcoord = round(IN.texcoord * IN.effectFactor.xy) / IN.effectFactor.xy;
+				#elif UI_TONE_PIXEL
 				float pixelRate = max(1,(1-IN.effectFactor.x) * 256);
 				IN.texcoord = round(IN.texcoord * pixelRate) / pixelRate;
 				#endif
