@@ -65,19 +65,19 @@ half3 UnpackToVec3(float value)
 //################################
 // Calculate blur effect.
 // Sample texture by blured uv, with bias.
-fixed4 Blur(sampler2D tex, half2 uv, half addUv, half bias)
+fixed4 Blur(sampler2D tex, half2 uv, half2 addUv, half bias)
 {
 	return 
 		(
-		tex2D(tex, uv + half2(addUv, addUv))
-		+ tex2D(tex, uv + half2(-addUv, addUv))
-		+ tex2D(tex, uv + half2(addUv, -addUv))
-		+ tex2D(tex, uv + half2(-addUv, -addUv))
+		tex2D(tex, uv + half2(addUv.x, addUv.y))
+		+ tex2D(tex, uv + half2(-addUv.x, addUv.y))
+		+ tex2D(tex, uv + half2(addUv.x, -addUv.y))
+		+ tex2D(tex, uv + half2(-addUv.x, -addUv.y))
 #if UI_BLUR_DETAIL
-		+ tex2D(tex, uv + half2(addUv, 0))
-		+ tex2D(tex, uv + half2(-addUv, 0))
-		+ tex2D(tex, uv + half2(0, addUv))
-		+ tex2D(tex, uv + half2(0, -addUv))
+		+ tex2D(tex, uv + half2(addUv.x, 0))
+		+ tex2D(tex, uv + half2(-addUv.x, 0))
+		+ tex2D(tex, uv + half2(0, addUv.y))
+		+ tex2D(tex, uv + half2(0, -addUv.y))
 		)
 		* bias / 2;
 #else
@@ -90,7 +90,7 @@ fixed4 Blur(sampler2D tex, half2 uv, half addUv, half bias)
 // * Fast: Sample texture with 3x4 blurring.
 // * Medium: Sample texture with 6x4 blurring.
 // * Detail: Sample texture with 6x8 blurring.
-fixed4 Tex2DBlurring(sampler2D tex, half2 uv, half blur)
+fixed4 Tex2DBlurring(sampler2D tex, half2 uv, half2 blur)
 {
 	half4 color = tex2D(tex, uv);
 

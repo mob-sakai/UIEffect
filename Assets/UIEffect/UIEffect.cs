@@ -30,7 +30,7 @@ namespace UnityEngine.UI
 			/// <summary>
 			/// How far is the blurring shadow from the graphic.
 			/// </summary>
-			[Range(0, 2)]
+			[Range(0, 1)]
 			public float shadowBlur = 0.25f;
 
 			/// <summary>
@@ -129,14 +129,14 @@ namespace UnityEngine.UI
 		/// </summary>
 		public float blur { get { return m_Blur; } set { m_Blur = Mathf.Clamp(value, 0, 2); SetDirty(); } }
 
-		[SerializeField][Range(0, 2)] float m_Blur = 0.25f;
+		[SerializeField][Range(0, 1)] float m_Blur = 0.25f;
 
 		/// <summary>
 		/// How far is the blurring shadow from the graphic.
 		/// </summary>
 		public float shadowBlur { get { return m_ShadowBlur; } set { m_ShadowBlur = Mathf.Clamp(value, 0, 2); SetDirty(); } }
 
-		[SerializeField][Range(0, 2)] float m_ShadowBlur = 0.25f;
+		[SerializeField][Range(0, 1)] float m_ShadowBlur = 0.25f;
 
 		/// <summary>
 		/// Shadow effect mode.
@@ -269,8 +269,8 @@ namespace UnityEngine.UI
 			{
 				// Pack some effect factors to 1 float.
 				Vector2 factor = new Vector2(
-									 PackToFloat(toneLevel, 0, blur / graphic.mainTexture.width * 4),
-									 PackToFloat(effectColor.r, effectColor.g, effectColor.b, effectColor.a)
+									PackToFloat(toneLevel, 0, blur),
+									PackToFloat(effectColor.r, effectColor.g, effectColor.b, effectColor.a)
 								 );
 
 				for (int i = 0; i < s_Verts.Count; i++)
@@ -295,11 +295,11 @@ namespace UnityEngine.UI
 				for (int i = additionalShadows.Count - 1; 0 <= i; i--)
 				{
 					AdditionalShadow shadow = additionalShadows[i];
-					ApplyShadow(s_Verts, ref start, ref end, shadow.shadowMode, toneLevel, shadow.shadowBlur / graphic.mainTexture.width * 4, shadow.effectDistance, shadow.shadowColor, shadow.useGraphicAlpha);
+					ApplyShadow(s_Verts, ref start, ref end, shadow.shadowMode, toneLevel, shadow.shadowBlur, shadow.effectDistance, shadow.shadowColor, shadow.useGraphicAlpha);
 				}
 
 				// Shadow.
-				ApplyShadow(s_Verts, ref start, ref end, shadowMode, toneLevel, shadowBlur / graphic.mainTexture.width * 4, effectDistance, shadowColor, useGraphicAlpha);
+				ApplyShadow(s_Verts, ref start, ref end, shadowStyle, toneLevel, shadowBlur, effectDistance, shadowColor, useGraphicAlpha);
 			}
 
 			vh.Clear();
