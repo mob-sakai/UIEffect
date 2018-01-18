@@ -175,8 +175,9 @@ namespace UnityEngine.UI
 				Material mat = effectMaterial;
 
 				_buffer = new CommandBuffer();
-				_buffer.name = mat.name;
-				_rt.name = mat.name;
+				_buffer.name =
+					_rt.name =
+						mat ? mat.name : "noeffect";
 
 				// Copy to temporary RT.
 				_buffer.GetTemporaryRT(s_CopyId, -1, -1, 0, FilterMode.Bilinear);
@@ -194,6 +195,7 @@ namespace UnityEngine.UI
 				if (!mat)
 				{
 					_buffer.Blit(s_CopyId, rtId);
+					_buffer.ReleaseTemporaryRT(s_CopyId);
 				}
 				// Blit with reduction buffer.
 				else if (m_DesamplingRate < m_ReductionRate)
