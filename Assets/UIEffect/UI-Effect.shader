@@ -131,7 +131,7 @@ Shader "UI/Hidden/UI-Effect"
 
 				// vvvv [For UIEffect] vvvv : Calculate effect parameter.
 				#if defined (UI_TONE) || defined (UI_BLUR)
-				OUT.effectFactor = UnpackToVec3(IN.uv1.x);
+				OUT.effectFactor = UnpackToVec4(IN.uv1.x);
 				#endif
 
 				#if UI_TONE_HUE

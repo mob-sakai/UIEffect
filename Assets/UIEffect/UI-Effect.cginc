@@ -40,26 +40,6 @@ fixed4 UnpackToVec4(float value)
     return color;
 }
 
-// Unpack float to low-precision [0-1] half3.
-// The z value is a little high precision.
-half3 UnpackToVec3(float value)
-{   
-	const int PRECISION = PACKER_STEP - 1;
-	const int PACKER_STEP_HIGH = PACKER_STEP * PACKER_STEP;
-	const int PRECISION_HIGH = PACKER_STEP_HIGH - 1;
-	half3 color;
-
-    color.x = (value % PACKER_STEP) / PRECISION;
-    value = floor(value / PACKER_STEP);
-
-    color.y = (value % PACKER_STEP) / PRECISION;
-    value = floor(value / PACKER_STEP);
-
-    color.z = (value % PACKER_STEP_HIGH) / (PRECISION_HIGH - 1);
-
-    return color;
-}
-
 //################################
 // Blur effect
 //################################

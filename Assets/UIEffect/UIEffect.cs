@@ -16,7 +16,7 @@ namespace UnityEngine.UI
 	[ExecuteInEditMode]
 	[RequireComponent(typeof(Graphic))]
 	[DisallowMultipleComponent]
-	public class UIEffect : MonoBehaviour, IMeshModifier
+	public class UIEffect : BaseMeshEffect
 #if UNITY_EDITOR
 		, ISerializationCallbackReceiver
 #endif
@@ -228,12 +228,6 @@ namespace UnityEngine.UI
 
 		[SerializeField] Material m_EffectMaterial;
 
-		/// <summary>
-		/// Graphic affected by the UIEffect.
-		/// </summary>
-		public Graphic graphic { get { if (m_Graphic == null) m_Graphic = GetComponent<Graphic>(); return m_Graphic; } }
-
-		Graphic m_Graphic;
 
 		/// <summary>
 		/// Additional Shadows.
@@ -249,32 +243,25 @@ namespace UnityEngine.UI
 		/// <summary>
 		/// This function is called when the object becomes enabled and active.
 		/// </summary>
-		protected virtual void OnEnable()
+		protected override void OnEnable()
 		{
-			SetDirty(true);
+			graphic.material = effectMaterial;
+			base.OnEnable();
 		}
 
 		/// <summary>
 		/// This function is called when the behaviour becomes disabled () or inactive.
 		/// </summary>
-		protected virtual void OnDisable()
+		protected override void OnDisable()
 		{
 			graphic.material = null;
-			SetDirty();
-		}
-
-		/// <summary>
-		/// Callback for when properties have been changed by animation.
-		/// </summary>
-		protected virtual void OnDidApplyAnimationProperties()
-		{
-			SetDirty(true);
+			base.OnDisable();
 		}
 
 		/// <summary>
 		/// Modifies the mesh.
 		/// </summary>
-		public virtual void ModifyMesh(VertexHelper vh)
+		public override void ModifyMesh(VertexHelper vh)
 		{
 			if (!isActiveAndEnabled)
 			{
@@ -290,7 +277,7 @@ namespace UnityEngine.UI
 			{
 				// Pack some effect factors to 1 float.
 				Vector2 factor = new Vector2(
-									PackToFloat(toneLevel, 0, blur),
+									PackToFloat(toneLevel, 0, blur, 0),
 									PackToFloat(effectColor.r, effectColor.g, effectColor.b, effectColor.a)
 								 );
 
@@ -329,22 +316,7 @@ namespace UnityEngine.UI
 			s_Verts.Clear();
 		}
 
-		/// <summary>
-		/// Modifies the mesh.
-		/// </summary>
-		[System.Obsolete("use IMeshModifier.ModifyMesh (VertexHelper verts) instead")]
-		public void ModifyMesh(Mesh mesh)
-		{
-		}
-
 #if UNITY_EDITOR
-		/// <summary>
-		/// This function is called when the script is loaded or a value is changed in the inspector (Called in the editor only).
-		/// </summary>
-		protected virtual void OnValidate()
-		{
-			SetDirty(true);
-		}
 
 		public void OnBeforeSerialize()
 		{
@@ -398,7 +370,7 @@ namespace UnityEngine.UI
 				return;
 
 			var factor = new Vector2(
-							 PackToFloat(toneLevel, 0, blur),
+							 PackToFloat(toneLevel, 0, blur, 0),
 							 PackToFloat(color.r, color.g, color.b, 1)
 						 );
 
@@ -472,15 +444,10 @@ namespace UnityEngine.UI
 		/// <summary>
 		/// Mark the UIEffect as dirty.
 		/// </summary>
-		/// <param name="isMaterialDirty">If set to true material dirty.</param>
-		void SetDirty(bool isMaterialDirty = false)
+		void SetDirty()
 		{
-			// Update material if needed.
-			if (isMaterialDirty)
-			{
-				graphic.material = effectMaterial;
-			}
-			graphic.SetVerticesDirty();
+			if(graphic)
+				graphic.SetVerticesDirty();
 		}
 
 		/// <summary>
@@ -492,21 +459,6 @@ namespace UnityEngine.UI
 			const int PRECISION = (1 << 6) - 1;
 			return (Mathf.FloorToInt(w * PRECISION) << 18)
 			+ (Mathf.FloorToInt(z * PRECISION) << 12)
-			+ (Mathf.FloorToInt(y * PRECISION) << 6)
-			+ Mathf.FloorToInt(x * PRECISION);
-		}
-
-		/// <summary>
-		/// Pack 3 low-precision [0-1] floats values to a float.
-		/// The x and y values [0-1] have 64 steps(6 bits).
-		/// The z value [0-1] is a little high precision(12 bits).
-		/// </summary>
-		static float PackToFloat(float x, float y, float z)
-		{
-			const int PRECISION = (1 << 6) - 1;
-			const int PRECISION_HIGH = (1 << 12) - 1;
-
-			return (Mathf.FloorToInt(z * PRECISION_HIGH) << 12)
 			+ (Mathf.FloorToInt(y * PRECISION) << 6)
 			+ Mathf.FloorToInt(x * PRECISION);
 		}
