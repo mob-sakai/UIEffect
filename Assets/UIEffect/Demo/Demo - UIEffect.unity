@@ -258,7 +258,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -466,7 +466,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -597,7 +597,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -773,7 +773,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -873,7 +873,7 @@ Animator:
   m_GameObject: {fileID: 71546336}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1edb2b7979e364afba561a955f4708ba, type: 2}
+  m_Controller: {fileID: 9100000, guid: e129a7bccac914fc0b15dab3c2395cd3, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -896,7 +896,7 @@ MonoBehaviour:
   m_ToneLevel: 0.531
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 5
   m_ColorMode: 0
   m_BlurMode: 0
@@ -1049,7 +1049,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 1
   m_ColorMode: 0
   m_BlurMode: 0
@@ -1193,7 +1193,7 @@ MonoBehaviour:
   m_ToneLevel: 0.75
   m_Blur: 0.75
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 1
@@ -1276,7 +1276,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 281272270}
-  m_RootOrder: 27
+  m_RootOrder: 26
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -1370,7 +1370,7 @@ MonoBehaviour:
   m_ToneLevel: 0.95
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 4
   m_ColorMode: 0
   m_BlurMode: 0
@@ -1550,7 +1550,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -1635,7 +1635,7 @@ RectTransform:
   - {fileID: 1299851536}
   - {fileID: 1533600033}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 15
+  m_RootOrder: 14
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -1741,7 +1741,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -1826,7 +1826,7 @@ RectTransform:
   - {fileID: 1006783756}
   - {fileID: 2109448120}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 16
+  m_RootOrder: 15
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -1932,7 +1932,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -2162,7 +2162,7 @@ Animator:
   m_GameObject: {fileID: 187644002}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1edb2b7979e364afba561a955f4708ba, type: 2}
+  m_Controller: {fileID: 9100000, guid: e129a7bccac914fc0b15dab3c2395cd3, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2185,7 +2185,7 @@ MonoBehaviour:
   m_ToneLevel: 0.5
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 6
   m_ColorMode: 1
   m_BlurMode: 0
@@ -2278,7 +2278,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -2381,7 +2381,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -2466,7 +2466,7 @@ RectTransform:
   - {fileID: 1436281684}
   - {fileID: 1512125626}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 22
+  m_RootOrder: 21
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -2572,7 +2572,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -2711,7 +2711,7 @@ MonoBehaviour:
   m_ToneLevel: 0.65
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 6
   m_ColorMode: 0
   m_BlurMode: 0
@@ -2838,7 +2838,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 5
   m_ColorMode: 0
   m_BlurMode: 0
@@ -2950,7 +2950,7 @@ MonoBehaviour:
   m_ToneLevel: 0.75
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 0
@@ -3073,10 +3073,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8b2ed11d675446c5a49da1ea296d490, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ToneLevel: 0.5
+  m_ToneLevel: 0.75
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 4
   m_ColorMode: 0
   m_BlurMode: 0
@@ -3202,7 +3202,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 1
-  m_ShadowMode: 4
+  m_ShadowStyle: 4
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 2
@@ -3289,7 +3289,7 @@ RectTransform:
   - {fileID: 1079241783}
   - {fileID: 2097561736}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -3416,7 +3416,7 @@ MonoBehaviour:
   m_ToneLevel: 0.5
   m_Blur: 0.5
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 2
@@ -3521,7 +3521,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -3624,7 +3624,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -3766,7 +3766,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.5
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 0
@@ -3892,7 +3892,7 @@ MonoBehaviour:
   m_ToneLevel: 0.5
   m_Blur: 0.5
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 3
@@ -3998,7 +3998,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -4089,7 +4089,6 @@ RectTransform:
   - {fileID: 595685184}
   - {fileID: 381429564}
   - {fileID: 2002886034}
-  - {fileID: 343392362}
   - {fileID: 1757664534}
   - {fileID: 1795102323}
   - {fileID: 226684853}
@@ -4254,7 +4253,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 1.5
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 3
@@ -4359,7 +4358,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -4462,7 +4461,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -4604,7 +4603,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -4793,7 +4792,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -4913,7 +4912,7 @@ MonoBehaviour:
   m_ToneLevel: 0.563
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 6
   m_ColorMode: 0
   m_BlurMode: 0
@@ -5006,7 +5005,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -5130,7 +5129,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 4
+  m_ShadowStyle: 4
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 0
@@ -5274,7 +5273,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -5350,57 +5349,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
---- !u!1 &343392361
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 224: {fileID: 343392362}
-  - 114: {fileID: 343392363}
-  m_Layer: 5
-  m_Name: Space
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &343392362
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 343392361}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 281272270}
-  m_RootOrder: 6
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &343392363
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 343392361}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1679637790, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: 100
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
 --- !u!1 &367268481
 GameObject:
   m_ObjectHideFlags: 0
@@ -5432,7 +5380,7 @@ RectTransform:
   - {fileID: 231989714}
   - {fileID: 372663983}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 23
+  m_RootOrder: 22
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -5684,7 +5632,7 @@ MonoBehaviour:
   m_ToneLevel: 0.75
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 2
@@ -5815,7 +5763,7 @@ MonoBehaviour:
   m_ToneLevel: 0.25
   m_Blur: 0.25
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 3
@@ -6158,7 +6106,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 1
   m_ColorMode: 2
   m_BlurMode: 0
@@ -6284,7 +6232,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.5
   m_ShadowBlur: 0
-  m_ShadowMode: 3
+  m_ShadowStyle: 3
   m_ToneMode: 1
   m_ColorMode: 1
   m_BlurMode: 0
@@ -6390,7 +6338,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -6534,7 +6482,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -6619,7 +6567,7 @@ MonoBehaviour:
   m_ToneLevel: 0.5
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 2
   m_ColorMode: 0
   m_BlurMode: 0
@@ -6763,7 +6711,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -6827,7 +6775,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -6948,10 +6896,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8b2ed11d675446c5a49da1ea296d490, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ToneLevel: 0.9
+  m_ToneLevel: 0.95
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 4
   m_ColorMode: 0
   m_BlurMode: 0
@@ -7074,10 +7022,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8b2ed11d675446c5a49da1ea296d490, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ToneLevel: 0.75
+  m_ToneLevel: 0.85
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 4
   m_ColorMode: 0
   m_BlurMode: 0
@@ -7221,7 +7169,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -7399,7 +7347,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -7520,7 +7468,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -7680,7 +7628,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -7933,7 +7881,7 @@ MonoBehaviour:
   m_ToneLevel: 0.75
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 1
+  m_ShadowStyle: 1
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 2
@@ -8079,7 +8027,7 @@ MonoBehaviour:
   m_ToneLevel: 0.85
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 4
   m_ColorMode: 1
   m_BlurMode: 0
@@ -8172,7 +8120,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -8275,7 +8223,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -8399,7 +8347,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 1
-  m_ShadowMode: 3
+  m_ShadowStyle: 3
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 2
@@ -8537,7 +8485,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -8658,10 +8606,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8b2ed11d675446c5a49da1ea296d490, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ToneLevel: 0.25
+  m_ToneLevel: 0.5
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 4
   m_ColorMode: 0
   m_BlurMode: 0
@@ -8963,7 +8911,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -9087,7 +9035,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 3
   m_BlurMode: 0
@@ -9444,7 +9392,7 @@ MonoBehaviour:
   m_ToneLevel: 0.5
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 7
   m_ColorMode: 0
   m_BlurMode: 0
@@ -9588,7 +9536,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -9744,7 +9692,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -9886,7 +9834,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -9984,7 +9932,7 @@ MonoBehaviour:
   m_ToneLevel: 0.25
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 6
   m_ColorMode: 1
   m_BlurMode: 0
@@ -10096,7 +10044,7 @@ MonoBehaviour:
   m_ToneLevel: 0.25
   m_Blur: 0.25
   m_ShadowBlur: 0
-  m_ShadowMode: 4
+  m_ShadowStyle: 4
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -10222,7 +10170,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 1
-  m_ShadowMode: 1
+  m_ShadowStyle: 1
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 2
@@ -10327,7 +10275,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -10451,7 +10399,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 1.5
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 1
@@ -10556,7 +10504,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -10693,7 +10641,7 @@ MonoBehaviour:
   m_ToneLevel: 0.25
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 5
   m_ColorMode: 0
   m_BlurMode: 0
@@ -10891,7 +10839,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -11072,7 +11020,7 @@ MonoBehaviour:
   m_ToneLevel: 0.5
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 3
   m_ColorMode: 0
   m_BlurMode: 0
@@ -11159,7 +11107,7 @@ RectTransform:
   - {fileID: 920692233}
   - {fileID: 1990445409}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 17
+  m_RootOrder: 16
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -11286,7 +11234,7 @@ MonoBehaviour:
   m_ToneLevel: 0.75
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 2
   m_ColorMode: 0
   m_BlurMode: 0
@@ -11391,7 +11339,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -11494,7 +11442,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -11618,7 +11566,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 2
   m_BlurMode: 0
@@ -11762,7 +11710,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -11860,7 +11808,7 @@ MonoBehaviour:
   m_ToneLevel: 0.75
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 5
   m_ColorMode: 0
   m_BlurMode: 0
@@ -11951,7 +11899,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -12054,7 +12002,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -12157,7 +12105,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -12261,7 +12209,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -12387,7 +12335,7 @@ MonoBehaviour:
   m_ToneLevel: 0.25
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 2
   m_BlurMode: 0
@@ -12492,7 +12440,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -12735,7 +12683,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -12837,7 +12785,7 @@ Animator:
   m_GameObject: {fileID: 900341460}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1edb2b7979e364afba561a955f4708ba, type: 2}
+  m_Controller: {fileID: 9100000, guid: e129a7bccac914fc0b15dab3c2395cd3, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -12877,7 +12825,7 @@ MonoBehaviour:
   m_ToneLevel: 0.938
   m_Blur: 0
   m_ShadowBlur: 1.41
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 4
   m_ColorMode: 0
   m_BlurMode: 0
@@ -12982,7 +12930,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -13124,7 +13072,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -13188,7 +13136,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -13291,7 +13239,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -13394,7 +13342,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -13536,7 +13484,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -13600,7 +13548,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -13685,7 +13633,7 @@ RectTransform:
   - {fileID: 781371154}
   - {fileID: 1189479420}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 21
+  m_RootOrder: 20
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -13812,7 +13760,7 @@ MonoBehaviour:
   m_ToneLevel: 0.5
   m_Blur: 0.5
   m_ShadowBlur: 0
-  m_ShadowMode: 4
+  m_ShadowStyle: 4
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 0
@@ -13938,7 +13886,7 @@ MonoBehaviour:
   m_ToneLevel: 0.75
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 3
+  m_ShadowStyle: 3
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 2
@@ -14051,7 +13999,7 @@ MonoBehaviour:
   m_ToneLevel: 0.25
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 1
   m_ColorMode: 0
   m_BlurMode: 0
@@ -14200,7 +14148,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 50857158}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.065136954
+  m_Size: 0.09809393
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -14292,7 +14240,7 @@ MonoBehaviour:
   m_ToneLevel: 0.75
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 1
   m_ColorMode: 0
   m_BlurMode: 0
@@ -14436,7 +14384,7 @@ MonoBehaviour:
   m_ToneLevel: 0.5
   m_Blur: 0.5
   m_ShadowBlur: 0
-  m_ShadowMode: 3
+  m_ShadowStyle: 3
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 0
@@ -14598,7 +14546,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -14724,7 +14672,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 1
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 3
@@ -14811,7 +14759,7 @@ RectTransform:
   - {fileID: 1679092646}
   - {fileID: 1297219626}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -14938,7 +14886,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 0
@@ -15261,7 +15209,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 2
   m_ColorMode: 0
   m_BlurMode: 0
@@ -15454,7 +15402,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -15596,7 +15544,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -15896,7 +15844,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -15999,7 +15947,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -16123,7 +16071,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 7
   m_ColorMode: 0
   m_BlurMode: 0
@@ -16228,7 +16176,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -16275,7 +16223,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0.25
+  m_Text: 0.5
 --- !u!222 &1068348003
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -16365,7 +16313,7 @@ MonoBehaviour:
   m_ToneLevel: 0.5
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 5
   m_ColorMode: 0
   m_BlurMode: 0
@@ -16438,7 +16386,7 @@ RectTransform:
   - {fileID: 1830688165}
   - {fileID: 1288257783}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -16583,7 +16531,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -16647,7 +16595,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -16771,7 +16719,7 @@ MonoBehaviour:
   m_ToneLevel: 0.25
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 7
   m_ColorMode: 0
   m_BlurMode: 0
@@ -16858,7 +16806,7 @@ RectTransform:
   - {fileID: 2078871437}
   - {fileID: 150573562}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 20
+  m_RootOrder: 19
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -16964,7 +16912,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -17124,7 +17072,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -17261,7 +17209,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 6
   m_ColorMode: 1
   m_BlurMode: 0
@@ -17423,7 +17371,7 @@ RectTransform:
   - {fileID: 847184842}
   - {fileID: 996338078}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 26
+  m_RootOrder: 25
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -17604,7 +17552,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -17728,7 +17676,7 @@ MonoBehaviour:
   m_ToneLevel: 0.25
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 3
   m_BlurMode: 0
@@ -17833,7 +17781,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -17937,7 +17885,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -18063,7 +18011,7 @@ MonoBehaviour:
   m_ToneLevel: 0.75
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 3
   m_BlurMode: 0
@@ -18189,7 +18137,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 3
   m_ColorMode: 0
   m_BlurMode: 0
@@ -18294,7 +18242,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -18436,7 +18384,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -18557,7 +18505,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -18604,7 +18552,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0.9
+  m_Text: 0.95
 --- !u!222 &1190426893
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -18660,7 +18608,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -18784,7 +18732,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 1
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 2
@@ -18889,7 +18837,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -19086,7 +19034,7 @@ MonoBehaviour:
   m_ToneLevel: 0.25
   m_Blur: 0.25
   m_ShadowBlur: 0
-  m_ShadowMode: 3
+  m_ShadowStyle: 3
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -19212,7 +19160,7 @@ MonoBehaviour:
   m_ToneLevel: 0.75
   m_Blur: 0.75
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 2
@@ -19356,7 +19304,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -19454,7 +19402,7 @@ MonoBehaviour:
   m_ToneLevel: 0.75
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 6
   m_ColorMode: 1
   m_BlurMode: 0
@@ -19584,7 +19532,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -19687,7 +19635,7 @@ MonoBehaviour:
   m_ToneLevel: 0.75
   m_Blur: 1
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 3
@@ -19774,7 +19722,7 @@ RectTransform:
   - {fileID: 909969087}
   - {fileID: 1847149037}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 19
+  m_RootOrder: 18
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -19958,7 +19906,7 @@ MonoBehaviour:
   m_ToneLevel: 0.95
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 3
+  m_ShadowStyle: 3
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 0
@@ -20084,7 +20032,7 @@ MonoBehaviour:
   m_ToneLevel: 0.25
   m_Blur: 0.25
   m_ShadowBlur: 0
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -20425,7 +20373,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -20528,7 +20476,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -20613,7 +20561,7 @@ MonoBehaviour:
   m_ToneLevel: 0.25
   m_Blur: 0.25
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 2
@@ -20739,7 +20687,7 @@ MonoBehaviour:
   m_ToneLevel: 0.25
   m_Blur: 0.25
   m_ShadowBlur: 0
-  m_ShadowMode: 1
+  m_ShadowStyle: 1
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -20922,7 +20870,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 1
   m_ColorMode: 3
   m_BlurMode: 0
@@ -21066,7 +21014,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -21166,7 +21114,7 @@ MonoBehaviour:
   m_ToneLevel: 0.35
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 5
   m_ColorMode: 0
   m_BlurMode: 0
@@ -21260,7 +21208,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -21365,7 +21313,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -21507,7 +21455,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 1.41
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 1
   m_ColorMode: 0
   m_BlurMode: 0
@@ -21651,7 +21599,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -21715,7 +21663,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -21818,7 +21766,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -21921,7 +21869,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -21968,7 +21916,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0.5
+  m_Text: 0.75
 --- !u!222 &1406650027
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -22045,7 +21993,7 @@ MonoBehaviour:
   m_ToneLevel: 0.5
   m_Blur: 0.5
   m_ShadowBlur: 0
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 0
@@ -22304,7 +22252,7 @@ MonoBehaviour:
   m_ToneLevel: 0.25
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 2
   m_ColorMode: 0
   m_BlurMode: 0
@@ -22516,7 +22464,7 @@ RectTransform:
   - {fileID: 540979214}
   - {fileID: 1107154135}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -22624,7 +22572,7 @@ MonoBehaviour:
   m_ToneLevel: 0
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 6
   m_ColorMode: 1
   m_BlurMode: 0
@@ -22754,7 +22702,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -22930,7 +22878,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -23054,7 +23002,7 @@ MonoBehaviour:
   m_ToneLevel: 0.5
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 2
   m_BlurMode: 0
@@ -23198,7 +23146,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -23301,7 +23249,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -23386,7 +23334,7 @@ MonoBehaviour:
   m_ToneLevel: 0.75
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 2
   m_BlurMode: 0
@@ -23512,7 +23460,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 1.5
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 2
@@ -23638,7 +23586,7 @@ MonoBehaviour:
   m_ToneLevel: 0.75
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 4
+  m_ShadowStyle: 4
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 2
@@ -23787,7 +23735,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -23851,7 +23799,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -24012,7 +23960,7 @@ MonoBehaviour:
   m_ToneLevel: 0
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 5
   m_ColorMode: 1
   m_BlurMode: 0
@@ -24120,7 +24068,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -24262,7 +24210,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -24347,7 +24295,7 @@ MonoBehaviour:
   m_ToneLevel: 0.75
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 3
   m_ColorMode: 0
   m_BlurMode: 0
@@ -24562,7 +24510,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -24647,7 +24595,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 1
+  m_ShadowStyle: 1
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 0
@@ -24924,7 +24872,7 @@ MonoBehaviour:
   m_ToneLevel: 0.75
   m_Blur: 0.75
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 3
@@ -25011,7 +24959,7 @@ RectTransform:
   - {fileID: 2137266271}
   - {fileID: 1425271615}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -25117,7 +25065,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -25259,7 +25207,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 1.41
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -25385,7 +25333,7 @@ MonoBehaviour:
   m_ToneLevel: 0.75
   m_Blur: 1
   m_ShadowBlur: 0
-  m_ShadowMode: 3
+  m_ShadowStyle: 3
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 3
@@ -25663,7 +25611,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -25802,7 +25750,7 @@ MonoBehaviour:
   m_ToneLevel: 0.65
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 6
   m_ColorMode: 1
   m_BlurMode: 0
@@ -26117,7 +26065,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 1
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 2
@@ -26401,7 +26349,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -26522,7 +26470,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -26646,7 +26594,7 @@ MonoBehaviour:
   m_ToneLevel: 0.5
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 0
@@ -26751,7 +26699,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -26854,7 +26802,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -26957,7 +26905,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -27188,7 +27136,7 @@ MonoBehaviour:
   m_ToneLevel: 0.25
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 3
   m_ColorMode: 0
   m_BlurMode: 0
@@ -27293,7 +27241,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -27557,7 +27505,7 @@ MonoBehaviour:
   m_ToneLevel: 0.25
   m_Blur: 0.25
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 1
@@ -27701,7 +27649,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -27765,7 +27713,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -27850,7 +27798,7 @@ RectTransform:
   - {fileID: 410465979}
   - {fileID: 486321976}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -27977,7 +27925,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 1
   m_ColorMode: 0
   m_BlurMode: 0
@@ -28103,7 +28051,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 0
@@ -28229,7 +28177,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 3
   m_ColorMode: 0
   m_BlurMode: 0
@@ -28316,7 +28264,7 @@ RectTransform:
   - {fileID: 1355093936}
   - {fileID: 1411681286}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -28422,7 +28370,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -28564,7 +28512,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -28649,7 +28597,7 @@ MonoBehaviour:
   m_ToneLevel: 0.25
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 0
@@ -28917,7 +28865,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -29002,7 +28950,7 @@ MonoBehaviour:
   m_ToneLevel: 0.75
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 7
   m_ColorMode: 0
   m_BlurMode: 0
@@ -29128,7 +29076,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 1
   m_ColorMode: 1
   m_BlurMode: 0
@@ -29254,7 +29202,7 @@ MonoBehaviour:
   m_ToneLevel: 0.5
   m_Blur: 0.5
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 1
@@ -29359,7 +29307,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -29462,7 +29410,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -29547,7 +29495,7 @@ RectTransform:
   - {fileID: 435612784}
   - {fileID: 75542492}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 14
+  m_RootOrder: 13
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -29692,7 +29640,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -29777,7 +29725,7 @@ MonoBehaviour:
   m_ToneLevel: 0.5
   m_Blur: 0.5
   m_ShadowBlur: 0
-  m_ShadowMode: 1
+  m_ShadowStyle: 1
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 0
@@ -29942,7 +29890,7 @@ MonoBehaviour:
   m_ToneLevel: 0.5
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 1
   m_ColorMode: 0
   m_BlurMode: 0
@@ -30104,7 +30052,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -30189,7 +30137,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 1
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 1
@@ -30315,7 +30263,7 @@ MonoBehaviour:
   m_ToneLevel: 0.5
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 0
   m_ColorMode: 3
   m_BlurMode: 0
@@ -30420,7 +30368,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -30664,7 +30612,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -30844,7 +30792,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -30947,7 +30895,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -31084,7 +31032,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -31226,7 +31174,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 1
-  m_ShadowMode: 3
+  m_ShadowStyle: 3
   m_ToneMode: 0
   m_ColorMode: 1
   m_BlurMode: 1
@@ -31375,7 +31323,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -31460,7 +31408,7 @@ MonoBehaviour:
   m_ToneLevel: 0.5
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 7
   m_ColorMode: 0
   m_BlurMode: 0
@@ -31565,7 +31513,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -31668,7 +31616,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -31867,7 +31815,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -31952,7 +31900,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 2
   m_ColorMode: 0
   m_BlurMode: 0
@@ -32184,7 +32132,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -32248,7 +32196,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -32390,7 +32338,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -32437,7 +32385,7 @@ RectTransform:
   - {fileID: 1518071220}
   - {fileID: 582927868}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 25
+  m_RootOrder: 24
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -32582,7 +32530,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0
   m_ShadowBlur: 1.41
-  m_ShadowMode: 3
+  m_ShadowStyle: 3
   m_ToneMode: 1
   m_ColorMode: 1
   m_BlurMode: 2
@@ -32726,7 +32674,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -32973,7 +32921,7 @@ RectTransform:
   - {fileID: 1117131205}
   - {fileID: 1349817153}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 18
+  m_RootOrder: 17
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -33231,7 +33179,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -33334,7 +33282,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -33533,7 +33481,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -33631,7 +33579,7 @@ MonoBehaviour:
   m_ToneLevel: 0.5
   m_Blur: 0
   m_ShadowBlur: 0
-  m_ShadowMode: 0
+  m_ShadowStyle: 0
   m_ToneMode: 6
   m_ColorMode: 1
   m_BlurMode: 0
@@ -33761,7 +33709,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -33864,7 +33812,7 @@ RectTransform:
   - {fileID: 329194871}
   - {fileID: 1658216850}
   m_Father: {fileID: 281272270}
-  m_RootOrder: 24
+  m_RootOrder: 23
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -33970,7 +33918,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -34306,7 +34254,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -34370,7 +34318,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0
@@ -34417,7 +34365,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0.75
+  m_Text: 0.85
 --- !u!222 &2129240654
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -34473,7 +34421,7 @@ MonoBehaviour:
   m_ToneLevel: 1
   m_Blur: 0.25
   m_ShadowBlur: 0.25
-  m_ShadowMode: 2
+  m_ShadowStyle: 2
   m_ToneMode: 0
   m_ColorMode: 0
   m_BlurMode: 0

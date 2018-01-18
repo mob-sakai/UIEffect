@@ -46,7 +46,7 @@ namespace UnityEngine.UI
 		public float blur { get { return m_Blur; } set { m_Blur = Mathf.Clamp(value, 0, 4); } }
 
 		[SerializeField]
-		[Range(0, 2)]
+		[Range(0, 1)]
 		float m_Blur = 0;
 
 		/// <summary>
@@ -180,15 +180,11 @@ namespace UnityEngine.UI
 						mat ? mat.name : "noeffect";
 
 				// Copy to temporary RT.
-				_buffer.GetTemporaryRT(s_CopyId, -1, -1, 0, FilterMode.Bilinear);
+				_buffer.GetTemporaryRT(s_CopyId, -1, -1, 0, m_FilterMode);
 				_buffer.Blit(BuiltinRenderTextureType.CurrentActive, s_CopyId);
 
 				// Set properties.
-				if(toneMode == UIEffect.ToneMode.Hue)
-					_buffer.SetGlobalVector("_EffectFactor", new Vector4(Mathf.Cos(toneLevel* Mathf.PI * 2), Mathf.Sin(toneLevel * Mathf.PI * 2), blur / w));
-				else
-					_buffer.SetGlobalVector("_EffectFactor", new Vector4(toneLevel, 0, blur / w));
-
+				_buffer.SetGlobalVector("_EffectFactor", new Vector4(toneLevel, 0, blur, 0));
 				_buffer.SetGlobalVector("_ColorFactor", new Vector4(effectColor.r, effectColor.g, effectColor.b, effectColor.a));
 
 				// Blit without effect.
@@ -201,7 +197,7 @@ namespace UnityEngine.UI
 				else if (m_DesamplingRate < m_ReductionRate)
 				{
 					GetDesamplingSize(m_ReductionRate, out w, out h);
-					_buffer.GetTemporaryRT(s_EffectId, w, h, 0, FilterMode.Bilinear);
+					_buffer.GetTemporaryRT(s_EffectId, w, h, 0, m_FilterMode);
 					_buffer.Blit(s_CopyId, s_EffectId, mat);
 					_buffer.ReleaseTemporaryRT(s_CopyId);
 					_buffer.Blit(s_EffectId, rtId);

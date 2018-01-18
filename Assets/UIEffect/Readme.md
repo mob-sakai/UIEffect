@@ -1,9 +1,14 @@
 UIEffect
 ===
 
-![image](https://user-images.githubusercontent.com/12690315/34973050-c7f3b262-fac8-11e7-8feb-64b656190532.png)
+Easy to use effects for uGUI. 
 
-Easy to use effects for uGUI. Supports following effects.
+![image](https://user-images.githubusercontent.com/12690315/35077815-5ff8094e-fc42-11e7-92dd-99916c9f9da7.png)
+
+[WebGL Demo](#demo) | [Download](https://github.com/mob-sakai/UIEffect/releases) | [Usage](#usage) | [Release Notes](#release-notes)
+
+
+### Supports following effects!
 
 * Grayscale
 * Sepia tone
@@ -48,81 +53,7 @@ Easy to use effects for uGUI. Supports following effects.
 
 
 
-
-## Requirement
-
-* Unity 5.3+ *(included Unity 2017.x)*
-* No other SDK are required
-
-
-
-
-## Usage
-
-1. Download UIEffect.unitypackage from [Releases](https://github.com/mob-sakai/UIEffect/releases) and install to your project.
-1. Import the package into your Unity project. Select `Import Package > Custom Package` from the `Assets` menu.
-1. Add `UIEffect` component to UI element (Image, RawImage, Text, etc...) from `Add Component` in inspector.
-1. Choose effect type and adjust values in inspector.  
-![image](https://user-images.githubusercontent.com/12690315/34595809-3838dc54-f21e-11e7-858b-72821dca8b44.png)
-1. Enjoy!
-
-
-
-## Development Note
-
-### How does UIEffectCapturedImage work?
-
-![image](https://user-images.githubusercontent.com/12690315/34619147-868cb36a-f284-11e7-8122-b924ff09077f.gif)
-
-`UIEffectCapturedImage` is similar to post effect, but uses `CommandBuffer` to give effect only on the rendering result (= captured image) of a specific frame.
-This effect is non-realtime, light-weight, less-camera, blit only once, but effective.
-
-* Camera for processing effect is unnecessary.
-* Process effect only once after `UIEffectCapturedImage.Capture`.
-* Using reduction buffer, keep used memory size small and keep rendering load are small.
-* When GameObjects with motion are on the screen, a result texture may be stirred.
-* You can overlay and display like as: [Screen] | [UIEffectCapturedImage] | [Dialog A] | [UIEffectCapturedImage] | [Dialog B].  
-See also [WebGL Demo](https://developer.cloud.unity3d.com/share/WyQetw3p-X/webgl/).
-
-
-
-
-## Why is UIEffect lightweight?
-
-* UIEffect pre-generates material from a combination of effects. This has the following benefits.
-    * Draw call batching If possible, draw calls will decrease.
-    * Since only the required material and shader variants are included in the build, the build size will be smaller.
-
-
-
-
-## How to control effect parameters for uGUI element WITHOUT MaterialPropertyBlock?
-
-* In general, you can use [MaterialPropertyBlock](https://docs.unity3d.com/ScriptReference/MaterialPropertyBlock.html) for renderers to control minor changes in the material without different batches.
-* However, changing the [MaterialPropertyBlock](https://docs.unity3d.com/ScriptReference/MaterialPropertyBlock.html) of the uGUI element from the script will cause different batches and draw calls to increase.
-* So UIEffect encodes multiple effect parameters to UV1 channel with [IMeshModifier](https://docs.unity3d.com/ScriptReference/UI.IMeshModifier.html).
-* Up to four [0-1] parameters are packed in one float.
-* 6 bit has 64 steps and 12 bit has 4096 steps.
-* Effect parameters are low precision, but sufficient.
-
-| uv1 | - | - | - | - |
-|-|-|-|-|-|
-| x(32bit float) | Tone[0-1] (6bit) | Empty (6bit) | Blur[0-1] (12bit) | - |
-| y(32bit float) | Red[0-1] (6bit) | Green[0-1] (6bit) | Blue[0-1] (6bit) | Alpha[0-1] (6bit) |
-
-
-
-
-## Note: Unity 5.6+
-
-In Unity 5.6+, Canvas supports **Additional Shader Channels**.  
-Please enable `TexCoord1` to use UIEffect.  
-![image](https://user-images.githubusercontent.com/12690315/28405830-f4f261e8-6d68-11e7-9faf-7e5442062f59.png)
-![image](https://user-images.githubusercontent.com/12690315/34560894-191b6cda-f18b-11e7-9de2-9a9d13f72ccd.png)
-
-
-
-
+<br><br><br><br>
 ## Demo
 
 [WebGL Demo](https://developer.cloud.unity3d.com/share/WJTY06hfG7/webgl/)
@@ -135,7 +66,82 @@ Please enable `TexCoord1` to use UIEffect.
 
 
 
+<br><br><br><br>
+## Usage
+
+1. Download UIEffect.unitypackage from [Releases](https://github.com/mob-sakai/UIEffect/releases) and install to your project.
+1. Import the package into your Unity project. Select `Import Package > Custom Package` from the `Assets` menu.
+1. Add `UIEffect` component to UI element (Image, RawImage, Text, etc...) from `Add Component` in inspector.
+1. Choose effect type and adjust values in inspector.  
+![image](https://user-images.githubusercontent.com/12690315/34595809-3838dc54-f21e-11e7-858b-72821dca8b44.png)
+1. Enjoy!
+
+
+##### Requirement
+
+* Unity 5.3+ *(included Unity 2017.x)*
+* No other SDK are required
+
+
+<br><br><br><br>
+## Development Note
+
+#### How does UIEffectCapturedImage work?
+
+![image](https://user-images.githubusercontent.com/12690315/34619147-868cb36a-f284-11e7-8122-b924ff09077f.gif)
+
+`UIEffectCapturedImage` is similar to post effect, but uses `CommandBuffer` to give effect only on the rendering result (= captured image) of a specific frame.
+This effect is non-realtime, light-weight, less-camera, blit only once, but effective.
+
+* Camera for processing effect is unnecessary.
+* Process effect only once after `UIEffectCapturedImage.Capture`.
+* Using reduction buffer, keep used memory size small and keep rendering load are small.
+* When GameObjects with motion are on the screen, a result texture may be stirred.
+* You can overlay and display like as: [Screen] | [UIEffectCapturedImage] | [Dialog A] | [UIEffectCapturedImage] | [Dialog B].  
+See also [Demo](#demo).
+
+
+#### Why is UIEffect lightweight?
+
+* UIEffect pre-generates material from a combination of effects. This has the following benefits.
+    * Draw call batching If possible, draw calls will decrease.
+    * Since only the required material and shader variants are included in the build, the build size will be smaller.
+
+
+#### How to control effect parameters for uGUI element WITHOUT MaterialPropertyBlock?
+
+* In general, you can use [MaterialPropertyBlock](https://docs.unity3d.com/ScriptReference/MaterialPropertyBlock.html) for renderers to control minor changes in the material without different batches.
+* However, changing the [MaterialPropertyBlock](https://docs.unity3d.com/ScriptReference/MaterialPropertyBlock.html) of the uGUI element from the script will cause different batches and draw calls to increase.
+* So UIEffect encodes multiple effect parameters to UV1 channel with [IMeshModifier](https://docs.unity3d.com/ScriptReference/UI.IMeshModifier.html).
+    * Pack four 6-bit [0-1] (64 steps) parameters into one float value.
+    * The parameters are low precision, but sufficient.
+
+| uv1 | 6-bit [0-1] | 6-bit [0-1] | 6-bit [0-1] | 6-bit [0-1] |
+|-|-|-|-|-|
+| x(32bit float) | Tone level | *Empty* | Blur level | *Empty* |
+| y(32bit float) | Red channel | Green channel | Blue channel | Alpha channel |
+
+
+#### Note: Unity 5.6+
+
+In Unity 5.6+, Canvas supports **Additional Shader Channels**.  
+Please enable `TexCoord1` to use UIEffect.  
+![image](https://user-images.githubusercontent.com/12690315/28405830-f4f261e8-6d68-11e7-9faf-7e5442062f59.png)
+![image](https://user-images.githubusercontent.com/12690315/34560894-191b6cda-f18b-11e7-9de2-9a9d13f72ccd.png)
+
+
+
+
+<br><br><br><br>
 ## Release Notes
+
+### ver.1.6.0
+
+* Changed: UIEffect inherit BaseMeshEffect.
+* Fixed: Pixelization is incorrect.
+* Changed: ShadowMode -> ShadowStyle.
+* Changed: Blur level is range [0-1].
+
 
 ### ver.1.5.1
 
@@ -255,7 +261,7 @@ Build report of demo project is as following.
 
 
 
-
+<br><br><br><br>
 ## License
 
 * MIT
@@ -263,11 +269,9 @@ Build report of demo project is as following.
 
 
 
-
 ## Author
 
 [mob-sakai](https://github.com/mob-sakai)
-
 
 
 

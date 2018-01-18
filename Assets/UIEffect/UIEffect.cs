@@ -16,7 +16,7 @@ namespace UnityEngine.UI
 	[ExecuteInEditMode]
 	[RequireComponent(typeof(Graphic))]
 	[DisallowMultipleComponent]
-	public class UIEffect : MonoBehaviour, IMeshModifier
+	public class UIEffect : BaseMeshEffect
 #if UNITY_EDITOR
 		, ISerializationCallbackReceiver
 #endif
@@ -30,13 +30,13 @@ namespace UnityEngine.UI
 			/// <summary>
 			/// How far is the blurring shadow from the graphic.
 			/// </summary>
-			[Range(0, 2)]
+			[Range(0, 1)]
 			public float shadowBlur = 0.25f;
 
 			/// <summary>
 			/// Shadow effect mode.
 			/// </summary>
-			public ShadowMode shadowMode = ShadowMode.Shadow;
+			public ShadowStyle shadowMode = ShadowStyle.Shadow;
 
 			/// <summary>
 			/// Color for the shadow effect.
@@ -88,7 +88,25 @@ namespace UnityEngine.UI
 		/// <summary>
 		/// Shadow effect mode.
 		/// </summary>
+		[Obsolete("ShadowMode has been deprecated. Use ShadowStyle instead (UnityUpgradable) -> ShadowStyle", true)]
 		public enum ShadowMode
+		{
+			[Obsolete("ShadowMode.None has been deprecated. Use ShadowStyle.None instead (UnityUpgradable) -> ShadowStyle.None", true)]
+			None = 0,
+			[Obsolete("ShadowMode.Shadow has been deprecated. Use ShadowStyle.Shadow instead (UnityUpgradable) -> ShadowStyle.Shadow", true)]
+			Shadow,
+			[Obsolete("ShadowMode.Outline has been deprecated. Use ShadowStyle.Outline instead (UnityUpgradable) -> ShadowStyle.Outline", true)]
+			Outline,
+			[Obsolete("ShadowMode.Outline8 has been deprecated. Use ShadowStyle.Outline8 instead (UnityUpgradable) -> ShadowStyle.Outline8", true)]
+			Outline8,
+			[Obsolete("ShadowMode.Shadow3 has been deprecated. Use ShadowStyle.Shadow3 instead (UnityUpgradable) -> ShadowStyle.Shadow3", true)]
+			Shadow3,
+		}
+
+		/// <summary>
+		/// Shadow effect style.
+		/// </summary>
+		public enum ShadowStyle
 		{
 			None = 0,
 			Shadow,
@@ -129,21 +147,24 @@ namespace UnityEngine.UI
 		/// </summary>
 		public float blur { get { return m_Blur; } set { m_Blur = Mathf.Clamp(value, 0, 2); SetDirty(); } }
 
-		[SerializeField][Range(0, 2)] float m_Blur = 0.25f;
+		[SerializeField][Range(0, 1)] float m_Blur = 0.25f;
 
 		/// <summary>
 		/// How far is the blurring shadow from the graphic.
 		/// </summary>
 		public float shadowBlur { get { return m_ShadowBlur; } set { m_ShadowBlur = Mathf.Clamp(value, 0, 2); SetDirty(); } }
 
-		[SerializeField][Range(0, 2)] float m_ShadowBlur = 0.25f;
+		[SerializeField][Range(0, 1)] float m_ShadowBlur = 0.25f;
 
 		/// <summary>
 		/// Shadow effect mode.
 		/// </summary>
-		public ShadowMode shadowMode { get { return m_ShadowMode; } set { m_ShadowMode = value; SetDirty(); } }
+		public ShadowStyle shadowStyle { get { return m_ShadowStyle; } set { m_ShadowStyle = value; SetDirty(); } }
 
-		[SerializeField] ShadowMode m_ShadowMode;
+		[Obsolete("UIEffect.shadowMode is obsolete, use UIEffect.shadowStyle instead. (UnityUpgradable) -> shadowStyle")]
+		public ShadowStyle shadowMode { get { return m_ShadowStyle; } set { m_ShadowStyle = value; SetDirty(); } }
+
+		[SerializeField][FormerlySerializedAs("m_ShadowMode")]  ShadowStyle m_ShadowStyle;
 
 		/// <summary>
 		/// Tone effect mode.
@@ -207,12 +228,6 @@ namespace UnityEngine.UI
 
 		[SerializeField] Material m_EffectMaterial;
 
-		/// <summary>
-		/// Graphic affected by the UIEffect.
-		/// </summary>
-		public Graphic graphic { get { if (m_Graphic == null) m_Graphic = GetComponent<Graphic>(); return m_Graphic; } }
-
-		Graphic m_Graphic;
 
 		/// <summary>
 		/// Additional Shadows.
@@ -228,32 +243,25 @@ namespace UnityEngine.UI
 		/// <summary>
 		/// This function is called when the object becomes enabled and active.
 		/// </summary>
-		protected virtual void OnEnable()
+		protected override void OnEnable()
 		{
-			SetDirty(true);
+			graphic.material = effectMaterial;
+			base.OnEnable();
 		}
 
 		/// <summary>
 		/// This function is called when the behaviour becomes disabled () or inactive.
 		/// </summary>
-		protected virtual void OnDisable()
+		protected override void OnDisable()
 		{
 			graphic.material = null;
-			SetDirty();
-		}
-
-		/// <summary>
-		/// Callback for when properties have been changed by animation.
-		/// </summary>
-		protected virtual void OnDidApplyAnimationProperties()
-		{
-			SetDirty(true);
+			base.OnDisable();
 		}
 
 		/// <summary>
 		/// Modifies the mesh.
 		/// </summary>
-		public virtual void ModifyMesh(VertexHelper vh)
+		public override void ModifyMesh(VertexHelper vh)
 		{
 			if (!isActiveAndEnabled)
 			{
@@ -269,8 +277,8 @@ namespace UnityEngine.UI
 			{
 				// Pack some effect factors to 1 float.
 				Vector2 factor = new Vector2(
-									 PackToFloat(toneLevel, 0, blur / graphic.mainTexture.width * 4),
-									 PackToFloat(effectColor.r, effectColor.g, effectColor.b, effectColor.a)
+									PackToFloat(toneLevel, 0, blur, 0),
+									PackToFloat(effectColor.r, effectColor.g, effectColor.b, effectColor.a)
 								 );
 
 				for (int i = 0; i < s_Verts.Count; i++)
@@ -295,11 +303,11 @@ namespace UnityEngine.UI
 				for (int i = additionalShadows.Count - 1; 0 <= i; i--)
 				{
 					AdditionalShadow shadow = additionalShadows[i];
-					ApplyShadow(s_Verts, ref start, ref end, shadow.shadowMode, toneLevel, shadow.shadowBlur / graphic.mainTexture.width * 4, shadow.effectDistance, shadow.shadowColor, shadow.useGraphicAlpha);
+					ApplyShadow(s_Verts, ref start, ref end, shadow.shadowMode, toneLevel, shadow.shadowBlur, shadow.effectDistance, shadow.shadowColor, shadow.useGraphicAlpha);
 				}
 
 				// Shadow.
-				ApplyShadow(s_Verts, ref start, ref end, shadowMode, toneLevel, shadowBlur / graphic.mainTexture.width * 4, effectDistance, shadowColor, useGraphicAlpha);
+				ApplyShadow(s_Verts, ref start, ref end, shadowStyle, toneLevel, shadowBlur, effectDistance, shadowColor, useGraphicAlpha);
 			}
 
 			vh.Clear();
@@ -308,22 +316,7 @@ namespace UnityEngine.UI
 			s_Verts.Clear();
 		}
 
-		/// <summary>
-		/// Modifies the mesh.
-		/// </summary>
-		[System.Obsolete("use IMeshModifier.ModifyMesh (VertexHelper verts) instead")]
-		public void ModifyMesh(Mesh mesh)
-		{
-		}
-
 #if UNITY_EDITOR
-		/// <summary>
-		/// This function is called when the script is loaded or a value is changed in the inspector (Called in the editor only).
-		/// </summary>
-		protected virtual void OnValidate()
-		{
-			SetDirty(true);
-		}
 
 		public void OnBeforeSerialize()
 		{
@@ -371,13 +364,13 @@ namespace UnityEngine.UI
 		/// Append shadow vertices.
 		/// * It is similar to Shadow component implementation.
 		/// </summary>
-		static void ApplyShadow(List<UIVertex> verts, ref int start, ref int end, ShadowMode mode, float toneLevel, float blur, Vector2 effectDistance, Color color, bool useGraphicAlpha)
+		static void ApplyShadow(List<UIVertex> verts, ref int start, ref int end, ShadowStyle mode, float toneLevel, float blur, Vector2 effectDistance, Color color, bool useGraphicAlpha)
 		{
-			if (ShadowMode.None == mode)
+			if (ShadowStyle.None == mode)
 				return;
 
 			var factor = new Vector2(
-							 PackToFloat(toneLevel, 0, blur),
+							 PackToFloat(toneLevel, 0, blur, 0),
 							 PackToFloat(color.r, color.g, color.b, 1)
 						 );
 
@@ -385,14 +378,14 @@ namespace UnityEngine.UI
 			ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
 
 			// Append Shadow3.
-			if (ShadowMode.Shadow3 == mode)
+			if (ShadowStyle.Shadow3 == mode)
 			{
 				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, 0, factor, color, useGraphicAlpha);
 				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, 0, effectDistance.y, factor, color, useGraphicAlpha);
 			}
 
 			// Append Outline.
-			else if (ShadowMode.Outline == mode)
+			else if (ShadowStyle.Outline == mode)
 			{
 				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
 				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
@@ -400,7 +393,7 @@ namespace UnityEngine.UI
 			}
 
 			// Append Outline8.
-			else if (ShadowMode.Outline8 == mode)
+			else if (ShadowStyle.Outline8 == mode)
 			{
 				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
 				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
@@ -451,15 +444,10 @@ namespace UnityEngine.UI
 		/// <summary>
 		/// Mark the UIEffect as dirty.
 		/// </summary>
-		/// <param name="isMaterialDirty">If set to true material dirty.</param>
-		void SetDirty(bool isMaterialDirty = false)
+		void SetDirty()
 		{
-			// Update material if needed.
-			if (isMaterialDirty)
-			{
-				graphic.material = effectMaterial;
-			}
-			graphic.SetVerticesDirty();
+			if(graphic)
+				graphic.SetVerticesDirty();
 		}
 
 		/// <summary>
@@ -471,21 +459,6 @@ namespace UnityEngine.UI
 			const int PRECISION = (1 << 6) - 1;
 			return (Mathf.FloorToInt(w * PRECISION) << 18)
 			+ (Mathf.FloorToInt(z * PRECISION) << 12)
-			+ (Mathf.FloorToInt(y * PRECISION) << 6)
-			+ Mathf.FloorToInt(x * PRECISION);
-		}
-
-		/// <summary>
-		/// Pack 3 low-precision [0-1] floats values to a float.
-		/// The x and y values [0-1] have 64 steps(6 bits).
-		/// The z value [0-1] is a little high precision(12 bits).
-		/// </summary>
-		static float PackToFloat(float x, float y, float z)
-		{
-			const int PRECISION = (1 << 6) - 1;
-			const int PRECISION_HIGH = (1 << 12) - 1;
-
-			return (Mathf.FloorToInt(z * PRECISION_HIGH) << 12)
 			+ (Mathf.FloorToInt(y * PRECISION) << 6)
 			+ Mathf.FloorToInt(x * PRECISION);
 		}

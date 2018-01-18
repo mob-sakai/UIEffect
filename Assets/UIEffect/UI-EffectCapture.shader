@@ -30,47 +30,84 @@ Shader "UI/Hidden/UI-EffectCapture"
 			#pragma shader_feature __ UI_COLOR_ADD UI_COLOR_SUB UI_COLOR_SET
 			#pragma shader_feature __ UI_BLUR_FAST UI_BLUR_MEDIUM UI_BLUR_DETAIL
 			#include "UI-Effect.cginc"
-			// ^^^^ [For UIEffect] ^^^^
 
-			v2f_img vert(appdata_img v)
+			// ^^^^ [For UIEffect] ^^^^
+			struct v2f
 			{
-				v2f_img o;
-				o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
-			
-				#if UNITY_UV_STARTS_AT_TOP
-				o.uv = half2(v.texcoord.x, 1 - v.texcoord.y);
-				#else
-				o.uv = v.texcoord;
+				float4 vertex   : SV_POSITION;
+				float2 texcoord  : TEXCOORD0;
+				
+				// vvvv [For UIEffect] vvvv
+				#if defined (UI_COLOR)						// Add color effect factor.
+				fixed4 colorFactor : COLOR1;
 				#endif
-			
-				return o;
-			}
+
+				#if defined (UI_TONE) || defined (UI_BLUR)	// Add other effect factor.
+				half4 effectFactor : TEXCOORD2;
+				#endif
+				// ^^^^ [For UIEffect] ^^^^
+			};
 
 			sampler2D _MainTex;
-			half3 _EffectFactor;
+			float4 _MainTex_TexelSize;
+			half4 _EffectFactor;
 			fixed4 _ColorFactor;
 
-			fixed4 frag(v2f_img IN) : SV_Target
+			v2f vert(appdata_img v)
 			{
-				#if UI_TONE_PIXEL
-				float pixelRate = max(1,(1 - _EffectFactor.x) * 256);
-				IN.uv = round(IN.uv * pixelRate) / pixelRate;
-				#endif
-				
-				#if defined (UI_BLUR)
-				half4 color = Tex2DBlurring(_MainTex, IN.uv, _EffectFactor.z);
+				v2f OUT;
+				OUT.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+			
+				#if UNITY_UV_STARTS_AT_TOP
+				OUT.texcoord = half2(v.texcoord.x, 1 - v.texcoord.y);
 				#else
-				half4 color = tex2D(_MainTex, IN.uv);
+				OUT.texcoord = v.texcoord;
+				#endif
+
+				// vvvv [For UIEffect] vvvv : Calculate effect parameter.
+				#if defined (UI_TONE) || defined (UI_BLUR)
+				OUT.effectFactor = _EffectFactor;
 				#endif
 
 				#if UI_TONE_HUE
-				color.rgb = shift_hue(color.rgb, _EffectFactor.x, _EffectFactor.y);
-				#elif defined (UI_TONE)
-				color = ApplyToneEffect(color, _EffectFactor.x);	// Tone effect.
+				OUT.effectFactor.y = sin(OUT.effectFactor.x*3.14159265359*2);
+				OUT.effectFactor.x = cos(OUT.effectFactor.x*3.14159265359*2);
+				#elif UI_TONE_PIXEL && UNITY_VERSION >= 540
+				OUT.effectFactor.xy = max(2, (1-OUT.effectFactor.x) * _MainTex_TexelSize.zw);
 				#endif
 				
 				#if defined (UI_COLOR)
-				color = ApplyColorEffect(color, _ColorFactor);	// Color effect.
+				OUT.colorFactor = _ColorFactor;
+				#endif
+				// ^^^^ [For UIEffect] ^^^^
+				
+				return OUT;
+			}
+
+
+			fixed4 frag(v2f IN) : SV_Target
+			{
+				#if UI_TONE_PIXEL && UNITY_VERSION >= 540
+				IN.texcoord = round(IN.texcoord * IN.effectFactor.xy) / IN.effectFactor.xy;
+				#elif UI_TONE_PIXEL
+				float pixelRate = max(1,(1-IN.effectFactor.x) * 256);
+				IN.texcoord = round(IN.texcoord * pixelRate) / pixelRate;
+				#endif
+				
+				#if defined (UI_BLUR)
+				half4 color = Tex2DBlurring(_MainTex, IN.texcoord, IN.effectFactor.z * _MainTex_TexelSize.xy * 2);
+				#else
+				half4 color = tex2D(_MainTex, IN.texcoord);
+				#endif
+
+				#if UI_TONE_HUE
+				color.rgb = shift_hue(color.rgb, IN.effectFactor.x, IN.effectFactor.y);
+				#elif defined (UI_TONE)
+				color = ApplyToneEffect(color, IN.effectFactor.x);	// Tone effect.
+				#endif
+				
+				#if defined (UI_COLOR)
+				color = ApplyColorEffect(color, IN.colorFactor);	// Color effect.
 				#endif
 
 				color.a = 1;

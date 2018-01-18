@@ -40,44 +40,24 @@ fixed4 UnpackToVec4(float value)
     return color;
 }
 
-// Unpack float to low-precision [0-1] half3.
-// The z value is a little high precision.
-half3 UnpackToVec3(float value)
-{   
-	const int PRECISION = PACKER_STEP - 1;
-	const int PACKER_STEP_HIGH = PACKER_STEP * PACKER_STEP;
-	const int PRECISION_HIGH = PACKER_STEP_HIGH - 1;
-	half3 color;
-
-    color.x = (value % PACKER_STEP) / PRECISION;
-    value = floor(value / PACKER_STEP);
-
-    color.y = (value % PACKER_STEP) / PRECISION;
-    value = floor(value / PACKER_STEP);
-
-    color.z = (value % PACKER_STEP_HIGH) / (PRECISION_HIGH - 1);
-
-    return color;
-}
-
 //################################
 // Blur effect
 //################################
 // Calculate blur effect.
 // Sample texture by blured uv, with bias.
-fixed4 Blur(sampler2D tex, half2 uv, half addUv, half bias)
+fixed4 Blur(sampler2D tex, half2 uv, half2 addUv, half bias)
 {
 	return 
 		(
-		tex2D(tex, uv + half2(addUv, addUv))
-		+ tex2D(tex, uv + half2(-addUv, addUv))
-		+ tex2D(tex, uv + half2(addUv, -addUv))
-		+ tex2D(tex, uv + half2(-addUv, -addUv))
+		tex2D(tex, uv + half2(addUv.x, addUv.y))
+		+ tex2D(tex, uv + half2(-addUv.x, addUv.y))
+		+ tex2D(tex, uv + half2(addUv.x, -addUv.y))
+		+ tex2D(tex, uv + half2(-addUv.x, -addUv.y))
 #if UI_BLUR_DETAIL
-		+ tex2D(tex, uv + half2(addUv, 0))
-		+ tex2D(tex, uv + half2(-addUv, 0))
-		+ tex2D(tex, uv + half2(0, addUv))
-		+ tex2D(tex, uv + half2(0, -addUv))
+		+ tex2D(tex, uv + half2(addUv.x, 0))
+		+ tex2D(tex, uv + half2(-addUv.x, 0))
+		+ tex2D(tex, uv + half2(0, addUv.y))
+		+ tex2D(tex, uv + half2(0, -addUv.y))
 		)
 		* bias / 2;
 #else
@@ -90,7 +70,7 @@ fixed4 Blur(sampler2D tex, half2 uv, half addUv, half bias)
 // * Fast: Sample texture with 3x4 blurring.
 // * Medium: Sample texture with 6x4 blurring.
 // * Detail: Sample texture with 6x8 blurring.
-fixed4 Tex2DBlurring(sampler2D tex, half2 uv, half blur)
+fixed4 Tex2DBlurring(sampler2D tex, half2 uv, half2 blur)
 {
 	half4 color = tex2D(tex, uv);
 
