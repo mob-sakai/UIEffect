@@ -137,6 +137,11 @@ Please enable `TexCoord1` to use UIEffect.
 
 ## Release Notes
 
+### ver.1.5.1
+
+* Fixed: An error occurs when no effect is specified for UICapturedImage. [#36](https://github.com/mob-sakai/UIEffect/issues/36)
+
+
 ### ver.1.5.0
 
 * Feature: Add ToneMode `Hue Shift`.  
