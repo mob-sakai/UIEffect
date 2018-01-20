@@ -1,1 +1,0 @@
-./Assets/UIEffect/LICENSE.txt
