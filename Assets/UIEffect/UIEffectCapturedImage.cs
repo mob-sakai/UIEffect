@@ -244,15 +244,22 @@ namespace UnityEngine.UI
 
 		public void OnAfterDeserialize()
 		{
+			var obj = this;
 			EditorApplication.delayCall += () =>
 			{
-				var old = m_EffectMaterial;
-				m_EffectMaterial = UIEffect.GetMaterial(Shader.Find(shaderName), toneMode, colorMode, blurMode);
-				if (old != m_EffectMaterial)
-				{
-					EditorUtility.SetDirty(this);
-					EditorApplication.delayCall +=AssetDatabase.SaveAssets;
-				}
+				if (Application.isPlaying || !obj)
+					return;
+
+				var mat = (0 == toneMode) && (0 == colorMode) && (0 == blurMode)
+						? null
+						: UIEffect.GetOrCreateMaterialVariant(Shader.Find(shaderName), toneMode, colorMode, blurMode);
+
+				if (m_EffectMaterial == mat)
+					return;
+
+				m_EffectMaterial = mat;
+				EditorUtility.SetDirty(this);
+				EditorApplication.delayCall += AssetDatabase.SaveAssets;
 			};
 		}
 		#endif

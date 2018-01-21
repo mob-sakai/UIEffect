@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
@@ -86,38 +87,12 @@ namespace UnityEditor.UI
 			}
 			else if (changed || !serializedObject.isEditingMultipleObjects)
 			{
-				spMaterial.objectReferenceValue = UIEffect.GetMaterial(Shader.Find(shaderName),
+				spMaterial.objectReferenceValue = UIEffect.GetOrCreateMaterialVariant(Shader.Find(shaderName),
 					(UIEffect.ToneMode)spToneMode.intValue,
 					(UIEffect.ColorMode)spColorMode.intValue,
 					(UIEffect.BlurMode)spBlurMode.intValue
 				);
 			}
-		}
-
-		public static Material GetOrCreateMaterial(Shader shader, UIEffect.ToneMode tone, UIEffect.ColorMode color, UIEffect.BlurMode blur)
-		{
-			Material mat = UIEffect.GetMaterial(shader, tone, color, blur);
-			if (!mat)
-			{
-				mat = new Material(shader);
-
-				if (0 < tone)
-					mat.EnableKeyword("UI_TONE_" + tone.ToString().ToUpper());
-				if (0 < color)
-					mat.EnableKeyword("UI_COLOR_" + color.ToString().ToUpper());
-				if (0 < blur)
-					mat.EnableKeyword("UI_BLUR_" + blur.ToString().ToUpper());
-
-				mat.name = Path.GetFileName(shader.name)
-				+ (0 < tone ? "-" + tone : "")
-				+ (0 < color ? "-" + color : "")
-				+ (0 < blur ? "-" + blur : "");
-				//mat.hideFlags = HideFlags.NotEditable;
-
-				Directory.CreateDirectory("Assets/UIEffect/Materials");
-				AssetDatabase.CreateAsset(mat, "Assets/UIEffect/Materials/" + mat.name + ".mat");
-			}
-			return mat;
 		}
 
 		void OnEnable()
@@ -130,6 +105,7 @@ namespace UnityEditor.UI
 			roAdditionalShadows.drawHeaderCallback = (rect) => EditorGUI.LabelField(rect, "Additional Shadows");
 			roAdditionalShadows.onAddCallback = OnAddCallback;
 			roAdditionalShadows.elementHeightCallback = ElementHeightCallback;
+
 		}
 
 		void OnAddCallback(ReorderableList ro)
