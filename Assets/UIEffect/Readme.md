@@ -79,7 +79,7 @@ Easy to use effects for uGUI.
 
 ##### Requirement
 
-* Unity 5.3+ *(included Unity 2017.x)*
+* Unity 5.5+ *(included Unity 2017.x)*
 * No other SDK are required
 
 
@@ -130,6 +130,17 @@ Please enable `TexCoord1` to use UIEffect.
 ![image](https://user-images.githubusercontent.com/12690315/34560894-191b6cda-f18b-11e7-9de2-9a9d13f72ccd.png)
 
 
+#### Note: if you include prefabs / scenes containing UIEffect in AssetBundle.
+
+Use script define symbol `UIEFFECT_SEPARATE`.  
+Unused shader variants and materials will be excluded from AssetBundles.
+
+||Combined mode (default)|Separated mode|
+|-|-|-|
+|Script define symbol| - |`UIEFFECT_SEPARATE`|
+|Included in build|Only used variants|Only used variants|
+|Included in AssetBundle|All variants (Heavy!)|Only used variants|
+|Look in editor|![comb](https://user-images.githubusercontent.com/12690315/35324040-df4f1684-0132-11e8-9534-f958b93de158.png)|![sep](https://user-images.githubusercontent.com/12690315/35324405-fd5e89a6-0133-11e8-9d23-71ccc424fa21.png)|
 
 
 #### How to improve performance?
@@ -143,6 +154,25 @@ https://docs.unity3d.com/Manual/OptimizingShaderLoadTime.html
 
 <br><br><br><br>
 ## Release Notes
+
+### ver.2.0.0
+
+* Feature: Switch separate/combine materials by script symbol "UIEFFECT_SEPARATE".
+    * Combined mode (default)
+        * The effect materials are sub-asset, and will be hidden in project view & object picker window.
+        * Unused shader variants and materials will be excluded from build, but they will be **included in AssetBundle.**  
+        ![comb](https://user-images.githubusercontent.com/12690315/35324040-df4f1684-0132-11e8-9534-f958b93de158.png)
+    * Separated mode
+        * Use script define symbol `UIEFFECT_SEPARATE`.
+        * The effect materials are main-asset, and will be displayed in project view & object picker window.
+        * In Editor, the effect materials are generated as asset, on demand.
+        * Unused shader variants and materials will be excluded from build and AssetBundle.
+        * We recommend this mode only if you include prefabs / scenes containing UIEffect in AssetBundle.  
+        ![sep](https://user-images.githubusercontent.com/12690315/35324405-fd5e89a6-0133-11e8-9d23-71ccc424fa21.png)
+* Changed: Default is "Combined mode".
+* Changed: Change namespace to `Coffee.UIExtensions`.
+* Changed: Unity 5.3.x & 5.4.x are no longer supported.
+
 
 ### ver.1.6.1
 
