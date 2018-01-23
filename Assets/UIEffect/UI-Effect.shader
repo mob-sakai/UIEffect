@@ -50,34 +50,26 @@ Shader "UI/Hidden/UI-Effect"
 		CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			#if UNITY_VERSION >= 540
 			#pragma target 2.0
-			#endif
 			
-			#include "UnityCG.cginc"
-			#include "UnityUI.cginc"
-
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
 
-			// vvvv [For UIEffect] vvvv : Define keyword and include.
 			#pragma shader_feature __ UI_TONE_GRAYSCALE UI_TONE_SEPIA UI_TONE_NEGA UI_TONE_PIXEL UI_TONE_MONO UI_TONE_CUTOFF UI_TONE_HUE 
 			#pragma shader_feature __ UI_COLOR_ADD UI_COLOR_SUB UI_COLOR_SET
 			#pragma shader_feature __ UI_BLUR_FAST UI_BLUR_MEDIUM UI_BLUR_DETAIL
+
+			#include "UnityCG.cginc"
+			#include "UnityUI.cginc"
 			#include "UI-Effect.cginc"
-			// ^^^^ [For UIEffect] ^^^^
-			
+
 			struct appdata_t
 			{
 				float4 vertex   : POSITION;
 				float4 color    : COLOR;
 				float2 texcoord : TEXCOORD0;
-				#ifdef UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_INPUT_INSTANCE_ID
-				#endif
 
-				// vvvv [For UIEffect] vvvv
 				float2 uv1 : TEXCOORD1;
-				// ^^^^ [For UIEffect] ^^^^
 			};
 
 			struct v2f
@@ -86,19 +78,15 @@ Shader "UI/Hidden/UI-Effect"
 				fixed4 color    : COLOR;
 				float2 texcoord  : TEXCOORD0;
 				float4 worldPosition : TEXCOORD1;
-				#ifdef UNITY_VERTEX_OUTPUT_STEREO
 				UNITY_VERTEX_OUTPUT_STEREO
-				#endif
 				
-				// vvvv [For UIEffect] vvvv
-				#if defined (UI_COLOR)						// Add color effect factor.
+				#if defined (UI_COLOR)
 				fixed4 colorFactor : COLOR1;
 				#endif
 
-				#if defined (UI_TONE) || defined (UI_BLUR)	// Add other effect factor.
+				#if defined (UI_TONE) || defined (UI_BLUR)
 				half3 effectFactor : TEXCOORD2;
 				#endif
-				// ^^^^ [For UIEffect] ^^^^
 			};
 			
 			fixed4 _Color;
@@ -110,26 +98,15 @@ Shader "UI/Hidden/UI-Effect"
 			v2f vert(appdata_t IN)
 			{
 				v2f OUT;
-				#ifdef UNITY_SETUP_INSTANCE_ID
 				UNITY_SETUP_INSTANCE_ID(IN);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
-				#endif
 				OUT.worldPosition = IN.vertex;
-				OUT.vertex = mul(UNITY_MATRIX_MVP, OUT.worldPosition);
+				OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
 
 				OUT.texcoord = IN.texcoord;
 				
-				#if defined (UNITY_HALF_TEXEL_OFFSET) && UNITY_VERSION < 550
-				#if UNITY_VERSION >= 540
-				OUT.vertex.xy += (_ScreenParams.zw-1.0) * float2(-1,1) * OUT.vertex.w;
-				#else
-				OUT.vertex.xy += (_ScreenParams.zw-1.0) * float2(-1,1);
-				#endif
-				#endif
-				
 				OUT.color = IN.color * _Color;
 
-				// vvvv [For UIEffect] vvvv : Calculate effect parameter.
 				#if defined (UI_TONE) || defined (UI_BLUR)
 				OUT.effectFactor = UnpackToVec4(IN.uv1.x);
 				#endif
@@ -137,14 +114,13 @@ Shader "UI/Hidden/UI-Effect"
 				#if UI_TONE_HUE
 				OUT.effectFactor.y = sin(OUT.effectFactor.x*3.14159265359*2);
 				OUT.effectFactor.x = cos(OUT.effectFactor.x*3.14159265359*2);
-				#elif UI_TONE_PIXEL && UNITY_VERSION >= 540
+				#elif UI_TONE_PIXEL
 				OUT.effectFactor.xy = max(2, (1-OUT.effectFactor.x) * _MainTex_TexelSize.zw);
 				#endif
 				
 				#if defined (UI_COLOR)
 				OUT.colorFactor = UnpackToVec4(IN.uv1.y);
 				#endif
-				// ^^^^ [For UIEffect] ^^^^
 				
 				return OUT;
 			}
@@ -152,11 +128,8 @@ Shader "UI/Hidden/UI-Effect"
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
-				#if UI_TONE_PIXEL && UNITY_VERSION >= 540
+				#if UI_TONE_PIXEL
 				IN.texcoord = round(IN.texcoord * IN.effectFactor.xy) / IN.effectFactor.xy;
-				#elif UI_TONE_PIXEL
-				float pixelRate = max(1,(1-IN.effectFactor.x) * 256);
-				IN.texcoord = round(IN.texcoord * pixelRate) / pixelRate;
 				#endif
 
 				#if defined (UI_BLUR)
@@ -178,11 +151,11 @@ Shader "UI/Hidden/UI-Effect"
 				#elif UI_TONE_HUE
 				color.rgb = shift_hue(color.rgb, IN.effectFactor.x, IN.effectFactor.y);
 				#elif defined (UI_TONE) & !UI_TONE_CUTOFF
-				color = ApplyToneEffect(color, IN.effectFactor.x);	// Tone effect.
+				color = ApplyToneEffect(color, IN.effectFactor.x);
 				#endif
 
 				#if defined (UI_COLOR)
-				color = ApplyColorEffect(color, IN.colorFactor) * IN.color;	// Color effect.
+				color = ApplyColorEffect(color, IN.colorFactor) * IN.color;
 				#endif
 
 				return color;
