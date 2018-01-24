@@ -85,7 +85,7 @@ namespace Coffee.UIExtensions
 			}
 			else if (changed || !serializedObject.isEditingMultipleObjects)
 			{
-				spMaterial.objectReferenceValue = UIEffect.GetOrCreateMaterialVariant(Shader.Find(shaderName),
+				spMaterial.objectReferenceValue = UIEffect.GetOrGenerateMaterialVariant(Shader.Find(shaderName),
 					(UIEffect.ToneMode)spToneMode.intValue,
 					(UIEffect.ColorMode)spColorMode.intValue,
 					(UIEffect.BlurMode)spBlurMode.intValue

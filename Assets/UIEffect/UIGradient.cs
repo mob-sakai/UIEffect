@@ -12,7 +12,6 @@ namespace Coffee.UIExtensions
 		//################################
 		// Constant or Static Members.
 		//################################
-		static readonly Vector2[] s_SplitedCharacterPosition = { Vector2.up, Vector2.one, Vector2.right, Vector2.zero };
 
 		/// <summary>
 		/// Gradient direction.
@@ -35,6 +34,7 @@ namespace Coffee.UIExtensions
 			Split,
 		}
 
+
 		//################################
 		// Serialize Members.
 		//################################
@@ -50,10 +50,10 @@ namespace Coffee.UIExtensions
 		[SerializeField] ColorSpace m_ColorSpace = ColorSpace.Uninitialized;
 		[SerializeField] bool m_IgnoreAspectRatio = true;
 
+
 		//################################
 		// Public Members.
 		//################################
-
 		new public Graphic graphic { get { return base.graphic; } }
 
 		/// <summary>
@@ -92,7 +92,7 @@ namespace Coffee.UIExtensions
 						: m_Direction == Direction.Vertical ? 0
 						: m_Rotation;
 			}
-			set { if (m_Rotation != value) { m_Rotation = value; graphic.SetVerticesDirty(); } }
+			set { if (!Mathf.Approximately(m_Rotation, value)) { m_Rotation = value; graphic.SetVerticesDirty(); } }
 		}
 
 		/// <summary>
@@ -206,6 +206,12 @@ namespace Coffee.UIExtensions
 				vh.SetUIVertex(vertex, i);
 			}
 		}
+
+
+		//################################
+		// Private Members.
+		//################################
+		static readonly Vector2[] s_SplitedCharacterPosition = { Vector2.up, Vector2.one, Vector2.right, Vector2.zero };
 
 		/// <summary>
 		/// Matrix2x3.

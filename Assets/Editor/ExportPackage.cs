@@ -70,7 +70,7 @@ namespace Coffee.UIExtensions
 				var comb = combinations[i];
 
 				EditorUtility.DisplayProgressBar("Genarate Effect Material", UIEffect.GetVariantName(shader, comb.tone, comb.color, comb.blur), (float)i / combinations.Length);
-				UIEffect.GetOrCreateMaterialVariant(shader, comb.tone, comb.color, comb.blur);
+				UIEffect.GetOrGenerateMaterialVariant(shader, comb.tone, comb.color, comb.blur);
 			}
 			EditorUtility.ClearProgressBar();
 		}

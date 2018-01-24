@@ -21,6 +21,10 @@ namespace Coffee.UIExtensions
 		, ISerializationCallbackReceiver
 #endif
 	{
+
+		//################################
+		// Constant or Static Members.
+		//################################
 		public const string shaderName = "UI/Hidden/UI-EffectCapture";
 
 		/// <summary>
@@ -35,91 +39,127 @@ namespace Coffee.UIExtensions
 			x8 = 8,
 		}
 
+
+		//################################
+		// Serialize Members.
+		//################################
+		[SerializeField][Range(0, 1)] float m_ToneLevel = 1;
+		[SerializeField][Range(0, 1)] float m_Blur = 0;
+		[SerializeField] ToneMode m_ToneMode;
+		[SerializeField] ColorMode m_ColorMode;
+		[SerializeField] BlurMode m_BlurMode;
+		[SerializeField] Color m_EffectColor = Color.white;
+		[SerializeField] DesamplingRate m_DesamplingRate;
+		[SerializeField] DesamplingRate m_ReductionRate;
+		[SerializeField] FilterMode m_FilterMode = FilterMode.Bilinear;
+		[SerializeField] Material m_EffectMaterial;
+
+
+		//################################
+		// Public Members.
+		//################################
 		/// <summary>
 		/// Tone effect level between 0(no effect) and 1(complete effect).
 		/// </summary>
 		public float toneLevel { get { return m_ToneLevel; } set { m_ToneLevel = Mathf.Clamp(value, 0, 1); } }
-
-		[SerializeField]
-		[Range(0, 1)]
-		float m_ToneLevel = 1;
 
 		/// <summary>
 		/// How far is the blurring from the graphic.
 		/// </summary>
 		public float blur { get { return m_Blur; } set { m_Blur = Mathf.Clamp(value, 0, 4); } }
 
-		[SerializeField]
-		[Range(0, 1)]
-		float m_Blur = 0;
-
 		/// <summary>
 		/// Tone effect mode.
 		/// </summary>
 		public ToneMode toneMode { get { return m_ToneMode; } set { m_ToneMode = value; } }
-
-		[SerializeField]
-		ToneMode m_ToneMode;
 
 		/// <summary>
 		/// Color effect mode.
 		/// </summary>
 		public ColorMode colorMode { get { return m_ColorMode; } set { m_ColorMode = value; } }
 
-		[SerializeField]
-		ColorMode m_ColorMode;
-
 		/// <summary>
 		/// Blur effect mode.
 		/// </summary>
 		public BlurMode blurMode { get { return m_BlurMode; } set { m_BlurMode = value; } }
-
-		[SerializeField]
-		BlurMode m_BlurMode;
 
 		/// <summary>
 		/// Color for the color effect.
 		/// </summary>
 		public Color effectColor { get { return m_EffectColor; } set { m_EffectColor = value; } }
 
-		[SerializeField]
-		Color m_EffectColor = Color.white;
+		/// <summary>
+		/// Effect material.
+		/// </summary>
+		public virtual Material effectMaterial { get { return m_EffectMaterial; } }
 
 		/// <summary>
 		/// Desampling rate of the generated RenderTexture.
 		/// </summary>
 		public DesamplingRate desamplingRate { get { return m_DesamplingRate; } set { m_DesamplingRate = value; } }
 
-		[SerializeField]
-		DesamplingRate m_DesamplingRate;
-
 		/// <summary>
 		/// Desampling rate of reduction buffer to apply effect.
 		/// </summary>
 		public DesamplingRate reductionRate { get { return m_ReductionRate; } set { m_ReductionRate = value; } }
-
-		[SerializeField]
-		DesamplingRate m_ReductionRate;
 
 		/// <summary>
 		/// FilterMode for capture.
 		/// </summary>
 		public FilterMode filterMode { get { return m_FilterMode; } set { m_FilterMode = value; } }
 
-		[SerializeField]
-		FilterMode m_FilterMode = FilterMode.Bilinear;
-
-		/// <summary>
-		/// Effect material.
-		/// </summary>
-		public virtual Material effectMaterial { get { return m_EffectMaterial; } }
-
-		[SerializeField] Material m_EffectMaterial;
-
 		/// <summary>
 		/// Captured texture.
 		/// </summary>
 		public RenderTexture capturedTexture { get { return _rt; } }
+
+		/// <summary>
+		/// This function is called when the MonoBehaviour will be destroyed.
+		/// </summary>
+		protected override void OnDestroy()
+		{
+			_Release(true);
+			base.OnDestroy();
+		}
+
+		/// <summary>
+		/// Callback function when a UI element needs to generate vertices.
+		/// </summary>
+		protected override void OnPopulateMesh(VertexHelper vh)
+		{
+			// When not displaying, clear vertex.
+			if (texture == null || effectColor.a < 1 / 255f || canvasRenderer.GetAlpha() < 1 / 255f)
+				vh.Clear();
+			else
+				base.OnPopulateMesh(vh);
+		}
+
+#if UNITY_EDITOR
+		public void OnBeforeSerialize()
+		{
+		}
+
+		public void OnAfterDeserialize()
+		{
+			var obj = this;
+			EditorApplication.delayCall += () =>
+				{
+					if (Application.isPlaying || !obj)
+						return;
+
+					var mat = (0 == toneMode) && (0 == colorMode) && (0 == blurMode)
+						? null
+						: UIEffect.GetOrGenerateMaterialVariant(Shader.Find(shaderName), toneMode, colorMode, blurMode);
+
+					if (m_EffectMaterial == mat)
+						return;
+
+					m_EffectMaterial = mat;
+					EditorUtility.SetDirty(this);
+					EditorApplication.delayCall += AssetDatabase.SaveAssets;
+				};
+		}
+#endif
 
 		/// <summary>
 		/// Gets the size of the desampling.
@@ -226,60 +266,19 @@ namespace Coffee.UIExtensions
 #endif
 		}
 
+		/// <summary>
+		/// Release captured image.
+		/// </summary>
 		public void Release()
 		{
 			_Release(true);
 		}
 
-		/// <summary>
-		/// This function is called when the MonoBehaviour will be destroyed.
-		/// </summary>
-		protected override void OnDestroy()
-		{
-			_Release(true);
-			base.OnDestroy();
-		}
 
 
-		#if UNITY_EDITOR
-		public void OnBeforeSerialize()
-		{
-		}
-
-		public void OnAfterDeserialize()
-		{
-			var obj = this;
-			EditorApplication.delayCall += () =>
-			{
-				if (Application.isPlaying || !obj)
-					return;
-
-				var mat = (0 == toneMode) && (0 == colorMode) && (0 == blurMode)
-						? null
-						: UIEffect.GetOrCreateMaterialVariant(Shader.Find(shaderName), toneMode, colorMode, blurMode);
-
-				if (m_EffectMaterial == mat)
-					return;
-
-				m_EffectMaterial = mat;
-				EditorUtility.SetDirty(this);
-				EditorApplication.delayCall += AssetDatabase.SaveAssets;
-			};
-		}
-		#endif
-
-		/// <summary>
-		/// Callback function when a UI element needs to generate vertices.
-		/// </summary>
-		protected override void OnPopulateMesh(VertexHelper vh)
-		{
-			// When not displaying, clear vertex.
-			if (texture == null || effectColor.a < 1 / 255f || canvasRenderer.GetAlpha() < 1 / 255f)
-				vh.Clear();
-			else
-				base.OnPopulateMesh(vh);
-		}
-
+		//################################
+		// Private Members.
+		//################################
 		const CameraEvent kCameraEvent = CameraEvent.AfterEverything;
 		Camera _camera;
 		RenderTexture _rt;

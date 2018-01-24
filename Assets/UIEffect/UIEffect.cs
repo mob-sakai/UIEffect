@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Serialization;
 
 #if UNITY_EDITOR
 using System.IO;
@@ -32,8 +31,7 @@ namespace Coffee.UIExtensions
 			/// <summary>
 			/// How far is the blurring shadow from the graphic.
 			/// </summary>
-			[Range(0, 1)]
-			public float shadowBlur = 0.25f;
+			[Range(0, 1)] public float shadowBlur = 0.25f;
 
 			/// <summary>
 			/// Shadow effect mode.
@@ -57,7 +55,7 @@ namespace Coffee.UIExtensions
 		}
 
 		//################################
-		// Constant Members.
+		// Constant or Static Members.
 		//################################
 		public const string shaderName = "UI/Hidden/UI-Effect";
 
@@ -88,24 +86,6 @@ namespace Coffee.UIExtensions
 		}
 
 		/// <summary>
-		/// Shadow effect mode.
-		/// </summary>
-		[Obsolete("ShadowMode has been deprecated. Use ShadowStyle instead (UnityUpgradable) -> ShadowStyle", true)]
-		public enum ShadowMode
-		{
-			[Obsolete("ShadowMode.None has been deprecated. Use ShadowStyle.None instead (UnityUpgradable) -> ShadowStyle.None", true)]
-			None = 0,
-			[Obsolete("ShadowMode.Shadow has been deprecated. Use ShadowStyle.Shadow instead (UnityUpgradable) -> ShadowStyle.Shadow", true)]
-			Shadow,
-			[Obsolete("ShadowMode.Outline has been deprecated. Use ShadowStyle.Outline instead (UnityUpgradable) -> ShadowStyle.Outline", true)]
-			Outline,
-			[Obsolete("ShadowMode.Outline8 has been deprecated. Use ShadowStyle.Outline8 instead (UnityUpgradable) -> ShadowStyle.Outline8", true)]
-			Outline8,
-			[Obsolete("ShadowMode.Shadow3 has been deprecated. Use ShadowStyle.Shadow3 instead (UnityUpgradable) -> ShadowStyle.Shadow3", true)]
-			Shadow3,
-		}
-
-		/// <summary>
 		/// Shadow effect style.
 		/// </summary>
 		public enum ShadowStyle
@@ -130,12 +110,25 @@ namespace Coffee.UIExtensions
 
 
 		//################################
-		// Static Members.
+		// Serialize Members.
 		//################################
-		static readonly List<UIVertex> s_Verts = new List<UIVertex>();
+		[SerializeField][Range(0, 1)] float m_ToneLevel = 1;
+		[SerializeField][Range(0, 1)] float m_Blur = 0.25f;
+		[SerializeField][Range(0, 1)] float m_ShadowBlur = 0.25f;
+		[SerializeField] ShadowStyle m_ShadowStyle;
+		[SerializeField] ToneMode m_ToneMode;
+		[SerializeField] ColorMode m_ColorMode;
+		[SerializeField] BlurMode m_BlurMode;
+		[SerializeField] Color m_ShadowColor = Color.black;
+		[SerializeField] Vector2 m_EffectDistance = new Vector2(1f, -1f);
+		[SerializeField] bool m_UseGraphicAlpha = true;
+		[SerializeField] Color m_EffectColor = Color.white;
+		[SerializeField] Material m_EffectMaterial;
+		[SerializeField] List<AdditionalShadow> m_AdditionalShadows = new List<AdditionalShadow>();
+
 
 		//################################
-		// Public or Serialize Members.
+		// Public Members.
 		//################################
 		/// <summary>
 		/// Graphic affected by the UIEffect.
@@ -145,108 +138,68 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Tone effect level between 0(no effect) and 1(complete effect).
 		/// </summary>
-		public float toneLevel{ get { return m_ToneLevel; } set { m_ToneLevel = Mathf.Clamp(value, 0, 1); SetDirty(); } }
-
-		[SerializeField][Range(0, 1)] float m_ToneLevel = 1;
+		public float toneLevel{ get { return m_ToneLevel; } set { m_ToneLevel = Mathf.Clamp(value, 0, 1); _SetDirty(); } }
 
 		/// <summary>
 		/// How far is the blurring from the graphic.
 		/// </summary>
-		public float blur { get { return m_Blur; } set { m_Blur = Mathf.Clamp(value, 0, 2); SetDirty(); } }
-
-		[SerializeField][Range(0, 1)] float m_Blur = 0.25f;
+		public float blur { get { return m_Blur; } set { m_Blur = Mathf.Clamp(value, 0, 2); _SetDirty(); } }
 
 		/// <summary>
 		/// How far is the blurring shadow from the graphic.
 		/// </summary>
-		public float shadowBlur { get { return m_ShadowBlur; } set { m_ShadowBlur = Mathf.Clamp(value, 0, 2); SetDirty(); } }
-
-		[SerializeField][Range(0, 1)] float m_ShadowBlur = 0.25f;
+		public float shadowBlur { get { return m_ShadowBlur; } set { m_ShadowBlur = Mathf.Clamp(value, 0, 2); _SetDirty(); } }
 
 		/// <summary>
 		/// Shadow effect mode.
 		/// </summary>
-		public ShadowStyle shadowStyle { get { return m_ShadowStyle; } set { m_ShadowStyle = value; SetDirty(); } }
-
-		[Obsolete("UIEffect.shadowMode is obsolete, use UIEffect.shadowStyle instead. (UnityUpgradable) -> shadowStyle")]
-		public ShadowStyle shadowMode { get { return m_ShadowStyle; } set { m_ShadowStyle = value; SetDirty(); } }
-
-		[SerializeField][FormerlySerializedAs("m_ShadowMode")]  ShadowStyle m_ShadowStyle;
+		public ShadowStyle shadowStyle { get { return m_ShadowStyle; } set { m_ShadowStyle = value; _SetDirty(); } }
 
 		/// <summary>
 		/// Tone effect mode.
 		/// </summary>
 		public ToneMode toneMode { get { return m_ToneMode; } }
 
-		[SerializeField] ToneMode m_ToneMode;
-
 		/// <summary>
 		/// Color effect mode.
 		/// </summary>
 		public ColorMode colorMode { get { return m_ColorMode; } }
-
-		[SerializeField] ColorMode m_ColorMode;
 
 		/// <summary>
 		/// Blur effect mode.
 		/// </summary>
 		public BlurMode blurMode { get { return m_BlurMode; } }
 
-		[SerializeField] BlurMode m_BlurMode;
-
 		/// <summary>
 		/// Color for the shadow effect.
 		/// </summary>
-		public Color shadowColor { get { return m_ShadowColor; } set { m_ShadowColor = value; SetDirty(); } }
-
-		[SerializeField] Color m_ShadowColor = Color.black;
+		public Color shadowColor { get { return m_ShadowColor; } set { m_ShadowColor = value; _SetDirty(); } }
 
 		/// <summary>
 		/// How far is the shadow from the graphic.
 		/// </summary>
-		public Vector2 effectDistance { get { return m_EffectDistance; } set { m_EffectDistance = value; SetDirty(); } }
-
-		[SerializeField] Vector2 m_EffectDistance = new Vector2(1f, -1f);
+		public Vector2 effectDistance { get { return m_EffectDistance; } set { m_EffectDistance = value; _SetDirty(); } }
 
 		/// <summary>
 		/// Should the shadow inherit the alpha from the graphic?
 		/// </summary>
-		public bool useGraphicAlpha { get { return m_UseGraphicAlpha; } set { m_UseGraphicAlpha = value; SetDirty(); } }
-
-		[SerializeField] bool m_UseGraphicAlpha = true;
+		public bool useGraphicAlpha { get { return m_UseGraphicAlpha; } set { m_UseGraphicAlpha = value; _SetDirty(); } }
 
 		/// <summary>
 		/// Color for the color effect.
 		/// </summary>
-		[Obsolete("UIEffect.color is obsolete, use UIEffect.effectColor instead. (UnityUpgradable) -> effectColor")]
-		public Color color { get { return m_EffectColor; } set { m_EffectColor = value; SetDirty(); } }
-
-		/// <summary>
-		/// Color for the color effect.
-		/// </summary>
-		public Color effectColor { get { return m_EffectColor; } set { m_EffectColor = value; SetDirty(); } }
-
-		[SerializeField][FormerlySerializedAs("m_Color")] Color m_EffectColor = Color.white;
+		public Color effectColor { get { return m_EffectColor; } set { m_EffectColor = value; _SetDirty(); } }
 
 		/// <summary>
 		/// Effect material.
 		/// </summary>
 		public virtual Material effectMaterial { get { return m_EffectMaterial; } }
 
-		[SerializeField] Material m_EffectMaterial;
-
-
 		/// <summary>
 		/// Additional Shadows.
 		/// </summary>
 		public List<AdditionalShadow> additionalShadows { get { return m_AdditionalShadows; } }
 
-		[SerializeField] List<AdditionalShadow> m_AdditionalShadows = new List<AdditionalShadow>();
-
-
-		//################################
-		// MonoBehaior Callbacks.
-		//################################
 		/// <summary>
 		/// This function is called when the object becomes enabled and active.
 		/// </summary>
@@ -284,8 +237,8 @@ namespace Coffee.UIExtensions
 			{
 				// Pack some effect factors to 1 float.
 				Vector2 factor = new Vector2(
-									PackToFloat(toneLevel, 0, blur, 0),
-									PackToFloat(effectColor.r, effectColor.g, effectColor.b, effectColor.a)
+									_PackToFloat(toneLevel, 0, blur, 0),
+									_PackToFloat(effectColor.r, effectColor.g, effectColor.b, effectColor.a)
 								 );
 
 				for (int i = 0; i < s_Verts.Count; i++)
@@ -310,11 +263,11 @@ namespace Coffee.UIExtensions
 				for (int i = additionalShadows.Count - 1; 0 <= i; i--)
 				{
 					AdditionalShadow shadow = additionalShadows[i];
-					ApplyShadow(s_Verts, ref start, ref end, shadow.shadowMode, toneLevel, shadow.shadowBlur, shadow.effectDistance, shadow.shadowColor, shadow.useGraphicAlpha);
+					_ApplyShadow(s_Verts, ref start, ref end, shadow.shadowMode, toneLevel, shadow.shadowBlur, shadow.effectDistance, shadow.shadowColor, shadow.useGraphicAlpha);
 				}
 
 				// Shadow.
-				ApplyShadow(s_Verts, ref start, ref end, shadowStyle, toneLevel, shadowBlur, effectDistance, shadowColor, useGraphicAlpha);
+				_ApplyShadow(s_Verts, ref start, ref end, shadowStyle, toneLevel, shadowBlur, effectDistance, shadowColor, useGraphicAlpha);
 			}
 
 			vh.Clear();
@@ -339,7 +292,7 @@ namespace Coffee.UIExtensions
 
 				var mat = (0 == toneMode) && (0 == colorMode) && (0 == blurMode)
 						? null
-						: GetOrCreateMaterialVariant(Shader.Find(shaderName), toneMode, colorMode, blurMode);
+						: GetOrGenerateMaterialVariant(Shader.Find(shaderName), toneMode, colorMode, blurMode);
 
 				if(m_EffectMaterial == mat && graphic.material == mat)
 					return;
@@ -354,7 +307,7 @@ namespace Coffee.UIExtensions
 		public static Material GetMaterial(Shader shader, ToneMode tone, ColorMode color, BlurMode blur)
 		{
 			string variantName = GetVariantName(shader, tone, color, blur);
-			return AssetDatabase.FindAssets("t:Material " + variantName)
+			return AssetDatabase.FindAssets("t:Material " + Path.GetFileName(shader.name))
 				.Select(x => AssetDatabase.GUIDToAssetPath(x))
 				.SelectMany(x => AssetDatabase.LoadAllAssetsAtPath(x))
 				.OfType<Material>()
@@ -362,7 +315,7 @@ namespace Coffee.UIExtensions
 		}
 
 
-		public static Material GetOrCreateMaterialVariant(Shader shader, ToneMode tone, ColorMode color, BlurMode blur)
+		public static Material GetOrGenerateMaterialVariant(Shader shader, ToneMode tone, ColorMode color, BlurMode blur)
 		{
 			if (!shader)
 				return null;
@@ -371,6 +324,7 @@ namespace Coffee.UIExtensions
 
 			if (!mat)
 			{
+				Debug.Log("Generate material : " + GetVariantName(shader, tone, color, blur));
 				mat = new Material(shader);
 
 				if (0 < tone)
@@ -429,51 +383,53 @@ namespace Coffee.UIExtensions
 		}
 #endif
 
-			//################################
-			// Internal Method.
-			//################################
-			/// <summary>
-			/// Append shadow vertices.
-			/// * It is similar to Shadow component implementation.
-			/// </summary>
-			static void ApplyShadow(List<UIVertex> verts, ref int start, ref int end, ShadowStyle mode, float toneLevel, float blur, Vector2 effectDistance, Color color, bool useGraphicAlpha)
+		//################################
+		// Private Members.
+		//################################
+		static readonly List<UIVertex> s_Verts = new List<UIVertex>();
+
+		/// <summary>
+		/// Append shadow vertices.
+		/// * It is similar to Shadow component implementation.
+		/// </summary>
+		static void _ApplyShadow(List<UIVertex> verts, ref int start, ref int end, ShadowStyle mode, float toneLevel, float blur, Vector2 effectDistance, Color color, bool useGraphicAlpha)
 		{
 			if (ShadowStyle.None == mode)
 				return;
 
 			var factor = new Vector2(
-							 PackToFloat(toneLevel, 0, blur, 0),
-							 PackToFloat(color.r, color.g, color.b, 1)
+							 _PackToFloat(toneLevel, 0, blur, 0),
+							 _PackToFloat(color.r, color.g, color.b, 1)
 						 );
 
 			// Append Shadow.
-			ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
+			_ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
 
 			// Append Shadow3.
 			if (ShadowStyle.Shadow3 == mode)
 			{
-				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, 0, factor, color, useGraphicAlpha);
-				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, 0, effectDistance.y, factor, color, useGraphicAlpha);
+				_ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, 0, factor, color, useGraphicAlpha);
+				_ApplyShadowZeroAlloc(s_Verts, ref start, ref end, 0, effectDistance.y, factor, color, useGraphicAlpha);
 			}
 
 			// Append Outline.
 			else if (ShadowStyle.Outline == mode)
 			{
-				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
-				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
-				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
+				_ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
+				_ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
+				_ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
 			}
 
 			// Append Outline8.
 			else if (ShadowStyle.Outline8 == mode)
 			{
-				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
-				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
-				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
-				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -effectDistance.x, 0, factor, color, useGraphicAlpha);
-				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, 0, -effectDistance.y, factor, color, useGraphicAlpha);
-				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, 0, factor, color, useGraphicAlpha);
-				ApplyShadowZeroAlloc(s_Verts, ref start, ref end, 0, effectDistance.y, factor, color, useGraphicAlpha);
+				_ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
+				_ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
+				_ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
+				_ApplyShadowZeroAlloc(s_Verts, ref start, ref end, -effectDistance.x, 0, factor, color, useGraphicAlpha);
+				_ApplyShadowZeroAlloc(s_Verts, ref start, ref end, 0, -effectDistance.y, factor, color, useGraphicAlpha);
+				_ApplyShadowZeroAlloc(s_Verts, ref start, ref end, effectDistance.x, 0, factor, color, useGraphicAlpha);
+				_ApplyShadowZeroAlloc(s_Verts, ref start, ref end, 0, effectDistance.y, factor, color, useGraphicAlpha);
 			}
 		}
 
@@ -481,7 +437,7 @@ namespace Coffee.UIExtensions
 		/// Append shadow vertices.
 		/// * It is similar to Shadow component implementation.
 		/// </summary>
-		static void ApplyShadowZeroAlloc(List<UIVertex> verts, ref int start, ref int end, float x, float y, Vector2 factor, Color color, bool useGraphicAlpha)
+		static void _ApplyShadowZeroAlloc(List<UIVertex> verts, ref int start, ref int end, float x, float y, Vector2 factor, Color color, bool useGraphicAlpha)
 		{
 			// Check list capacity.
 			var neededCapacity = verts.Count + end - start;
@@ -516,7 +472,7 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Mark the UIEffect as dirty.
 		/// </summary>
-		void SetDirty()
+		void _SetDirty()
 		{
 			if(graphic)
 				graphic.SetVerticesDirty();
@@ -526,7 +482,7 @@ namespace Coffee.UIExtensions
 		/// Pack 4 low-precision [0-1] floats values to a float.
 		/// Each value [0-1] has 64 steps(6 bits).
 		/// </summary>
-		static float PackToFloat(float x, float y, float z, float w)
+		static float _PackToFloat(float x, float y, float z, float w)
 		{
 			const int PRECISION = (1 << 6) - 1;
 			return (Mathf.FloorToInt(w * PRECISION) << 18)
