@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Serialization;
 
 #if UNITY_EDITOR
@@ -8,7 +10,7 @@ using System.Linq;
 using UnityEditor;
 #endif
 
-namespace UnityEngine.UI
+namespace Coffee.UIExtensions
 {
 	/// <summary>
 	/// UIEffect.

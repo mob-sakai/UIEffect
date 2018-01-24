@@ -2,14 +2,14 @@
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using BlurMode = UnityEngine.UI.UIEffect.BlurMode;
-using ColorMode = UnityEngine.UI.UIEffect.ColorMode;
-using ToneMode = UnityEngine.UI.UIEffect.ToneMode;
 using UnityEngine.UI;
-using System.IO;
 
-namespace UnityEditor.UI
+namespace Coffee.UIExtensions
 {
+	using BlurMode = UIEffect.BlurMode;
+	using ColorMode = UIEffect.ColorMode;
+	using ToneMode = UIEffect.ToneMode;
+
 	public static class ExportPackage
 	{
 		const string kPackageName = "UIEffect.unitypackage";
@@ -37,41 +37,37 @@ namespace UnityEditor.UI
 		static void GenerateMaterialVariants()
 		{
 #if UIEFFECT_SEPARATE
+			// On "UIEFFECT_SEPARATE" mode, generate effect materials on demand.
 			return;
 #endif
 
 			// Export materials.
 			AssetDatabase.StartAssetEditing();
-			GenerateMaterialVariants(
-				Shader.Find(UIEffect.shaderName)
-				, (ToneMode[])Enum.GetValues(typeof(ToneMode))
-				, (ColorMode[])Enum.GetValues(typeof(ColorMode))
-				, (BlurMode[])Enum.GetValues(typeof(BlurMode))
-			);
+			{
+				// For UIEffect
+				GenerateMaterialVariants(Shader.Find(UIEffect.shaderName));
 
-			GenerateMaterialVariants(
-				Shader.Find(UIEffectCapturedImage.shaderName)
-				, new[] { ToneMode.None, ToneMode.Grayscale, ToneMode.Sepia, ToneMode.Nega, ToneMode.Pixel, ToneMode.Hue, }
-				, (ColorMode[])Enum.GetValues(typeof(ColorMode))
-				, (BlurMode[])Enum.GetValues(typeof(BlurMode))
-			);
-
+				// For UIEffectCapturedImage
+				GenerateMaterialVariants(Shader.Find(UIEffectCapturedImage.shaderName));
+			}
 			AssetDatabase.StopAssetEditing();
 			AssetDatabase.SaveAssets();
 			AssetDatabase.Refresh();
 		}
 
-		static void GenerateMaterialVariants(Shader shader, ToneMode[] tones, ColorMode[] colors, BlurMode[] blurs)
+		/// <summary>
+		/// Generates the material variants.
+		/// </summary>
+		static void GenerateMaterialVariants(Shader shader)
 		{
-			var combinations = (from tone in tones
-								from color in colors
-								from blur in blurs
+			var combinations = (from tone in (ToneMode[])Enum.GetValues(typeof(ToneMode))
+								from color in (ColorMode[])Enum.GetValues(typeof(ColorMode))
+								from blur in (BlurMode[])Enum.GetValues(typeof(BlurMode))
 								select new { tone, color, blur }).ToArray();
 
 			for (int i = 0; i < combinations.Length; i++)
 			{
 				var comb = combinations[i];
-				
 
 				EditorUtility.DisplayProgressBar("Genarate Effect Material", UIEffect.GetVariantName(shader, comb.tone, comb.color, comb.blur), (float)i / combinations.Length);
 				UIEffect.GetOrCreateMaterialVariant(shader, comb.tone, comb.color, comb.blur);

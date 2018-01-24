@@ -1,8 +1,8 @@
 ﻿using UnityEditor;
+using UnityEditor.UI;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace UnityEditor.UI
+namespace Coffee.UIExtensions
 {
 	/// <summary>
 	/// UIEffectCapturedImage editor.

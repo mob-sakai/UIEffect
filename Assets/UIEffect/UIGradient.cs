@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace UnityEngine.UI
+namespace Coffee.UIExtensions
 {
 	/// <summary>
 	/// UIGradient.

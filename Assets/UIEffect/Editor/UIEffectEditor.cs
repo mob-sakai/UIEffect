@@ -1,10 +1,8 @@
-﻿using System.IO;
-using System.Linq;
+﻿using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace UnityEditor.UI
+namespace Coffee.UIExtensions
 {
 	/// <summary>
 	/// UIEffect editor.

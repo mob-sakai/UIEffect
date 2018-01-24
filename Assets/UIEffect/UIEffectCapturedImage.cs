@@ -7,8 +7,12 @@ using UnityEngine.UI;
 using UnityEditor;
 #endif
 
-namespace UnityEngine.UI
+namespace Coffee.UIExtensions
 {
+	using BlurMode = UIEffect.BlurMode;
+	using ColorMode = UIEffect.ColorMode;
+	using ToneMode = UIEffect.ToneMode;
+
 	/// <summary>
 	/// UIEffectCapturedImage
 	/// </summary>
@@ -52,26 +56,26 @@ namespace UnityEngine.UI
 		/// <summary>
 		/// Tone effect mode.
 		/// </summary>
-		public UIEffect.ToneMode toneMode { get { return m_ToneMode; } set { m_ToneMode = value; } }
+		public ToneMode toneMode { get { return m_ToneMode; } set { m_ToneMode = value; } }
 
 		[SerializeField]
-		UIEffect.ToneMode m_ToneMode;
+		ToneMode m_ToneMode;
 
 		/// <summary>
 		/// Color effect mode.
 		/// </summary>
-		public UIEffect.ColorMode colorMode { get { return m_ColorMode; } set { m_ColorMode = value; } }
+		public ColorMode colorMode { get { return m_ColorMode; } set { m_ColorMode = value; } }
 
 		[SerializeField]
-		UIEffect.ColorMode m_ColorMode;
+		ColorMode m_ColorMode;
 
 		/// <summary>
 		/// Blur effect mode.
 		/// </summary>
-		public UIEffect.BlurMode blurMode { get { return m_BlurMode; } set { m_BlurMode = value; } }
+		public BlurMode blurMode { get { return m_BlurMode; } set { m_BlurMode = value; } }
 
 		[SerializeField]
-		UIEffect.BlurMode m_BlurMode;
+		BlurMode m_BlurMode;
 
 		/// <summary>
 		/// Color for the color effect.
