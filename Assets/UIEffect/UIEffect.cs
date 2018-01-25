@@ -136,6 +136,11 @@ namespace UnityEngine.UI
 		// Public or Serialize Members.
 		//################################
 		/// <summary>
+		/// Graphic affected by the UIEffect.
+		/// </summary>
+		new public Graphic graphic { get { return base.graphic; } }
+
+		/// <summary>
 		/// Tone effect level between 0(no effect) and 1(complete effect).
 		/// </summary>
 		public float toneLevel{ get { return m_ToneLevel; } set { m_ToneLevel = Mathf.Clamp(value, 0, 1); SetDirty(); } }
