@@ -135,6 +135,11 @@ Please enable `TexCoord1` to use UIEffect.
 <br><br><br><br>
 ## Release Notes
 
+### ver.1.6.1
+
+* Fixed: Cannot access protected member `UnityEngine.UI.BaseMeshEffect.graphic` in Unity5.6+.
+
+
 ### ver.1.6.0
 
 * Changed: UIEffect inherit BaseMeshEffect.

@@ -217,9 +217,10 @@ namespace UnityEditor.UI
 			serializedObject.ApplyModifiedProperties();
 
 #if UNITY_5_6_OR_NEWER
-			if((target as UIEffect).graphic)
+			var graphic = (target as UIEffect).graphic;
+			if(graphic)
 			{
-				var canvas = (target as UIEffect).graphic.canvas;
+				var canvas = graphic.canvas;
 				if( canvas && 0 == (canvas.additionalShaderChannels & AdditionalCanvasShaderChannels.TexCoord1))
 				{
 					using (new GUILayout.HorizontalScope())

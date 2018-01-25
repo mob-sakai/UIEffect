@@ -45,6 +45,8 @@ namespace UnityEditor.UI
 			// Export package
 			AssetDatabase.ExportPackage(kAssetPathes, kPackageName, ExportPackageOptions.Recurse | ExportPackageOptions.Default);
 			UnityEngine.Debug.Log("Export successfully : " + kPackageName);
+
+			System.IO.File.Copy("Assets/UIEffect/Readme.md", "Readme.md", true);
 		}
 
 		static void CreateMaterialVariant(Shader shader, ToneMode[] tones, ColorMode[] colors, BlurMode[] blurs)
