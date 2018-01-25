@@ -132,6 +132,15 @@ Please enable `TexCoord1` to use UIEffect.
 
 
 
+#### How to improve performance?
+
+* Use `ShaderVariantCollection` to preload shader.  
+https://docs.unity3d.com/Manual/OptimizingShaderLoadTime.html
+* Set camera's clear flag to "Solid Color".
+* Enable multi thread rendering.
+
+
+
 <br><br><br><br>
 ## Release Notes
 
