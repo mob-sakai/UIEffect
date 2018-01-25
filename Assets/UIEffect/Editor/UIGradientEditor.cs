@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 using UnityEngine.UI;
 
-namespace UnityEditor.UI
+namespace Coffee.UIExtensions
 {
 	/// <summary>
 	/// UIEffect editor.
