@@ -53,6 +53,7 @@ namespace Coffee.UIExtensions
 		[SerializeField] DesamplingRate m_ReductionRate;
 		[SerializeField] FilterMode m_FilterMode = FilterMode.Bilinear;
 		[SerializeField] Material m_EffectMaterial;
+		[SerializeField][Range(1, 8)] int m_Iterations = 1;
 
 
 		//################################
@@ -112,6 +113,11 @@ namespace Coffee.UIExtensions
 		/// Captured texture.
 		/// </summary>
 		public RenderTexture capturedTexture { get { return _rt; } }
+		
+		/// <summary>
+		/// Iterations.
+		/// </summary>
+		public int iterations { get { return m_Iterations; } set { m_Iterations = value; } }
 
 		/// <summary>
 		/// This function is called when the MonoBehaviour will be destroyed.
@@ -187,8 +193,9 @@ namespace Coffee.UIExtensions
 			// Cache id for RT.
 			if (s_CopyId == 0)
 			{
-				s_CopyId = Shader.PropertyToID("_ScreenCopy");
-				s_EffectId = Shader.PropertyToID("_Effect");
+				s_CopyId = Shader.PropertyToID("_UIEffectCapturedImage_ScreenCopyId");
+				s_EffectId1 = Shader.PropertyToID("_UIEffectCapturedImage_EffectId1");
+				s_EffectId2 = Shader.PropertyToID("_UIEffectCapturedImage_EffectId2");
 			}
 
 			// If size of generated result RT has changed, relese it.
@@ -237,21 +244,31 @@ namespace Coffee.UIExtensions
 					_buffer.Blit(s_CopyId, rtId);
 					_buffer.ReleaseTemporaryRT(s_CopyId);
 				}
-				// Blit with reduction buffer.
-				else if (m_DesamplingRate < m_ReductionRate)
-				{
-					GetDesamplingSize(m_ReductionRate, out w, out h);
-					_buffer.GetTemporaryRT(s_EffectId, w, h, 0, m_FilterMode);
-					_buffer.Blit(s_CopyId, s_EffectId, mat);
-					_buffer.ReleaseTemporaryRT(s_CopyId);
-					_buffer.Blit(s_EffectId, rtId);
-					_buffer.ReleaseTemporaryRT(s_EffectId);
-				}
-				// Blit without reduction buffer.
+				// Blit with effect.
 				else
 				{
-					_buffer.Blit(s_CopyId, rtId, mat);
+					GetDesamplingSize(m_ReductionRate, out w, out h);
+					_buffer.GetTemporaryRT(s_EffectId1, w, h, 0, m_FilterMode);
+					_buffer.Blit(s_CopyId, s_EffectId1, mat);    // Apply effect (copied screen -> effect1).
 					_buffer.ReleaseTemporaryRT(s_CopyId);
+					
+					// Iterate the operation.
+					if(1 < m_Iterations)
+					{
+						_buffer.GetTemporaryRT(s_EffectId2, w, h, 0, m_FilterMode);
+						for (int i = 1; i < m_Iterations; i++)
+						{
+							// Apply effect (effect1 -> effect2, or effect2 -> effect1).
+							_buffer.Blit(i % 2 == 0 ? s_EffectId2 : s_EffectId1, i % 2 == 0 ? s_EffectId1 : s_EffectId2, mat);
+						}
+					}
+
+					_buffer.Blit(m_Iterations % 2 == 0 ? s_EffectId2 : s_EffectId1, rtId);
+					_buffer.ReleaseTemporaryRT(s_EffectId1);
+					if (1 < m_Iterations)
+					{
+						_buffer.ReleaseTemporaryRT(s_EffectId2);
+					}
 				}
 			}
 
@@ -286,11 +303,13 @@ namespace Coffee.UIExtensions
 		CommandBuffer _buffer;
 
 		static int s_CopyId;
-		static int s_EffectId;
+		static int s_EffectId1;
+		static int s_EffectId2;
 
 		/// <summary>
 		/// Release genarated objects.
 		/// </summary>
+		/// <param name="releaseRT">If set to <c>true</c> release cached RenderTexture.</param>
 		void _Release(bool releaseRT)
 		{
 			if (releaseRT)
