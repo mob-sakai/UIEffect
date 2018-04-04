@@ -46,6 +46,9 @@ namespace Coffee.UIExtensions
 
 			// Filter Mode.
 			EditorGUILayout.PropertyField(serializedObject.FindProperty("m_FilterMode"));
+			
+			// Iterations.
+			EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Iterations"));
 
 			serializedObject.ApplyModifiedProperties();
 
