@@ -34,10 +34,15 @@ namespace Coffee.UIExtensions
 		protected override void OnEnable()
 		{
 			base.OnEnable();
+			_spTexture = serializedObject.FindProperty("m_Texture");
+			_spColor = serializedObject.FindProperty("m_Color");
+			_spRaycastTarget = serializedObject.FindProperty("m_RaycastTarget");
 			_spDesamplingRate = serializedObject.FindProperty("m_DesamplingRate");
 			_spReductionRate = serializedObject.FindProperty("m_ReductionRate");
 			_spFilterMode = serializedObject.FindProperty("m_FilterMode");
 			_spIterations = serializedObject.FindProperty("m_Iterations");
+			_spKeepSizeToRootCanvas = serializedObject.FindProperty("m_KeepCanvasSize");
+			
 
 			_customAdvancedOption = (qualityMode == QualityMode.Custom);
 		}
@@ -52,9 +57,9 @@ namespace Coffee.UIExtensions
 			//================
 			// Basic properties.
 			//================
-			EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Texture"));
-			EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Color"));
-			EditorGUILayout.PropertyField(serializedObject.FindProperty("m_RaycastTarget"));
+			EditorGUILayout.PropertyField(_spTexture);
+			EditorGUILayout.PropertyField(_spColor);
+			EditorGUILayout.PropertyField(_spRaycastTarget);
 
 			//================
 			// Capture effect.
@@ -86,6 +91,7 @@ namespace Coffee.UIExtensions
 				EditorGUILayout.PropertyField(_spFilterMode);// Filter Mode.
 				EditorGUILayout.PropertyField(_spIterations);// Iterations.
 			}
+			EditorGUILayout.PropertyField(_spKeepSizeToRootCanvas);// Iterations.
 
 			serializedObject.ApplyModifiedProperties();
 
@@ -110,10 +116,14 @@ namespace Coffee.UIExtensions
 		const int Bits4 = (1 << 4) - 1;
 		const int Bits2 = (1 << 2) - 1;
 		bool _customAdvancedOption = false;
+		SerializedProperty _spTexture;
+		SerializedProperty _spColor;
+		SerializedProperty _spRaycastTarget;
 		SerializedProperty _spDesamplingRate;
 		SerializedProperty _spReductionRate;
 		SerializedProperty _spFilterMode;
 		SerializedProperty _spIterations;
+		SerializedProperty _spKeepSizeToRootCanvas;
 
 		QualityMode qualityMode
 		{

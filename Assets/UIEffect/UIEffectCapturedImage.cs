@@ -54,6 +54,7 @@ namespace Coffee.UIExtensions
 		[SerializeField] FilterMode m_FilterMode = FilterMode.Bilinear;
 		[SerializeField] Material m_EffectMaterial;
 		[SerializeField][Range(1, 8)] int m_Iterations = 1;
+		[SerializeField] bool m_KeepCanvasSize = true;
 
 
 		//################################
@@ -118,6 +119,11 @@ namespace Coffee.UIExtensions
 		/// Iterations.
 		/// </summary>
 		public int iterations { get { return m_Iterations; } set { m_Iterations = value; } }
+
+		/// <summary>
+		/// Fits graphic size to the root canvas.
+		/// </summary>
+		public bool keepCanvasSize { get { return m_KeepCanvasSize; } set { m_KeepCanvasSize = value; } }
 
 		/// <summary>
 		/// This function is called when the MonoBehaviour will be destroyed.
@@ -276,11 +282,15 @@ namespace Coffee.UIExtensions
 			_camera.AddCommandBuffer(kCameraEvent, _buffer);
 
 			// StartCoroutine by CanvasScaler.
-#if UNITY_5_4_OR_NEWER
-			canvas.rootCanvas.GetComponent<CanvasScaler>().StartCoroutine(_CoUpdateTextureOnNextFrame());
-#else
-			canvas.GetComponentInParent<CanvasScaler>().StartCoroutine(_CoUpdateTextureOnNextFrame());
-#endif
+			var rootCanvas = canvas.rootCanvas;
+			var scaler = rootCanvas.GetComponent<CanvasScaler>();
+			scaler.StartCoroutine(_CoUpdateTextureOnNextFrame());
+			if (m_KeepCanvasSize)
+			{
+				var size = (rootCanvas.transform as RectTransform).rect.size;
+				rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
+				rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
+			}
 		}
 
 		/// <summary>
