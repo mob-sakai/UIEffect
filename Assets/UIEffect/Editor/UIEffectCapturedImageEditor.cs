@@ -1,6 +1,7 @@
 ﻿using UnityEditor;
 using UnityEditor.UI;
 using UnityEngine;
+using DesamplingRate = Coffee.UIExtensions.UIEffectCapturedImage.DesamplingRate;
 
 namespace Coffee.UIExtensions
 {
@@ -11,6 +12,36 @@ namespace Coffee.UIExtensions
 	[CanEditMultipleObjects]
 	public class UIEffectCapturedImageEditor : RawImageEditor
 	{
+		//################################
+		// Constant or Static Members.
+		//################################
+
+		public enum QualityMode : int
+		{
+			Fast = (DesamplingRate.x2 << 0) + (DesamplingRate.x2 << 4) + (FilterMode.Bilinear << 8) + (1 << 10),
+			Medium = (DesamplingRate.x1 << 0) + (DesamplingRate.x1 << 4) + (FilterMode.Bilinear << 8) + (1 << 10),
+			Detail = (DesamplingRate.None << 0) + (DesamplingRate.x1 << 4) + (FilterMode.Bilinear << 8) + (1 << 10),
+			Custom = -1,
+		}
+
+
+		//################################
+		// Public/Protected Members.
+		//################################
+		/// <summary>
+		/// This function is called when the object becomes enabled and active.
+		/// </summary>
+		protected override void OnEnable()
+		{
+			base.OnEnable();
+			_spDesamplingRate = serializedObject.FindProperty("m_DesamplingRate");
+			_spReductionRate = serializedObject.FindProperty("m_ReductionRate");
+			_spFilterMode = serializedObject.FindProperty("m_FilterMode");
+			_spIterations = serializedObject.FindProperty("m_Iterations");
+
+			_customAdvancedOption = (qualityMode == QualityMode.Custom);
+		}
+
 		/// <summary>
 		/// Implement this function to make a custom inspector.
 		/// </summary>
@@ -38,17 +69,23 @@ namespace Coffee.UIExtensions
 			GUILayout.Space(10);
 			EditorGUILayout.LabelField("Advanced Option", EditorStyles.boldLabel);
 
-			// Desampling rate.
-			DrawDesamplingRate(serializedObject.FindProperty("m_DesamplingRate"));
+			EditorGUI.BeginChangeCheck();
+			QualityMode quality = qualityMode;
+			quality = (QualityMode)EditorGUILayout.EnumPopup("Quality Mode", quality);
+			if(EditorGUI.EndChangeCheck())
+			{
+				_customAdvancedOption = (quality == QualityMode.Custom);
+				qualityMode = quality;
+			}
 
-			// Reduction rate.
-			DrawDesamplingRate(serializedObject.FindProperty("m_ReductionRate"));
-
-			// Filter Mode.
-			EditorGUILayout.PropertyField(serializedObject.FindProperty("m_FilterMode"));
-			
-			// Iterations.
-			EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Iterations"));
+			// When qualityMode is `Custom`, show advanced option.
+			if (_customAdvancedOption)
+			{
+				DrawDesamplingRate(_spDesamplingRate);// Desampling rate.
+				DrawDesamplingRate(_spReductionRate);// Reduction rate.
+				EditorGUILayout.PropertyField(_spFilterMode);// Filter Mode.
+				EditorGUILayout.PropertyField(_spIterations);// Iterations.
+			}
 
 			serializedObject.ApplyModifiedProperties();
 
@@ -64,6 +101,44 @@ namespace Coffee.UIExtensions
 				if (GUILayout.Button("Release", "ButtonRight"))
 					UpdateTexture(false);
 				EditorGUI.EndDisabledGroup();
+			}
+		}
+
+		//################################
+		// Private Members.
+		//################################
+		const int Bits4 = (1 << 4) - 1;
+		const int Bits2 = (1 << 2) - 1;
+		bool _customAdvancedOption = false;
+		SerializedProperty _spDesamplingRate;
+		SerializedProperty _spReductionRate;
+		SerializedProperty _spFilterMode;
+		SerializedProperty _spIterations;
+
+		QualityMode qualityMode
+		{
+			get
+			{
+				if (_customAdvancedOption)
+					return QualityMode.Custom;
+
+				int qualityValue = (_spDesamplingRate.intValue << 0)
+					+ (_spReductionRate.intValue << 4)
+					+ (_spFilterMode.intValue << 8)
+					+ (_spIterations.intValue << 10);
+
+				return System.Enum.IsDefined(typeof(QualityMode), qualityValue) ? (QualityMode)qualityValue : QualityMode.Custom;
+			}
+			set
+			{
+				if (value != QualityMode.Custom)
+				{
+					int qualityValue = (int)value;
+					_spDesamplingRate.intValue = (qualityValue >> 0) & Bits4;
+					_spReductionRate.intValue = (qualityValue >> 4) & Bits4;
+					_spFilterMode.intValue = (qualityValue >> 8) & Bits2;
+					_spIterations.intValue = (qualityValue >> 10) & Bits4;
+				}
 			}
 		}
 
