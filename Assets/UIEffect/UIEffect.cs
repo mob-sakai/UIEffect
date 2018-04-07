@@ -127,6 +127,9 @@ namespace Coffee.UIExtensions
 		[SerializeField] List<AdditionalShadow> m_AdditionalShadows = new List<AdditionalShadow>();
 
 
+		[SerializeField] bool m_CustomEffect = false;
+		[SerializeField] Vector4 m_CustomFactor = new Vector4();
+
 		//################################
 		// Public Members.
 		//################################
@@ -201,6 +204,11 @@ namespace Coffee.UIExtensions
 		public List<AdditionalShadow> additionalShadows { get { return m_AdditionalShadows; } }
 
 		/// <summary>
+		/// Custom effect factor.
+		/// </summary>
+		public Vector4 customFactor { get { return m_CustomFactor; } set { m_CustomFactor = value; _SetDirty(); } }
+		
+		/// <summary>
 		/// This function is called when the object becomes enabled and active.
 		/// </summary>
 		protected override void OnEnable()
@@ -237,7 +245,7 @@ namespace Coffee.UIExtensions
 			{
 				// Pack some effect factors to 1 float.
 				Vector2 factor = new Vector2(
-									_PackToFloat(toneLevel, 0, blur, 0),
+									m_CustomEffect ? _PackToFloat(m_CustomFactor) : _PackToFloat(toneLevel, 0, blur, 0),
 									_PackToFloat(effectColor.r, effectColor.g, effectColor.b, effectColor.a)
 								 );
 
@@ -284,6 +292,9 @@ namespace Coffee.UIExtensions
 
 		public void OnAfterDeserialize()
 		{
+			if (m_CustomEffect)
+				return;
+
 			var obj = this;
 			EditorApplication.delayCall += () =>
 			{
@@ -489,6 +500,15 @@ namespace Coffee.UIExtensions
 			+ (Mathf.FloorToInt(z * PRECISION) << 12)
 			+ (Mathf.FloorToInt(y * PRECISION) << 6)
 			+ Mathf.FloorToInt(x * PRECISION);
+		}
+
+		/// <summary>
+		/// Pack 4 low-precision [0-1] floats values to a float.
+		/// Each value [0-1] has 64 steps(6 bits).
+		/// </summary>
+		static float _PackToFloat(Vector4 factor)
+		{
+			return _PackToFloat(Mathf.Clamp01(factor.x), Mathf.Clamp01(factor.y), Mathf.Clamp01(factor.z), Mathf.Clamp01(factor.w));
 		}
 	}
 }
