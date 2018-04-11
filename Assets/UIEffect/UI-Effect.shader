@@ -118,7 +118,7 @@ Shader "UI/Hidden/UI-Effect"
 				OUT.extraFactor.x = cos(OUT.effectFactor.x*3.14159265359 * 2);
 				OUT.extraFactor.y = sin(OUT.effectFactor.x*3.14159265359 * 2);
 				#elif UI_TONE_PIXEL
-				OUT.extraFactor.xy = max(2, (1-OUT.effectFactor.x) * _MainTex_TexelSize.zw);
+				OUT.extraFactor.xy = max(2, (1-OUT.effectFactor.x*0.98) * _MainTex_TexelSize.zw);
 				#endif
 				
 				#if defined (UI_COLOR)
