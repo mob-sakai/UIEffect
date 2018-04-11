@@ -1,8 +1,8 @@
-#!/bin/bash -xe
+#!/bin/bash -e
 
 # Release the project with the following steps:
 #   1. Update the release version in package.json.
-#   2. Update "CHANGELOG.md" using "github_changelog_generator-1.15.0.pre.beta".
+#   2. Update "CHANGELOG.md" using "github_changelog_generator-1.15.0.pre.rc".
 #   3. Commit package.json and CHANGELOG.md.
 #   4. Merge into master branch.
 #   5. Export unitypackage.
@@ -26,9 +26,14 @@ sed -i -e "s/\"version\": \(.*\)/\"version\": \"${RELEASE_VERSION}\",/g" package
 TAG=v$RELEASE_VERSION
 git tag $TAG
 git push --tags
-github_changelog_generator
+github_changelog_generator -t $GITHUB_TOKEN
 git tag -d $TAG
 git push --delete origin $TAG
+
+
+git diff -- CHANGELOG.md
+read -p "[? continue? (y/N):" yn
+case "$yn" in [yY]*) ;; *) exit ;; esac
 
 
 # commit files
