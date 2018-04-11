@@ -403,7 +403,7 @@ namespace Coffee.UIExtensions
 		/// Append shadow vertices.
 		/// * It is similar to Shadow component implementation.
 		/// </summary>
-		static void _ApplyShadow(List<UIVertex> verts, ref int start, ref int end, ShadowStyle mode, float toneLevel, float blur, Vector2 effectDistance, Color color, bool useGraphicAlpha)
+		void _ApplyShadow(List<UIVertex> verts, ref int start, ref int end, ShadowStyle mode, float toneLevel, float blur, Vector2 effectDistance, Color color, bool useGraphicAlpha)
 		{
 			if (ShadowStyle.None == mode)
 				return;
@@ -448,7 +448,7 @@ namespace Coffee.UIExtensions
 		/// Append shadow vertices.
 		/// * It is similar to Shadow component implementation.
 		/// </summary>
-		static void _ApplyShadowZeroAlloc(List<UIVertex> verts, ref int start, ref int end, float x, float y, Vector2 factor, Color color, bool useGraphicAlpha)
+		void _ApplyShadowZeroAlloc(List<UIVertex> verts, ref int start, ref int end, float x, float y, Vector2 factor, Color color, bool useGraphicAlpha)
 		{
 			// Check list capacity.
 			var neededCapacity = verts.Count + end - start;
@@ -467,6 +467,12 @@ namespace Coffee.UIExtensions
 				vt.position.Set(v.x + x, v.y + y, v.z);
 
 				Color vertColor = color;
+
+				if(colorMode != ColorMode.None)
+				{
+					vertColor.r = vertColor.g = vertColor.b = 1;
+				}
+
 				vertColor.a = useGraphicAlpha ? color.a * vt.color.a / 255 : color.a;
 				vt.color = vertColor;
 
