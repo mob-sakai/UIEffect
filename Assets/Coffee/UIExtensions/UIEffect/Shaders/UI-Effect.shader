@@ -84,13 +84,7 @@ Shader "UI/Hidden/UI-Effect"
 				float4 worldPosition : TEXCOORD1;
 				UNITY_VERTEX_OUTPUT_STEREO
 				
-				#if defined (UI_COLOR)
-				fixed4 colorFactor : COLOR1;
-				#endif
-
-				#if defined (UI_TONE) || defined (UI_BLUR)
 				half4 effectFactor : TEXCOORD2;
-				#endif
 				#if HUE || PIXEL
 				half2 extraFactor : TEXCOORD3;
 				#endif
@@ -114,19 +108,13 @@ Shader "UI/Hidden/UI-Effect"
 				
 				OUT.color = IN.color * _Color;
 
-				#if defined (UI_TONE) || defined (UI_BLUR)
 				OUT.effectFactor = UnpackToVec4(IN.uv1.x);
-				#endif
 
 				#if HUE
 				OUT.extraFactor.x = cos(OUT.effectFactor.x*3.14159265359 * 2);
 				OUT.extraFactor.y = sin(OUT.effectFactor.x*3.14159265359 * 2);
 				#elif PIXEL
 				OUT.extraFactor.xy = max(2, (1-OUT.effectFactor.x*0.98) * _MainTex_TexelSize.zw);
-				#endif
-				
-				#if defined (UI_COLOR)
-				OUT.colorFactor = UnpackToVec4(IN.uv1.y);
 				#endif
 				
 				return OUT;
@@ -140,9 +128,9 @@ Shader "UI/Hidden/UI-Effect"
 				#endif
 
 				#if defined (UI_BLUR)
-				half4 color = (Tex2DBlurring(_MainTex, IN.texcoord, IN.effectFactor.z * _MainTex_TexelSize.xy * 2) + _TextureSampleAdd) * IN.color;
+				half4 color = (Tex2DBlurring(_MainTex, IN.texcoord, IN.effectFactor.z * _MainTex_TexelSize.xy * 2) + _TextureSampleAdd);
 				#else
-				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
+				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd);
 				#endif
 				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
 
@@ -161,9 +149,8 @@ Shader "UI/Hidden/UI-Effect"
 				color = ApplyToneEffect(color, IN.effectFactor.x);
 				#endif
 
-				#if defined (UI_COLOR)
-				color = ApplyColorEffect(color, IN.colorFactor) * IN.color;
-				#endif
+				color = ApplyColorEffect(color, fixed4(IN.color.rgb, IN.effectFactor.y));
+				color.a *= IN.color.a;
 
 				return color;
 			}
