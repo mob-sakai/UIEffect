@@ -127,6 +127,9 @@ namespace Coffee.UIExtensions
 		[SerializeField] List<AdditionalShadow> m_AdditionalShadows = new List<AdditionalShadow>();
 
 
+		[SerializeField] bool m_CustomEffect = false;
+		[SerializeField] Vector4 m_CustomFactor = new Vector4();
+
 		//################################
 		// Public Members.
 		//################################
@@ -201,6 +204,11 @@ namespace Coffee.UIExtensions
 		public List<AdditionalShadow> additionalShadows { get { return m_AdditionalShadows; } }
 
 		/// <summary>
+		/// Custom effect factor.
+		/// </summary>
+		public Vector4 customFactor { get { return m_CustomFactor; } set { m_CustomFactor = value; _SetDirty(); } }
+		
+		/// <summary>
 		/// This function is called when the object becomes enabled and active.
 		/// </summary>
 		protected override void OnEnable()
@@ -237,7 +245,7 @@ namespace Coffee.UIExtensions
 			{
 				// Pack some effect factors to 1 float.
 				Vector2 factor = new Vector2(
-									_PackToFloat(toneLevel, 0, blur, 0),
+									m_CustomEffect ? _PackToFloat(m_CustomFactor) : _PackToFloat(toneLevel, 0, blur, 0),
 									_PackToFloat(effectColor.r, effectColor.g, effectColor.b, effectColor.a)
 								 );
 
@@ -284,6 +292,9 @@ namespace Coffee.UIExtensions
 
 		public void OnAfterDeserialize()
 		{
+			if (m_CustomEffect)
+				return;
+
 			var obj = this;
 			EditorApplication.delayCall += () =>
 			{
@@ -392,7 +403,7 @@ namespace Coffee.UIExtensions
 		/// Append shadow vertices.
 		/// * It is similar to Shadow component implementation.
 		/// </summary>
-		static void _ApplyShadow(List<UIVertex> verts, ref int start, ref int end, ShadowStyle mode, float toneLevel, float blur, Vector2 effectDistance, Color color, bool useGraphicAlpha)
+		void _ApplyShadow(List<UIVertex> verts, ref int start, ref int end, ShadowStyle mode, float toneLevel, float blur, Vector2 effectDistance, Color color, bool useGraphicAlpha)
 		{
 			if (ShadowStyle.None == mode)
 				return;
@@ -437,7 +448,7 @@ namespace Coffee.UIExtensions
 		/// Append shadow vertices.
 		/// * It is similar to Shadow component implementation.
 		/// </summary>
-		static void _ApplyShadowZeroAlloc(List<UIVertex> verts, ref int start, ref int end, float x, float y, Vector2 factor, Color color, bool useGraphicAlpha)
+		void _ApplyShadowZeroAlloc(List<UIVertex> verts, ref int start, ref int end, float x, float y, Vector2 factor, Color color, bool useGraphicAlpha)
 		{
 			// Check list capacity.
 			var neededCapacity = verts.Count + end - start;
@@ -456,6 +467,12 @@ namespace Coffee.UIExtensions
 				vt.position.Set(v.x + x, v.y + y, v.z);
 
 				Color vertColor = color;
+
+				if(colorMode != ColorMode.None)
+				{
+					vertColor.r = vertColor.g = vertColor.b = 1;
+				}
+
 				vertColor.a = useGraphicAlpha ? color.a * vt.color.a / 255 : color.a;
 				vt.color = vertColor;
 
@@ -489,6 +506,15 @@ namespace Coffee.UIExtensions
 			+ (Mathf.FloorToInt(z * PRECISION) << 12)
 			+ (Mathf.FloorToInt(y * PRECISION) << 6)
 			+ Mathf.FloorToInt(x * PRECISION);
+		}
+
+		/// <summary>
+		/// Pack 4 low-precision [0-1] floats values to a float.
+		/// Each value [0-1] has 64 steps(6 bits).
+		/// </summary>
+		static float _PackToFloat(Vector4 factor)
+		{
+			return _PackToFloat(Mathf.Clamp01(factor.x), Mathf.Clamp01(factor.y), Mathf.Clamp01(factor.z), Mathf.Clamp01(factor.w));
 		}
 	}
 }

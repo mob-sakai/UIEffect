@@ -1,16 +1,16 @@
 UIEffect
 ===
 
-UIEffect is an effect component for uGUI.  
-Controls and manipulate visual effect is very easy!
+UIEffect is an effect component for uGUI in Unity.  
+Let's decorate your UI with effects!
 
 [![](https://img.shields.io/github/release/mob-sakai/UIEffect.svg?label=latest%20version)](https://github.com/mob-sakai/UIEffect/release)
 [![](https://img.shields.io/github/release-date/mob-sakai/UIEffect.svg)](https://github.com/mob-sakai/UIEffect/releases)  
 ![](https://img.shields.io/badge/requirement-Unity%205.5%2B-green.svg)
 [![](https://img.shields.io/github/license/mob-sakai/UIEffect.svg)](https://github.com/mob-sakai/UIEffect/blob/master/LICENSE.txt)  
-[![](https://img.shields.io/github/last-commit/mob-sakai/UIEffect/develop.svg?label=last%20commit)](https://github.com/mob-sakai/UIEffect/commits/develop)
+[![](https://img.shields.io/github/last-commit/mob-sakai/UIEffect/develop.svg?label=last%20commit%20to%20develop)](https://github.com/mob-sakai/UIEffect/commits/develop)
 [![](https://img.shields.io/github/issues/mob-sakai/UIEffect.svg)](https://github.com/mob-sakai/UIEffect/issues)
-[![](https://img.shields.io/github/commits-since/mob-sakai/UIEffect/latest.svg)](https://github.com/mob-sakai/UIEffect/compare/master...develop)
+
 
 
 << [Description](#Description) | [WebGL Demo](#demo) | [Download](https://github.com/mob-sakai/UIEffect/releases) | [Usage](#usage) | [Development Note](#development-note) | [Change log](https://github.com/mob-sakai/UIEffect/blob/develop/CHANGELOG.md) >>
@@ -48,22 +48,26 @@ Controls and manipulate visual effect is very easy!
     * Diagonal
 
 
+### Easy to control effect parameters!
+
+![image](https://user-images.githubusercontent.com/12690315/38594668-636dd3ac-3d82-11e8-9951-820964a6a95f.gif)
+
+
 ### And, more features!
 
 * Control the effect parameters without instantiating the material
-* Control the effect parameter with AnimationClip  
+* Control the effect parameters with AnimationClip  
 ![image](https://user-images.githubusercontent.com/12690315/34617750-cf2c9464-f27f-11e7-8ee9-e6be3b209943.gif)
 * Use for screen transition  
 ![image](https://user-images.githubusercontent.com/12690315/34618554-71a32e40-f282-11e7-8b78-6948c50c6b58.gif)
 * Multiple shadow effect to reduce rendering vertices  
 ![image](https://user-images.githubusercontent.com/12690315/34552373-600fdab2-f164-11e7-8565-21c15af92a93.png)
-* The captured image with effect, like post effect  
+* UICapturedEffectImage: The captured image with effect, like post effect  
 ![image](https://user-images.githubusercontent.com/12690315/34619147-868cb36a-f284-11e7-8122-b924ff09077f.gif)
-* Dialog window with the captured image effect  
+* UICapturedEffectImage: Dialog window with the captured image effect  
 ![image](https://user-images.githubusercontent.com/12690315/34619468-97e3c134-f285-11e7-90b2-3a75bde13911.gif)
-* Change vertex color as gradient, with rotation, offset, color correction  
-![image](https://user-images.githubusercontent.com/12690315/34931353-b1824df2-fa11-11e7-9dda-18aba10a8607.gif)
-![image](https://user-images.githubusercontent.com/12690315/34930676-000c41d4-fa0e-11e7-825b-d5a1e757fea8.png)
+* UIGradient: Change vertex color as gradient, with rotation, offset, color correction  
+![image](https://user-images.githubusercontent.com/12690315/38594997-2a39f03c-3d84-11e8-865d-9ce12a8bb3db.gif)
 
 
 

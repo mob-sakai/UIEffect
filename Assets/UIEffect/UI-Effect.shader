@@ -85,7 +85,10 @@ Shader "UI/Hidden/UI-Effect"
 				#endif
 
 				#if defined (UI_TONE) || defined (UI_BLUR)
-				half3 effectFactor : TEXCOORD2;
+				half4 effectFactor : TEXCOORD2;
+				#endif
+				#if UI_TONE_HUE || UI_TONE_PIXEL
+				half4 extraFactor : TEXCOORD3;
 				#endif
 			};
 			
@@ -112,10 +115,10 @@ Shader "UI/Hidden/UI-Effect"
 				#endif
 
 				#if UI_TONE_HUE
-				OUT.effectFactor.y = sin(OUT.effectFactor.x*3.14159265359*2);
-				OUT.effectFactor.x = cos(OUT.effectFactor.x*3.14159265359*2);
+				OUT.extraFactor.x = cos(OUT.effectFactor.x*3.14159265359 * 2);
+				OUT.extraFactor.y = sin(OUT.effectFactor.x*3.14159265359 * 2);
 				#elif UI_TONE_PIXEL
-				OUT.effectFactor.xy = max(2, (1-OUT.effectFactor.x) * _MainTex_TexelSize.zw);
+				OUT.extraFactor.xy = max(2, (1-OUT.effectFactor.x*0.98) * _MainTex_TexelSize.zw);
 				#endif
 				
 				#if defined (UI_COLOR)
@@ -129,7 +132,7 @@ Shader "UI/Hidden/UI-Effect"
 			fixed4 frag(v2f IN) : SV_Target
 			{
 				#if UI_TONE_PIXEL
-				IN.texcoord = round(IN.texcoord * IN.effectFactor.xy) / IN.effectFactor.xy;
+				IN.texcoord = round(IN.texcoord * IN.extraFactor.xy) / IN.extraFactor.xy;
 				#endif
 
 				#if defined (UI_BLUR)
@@ -149,7 +152,7 @@ Shader "UI/Hidden/UI-Effect"
 				color.rgb = IN.color.rgb;
 				color.a = color.a * tex2D(_MainTex, IN.texcoord).a + IN.effectFactor.x * 2 - 1;
 				#elif UI_TONE_HUE
-				color.rgb = shift_hue(color.rgb, IN.effectFactor.x, IN.effectFactor.y);
+				color.rgb = shift_hue(color.rgb, IN.extraFactor.x, IN.extraFactor.y);
 				#elif defined (UI_TONE) & !UI_TONE_CUTOFF
 				color = ApplyToneEffect(color, IN.effectFactor.x);
 				#endif
