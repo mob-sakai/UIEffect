@@ -2,7 +2,7 @@
 
 namespace Coffee.UIExtensions
 {
-	public class UIEffectDialogDemo : MonoBehaviour
+	public class Demo_UIEffectDialog : MonoBehaviour
 	{
 		public void Open()
 		{
