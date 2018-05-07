@@ -55,6 +55,8 @@ git checkout master
 git merge --no-ff release -m "release $TAG"
 git branch -D release
 git push origin master
+git checkout develop
+git merge --ff master
 git push origin develop
 
 

@@ -6,5 +6,6 @@
     "url": "git+https://github.com/mob-sakai/UIEffect.git"
   },
   "src": "Assets/UIEffect",
+  "unity": "/Applications/Unity2017.1.0p5/Unity2017.1.0p5.app/Contents/MacOS/Unity",
   "license": "MIT"
 }
