@@ -46,6 +46,8 @@ Let's decorate your UI with effects!
     * Vertical
     * Angle
     * Diagonal
+* Shiny
+* Dissolve
 
 
 ### Easy to control effect parameters!
@@ -68,14 +70,19 @@ Let's decorate your UI with effects!
 ![image](https://user-images.githubusercontent.com/12690315/34619468-97e3c134-f285-11e7-90b2-3a75bde13911.gif)
 * UIGradient: Change vertex color as gradient, with rotation, offset, color correction  
 ![image](https://user-images.githubusercontent.com/12690315/38594997-2a39f03c-3d84-11e8-865d-9ce12a8bb3db.gif)
-
+* UIShiny: Shiny effect WITHOUT Mask component. This will suppress extra draw calls and improve performance.  
+Merged from [ShinyEffectForUGUI](https://github.com/mob-sakai/ShinyEffectForUGUI).  
+![image](https://user-images.githubusercontent.com/12690315/38501362-c56e3768-3c47-11e8-9ec1-50343d8b83ad.gif)
+* UIDissolve: Dissolve effect WITHOUT material instancing. This will suppress extra draw calls and improve performance.  
+Merged from [DissolveEffectForUGUI](https://github.com/mob-sakai/DissolveEffectForUGUI).  
+![demo](https://user-images.githubusercontent.com/12690315/39131616-dcf7ea60-474a-11e8-8e20-f9e5bd8b3f5c.gif)
 
 
 
 <br><br><br><br>
 ## Demo
 
-[WebGL Demo](https://developer.cloud.unity3d.com/share/WJTY06hfG7/webgl/)
+[WebGL Demo](http://mob-sakai.github.io/UIEffect)
 
 * Effect sample
 * Transition

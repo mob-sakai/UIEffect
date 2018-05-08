@@ -1,5 +1,15 @@
 # Changelog
 
+## [v2.3.0](https://github.com/mob-sakai/UIEffect/tree/v2.3.0) (2018-05-08)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.2.0...v2.3.0)
+
+**Implemented enhancements:**
+
+- Feature: Flip horizontal/vertical [\#47](https://github.com/mob-sakai/UIEffect/issues/47)
+- Feature: Dissolve [\#45](https://github.com/mob-sakai/UIEffect/issues/45)
+- Feature: Shining effect [\#9](https://github.com/mob-sakai/UIEffect/issues/9)
+
 ## [v2.2.0](https://github.com/mob-sakai/UIEffect/tree/v2.2.0) (2018-04-12)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.1.0...v2.2.0)
