@@ -20,6 +20,9 @@ Let's decorate your UI with effects!
 <br><br><br><br>
 ## Description
 
+### New feature in v2.3.0!
+![v2.3.0](https://user-images.githubusercontent.com/12690315/39756239-bf546ae6-5303-11e8-964a-38aed7ea6096.gif)
+
 ### Supports following effects!
 ![image](https://user-images.githubusercontent.com/12690315/35077815-5ff8094e-fc42-11e7-92dd-99916c9f9da7.png)
 
@@ -48,6 +51,7 @@ Let's decorate your UI with effects!
     * Diagonal
 * Shiny
 * Dissolve
+* Flip horizontal/vertical
 
 
 ### Easy to control effect parameters!
@@ -76,6 +80,7 @@ Merged from [ShinyEffectForUGUI](https://github.com/mob-sakai/ShinyEffectForUGUI
 * UIDissolve: Dissolve effect WITHOUT material instancing. This will suppress extra draw calls and improve performance.  
 Merged from [DissolveEffectForUGUI](https://github.com/mob-sakai/DissolveEffectForUGUI).  
 ![demo](https://user-images.githubusercontent.com/12690315/39131616-dcf7ea60-474a-11e8-8e20-f9e5bd8b3f5c.gif)
+* UIFlip: Flip horizontal/vertical.
 
 
 
