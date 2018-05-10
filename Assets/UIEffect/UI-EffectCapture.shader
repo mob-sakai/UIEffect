@@ -37,9 +37,7 @@ Shader "UI/Hidden/UI-EffectCapture"
 				fixed4 colorFactor : COLOR1;
 				#endif
 
-				#if defined (UI_TONE) || defined (UI_BLUR)
 				half4 effectFactor : TEXCOORD2;
-				#endif
 			};
 
 			sampler2D _MainTex;
@@ -51,16 +49,9 @@ Shader "UI/Hidden/UI-EffectCapture"
 			{
 				v2f OUT;
 				OUT.vertex = UnityObjectToClipPos(v.vertex);
-			
-				#if UNITY_UV_STARTS_AT_TOP
-				OUT.texcoord = half2(v.texcoord.x, 1 - v.texcoord.y);
-				#else
-				OUT.texcoord = v.texcoord;
-				#endif
 
-				#if defined (UI_TONE) || defined (UI_BLUR)
+				OUT.texcoord = v.texcoord;
 				OUT.effectFactor = _EffectFactor;
-				#endif
 
 				#if UI_TONE_HUE
 				OUT.effectFactor.y = sin(OUT.effectFactor.x*3.14159265359*2);
@@ -71,6 +62,10 @@ Shader "UI/Hidden/UI-EffectCapture"
 				
 				#if defined (UI_COLOR)
 				OUT.colorFactor = _ColorFactor;
+				#endif
+				
+				#if UNITY_UV_STARTS_AT_TOP
+				OUT.texcoord.y = lerp(OUT.texcoord.y, 1 - OUT.texcoord.y, OUT.effectFactor.w);
 				#endif
 				
 				return OUT;
