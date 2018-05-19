@@ -142,6 +142,20 @@ namespace Coffee.UIExtensions
 			// When not displaying, clear vertex.
 			if (texture == null || effectColor.a < 1 / 255f || canvasRenderer.GetAlpha() < 1 / 255f)
 				vh.Clear();
+            else if(_capturedIterations % 2 == 0)
+            {
+                Debug.Log(iterations);
+                base.OnPopulateMesh(vh);
+                int count = vh.currentVertCount;
+                UIVertex vt = UIVertex.simpleVert;
+                Vector2 one = Vector2.one;
+                for (int i = 0; i < count; i++)
+                {
+                    vh.PopulateUIVertex(ref vt, i);
+                    vt.uv0 = new Vector2(vt.uv0.x, 1-vt.uv0.y);
+                    vh.SetUIVertex(vt, i);
+                }
+            }
 			else
 				base.OnPopulateMesh(vh);
 		}
@@ -249,6 +263,7 @@ namespace Coffee.UIExtensions
 				{
 					_buffer.Blit(s_CopyId, rtId);
 					_buffer.ReleaseTemporaryRT(s_CopyId);
+                    _capturedIterations = 1;
 				}
 				// Blit with effect.
 				else
@@ -275,6 +290,7 @@ namespace Coffee.UIExtensions
 					{
 						_buffer.ReleaseTemporaryRT(s_EffectId2);
 					}
+                    _capturedIterations = m_Iterations;
 				}
 			}
 
@@ -311,6 +327,7 @@ namespace Coffee.UIExtensions
 		RenderTexture _rt;
 		RenderTexture _rtToRelease;
 		CommandBuffer _buffer;
+        int _capturedIterations = 1;
 
 		static int s_CopyId;
 		static int s_EffectId1;
