@@ -142,6 +142,7 @@ namespace Coffee.UIExtensions
 			// When not displaying, clear vertex.
 			if (texture == null || effectColor.a < 1 / 255f || canvasRenderer.GetAlpha() < 1 / 255f)
 				vh.Clear();
+#if UNITY_STANDALONE_WIN
             else if(_capturedIterations % 2 == 0)
             {
                 Debug.Log(iterations);
@@ -156,6 +157,7 @@ namespace Coffee.UIExtensions
                     vh.SetUIVertex(vt, i);
                 }
             }
+#endif
 			else
 				base.OnPopulateMesh(vh);
 		}
