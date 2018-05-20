@@ -17,5 +17,10 @@ namespace Coffee.UIExtensions
 				mask.enabled = true;
 			}
 		}
+		
+		public void SetTimeScale(float scale)
+		{
+			Time.timeScale = scale;
+		}
 	}
 }
