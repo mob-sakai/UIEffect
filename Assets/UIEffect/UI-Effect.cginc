@@ -145,6 +145,9 @@ fixed4 ApplyColorEffect(fixed4 color, fixed4 factor)
 
 	#elif UI_COLOR_SUB // Sub
 	color.rgb -= factor.rgb * factor.a;
+
+	#else
+	color.rgb = lerp(color.rgb, color.rgb * factor.rgb, factor.a);
 	#endif
 
 	#if UI_TONE_CUTOFF
