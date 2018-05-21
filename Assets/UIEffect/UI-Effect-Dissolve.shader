@@ -16,12 +16,7 @@ Shader "UI/Hidden/UI-Effect-Dissolve"
 		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
 
 		[Header(Dissolve)]
-		_NoiseTex ("Noise Texture (A)", 2D) = "white" {}
-		_EdgeWidth ("Edge width", Range (0.0001, 1)) = 0.05
-		_OuterEdgeColor ("Outer edge color", Color) = (1.0, 0.75, 0.0, 1.0)
-		_OuterSoftness ("Outer softness", Range (0.0001, 1)) = 0.5
-		_InnerEdgeColor ("Inner edge color", Color) = (1.0, 0.0, 0.0, 1.0)
-		_InnerSoftness ("Inner softness", Range (0.0001, 1)) = 0.5
+		_NoiseTex("Noise Texture (A)", 2D) = "white" {}
 	}
 
 	SubShader
@@ -61,9 +56,11 @@ Shader "UI/Hidden/UI-Effect-Dissolve"
 			#pragma target 2.0
 			
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
+			#pragma shader_feature __ UI_COLOR_ADD UI_COLOR_SUB UI_COLOR_SET
 
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
+			#include "UI-Effect.cginc"
 
 			struct appdata_t
 			{
@@ -83,36 +80,15 @@ Shader "UI/Hidden/UI-Effect-Dissolve"
 				float4 worldPosition : TEXCOORD1;
 				UNITY_VERTEX_OUTPUT_STEREO
 				
-				half3 effectFactor : TEXCOORD2;
+				fixed4 effectFactor : TEXCOORD2;
+				fixed4 effectFactor2 : TEXCOORD3;
 			};
 			
 			fixed4 _Color;
 			fixed4 _TextureSampleAdd;
 			float4 _ClipRect;
 			sampler2D _MainTex;
-
 			sampler2D _NoiseTex;
-			float _EdgeWidth;
-			float3 _OuterEdgeColor;
-			float _OuterSoftness;
-			float3 _InnerEdgeColor;
-			float _InnerSoftness;
-
-			fixed3 UnpackToVec3(float value)
-			{
-				const int PACKER_STEP = 256;
-				const int PRECISION = PACKER_STEP - 1;
-				fixed3 vec;
-
-				vec.x = (value % PACKER_STEP) / PRECISION;
-				value = floor(value / PACKER_STEP);
-
-				vec.y = (value % PACKER_STEP) / PRECISION;
-				value = floor(value / PACKER_STEP);
-
-				vec.z = (value % PACKER_STEP) / PRECISION;
-				return vec;
-			}
 
 			v2f vert(appdata_t IN)
 			{
@@ -127,9 +103,11 @@ Shader "UI/Hidden/UI-Effect-Dissolve"
 				
 				OUT.color = IN.color * _Color;
 
-				//xy: Noize uv
-				//z: Dissolve factor
-				OUT.effectFactor = UnpackToVec3(IN.uv1.x);
+				//xy: Noize uv, z: Dissolve factor, w: width
+				OUT.effectFactor = UnpackToVec4(IN.uv1.x);
+
+				//xyz: color, w: softness
+				OUT.effectFactor2 = UnpackToVec4(IN.uv1.y);
 				return OUT;
 			}
 
@@ -146,11 +124,9 @@ Shader "UI/Hidden/UI-Effect-Dissolve"
 				clip (min(color.a - 0.01, factor));
 				#endif
 
-				fixed edgeLerp = step(cutout, color.a) * saturate((_EdgeWidth - factor)*16/_InnerSoftness);
-				fixed3 edgeColor = lerp(_OuterEdgeColor, _InnerEdgeColor, (factor)/_EdgeWidth);
-
-				color.rgb =lerp(color.rgb, edgeColor, edgeLerp);
-				color.a *= saturate((factor)*32/_OuterSoftness);
+				fixed edgeLerp = step(cutout, color.a) * saturate((IN.effectFactor.w/4 - factor)*16/ IN.effectFactor2.w);
+				color = ApplyColorEffect(color, fixed4(IN.effectFactor2.rgb, edgeLerp));
+				color.a *= saturate((factor)*32/ IN.effectFactor2.w);
 
 				return color;
 			}

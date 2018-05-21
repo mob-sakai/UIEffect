@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.4.0](https://github.com/mob-sakai/UIEffect/tree/v2.4.0) (2018-05-21)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.3.2...v2.4.0)
+
+**Implemented enhancements:**
+
+- UIDissolve: Add color mode option. [\#64](https://github.com/mob-sakai/UIEffect/issues/64)
+
 ## [v2.3.2](https://github.com/mob-sakai/UIEffect/tree/v2.3.2) (2018-05-21)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.3.1...v2.3.2)

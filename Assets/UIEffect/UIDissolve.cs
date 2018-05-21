@@ -30,7 +30,11 @@ namespace Coffee.UIExtensions
 		//################################
 		// Serialize Members.
 		//################################
-		[SerializeField] [Range(0, 1)] float m_Location = 0;
+		[SerializeField] [Range(0, 1)] float m_Location = 0.5f;
+		[SerializeField] [Range(0, 1)] float m_Width = 0.5f;
+		[SerializeField] [Range(0, 1)] float m_Softness = 0.5f;
+		[SerializeField] [ColorUsage(false)] Color m_Color = new Color(0.0f, 0.25f, 1.0f);
+		[SerializeField] UIEffect.ColorMode m_ColorMode = UIEffect.ColorMode.Add;
 		[SerializeField] Material m_EffectMaterial;
 
 
@@ -46,6 +50,26 @@ namespace Coffee.UIExtensions
 		/// Location for effect.
 		/// </summary>
 		public float location { get { return m_Location; } set { m_Location = Mathf.Clamp(value, 0, 1); _SetDirty(); } }
+
+		/// <summary>
+		/// Edge width.
+		/// </summary>
+		public float width { get { return m_Width; } set { m_Width = Mathf.Clamp(value, 0, 1); _SetDirty(); } }
+
+		/// <summary>
+		/// Edge softness.
+		/// </summary>
+		public float softness { get { return m_Softness; } set { m_Softness = Mathf.Clamp(value, 0, 1); _SetDirty(); } }
+
+		/// <summary>
+		/// Edge color.
+		/// </summary>
+		public Color color { get { return m_Color; } set { m_Color = value; _SetDirty(); } }
+
+		/// <summary>
+		/// Color effect mode.
+		/// </summary>
+		public UIEffect.ColorMode colorMode { get { return m_ColorMode; } }
 
 		/// <summary>
 		/// Effect material.
@@ -82,30 +106,17 @@ namespace Coffee.UIExtensions
 			{
 				if (Application.isPlaying || !obj || !obj.graphic)
 					return;
+				
+				var mat = UIEffect.GetOrGenerateMaterialVariant(Shader.Find(shaderName), UIEffect.ToneMode.None, m_ColorMode, UIEffect.BlurMode.None);
 
-				if(!m_EffectMaterial)
-				{
-					m_EffectMaterial = GetMaterial(shaderName);
-					EditorUtility.SetDirty(this);
-					EditorApplication.delayCall +=AssetDatabase.SaveAssets;
-				}
-				if(obj.isActiveAndEnabled && graphic.material != m_EffectMaterial)
-				{
-					graphic.material = m_EffectMaterial;
-					EditorUtility.SetDirty(graphic);
-					EditorApplication.delayCall +=AssetDatabase.SaveAssets;
-				}
+				if (m_EffectMaterial == mat && graphic.material == mat)
+					return;
+
+				graphic.material = m_EffectMaterial = mat;
+				EditorUtility.SetDirty(this);
+				EditorUtility.SetDirty(graphic);
+				EditorApplication.delayCall += AssetDatabase.SaveAssets;
 			};
-		}
-
-		public static Material GetMaterial(string shaderName)
-		{
-			string name = Path.GetFileName (shaderName);
-			return AssetDatabase.FindAssets("t:Material " + name)
-				.Select(x => AssetDatabase.GUIDToAssetPath(x))
-				.SelectMany(x => AssetDatabase.LoadAllAssetsAtPath(x))
-				.OfType<Material>()
-				.FirstOrDefault(x => x.name == name);
 		}
 #endif
 
@@ -129,7 +140,7 @@ namespace Coffee.UIExtensions
 
 				var x = Mathf.Clamp01 (vertex.position.x / rect.width + 0.5f);
 				var y = Mathf.Clamp01 (vertex.position.y / rect.height + 0.5f);
-				vertex.uv1 = new Vector2 (_PackToFloat (x, y, location), 0);
+				vertex.uv1 = new Vector2 (_PackToFloat (x, y, location, m_Width), _PackToFloat(m_Color.r, m_Color.g, m_Color.b, m_Softness));
 
 				vh.SetUIVertex(vertex, i);
 			}
@@ -156,6 +167,19 @@ namespace Coffee.UIExtensions
 			const int PRECISION = (1 << 8) - 1;
 			return (Mathf.FloorToInt(z * PRECISION) << 16)
 			+ (Mathf.FloorToInt(y * PRECISION) << 8)
+			+ Mathf.FloorToInt(x * PRECISION);
+		}
+
+		/// <summary>
+		/// Pack 4 low-precision [0-1] floats values to a float.
+		/// Each value [0-1] has 64 steps(6 bits).
+		/// </summary>
+		static float _PackToFloat(float x, float y, float z, float w)
+		{
+			const int PRECISION = (1 << 6) - 1;
+			return (Mathf.FloorToInt(w * PRECISION) << 18)
+			+ (Mathf.FloorToInt(z * PRECISION) << 12)
+			+ (Mathf.FloorToInt(y * PRECISION) << 6)
 			+ Mathf.FloorToInt(x * PRECISION);
 		}
 	}

@@ -17,11 +17,9 @@ Let's decorate your UI with effects!
 
 
 
+
 <br><br><br><br>
 ## Description
-
-### New feature in v2.3.0!
-![v2.3.0](https://user-images.githubusercontent.com/12690315/39756239-bf546ae6-5303-11e8-964a-38aed7ea6096.gif)
 
 ### Supports following effects!
 ![image](https://user-images.githubusercontent.com/12690315/35077815-5ff8094e-fc42-11e7-92dd-99916c9f9da7.png)
@@ -74,13 +72,21 @@ Let's decorate your UI with effects!
 ![image](https://user-images.githubusercontent.com/12690315/34619468-97e3c134-f285-11e7-90b2-3a75bde13911.gif)
 * UIGradient: Change vertex color as gradient, with rotation, offset, color correction  
 ![image](https://user-images.githubusercontent.com/12690315/38594997-2a39f03c-3d84-11e8-865d-9ce12a8bb3db.gif)
-* UIShiny: Shiny effect WITHOUT Mask component. This will suppress extra draw calls and improve performance.  
-Merged from [ShinyEffectForUGUI](https://github.com/mob-sakai/ShinyEffectForUGUI).  
-![image](https://user-images.githubusercontent.com/12690315/38501362-c56e3768-3c47-11e8-9ec1-50343d8b83ad.gif)
-* UIDissolve: Dissolve effect WITHOUT material instancing. This will suppress extra draw calls and improve performance.  
-Merged from [DissolveEffectForUGUI](https://github.com/mob-sakai/DissolveEffectForUGUI).  
-![demo](https://user-images.githubusercontent.com/12690315/39131616-dcf7ea60-474a-11e8-8e20-f9e5bd8b3f5c.gif)
-* UIFlip: Flip horizontal/vertical.
+
+### New feature in v2.3.0
+![v2.3.0](https://user-images.githubusercontent.com/12690315/39756239-bf546ae6-5303-11e8-964a-38aed7ea6096.gif)
+
+* UIShiny: Shiny effect WITHOUT Mask component. This will suppress extra draw calls and improve performance.
+* UIDissolve: Dissolve effect WITHOUT material instancing. This will suppress extra draw calls and improve performance.
+* UIFlip: Flip graphic horizontal/vertical.
+
+### New feature in v2.4.0
+![v2.4.0](https://user-images.githubusercontent.com/12690315/40294019-a0bfb8aa-5d0e-11e8-8451-873502db6a99.gif)
+![editor](https://user-images.githubusercontent.com/12690315/40294212-9e1b1ce2-5d0f-11e8-88ce-78a8c0523dc2.png)
+
+* UIDissolve: Add color mode option.
+* UIDissolve: You can change the edge color, width, softness, color mode in inspector.
+
 
 
 
