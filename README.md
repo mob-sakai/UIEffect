@@ -4,7 +4,7 @@ UIEffect
 UIEffect is an effect component for uGUI in Unity.  
 Let's decorate your UI with effects!
 
-[![](https://img.shields.io/github/release/mob-sakai/UIEffect.svg?label=latest%20version)](https://github.com/mob-sakai/UIEffect/release)
+[![](https://img.shields.io/github/release/mob-sakai/UIEffect.svg?label=latest%20version)](https://github.com/mob-sakai/UIEffect/releases)
 [![](https://img.shields.io/github/release-date/mob-sakai/UIEffect.svg)](https://github.com/mob-sakai/UIEffect/releases)  
 ![](https://img.shields.io/badge/requirement-Unity%205.5%2B-green.svg)
 [![](https://img.shields.io/github/license/mob-sakai/UIEffect.svg)](https://github.com/mob-sakai/UIEffect/blob/master/LICENSE.txt)  
