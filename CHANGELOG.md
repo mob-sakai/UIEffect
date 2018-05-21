@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.3.2](https://github.com/mob-sakai/UIEffect/tree/v2.3.2) (2018-05-21)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.3.1...v2.3.2)
+
+**Closed issues:**
+
+- Fixed: UIEffectCapturedImage: When iteration count is even. the result image is flipped vertically \(other method\) [\#65](https://github.com/mob-sakai/UIEffect/issues/65)
+
 ## [v2.3.1](https://github.com/mob-sakai/UIEffect/tree/v2.3.1) (2018-05-10)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.3.0...v2.3.1)
