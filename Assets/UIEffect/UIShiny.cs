@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
+using System.Collections;
 
 #if UNITY_EDITOR
 using System.IO;
@@ -32,8 +34,11 @@ namespace Coffee.UIExtensions
 		//################################
 		[SerializeField] [Range(0, 1)] float m_Location = 0;
 		[SerializeField] [Range(0, 1)] float m_Width = 0.25f;
-		[SerializeField] [Range(0, 1)] float m_Alpha = 1f;
 		[SerializeField] [Range(-180, 180)] float m_Rotation;
+		[SerializeField][Range(0.01f, 1)] float m_Softness = 1f;
+		[FormerlySerializedAs("m_Alpha")]
+		[SerializeField][Range(0, 1)] float m_Brightness = 1f;
+		[SerializeField][Range(0, 1)] float m_Highlight = 1;
 		[SerializeField] Material m_EffectMaterial;
 
 
@@ -53,12 +58,28 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Width for shiny effect.
 		/// </summary>
-		public float width { get { return m_Width; } set { m_Width = Mathf.Clamp(value, 0, 2); _SetDirty(); } }
+		public float width { get { return m_Width; } set { m_Width = Mathf.Clamp(value, 0, 1); _SetDirty(); } }
+
+		/// <summary>
+		/// Softness for shiny effect.
+		/// </summary>
+		public float softness { get { return m_Softness; } set { m_Softness = Mathf.Clamp(value, 0.01f, 1); _SetDirty(); } }
 
 		/// <summary>
 		/// Alpha for shiny effect.
 		/// </summary>
-		public float alpha { get { return m_Alpha; } set { m_Alpha = Mathf.Clamp(value, 0, 1); _SetDirty(); } }
+		[System.Obsolete ("Use brightness instead (UnityUpgradable) -> brightness")]
+		public float alpha { get { return m_Brightness; } set { m_Brightness = Mathf.Clamp(value, 0, 1); _SetDirty(); } }
+
+		/// <summary>
+		/// Brightness for shiny effect.
+		/// </summary>
+		public float brightness { get { return m_Brightness; } set { m_Brightness = Mathf.Clamp(value, 0, 1); _SetDirty(); } }
+
+		/// <summary>
+		/// Highlight factor for shiny effect.
+		/// </summary>
+		public float highlight { get { return m_Highlight; } set { m_Highlight = Mathf.Clamp(value, 0, 1); _SetDirty(); } }
 
 		/// <summary>
 		/// Rotation for shiny effect.
@@ -160,12 +181,38 @@ namespace Coffee.UIExtensions
 				nomalizedPos = localMatrix * vertex.position;
 
 				vertex.uv1 = new Vector2(
-					_PackToFloat(Mathf.Clamp01(nomalizedPos.y), location, width, alpha),
-					0
+					_PackToFloat(Mathf.Clamp01(nomalizedPos.y), softness, width, brightness),
+					_PackToFloat(location, highlight)
 				);
 
 				vh.SetUIVertex(vertex, i);
 			}
+		}
+
+		/// <summary>
+		/// Play effect.
+		/// </summary>
+		public void Play()
+		{
+			Play(1);
+		}
+
+		/// <summary>
+		/// Play effect.
+		/// </summary>
+		public void Play(float duration)
+		{
+			StopAllCoroutines();
+			StartCoroutine(CoPlay(duration, AnimatorUpdateMode.Normal));
+		}
+
+		/// <summary>
+		/// Play effect.
+		/// </summary>
+		public void Play(float duration, AnimatorUpdateMode updateMode)
+		{
+			StopAllCoroutines();
+			StartCoroutine(CoPlay(duration, updateMode));
 		}
 
 		//################################
@@ -178,6 +225,19 @@ namespace Coffee.UIExtensions
 		{
 			if(graphic)
 				graphic.SetVerticesDirty();
+		}
+
+		IEnumerator CoPlay(float duration, AnimatorUpdateMode updateMode = AnimatorUpdateMode.Normal)
+		{
+			float time = 0;
+			while (time < duration)
+			{
+				location = time / duration;
+				time += updateMode == AnimatorUpdateMode.UnscaledTime
+					? Time.unscaledDeltaTime
+					: Time.deltaTime;
+				yield return null;
+			}
 		}
 
 		/// <summary>
@@ -193,6 +253,16 @@ namespace Coffee.UIExtensions
 			+ Mathf.FloorToInt(x * PRECISION);
 		}
 
+		/// <summary>
+		/// Pack 2 low-precision [0-1] floats values to a float.
+		/// Each value [0-1] has 4096 steps(12 bits).
+		/// </summary>
+		static float _PackToFloat(float x, float y)
+		{
+			const int PRECISION = (1 << 12) - 1;
+			return (Mathf.FloorToInt(y * PRECISION) << 12)
+				+ Mathf.FloorToInt(x * PRECISION);
+		}
 
 
 		/// <summary>

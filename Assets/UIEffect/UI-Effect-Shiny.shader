@@ -76,6 +76,7 @@ Shader "UI/Hidden/UI-Effect-Shiny"
 				UNITY_VERTEX_OUTPUT_STEREO
 				
 				half4 effectFactor : TEXCOORD2;
+				half2 effectFactor2 : TEXCOORD3;
 			};
 			
 			fixed4 _Color;
@@ -103,6 +104,19 @@ Shader "UI/Hidden/UI-Effect-Shiny"
 				return color;
 			}
 
+			half2 UnpackToVec2(float value)
+			{
+				const int PACKER_STEP = 4096;
+				const int PRECISION = PACKER_STEP - 1;
+				fixed4 color;
+
+				color.x = (value % PACKER_STEP) / PRECISION;
+				value = floor(value / PACKER_STEP);
+
+				color.y = (value % PACKER_STEP) / PRECISION;
+				return color;
+			}
+
 			v2f vert(appdata_t IN)
 			{
 				v2f OUT;
@@ -117,25 +131,30 @@ Shader "UI/Hidden/UI-Effect-Shiny"
 				OUT.color = IN.color * _Color;
 
 				OUT.effectFactor = UnpackToVec4(IN.uv1.x);
-				OUT.effectFactor.y = OUT.effectFactor.y * 2 - 0.5;
+				OUT.effectFactor2 = UnpackToVec2(IN.uv1.y);
+
+				OUT.effectFactor2.x = OUT.effectFactor2.x * 2 - 0.5;
 				return OUT;
 			}
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
-				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
-
+				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd);
+				fixed4 originAlpha = color.a;
+				color *= IN.color;
 				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
 
 				#ifdef UNITY_UI_ALPHACLIP
 				clip (color.a - 0.001);
 				#endif
 
-				fixed lowLevel = IN.effectFactor.y - IN.effectFactor.z;
-				fixed highLevel = IN.effectFactor.y + IN.effectFactor.z;
-				fixed shinePower = smoothstep(IN.effectFactor.z, 0, abs(abs(clamp(IN.effectFactor.x, lowLevel, highLevel) - IN.effectFactor.y)));
+				half pos = IN.effectFactor.x - IN.effectFactor2.x;
 
-				color.rgb +=  color.a * (shinePower / 2) * IN.effectFactor.w;
+				half normalized = 1 - saturate(abs(pos / IN.effectFactor.z));
+				half shinePower = smoothstep(0, IN.effectFactor.y*2, normalized);
+				half3 reflectColor = lerp(1, color.rgb * 10, IN.effectFactor2.y);
+
+				color.rgb += originAlpha * (shinePower / 2) * IN.effectFactor.w * reflectColor;
 				return color;
 			}
 		ENDCG
