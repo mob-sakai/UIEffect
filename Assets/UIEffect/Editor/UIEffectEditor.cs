@@ -231,7 +231,7 @@ namespace Coffee.UIExtensions
 			serializedObject.ApplyModifiedProperties();
 
 #if UNITY_5_6_OR_NEWER
-			var graphic = (target as UIEffect).graphic;
+			var graphic = (target as UIEffectBase).targetGraphic;
 			if(graphic)
 			{
 				var canvas = graphic.canvas;
