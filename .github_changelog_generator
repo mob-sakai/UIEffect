@@ -1,6 +1,3 @@
-user=mob-sakai
-project=UIEffect
 issues-wo-labels=false
 pr-wo-labels=false
-exclude_labels=duplicate,question,invalid,wontfix,Duplicate,Question,Invalid,Wontfix,Meta: Exclude From Changelog,unreleased
-unreleased=false
+exclude_labels=duplicate,question,invalid,wontfix,Duplicate,Question,Invalid,Wontfix,Meta: Exclude From Changelog
