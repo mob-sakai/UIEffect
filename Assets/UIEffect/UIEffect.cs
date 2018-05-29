@@ -286,33 +286,41 @@ namespace Coffee.UIExtensions
 
 #if UNITY_EDITOR
 
+		protected override void OnValidate ()
+		{
+			base.OnValidate ();
+			EditorApplication.delayCall += () => UpdateMaterial(false);
+		}
+
 		public void OnBeforeSerialize()
 		{
 		}
 
 		public void OnAfterDeserialize()
 		{
-			if (m_CustomEffect)
-				return;
-
-			var obj = this;
-			EditorApplication.delayCall += () =>
+			if (!m_CustomEffect)
 			{
-				if (Application.isPlaying || !obj)
-					return;
+				EditorApplication.delayCall += () => UpdateMaterial (true);
+			}
+		}
 
-				var mat = (0 == toneMode) && (0 == colorMode) && (0 == blurMode)
-						? null
-						: GetOrGenerateMaterialVariant(Shader.Find(shaderName), toneMode, colorMode, blurMode);
+		void UpdateMaterial(bool onlyEditMode)
+		{
+			if(!this || onlyEditMode && Application.isPlaying)
+			{
+				return;
+			}
 
-				if(m_EffectMaterial == mat && graphic.material == mat)
-					return;
-					
+			var mat = (0 == toneMode) && (0 == colorMode) && (0 == blurMode)
+				? null
+				: GetOrGenerateMaterialVariant(Shader.Find(shaderName), toneMode, colorMode, blurMode);
+
+			if (m_EffectMaterial != mat || graphic.material != mat)
+			{
 				graphic.material = m_EffectMaterial = mat;
 				EditorUtility.SetDirty(this);
 				EditorUtility.SetDirty(graphic);
-				EditorApplication.delayCall +=AssetDatabase.SaveAssets;
-			};
+			}
 		}
 		
 		public static Material GetMaterial(Shader shader, ToneMode tone, ColorMode color, BlurMode blur)
