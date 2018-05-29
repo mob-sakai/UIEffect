@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.4.1](https://github.com/mob-sakai/UIEffect/tree/v2.4.1) (2018-05-29)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.4.0...v2.4.1)
+
+**Fixed bugs:**
+
+- UIEffectCapturedImage: The result image is flipped vertically [\#69](https://github.com/mob-sakai/UIEffect/issues/69)
+
 ## [v2.4.0](https://github.com/mob-sakai/UIEffect/tree/v2.4.0) (2018-05-21)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.3.2...v2.4.0)
