@@ -142,22 +142,6 @@ namespace Coffee.UIExtensions
 			// When not displaying, clear vertex.
 			if (texture == null || effectColor.a < 1 / 255f || canvasRenderer.GetAlpha() < 1 / 255f)
 				vh.Clear();
-#if UNITY_STANDALONE_WIN
-            else if(_capturedIterations % 2 == 0)
-            {
-                Debug.Log(iterations);
-                base.OnPopulateMesh(vh);
-                int count = vh.currentVertCount;
-                UIVertex vt = UIVertex.simpleVert;
-                Vector2 one = Vector2.one;
-                for (int i = 0; i < count; i++)
-                {
-                    vh.PopulateUIVertex(ref vt, i);
-                    vt.uv0 = new Vector2(vt.uv0.x, 1-vt.uv0.y);
-                    vh.SetUIVertex(vt, i);
-                }
-            }
-#endif
 			else
 				base.OnPopulateMesh(vh);
 		}
@@ -257,7 +241,7 @@ namespace Coffee.UIExtensions
 				_buffer.Blit(BuiltinRenderTextureType.CurrentActive, s_CopyId);
 
 				// Set properties.
-				_buffer.SetGlobalVector("_EffectFactor", new Vector4(toneLevel, 0, blur, 0));
+				_buffer.SetGlobalVector("_EffectFactor", new Vector4(toneLevel, 0, blur, 1));
 				_buffer.SetGlobalVector("_ColorFactor", new Vector4(effectColor.r, effectColor.g, effectColor.b, effectColor.a));
 
 				// Blit without effect.
@@ -265,7 +249,6 @@ namespace Coffee.UIExtensions
 				{
 					_buffer.Blit(s_CopyId, rtId);
 					_buffer.ReleaseTemporaryRT(s_CopyId);
-                    _capturedIterations = 1;
 				}
 				// Blit with effect.
 				else
@@ -278,6 +261,7 @@ namespace Coffee.UIExtensions
 					// Iterate the operation.
 					if(1 < m_Iterations)
 					{
+						_buffer.SetGlobalVector("_EffectFactor", new Vector4(toneLevel, 0, blur, 0));
 						_buffer.GetTemporaryRT(s_EffectId2, w, h, 0, m_FilterMode);
 						for (int i = 1; i < m_Iterations; i++)
 						{
@@ -292,7 +276,6 @@ namespace Coffee.UIExtensions
 					{
 						_buffer.ReleaseTemporaryRT(s_EffectId2);
 					}
-                    _capturedIterations = m_Iterations;
 				}
 			}
 
@@ -329,7 +312,6 @@ namespace Coffee.UIExtensions
 		RenderTexture _rt;
 		RenderTexture _rtToRelease;
 		CommandBuffer _buffer;
-        int _capturedIterations = 1;
 
 		static int s_CopyId;
 		static int s_EffectId1;
