@@ -150,7 +150,7 @@ namespace Coffee.UIExtensions
 		{
 			if (_uiEffect && _uiEffect.isActiveAndEnabled)
 			{
-				_factor = new Vector2(_PackToFloat(tone, 0, blur, 0), _PackToFloat(color.r, color.g, color.b, 1));
+				_factor = new Vector2(Packer.ToFloat(tone, 0, blur, 0), Packer.ToFloat(color.r, color.g, color.b, 1));
 			}
 		}
 
@@ -238,42 +238,6 @@ namespace Coffee.UIExtensions
 		{
 			if(graphic)
 				graphic.SetVerticesDirty();
-		}
-
-		/// <summary>
-		/// Pack 4 low-precision [0-1] float values to a float value.
-		/// Each value [0-1] has 64 steps(6 bits).
-		/// </summary>
-		static float _PackToFloat(float x, float y, float z, float w)
-		{
-			const int PRECISION = (1 << 6) - 1;
-			return (Mathf.FloorToInt(w * PRECISION) << 18)
-			+ (Mathf.FloorToInt(z * PRECISION) << 12)
-			+ (Mathf.FloorToInt(y * PRECISION) << 6)
-			+ Mathf.FloorToInt(x * PRECISION);
-		}
-		
-		/// <summary>
-		 /// Unpack a float value to 4 low-precision [0-1] float values.
-		 /// Each value [0-1] has 64 steps(6 bits).
-		 /// </summary>
-		static Vector4 _UnpackToVector4(float value)
-		{
-			const int PACKER_STEP = 1 << 6;
-			const int PRECISION = PACKER_STEP - 1;
-
-			var x = (value % PACKER_STEP) / PRECISION;
-			value = Mathf.Floor(value / PACKER_STEP);
-
-			var y = (value % PACKER_STEP) / PRECISION;
-			value = Mathf.Floor(value / PACKER_STEP);
-
-			var z = (value % PACKER_STEP) / PRECISION;
-			value = Mathf.Floor(value / PACKER_STEP);
-
-			var w = (value % PACKER_STEP) / PRECISION;
-
-			return new Vector4(x, y, z, w);
 		}
 	}
 }
