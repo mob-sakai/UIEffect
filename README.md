@@ -5,15 +5,15 @@ UIEffect is an effect component for uGUI in Unity.
 Let's decorate your UI with effects!
 
 [![](https://img.shields.io/github/release/mob-sakai/UIEffect.svg?label=latest%20version)](https://github.com/mob-sakai/UIEffect/releases)
-[![](https://img.shields.io/github/release-date/mob-sakai/UIEffect.svg)](https://github.com/mob-sakai/UIEffect/releases)  
-![](https://img.shields.io/badge/requirement-Unity%205.5%2B-green.svg)
-[![](https://img.shields.io/github/license/mob-sakai/UIEffect.svg)](https://github.com/mob-sakai/UIEffect/blob/master/LICENSE.txt)  
-[![](https://img.shields.io/github/last-commit/mob-sakai/UIEffect/develop.svg?label=last%20commit%20to%20develop)](https://github.com/mob-sakai/UIEffect/commits/develop)
-[![](https://img.shields.io/github/issues/mob-sakai/UIEffect.svg)](https://github.com/mob-sakai/UIEffect/issues)
+[![](https://img.shields.io/github/release-date/mob-sakai/UIEffect.svg)](https://github.com/mob-sakai/UIEffect/releases)
+![](https://img.shields.io/badge/unity-5.5%2B-green.svg)
+[![](https://img.shields.io/github/license/mob-sakai/UIEffect.svg)](https://github.com/mob-sakai/UIEffect/blob/master/LICENSE.txt)
 
 
 
-<< [Description](#Description) | [WebGL Demo](#demo) | [Download](https://github.com/mob-sakai/UIEffect/releases) | [Usage](#usage) | [Development Note](#development-note) | [Change log](https://github.com/mob-sakai/UIEffect/blob/develop/CHANGELOG.md) >>
+<< [Description](#Description) | [WebGL Demo](#demo) | [Download](https://github.com/mob-sakai/UIEffect/releases) | [Usage](#usage) | [Development Note](#development-note) >>
+
+### [RELEASE NOTE ![](https://img.shields.io/github/release-date/mob-sakai/UIEffect.svg?label=last%20updated&style=for-the-badge)](https://github.com/mob-sakai/UIEffect/blob/develop/CHANGELOG.md)
 
 
 
@@ -21,71 +21,31 @@ Let's decorate your UI with effects!
 <br><br><br><br>
 ## Description
 
-### Supports following effects!
-![image](https://user-images.githubusercontent.com/12690315/35077815-5ff8094e-fc42-11e7-92dd-99916c9f9da7.png)
+Let's decorate your UI with effects!  
+You can control parameters as you like from the script as well as inspector.  
+AnimationClip is supported as a matter of course!
 
-* Grayscale
-* Sepia tone
-* Nega tone
-* Pixelation
-* Hue shift
-* Cutoff (alpha-based)
-* Mono (alpha-based)
-* Color overwrite
-* Color additive
-* Color subtract
-* Blur fast(3x4)
-* Blur medium(6x4)
-* Blur detail(6x8)
-* Shadow with effect
-    * Shadow
-    * Shadow3
-    * Outline
-    * Outline8
-* Gradient vertex color
-    * Horizontal
-    * Vertical
-    * Angle
-    * Diagonal
-* Shiny
-* Dissolve
-* Flip horizontal/vertical
-
-
-### Easy to control effect parameters!
-
+![5 -31-2018 12-57-40](https://user-images.githubusercontent.com/12690315/40760610-7ad82b38-64d2-11e8-9c18-f97229aada78.gif)
 ![image](https://user-images.githubusercontent.com/12690315/38594668-636dd3ac-3d82-11e8-9951-820964a6a95f.gif)
 
+<br><br>
+#### Available effects
 
-### And, more features!
+| Component | Features | Screenshot |
+|-|-|-|
+|**UIEffect**|Combine some visual effects.<br>See also [Development note](#why-is-uieffect-lightweight?).<br><br>**ToneMode:** Grayscale, Sepia, Nega, Pixelation, Hue shift,Cutoff (alpha-based), Mono (alpha-based)<br>**ColorMode:** Overwrite, Additive, Subtract<br>**BlurMode:** Fast, Medium, Detail<br><br>*NOTE: ToneMode, ColorMode and BlurMode are changeable only in editor.*<br>*NOTE: Shadow features will be obsolated. Please use `UIShadow` instead.*|<img src="https://user-images.githubusercontent.com/12690315/40757428-68277f0c-64c3-11e8-89e5-4a19616a85c1.png" width="1000px">|
+|**UICaptured EffectImage**|Capture a screenshot of a specific frame with effect, and disply it.<br>See also [Development note](#how-does-uieffectcapturedimage-work?).<br><br>**ToneMode:** Grayscale, Sepia, Nega, Pixelation, Hue shift<br>**ColorMode:** Overwrite, Additive, Subtract<br>**BlurMode:** Fast, Medium, Detail|<img src="https://user-images.githubusercontent.com/12690315/34619468-97e3c134-f285-11e7-90b2-3a75bde13911.gif"  width="1000px">|
+|**UIShiny**|Apply shinning effect to graphic.<br><br>**Options:** Location, Width, Rotation, Softness, Brightness, Highlight|<img  src="https://user-images.githubusercontent.com/12690315/40716998-cd42e954-6445-11e8-899b-f8ba8f1fea83.gif" width="1000px">|
+|**UIDissolve**|Apply dissolve effect to graphic.<br><br>**ColorMode:** Overwrite, Additive, Subtract<br>**Options:** Location, Width, Rotation, Softness, Color|<img src="https://user-images.githubusercontent.com/12690315/40717609-f0c3ca40-6447-11e8-97aa-7c4242d12106.gif" width="1000px">|
 
-* Control the effect parameters without instantiating the material
-* Control the effect parameters with AnimationClip  
-![image](https://user-images.githubusercontent.com/12690315/34617750-cf2c9464-f27f-11e7-8ee9-e6be3b209943.gif)
-* Use for screen transition  
-![image](https://user-images.githubusercontent.com/12690315/34618554-71a32e40-f282-11e7-8b78-6948c50c6b58.gif)
-* Multiple shadow effect to reduce rendering vertices  
-![image](https://user-images.githubusercontent.com/12690315/34552373-600fdab2-f164-11e7-8565-21c15af92a93.png)
-* UICapturedEffectImage: The captured image with effect, like post effect  
-![image](https://user-images.githubusercontent.com/12690315/34619147-868cb36a-f284-11e7-8122-b924ff09077f.gif)
-* UICapturedEffectImage: Dialog window with the captured image effect  
-![image](https://user-images.githubusercontent.com/12690315/34619468-97e3c134-f285-11e7-90b2-3a75bde13911.gif)
-* UIGradient: Change vertex color as gradient, with rotation, offset, color correction  
-![image](https://user-images.githubusercontent.com/12690315/38594997-2a39f03c-3d84-11e8-865d-9ce12a8bb3db.gif)
+<br><br>
+##### The following effects can be used with the above components.
 
-### New feature in v2.3.0
-![v2.3.0](https://user-images.githubusercontent.com/12690315/39756239-bf546ae6-5303-11e8-964a-38aed7ea6096.gif)
-
-* UIShiny: Shiny effect WITHOUT Mask component. This will suppress extra draw calls and improve performance.
-* UIDissolve: Dissolve effect WITHOUT material instancing. This will suppress extra draw calls and improve performance.
-* UIFlip: Flip graphic horizontal/vertical.
-
-### New feature in v2.4.0
-![v2.4.0](https://user-images.githubusercontent.com/12690315/40294019-a0bfb8aa-5d0e-11e8-8451-873502db6a99.gif)
-![editor](https://user-images.githubusercontent.com/12690315/40294212-9e1b1ce2-5d0f-11e8-88ce-78a8c0523dc2.png)
-
-* UIDissolve: Add color mode option.
-* UIDissolve: You can change the edge color, width, softness, color mode in inspector.
+| Component | Features | Screenshot |
+|-|-|-|
+|**UIShadow**|Add shadows/outlines.<br>Performance is better than the default Shadow/Outline component.<br>See also [Development note](#the-issue-of-default-outline-component).<br><br>**ShadowStyle:** Shadow, Shadow3, Outline, Outline8<br>**Additional Shadows** reduce vertices for multiple Shadows or Outlines.|<img src="https://user-images.githubusercontent.com/12690315/40716994-ca5c13d2-6445-11e8-96d0-25a3ce704e2e.png" width="1000px">|
+|**UIGradient**|Change vertex color as gradient with angle and offset.<br><br>**Direction:** Horizontal, Vertical, Angle, Diagonal<br>**Options:** Offset, Color space|<img src="https://user-images.githubusercontent.com/12690315/40716995-ca87665e-6445-11e8-8233-ec2e21fefd6b.png" width="1000px">|
+|**UIFlip**|Flip graphic.<br><br>**Direction:** Horizontal, Vertical, Both|<img src="https://user-images.githubusercontent.com/12690315/40716996-cab1fd7e-6445-11e8-9753-962d23991d86.png"  width="1000px">|
 
 
 
@@ -108,15 +68,13 @@ Let's decorate your UI with effects!
 
 1. Download UIEffect.unitypackage from [Releases](https://github.com/mob-sakai/UIEffect/releases).
 1. Import the package into your Unity project. Select `Import Package > Custom Package` from the `Assets` menu.
-1. Add `UIEffect` component to UI element (Image, RawImage, Text, etc...) from `Add Component` in inspector.
-1. Choose effect type and adjust values in inspector.  
-![image](https://user-images.githubusercontent.com/12690315/34595809-3838dc54-f21e-11e7-858b-72821dca8b44.png)
+1. Add any effect component to UI element (Image, RawImage, Text, etc...) from `Add Component` in inspector.
 1. Enjoy!
 
 
 ##### Requirement
 
-* Unity 5.5+ *(included Unity 2017.x)*
+* Unity 5.5+ *(included Unity 2018.x)*
 * No other SDK are required
 
 
@@ -188,6 +146,20 @@ Unused shader variants and materials will be excluded from AssetBundles.
 https://docs.unity3d.com/Manual/OptimizingShaderLoadTime.html
 * Set camera's clear flag to "Solid Color".
 * Enable multi thread rendering.
+
+
+#### The issue of default Outline component
+
+Graphic with multiple outline components will generate a lot of overdraw.
+
+![image](https://user-images.githubusercontent.com/12690315/34552373-600fdab2-f164-11e7-8565-21c15af92a93.png)
+
+This is an overdraw view of image with three outline components.  
+Because there are many overdraws, it is very bright!  
+For each Outline component, increase the mesh by 5 times. (In the case of the Shadow component, it doubles the mesh.)  
+In the image above, `1 x 5 x 5 x 5 = 125` overdraws are generated.
+
+UIShadow's 'Addition Shadow' feature solves this issue by adding only the necessary mesh, `1 + 4 + 4 + 4 = 13` overdraws are generated.
 
 
 
