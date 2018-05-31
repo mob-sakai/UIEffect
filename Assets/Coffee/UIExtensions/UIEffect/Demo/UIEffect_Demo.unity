@@ -2326,6 +2326,11 @@ MonoBehaviour:
   m_Brightness: 0.85
   m_Highlight: 0
   m_EffectMaterial: {fileID: 2100000, guid: 9dc7e810a87b444ab96919f3215c2fe5, type: 2}
+  m_Play: 0
+  m_Loop: 0
+  m_Duration: 1
+  m_LoopDelay: 1
+  m_UpdateMode: 0
 --- !u!114 &97611289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2517,6 +2522,11 @@ MonoBehaviour:
   m_Brightness: 1
   m_Highlight: 1
   m_EffectMaterial: {fileID: 2100000, guid: 9dc7e810a87b444ab96919f3215c2fe5, type: 2}
+  m_Play: 0
+  m_Loop: 0
+  m_Duration: 1
+  m_LoopDelay: 1
+  m_UpdateMode: 0
 --- !u!114 &99342236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3896,6 +3906,9 @@ MonoBehaviour:
   m_ColorMode: 2
   m_EffectMaterial: {fileID: 21939717441729078, guid: 17b17d6effbe14075a3bbdf1fda1f6e1,
     type: 2}
+  m_Play: 0
+  m_Duration: 1
+  m_UpdateMode: 0
 --- !u!114 &159046164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8361,6 +8374,9 @@ MonoBehaviour:
   m_ColorMode: 2
   m_EffectMaterial: {fileID: 21939717441729078, guid: 17b17d6effbe14075a3bbdf1fda1f6e1,
     type: 2}
+  m_Play: 0
+  m_Duration: 1
+  m_UpdateMode: 0
 --- !u!114 &296004820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8570,6 +8586,9 @@ MonoBehaviour:
   m_ColorMode: 2
   m_EffectMaterial: {fileID: 21939717441729078, guid: 17b17d6effbe14075a3bbdf1fda1f6e1,
     type: 2}
+  m_Play: 0
+  m_Duration: 1
+  m_UpdateMode: 0
 --- !u!114 &322542925
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11915,6 +11934,11 @@ MonoBehaviour:
   m_Brightness: 0.85
   m_Highlight: 1
   m_EffectMaterial: {fileID: 2100000, guid: 9dc7e810a87b444ab96919f3215c2fe5, type: 2}
+  m_Play: 0
+  m_Loop: 0
+  m_Duration: 1
+  m_LoopDelay: 1
+  m_UpdateMode: 0
 --- !u!114 &430578154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12184,6 +12208,9 @@ MonoBehaviour:
   m_Color: {r: 0, g: 0.25, b: 1, a: 1}
   m_ColorMode: 0
   m_EffectMaterial: {fileID: 2100000, guid: 17b17d6effbe14075a3bbdf1fda1f6e1, type: 2}
+  m_Play: 0
+  m_Duration: 1
+  m_UpdateMode: 0
 --- !u!114 &432751465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12445,6 +12472,11 @@ MonoBehaviour:
   m_Brightness: 0.85
   m_Highlight: 1
   m_EffectMaterial: {fileID: 2100000, guid: 9dc7e810a87b444ab96919f3215c2fe5, type: 2}
+  m_Play: 0
+  m_Loop: 0
+  m_Duration: 1
+  m_LoopDelay: 1
+  m_UpdateMode: 0
 --- !u!114 &447086098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12556,7 +12588,7 @@ Animator:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 452111912}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 6407849c9ce4141a9b34a33fbfef3d78, type: 2}
   m_CullingMode: 0
@@ -12577,13 +12609,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f19b7e2285c104f6ca47d583f3e5444f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Location: 0.492
+  m_Location: 0.8090987
   m_Width: 0.192
   m_Rotation: 135
   m_Softness: 0.537
   m_Brightness: 1
   m_Highlight: 0
   m_EffectMaterial: {fileID: 2100000, guid: 9dc7e810a87b444ab96919f3215c2fe5, type: 2}
+  m_Play: 0
+  m_Loop: 1
+  m_Duration: 1
+  m_LoopDelay: 1
+  m_UpdateMode: 0
 --- !u!114 &452111916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13091,6 +13128,11 @@ MonoBehaviour:
   m_Brightness: 1
   m_Highlight: 1
   m_EffectMaterial: {fileID: 2100000, guid: 9dc7e810a87b444ab96919f3215c2fe5, type: 2}
+  m_Play: 0
+  m_Loop: 0
+  m_Duration: 1
+  m_LoopDelay: 1
+  m_UpdateMode: 0
 --- !u!114 &467476413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13834,6 +13876,9 @@ MonoBehaviour:
   m_ColorMode: 2
   m_EffectMaterial: {fileID: 21939717441729078, guid: 17b17d6effbe14075a3bbdf1fda1f6e1,
     type: 2}
+  m_Play: 0
+  m_Duration: 1
+  m_UpdateMode: 0
 --- !u!114 &508313351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19875,6 +19920,11 @@ MonoBehaviour:
   m_Brightness: 0.85
   m_Highlight: 1
   m_EffectMaterial: {fileID: 2100000, guid: 9dc7e810a87b444ab96919f3215c2fe5, type: 2}
+  m_Play: 0
+  m_Loop: 0
+  m_Duration: 1
+  m_LoopDelay: 1
+  m_UpdateMode: 0
 --- !u!114 &725274311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20014,6 +20064,11 @@ MonoBehaviour:
   m_Brightness: 1
   m_Highlight: 1
   m_EffectMaterial: {fileID: 2100000, guid: 9dc7e810a87b444ab96919f3215c2fe5, type: 2}
+  m_Play: 0
+  m_Loop: 0
+  m_Duration: 1
+  m_LoopDelay: 1
+  m_UpdateMode: 0
 --- !u!114 &740119758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20473,6 +20528,11 @@ MonoBehaviour:
   m_Brightness: 1
   m_Highlight: 1
   m_EffectMaterial: {fileID: 2100000, guid: 9dc7e810a87b444ab96919f3215c2fe5, type: 2}
+  m_Play: 0
+  m_Loop: 0
+  m_Duration: 1
+  m_LoopDelay: 1
+  m_UpdateMode: 0
 --- !u!114 &762572847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22509,6 +22569,11 @@ MonoBehaviour:
   m_Brightness: 1
   m_Highlight: 0
   m_EffectMaterial: {fileID: 2100000, guid: 9dc7e810a87b444ab96919f3215c2fe5, type: 2}
+  m_Play: 0
+  m_Loop: 0
+  m_Duration: 1
+  m_LoopDelay: 1
+  m_UpdateMode: 0
 --- !u!114 &868213302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25631,7 +25696,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 50857158}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.13205364
+  m_Size: 0.06367983
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -26229,6 +26294,11 @@ MonoBehaviour:
   m_Brightness: 0.85
   m_Highlight: 0
   m_EffectMaterial: {fileID: 2100000, guid: 9dc7e810a87b444ab96919f3215c2fe5, type: 2}
+  m_Play: 0
+  m_Loop: 0
+  m_Duration: 1
+  m_LoopDelay: 1
+  m_UpdateMode: 0
 --- !u!114 &971501893
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27113,6 +27183,11 @@ MonoBehaviour:
   m_Brightness: 0.5
   m_Highlight: 1
   m_EffectMaterial: {fileID: 2100000, guid: 9dc7e810a87b444ab96919f3215c2fe5, type: 2}
+  m_Play: 0
+  m_Loop: 0
+  m_Duration: 1
+  m_LoopDelay: 1
+  m_UpdateMode: 0
 --- !u!1 &999292210
 GameObject:
   m_ObjectHideFlags: 0
@@ -30688,6 +30763,9 @@ MonoBehaviour:
   m_ColorMode: 1
   m_EffectMaterial: {fileID: 21162286589123374, guid: 17b17d6effbe14075a3bbdf1fda1f6e1,
     type: 2}
+  m_Play: 0
+  m_Duration: 1
+  m_UpdateMode: 0
 --- !u!114 &1157031680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30828,6 +30906,9 @@ MonoBehaviour:
   m_ColorMode: 1
   m_EffectMaterial: {fileID: 21162286589123374, guid: 17b17d6effbe14075a3bbdf1fda1f6e1,
     type: 2}
+  m_Play: 0
+  m_Duration: 1
+  m_UpdateMode: 0
 --- !u!114 &1158040209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31666,6 +31747,11 @@ MonoBehaviour:
   m_Brightness: 1
   m_Highlight: 1
   m_EffectMaterial: {fileID: 2100000, guid: 9dc7e810a87b444ab96919f3215c2fe5, type: 2}
+  m_Play: 0
+  m_Loop: 0
+  m_Duration: 1
+  m_LoopDelay: 1
+  m_UpdateMode: 0
 --- !u!114 &1192977364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33749,6 +33835,9 @@ MonoBehaviour:
   m_ColorMode: 3
   m_EffectMaterial: {fileID: 21841578701121694, guid: 17b17d6effbe14075a3bbdf1fda1f6e1,
     type: 2}
+  m_Play: 0
+  m_Duration: 1
+  m_UpdateMode: 0
 --- !u!114 &1273502435
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35483,6 +35572,9 @@ MonoBehaviour:
   m_ColorMode: 2
   m_EffectMaterial: {fileID: 21939717441729078, guid: 17b17d6effbe14075a3bbdf1fda1f6e1,
     type: 2}
+  m_Play: 0
+  m_Duration: 1
+  m_UpdateMode: 0
 --- !u!114 &1341186036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37956,6 +38048,9 @@ MonoBehaviour:
   m_Color: {r: 0, g: 0.37931013, b: 1, a: 1}
   m_ColorMode: 0
   m_EffectMaterial: {fileID: 2100000, guid: 17b17d6effbe14075a3bbdf1fda1f6e1, type: 2}
+  m_Play: 0
+  m_Duration: 1
+  m_UpdateMode: 0
 --- !u!114 &1445986828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39596,6 +39691,9 @@ MonoBehaviour:
   m_ColorMode: 2
   m_EffectMaterial: {fileID: 21939717441729078, guid: 17b17d6effbe14075a3bbdf1fda1f6e1,
     type: 2}
+  m_Play: 0
+  m_Duration: 1
+  m_UpdateMode: 0
 --- !u!114 &1515550236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42315,6 +42413,11 @@ MonoBehaviour:
   m_Brightness: 0.85
   m_Highlight: 0
   m_EffectMaterial: {fileID: 2100000, guid: 9dc7e810a87b444ab96919f3215c2fe5, type: 2}
+  m_Play: 0
+  m_Loop: 0
+  m_Duration: 1
+  m_LoopDelay: 1
+  m_UpdateMode: 0
 --- !u!114 &1616823931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45625,6 +45728,9 @@ MonoBehaviour:
   m_ColorMode: 2
   m_EffectMaterial: {fileID: 21939717441729078, guid: 17b17d6effbe14075a3bbdf1fda1f6e1,
     type: 2}
+  m_Play: 0
+  m_Duration: 1
+  m_UpdateMode: 0
 --- !u!114 &1724447233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45994,6 +46100,11 @@ MonoBehaviour:
   m_Brightness: 0.85
   m_Highlight: 0
   m_EffectMaterial: {fileID: 2100000, guid: 9dc7e810a87b444ab96919f3215c2fe5, type: 2}
+  m_Play: 0
+  m_Loop: 0
+  m_Duration: 1
+  m_LoopDelay: 1
+  m_UpdateMode: 0
 --- !u!114 &1738290859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47635,6 +47746,9 @@ MonoBehaviour:
   m_ColorMode: 2
   m_EffectMaterial: {fileID: 21939717441729078, guid: 17b17d6effbe14075a3bbdf1fda1f6e1,
     type: 2}
+  m_Play: 0
+  m_Duration: 1
+  m_UpdateMode: 0
 --- !u!114 &1805646272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50004,6 +50118,9 @@ MonoBehaviour:
   m_ColorMode: 3
   m_EffectMaterial: {fileID: 21841578701121694, guid: 17b17d6effbe14075a3bbdf1fda1f6e1,
     type: 2}
+  m_Play: 0
+  m_Duration: 1
+  m_UpdateMode: 0
 --- !u!114 &1881423586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51537,7 +51654,7 @@ Animator:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1970251575}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 6407849c9ce4141a9b34a33fbfef3d78, type: 2}
   m_CullingMode: 0
@@ -51565,6 +51682,9 @@ MonoBehaviour:
   m_ColorMode: 2
   m_EffectMaterial: {fileID: 21939717441729078, guid: 17b17d6effbe14075a3bbdf1fda1f6e1,
     type: 2}
+  m_Play: 0
+  m_Duration: 1
+  m_UpdateMode: 0
 --- !u!114 &1970251579
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54242,6 +54362,11 @@ MonoBehaviour:
   m_Brightness: 0.85
   m_Highlight: 1
   m_EffectMaterial: {fileID: 2100000, guid: 9dc7e810a87b444ab96919f3215c2fe5, type: 2}
+  m_Play: 0
+  m_Loop: 0
+  m_Duration: 1
+  m_LoopDelay: 1
+  m_UpdateMode: 0
 --- !u!114 &2105256061
 MonoBehaviour:
   m_ObjectHideFlags: 0
