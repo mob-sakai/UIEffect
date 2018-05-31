@@ -356,7 +356,7 @@ namespace Coffee.UIExtensions
 			return AssetDatabase.FindAssets("t:Material " + name)
 				.Select(x => AssetDatabase.GUIDToAssetPath(x))
 				.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == name)
-				?? ("Assets/UIEffect/Materials/" + name + ".mat");
+				?? ("Assets/Coffee/UIExtensions/UIEffect/Materials/" + name + ".mat");
 		}
 
 		public static string GetVariantName(Shader shader, ToneMode tone, ColorMode color, BlurMode blur)

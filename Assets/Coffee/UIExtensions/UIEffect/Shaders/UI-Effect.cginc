@@ -135,7 +135,7 @@ fixed4 ApplyToneEffect(fixed4 color, fixed factor)
 // Color effect
 //################################
 // Apply color effect.
-fixed4 ApplyColorEffect(fixed4 color, fixed4 factor)
+half4 ApplyColorEffect(half4 color, half4 factor)
 {
 	#ifdef UI_COLOR_SET // Set
 	color.rgb = lerp(color.rgb, factor.rgb, factor.a);
