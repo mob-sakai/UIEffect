@@ -36,7 +36,10 @@ namespace Coffee.UIExtensions
 		[SerializeField] [ColorUsage(false)] Color m_Color = new Color(0.0f, 0.25f, 1.0f);
 		[SerializeField] UIEffect.ColorMode m_ColorMode = UIEffect.ColorMode.Add;
 		[SerializeField] Material m_EffectMaterial;
-
+		[Space]
+		[SerializeField] bool m_Play = false;
+		[SerializeField][Range(0.1f, 10)] float m_Duration = 1;
+		[SerializeField] AnimatorUpdateMode m_UpdateMode = AnimatorUpdateMode.Normal;
 
 		//################################
 		// Public Members.
@@ -49,22 +52,69 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Location for effect.
 		/// </summary>
-		public float location { get { return m_Location; } set { m_Location = Mathf.Clamp(value, 0, 1); _SetDirty(); } }
+		public float location
+		{
+			get { return m_Location; }
+			set
+			{
+				value = Mathf.Clamp(value, 0, 1);
+				if (!Mathf.Approximately(m_Location, value))
+				{
+					m_Location = value;
+					_SetDirty();
+				}
+			}
+		}
 
 		/// <summary>
 		/// Edge width.
 		/// </summary>
-		public float width { get { return m_Width; } set { m_Width = Mathf.Clamp(value, 0, 1); _SetDirty(); } }
+		public float width
+		{
+			get { return m_Width; }
+			set
+			{
+				value = Mathf.Clamp(value, 0, 1);
+				if (!Mathf.Approximately(m_Width, value))
+				{
+					m_Width = value;
+					_SetDirty();
+				}
+			}
+		}
 
 		/// <summary>
 		/// Edge softness.
 		/// </summary>
-		public float softness { get { return m_Softness; } set { m_Softness = Mathf.Clamp(value, 0, 1); _SetDirty(); } }
+		public float softness
+		{
+			get { return m_Softness; }
+			set
+			{
+				value = Mathf.Clamp(value, 0, 1);
+				if (!Mathf.Approximately(m_Softness, value))
+				{
+					m_Softness = value;
+					_SetDirty();
+				}
+			}
+		}
 
 		/// <summary>
 		/// Edge color.
 		/// </summary>
-		public Color color { get { return m_Color; } set { m_Color = value; _SetDirty(); } }
+		public Color color
+		{
+			get { return m_Color; }
+			set
+			{
+				if (m_Color != value)
+				{
+					m_Color = value;
+					_SetDirty();
+				}
+			}
+		}
 
 		/// <summary>
 		/// Color effect mode.
@@ -77,10 +127,26 @@ namespace Coffee.UIExtensions
 		public virtual Material effectMaterial { get { return m_EffectMaterial; } }
 
 		/// <summary>
+		/// Play dissolve on enable.
+		/// </summary>
+		public bool play { get { return m_Play; } set { m_Play = value; } }
+
+		/// <summary>
+		/// Dissolve duration.
+		/// </summary>
+		public float duration { get { return m_Duration; } set { m_Duration = Mathf.Max(value, 0.1f); } }
+
+		/// <summary>
+		/// Dissolve update mode.
+		/// </summary>
+		public AnimatorUpdateMode updateMode { get { return m_UpdateMode; } set { m_UpdateMode = value; } }
+
+		/// <summary>
 		/// This function is called when the object becomes enabled and active.
 		/// </summary>
 		protected override void OnEnable()
 		{
+			_time = 0;
 			graphic.material = effectMaterial;
 			base.OnEnable();
 		}
@@ -125,8 +191,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public override void ModifyMesh(VertexHelper vh)
 		{
-
-			if (!IsActive())
+			if (!isActiveAndEnabled)
 				return;
 
 			// rect.
@@ -138,49 +203,57 @@ namespace Coffee.UIExtensions
 			{
 				vh.PopulateUIVertex(ref vertex, i);
 
-				var x = Mathf.Clamp01 (vertex.position.x / rect.width + 0.5f);
-				var y = Mathf.Clamp01 (vertex.position.y / rect.height + 0.5f);
-				vertex.uv1 = new Vector2 (_PackToFloat (x, y, location, m_Width), _PackToFloat(m_Color.r, m_Color.g, m_Color.b, m_Softness));
+				var x = Mathf.Clamp01(vertex.position.x / rect.width + 0.5f);
+				var y = Mathf.Clamp01(vertex.position.y / rect.height + 0.5f);
+				vertex.uv1 = new Vector2(
+					Packer.ToFloat(x, y, location, m_Width),
+					Packer.ToFloat(m_Color.r, m_Color.g, m_Color.b, m_Softness)
+				);
 
 				vh.SetUIVertex(vertex, i);
 			}
 		}
 
+		/// <summary>
+		/// Play effect.
+		/// </summary>
+		public void Play()
+		{
+			_time = 0;
+			m_Play = true;
+		}
+
 		//################################
 		// Private Members.
 		//################################
+		float _time = 0;
+
+		void Update()
+		{
+			if (!m_Play || !Application.isPlaying)
+			{
+				return;
+			}
+
+			_time += m_UpdateMode == AnimatorUpdateMode.UnscaledTime
+				? Time.unscaledDeltaTime
+				: Time.deltaTime;
+			location = _time / m_Duration;
+
+			if (m_Duration <= _time)
+			{
+				m_Play = false;
+				_time = 0;
+			}
+		}
+
 		/// <summary>
 		/// Mark the UIEffect as dirty.
 		/// </summary>
 		void _SetDirty()
 		{
-			if(graphic)
+			if (graphic)
 				graphic.SetVerticesDirty();
-		}
-
-		/// <summary>
-		/// Pack 3 low-precision [0-1] floats values to a float.
-		/// Each value [0-1] has 256 steps(8 bits).
-		/// </summary>
-		static float _PackToFloat(float x, float y, float z)
-		{
-			const int PRECISION = (1 << 8) - 1;
-			return (Mathf.FloorToInt(z * PRECISION) << 16)
-			+ (Mathf.FloorToInt(y * PRECISION) << 8)
-			+ Mathf.FloorToInt(x * PRECISION);
-		}
-
-		/// <summary>
-		/// Pack 4 low-precision [0-1] floats values to a float.
-		/// Each value [0-1] has 64 steps(6 bits).
-		/// </summary>
-		static float _PackToFloat(float x, float y, float z, float w)
-		{
-			const int PRECISION = (1 << 6) - 1;
-			return (Mathf.FloorToInt(w * PRECISION) << 18)
-			+ (Mathf.FloorToInt(z * PRECISION) << 12)
-			+ (Mathf.FloorToInt(y * PRECISION) << 6)
-			+ Mathf.FloorToInt(x * PRECISION);
 		}
 	}
 }
