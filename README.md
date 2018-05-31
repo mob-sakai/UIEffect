@@ -1,8 +1,7 @@
 UIEffect
 ===
 
-UIEffect is an effect component for uGUI in Unity.  
-Let's decorate your UI with effects!
+UIEffect contains visual effect components for uGUI element in Unity.
 
 [![](https://img.shields.io/github/release/mob-sakai/UIEffect.svg?label=latest%20version)](https://github.com/mob-sakai/UIEffect/releases)
 [![](https://img.shields.io/github/release-date/mob-sakai/UIEffect.svg)](https://github.com/mob-sakai/UIEffect/releases)
@@ -25,7 +24,7 @@ Let's decorate your UI with effects!
 You can control parameters as you like from the script as well as inspector.  
 AnimationClip is supported as a matter of course!
 
-![5 -31-2018 12-57-40](https://user-images.githubusercontent.com/12690315/40760610-7ad82b38-64d2-11e8-9c18-f97229aada78.gif)
+![thumbnail](https://user-images.githubusercontent.com/12690315/40760610-7ad82b38-64d2-11e8-9c18-f97229aada78.gif)
 ![image](https://user-images.githubusercontent.com/12690315/38594668-636dd3ac-3d82-11e8-9951-820964a6a95f.gif)
 
 <br><br>
@@ -33,19 +32,19 @@ AnimationClip is supported as a matter of course!
 
 | Component | Features | Screenshot |
 |-|-|-|
-|**UIEffect**|Combine some visual effects.<br>See also [Development note](#why-is-uieffect-lightweight?).<br><br>**ToneMode:** Grayscale, Sepia, Nega, Pixelation, Hue shift,Cutoff (alpha-based), Mono (alpha-based)<br>**ColorMode:** Overwrite, Additive, Subtract<br>**BlurMode:** Fast, Medium, Detail<br><br>*NOTE: ToneMode, ColorMode and BlurMode are changeable only in editor.*<br>*NOTE: Shadow features will be obsolated. Please use `UIShadow` instead.*|<img src="https://user-images.githubusercontent.com/12690315/40757428-68277f0c-64c3-11e8-89e5-4a19616a85c1.png" width="1000px">|
-|**UICaptured EffectImage**|Capture a screenshot of a specific frame with effect, and disply it.<br>See also [Development note](#how-does-uieffectcapturedimage-work?).<br><br>**ToneMode:** Grayscale, Sepia, Nega, Pixelation, Hue shift<br>**ColorMode:** Overwrite, Additive, Subtract<br>**BlurMode:** Fast, Medium, Detail|<img src="https://user-images.githubusercontent.com/12690315/34619468-97e3c134-f285-11e7-90b2-3a75bde13911.gif"  width="1000px">|
-|**UIShiny**|Apply shinning effect to graphic.<br><br>**Options:** Location, Width, Rotation, Softness, Brightness, Highlight|<img  src="https://user-images.githubusercontent.com/12690315/40716998-cd42e954-6445-11e8-899b-f8ba8f1fea83.gif" width="1000px">|
-|**UIDissolve**|Apply dissolve effect to graphic.<br><br>**ColorMode:** Overwrite, Additive, Subtract<br>**Options:** Location, Width, Rotation, Softness, Color|<img src="https://user-images.githubusercontent.com/12690315/40717609-f0c3ca40-6447-11e8-97aa-7c4242d12106.gif" width="1000px">|
+|**UIEffect**|Combine some visual effects.<br>See also [Development note](#why-is-uieffect-lightweight?).<br><br>**ToneMode:** Grayscale, Sepia, Nega, Pixelation, Hue shift, Cutoff (alpha-based), Mono (alpha-based)<br>**ColorMode:** Overwrite, Additive, Subtract<br>**BlurMode:** Fast, Medium, Detail<br><br>*NOTE: ToneMode, ColorMode and BlurMode are changeable only in editor.*<br>*NOTE: Custom Effect feature will be obsolete. Please use `UICustomEffect` component instead.*<br>*NOTE: Shadow feature will be obsolete. Please use `UIShadow` component instead.*|<img src="https://user-images.githubusercontent.com/12690315/40757428-68277f0c-64c3-11e8-89e5-4a19616a85c1.png" width="1000px">|
+|**UICaptured EffectImage**|Capture a screenshot of a specific frame with effect, and display it.<br>See also [Development note](#how-does-uieffectcapturedimage-work?).<br><br>**ToneMode:** Grayscale, Sepia, Nega, Pixelation, Hue shift<br>**ColorMode:** Overwrite, Additive, Subtract<br>**BlurMode:** Fast, Medium, Detail|<img src="https://user-images.githubusercontent.com/12690315/34619468-97e3c134-f285-11e7-90b2-3a75bde13911.gif"  width="1000px">|
+|**UIShiny**|Apply shinning effect to a graphic.<br><br>**Options:** Location, Width, Rotation, Softness, Brightness, Highlight|<img  src="https://user-images.githubusercontent.com/12690315/40716998-cd42e954-6445-11e8-899b-f8ba8f1fea83.gif" width="1000px">|
+|**UIDissolve**|Apply dissolve effect to a graphic.<br><br>**ColorMode:** Overwrite, Additive, Subtract<br>**Options:** Location, Width, Rotation, Softness, Color|<img src="https://user-images.githubusercontent.com/12690315/40717609-f0c3ca40-6447-11e8-97aa-7c4242d12106.gif" width="1000px">|
 
 <br><br>
 ##### The following effects can be used with the above components.
 
 | Component | Features | Screenshot |
 |-|-|-|
-|**UIShadow**|Add shadows/outlines.<br>Performance is better than the default Shadow/Outline component.<br>See also [Development note](#the-issue-of-default-outline-component).<br><br>**ShadowStyle:** Shadow, Shadow3, Outline, Outline8<br>**Additional Shadows** reduce vertices for multiple Shadows or Outlines.|<img src="https://user-images.githubusercontent.com/12690315/40716994-ca5c13d2-6445-11e8-96d0-25a3ce704e2e.png" width="1000px">|
+|**UIShadow**|Add shadows/outlines to a graphic.<br>Performance is better than the default Shadow/Outline component.<br>See also [Development note](#the-issue-of-default-outline-component).<br><br>**ShadowStyle:** Shadow, Shadow3, Outline, Outline8<br>**Additional Shadows** reduce vertices for multiple Shadows or Outlines.|<img src="https://user-images.githubusercontent.com/12690315/40716994-ca5c13d2-6445-11e8-96d0-25a3ce704e2e.png" width="1000px">|
 |**UIGradient**|Change vertex color as gradient with angle and offset.<br><br>**Direction:** Horizontal, Vertical, Angle, Diagonal<br>**Options:** Offset, Color space|<img src="https://user-images.githubusercontent.com/12690315/40716995-ca87665e-6445-11e8-8233-ec2e21fefd6b.png" width="1000px">|
-|**UIFlip**|Flip graphic.<br><br>**Direction:** Horizontal, Vertical, Both|<img src="https://user-images.githubusercontent.com/12690315/40716996-cab1fd7e-6445-11e8-9753-962d23991d86.png"  width="1000px">|
+|**UIFlip**|Flip a graphic.<br><br>**Direction:** Horizontal, Vertical, Both|<img src="https://user-images.githubusercontent.com/12690315/40716996-cab1fd7e-6445-11e8-9753-962d23991d86.png"  width="1000px">|
 
 
 
@@ -87,14 +86,15 @@ AnimationClip is supported as a matter of course!
 
 ![image](https://user-images.githubusercontent.com/12690315/34619147-868cb36a-f284-11e7-8122-b924ff09077f.gif)
 
-`UIEffectCapturedImage` is similar to post effect, but uses `CommandBuffer` to give effect only on the rendering result (= captured image) of a specific frame.
-This effect is non-realtime, light-weight, less-camera, blit only once, but effective.
+`UIEffectCapturedImage` is similar to post effect, but uses `CommandBuffer` to give effect only on the rendering result (= captured image) of a specific frame.  
+This effect is non-realtime, light-weight, less-camera, blit only once, but be effective enough.
 
 * Camera for processing effect is unnecessary.
 * Process effect only once after `UIEffectCapturedImage.Capture`.
-* Using reduction buffer, keep used memory size small and keep rendering load are small.
+* Using reduction buffer, keep using memory size small and keep the rendering load are small.
 * When GameObjects with motion are on the screen, a result texture may be stirred.
-* You can overlay and display like as: [Screen] | [UIEffectCapturedImage] | [Dialog A] | [UIEffectCapturedImage] | [Dialog B].  
+* You can overlay and display like as:  
+`[Screen] | [UIEffectCapturedImage] | [Dialog A] | [UIEffectCapturedImage] | [Dialog B]`.  
 See also [Demo](#demo).
 
 
@@ -111,7 +111,7 @@ See also [Demo](#demo).
 * However, changing the [MaterialPropertyBlock](https://docs.unity3d.com/ScriptReference/MaterialPropertyBlock.html) of the uGUI element from the script will cause different batches and draw calls to increase.
 * So UIEffect encodes multiple effect parameters to UV1 channel with [IMeshModifier](https://docs.unity3d.com/ScriptReference/UI.IMeshModifier.html).
     * Pack four 6-bit [0-1] (64 steps) parameters into one float value.
-    * The parameters are low precision, but sufficient.
+    * The parameters are lower precision, but sufficient.
 
 | uv1 | 6-bit [0-1] | 6-bit [0-1] | 6-bit [0-1] | 6-bit [0-1] |
 |-|-|-|-|-|
