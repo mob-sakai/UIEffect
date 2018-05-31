@@ -5,11 +5,13 @@
 
 # Release the project with the following steps:
 #   1. Update the release version in package.json.
-#   2. Update "CHANGELOG.md" using "github_changelog_generator-1.15.0.pre.rc".
-#   3. Commit package.json and CHANGELOG.md.
-#   4. Merge into master branch.
+#   2. Open unity project to check compile error.
+#   3. Update "CHANGELOG.md" using "github_changelog_generator-1.15.0.pre.rc".
+#   4. Check changelog and continue proccess.
 #   5. Export unitypackage.
-#   6. Release using "gh-release-3.2.0". (Upload unitypackage)
+#   6. Commit package.json and CHANGELOG.md.
+#   7. Merge into master branch.
+#   8. Release using "gh-release-3.2.0". (with upload unitypackage)
 
 
 # input release version
@@ -45,6 +47,12 @@ read -p "[? is the change log correct? (y/N):" yn
 case "$yn" in [yY]*) ;; *) exit ;; esac
 
 
+# export unitypackage
+PACKAGE_SRC=`node -pe 'require("./package.json").src'`
+echo -e "\n>> Export unitypackage... ${PACKAGE_SRC}"
+"$UNITY_EDITOR" -quit -batchmode -projectPath "`pwd`" -exportpackage "$PACKAGE_SRC" "$PACKAGE_NAME.unitypackage"
+echo -e ">> OK"
+
 # commit release files
 echo -e "\n>> Commit release files..."
 git add CHANGELOG.md -f
@@ -61,13 +69,6 @@ git push origin master
 git checkout develop
 git merge --ff master
 git push origin develop
-
-
-# export unitypackage
-PACKAGE_SRC=`node -pe 'require("./package.json").src'`
-echo -e "\n>> Export unitypackage... ${PACKAGE_SRC}"
-"$UNITY_EDITOR" -quit -batchmode -projectPath "`pwd`" -exportpackage "$PACKAGE_SRC" "$PACKAGE_NAME.unitypackage"
-echo -e ">> OK"
 
 
 # upload unitypackage and release on Github
