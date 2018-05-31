@@ -19,16 +19,18 @@ AnimationClip:
   - curve:
       serializedVersion: 2
       m_Curve:
-      - time: 0
+      - serializedVersion: 2
+        time: 0
         value: 0
         inSlope: 2
         outSlope: 2
-        tangentMode: 10
-      - time: 0.5
+        tangentMode: 34
+      - serializedVersion: 2
+        time: 0.5
         value: 1
         inSlope: 2
         outSlope: 2
-        tangentMode: 10
+        tangentMode: 34
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -39,16 +41,18 @@ AnimationClip:
   - curve:
       serializedVersion: 2
       m_Curve:
-      - time: 0
+      - serializedVersion: 2
+        time: 0
         value: 1
         inSlope: Infinity
         outSlope: Infinity
-        tangentMode: 31
-      - time: 0.5
+        tangentMode: 103
+      - serializedVersion: 2
+        time: 0.5
         value: 1
         inSlope: Infinity
         outSlope: Infinity
-        tangentMode: 31
+        tangentMode: 103
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -101,16 +105,18 @@ AnimationClip:
   - curve:
       serializedVersion: 2
       m_Curve:
-      - time: 0
+      - serializedVersion: 2
+        time: 0
         value: 0
         inSlope: 2
         outSlope: 2
-        tangentMode: 10
-      - time: 0.5
+        tangentMode: 34
+      - serializedVersion: 2
+        time: 0.5
         value: 1
         inSlope: 2
         outSlope: 2
-        tangentMode: 10
+        tangentMode: 34
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -121,16 +127,18 @@ AnimationClip:
   - curve:
       serializedVersion: 2
       m_Curve:
-      - time: 0
+      - serializedVersion: 2
+        time: 0
         value: 1
         inSlope: Infinity
         outSlope: Infinity
-        tangentMode: 31
-      - time: 0.5
+        tangentMode: 103
+      - serializedVersion: 2
+        time: 0.5
         value: 1
         inSlope: Infinity
         outSlope: Infinity
-        tangentMode: 31
+        tangentMode: 103
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -142,14 +150,8 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_GenerateMotionCurves: 0
-  m_Events:
-  - time: 0
-    functionName: CaptureBackground
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
+  m_IsEmpty: 0
+  m_Events: []
 --- !u!1102 &-1537770706
 AnimatorState:
   serializedVersion: 5
@@ -192,16 +194,18 @@ AnimationClip:
   - curve:
       serializedVersion: 2
       m_Curve:
-      - time: 0
+      - serializedVersion: 2
+        time: 0
         value: 1
         inSlope: -2
         outSlope: -2
-        tangentMode: 10
-      - time: 0.5
+        tangentMode: 34
+      - serializedVersion: 2
+        time: 0.5
         value: 0
         inSlope: -2
         outSlope: -2
-        tangentMode: 10
+        tangentMode: 34
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -248,16 +252,18 @@ AnimationClip:
   - curve:
       serializedVersion: 2
       m_Curve:
-      - time: 0
+      - serializedVersion: 2
+        time: 0
         value: 1
         inSlope: -2
         outSlope: -2
-        tangentMode: 10
-      - time: 0.5
+        tangentMode: 34
+      - serializedVersion: 2
+        time: 0.5
         value: 0
         inSlope: -2
         outSlope: -2
-        tangentMode: 10
+        tangentMode: 34
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -269,6 +275,7 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_GenerateMotionCurves: 0
+  m_IsEmpty: 0
   m_Events: []
 --- !u!74 &7450624
 AnimationClip:
@@ -289,22 +296,26 @@ AnimationClip:
   - curve:
       serializedVersion: 2
       m_Curve:
-      - time: 0
+      - serializedVersion: 2
+        time: 0
         value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
-      - time: 1
+      - serializedVersion: 2
+        time: 1
         value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
-      - time: 2
+      - serializedVersion: 2
+        time: 2
         value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
-      - time: 3
+      - serializedVersion: 2
+        time: 3
         value: 0
         inSlope: 0
         outSlope: 0
@@ -355,22 +366,26 @@ AnimationClip:
   - curve:
       serializedVersion: 2
       m_Curve:
-      - time: 0
+      - serializedVersion: 2
+        time: 0
         value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
-      - time: 1
+      - serializedVersion: 2
+        time: 1
         value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
-      - time: 2
+      - serializedVersion: 2
+        time: 2
         value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
-      - time: 3
+      - serializedVersion: 2
+        time: 3
         value: 0
         inSlope: 0
         outSlope: 0
@@ -386,6 +401,7 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_GenerateMotionCurves: 0
+  m_IsEmpty: 0
   m_Events: []
 --- !u!74 &7451788
 AnimationClip:
@@ -451,6 +467,7 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_GenerateMotionCurves: 0
+  m_IsEmpty: 0
   m_Events: []
 --- !u!74 &7487404
 AnimationClip:
@@ -471,11 +488,12 @@ AnimationClip:
   - curve:
       serializedVersion: 2
       m_Curve:
-      - time: 0
+      - serializedVersion: 2
+        time: 0
         value: 0
         inSlope: 0
         outSlope: 0
-        tangentMode: 10
+        tangentMode: 34
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -486,11 +504,12 @@ AnimationClip:
   - curve:
       serializedVersion: 2
       m_Curve:
-      - time: 0
+      - serializedVersion: 2
+        time: 0
         value: 0
         inSlope: Infinity
         outSlope: Infinity
-        tangentMode: 31
+        tangentMode: 103
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -543,11 +562,12 @@ AnimationClip:
   - curve:
       serializedVersion: 2
       m_Curve:
-      - time: 0
+      - serializedVersion: 2
+        time: 0
         value: 0
         inSlope: 0
         outSlope: 0
-        tangentMode: 10
+        tangentMode: 34
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -558,11 +578,12 @@ AnimationClip:
   - curve:
       serializedVersion: 2
       m_Curve:
-      - time: 0
+      - serializedVersion: 2
+        time: 0
         value: 0
         inSlope: Infinity
         outSlope: Infinity
-        tangentMode: 31
+        tangentMode: 103
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -574,20 +595,14 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_GenerateMotionCurves: 0
-  m_Events:
-  - time: 0
-    functionName: Closed
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
+  m_IsEmpty: 0
+  m_Events: []
 --- !u!91 &9100000
 AnimatorController:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Dialog
+  m_Name: UIEffect_Demo_Dialog
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Open
