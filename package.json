@@ -1,11 +1,10 @@
 {
   "name": "UIEffect",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mob-sakai/UIEffect.git"
   },
-  "src": "Assets/UIEffect",
-  "unity": "/Applications/Unity/Hub/Editor/5.5.0p4/Unity.app/Contents/MacOS/Unity",
+  "src": "Assets/Coffee/UIExtensions/UIEffect",
   "license": "MIT"
 }

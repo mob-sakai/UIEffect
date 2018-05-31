@@ -13,7 +13,7 @@
 
 
 # input release version
-echo -e "\n>> Start Github Release:"
+echo -e ">> Start Github Release:"
 PACKAGE_NAME=`node -pe 'require("./package.json").name'`
 echo -e ">> Package name: ${PACKAGE_NAME}"
 CURRENT_VERSION=`grep -o -e "\"version\".*$" package.json | sed -e "s/\"version\": \"\(.*\)\".*$/\1/"`
@@ -38,12 +38,7 @@ echo -e ">> OK"
 CHANGELOG_GENERATOR_ARG=`grep -o -e ".*git\"$" package.json | sed -e "s/^.*\/\([^\/]*\)\/\([^\/]*\).git.*$/--user \1 --project \2/"`
 CHANGELOG_GENERATOR_ARG="--future-release v${RELEASE_VERSION} ${CHANGELOG_GENERATOR_ARG}"
 echo -e "\n>> Generate change log... ${CHANGELOG_GENERATOR_ARG}"
-# TAG=v$RELEASE_VERSION
-# git tag $TAG
-# git push --tags
 github_changelog_generator ${CHANGELOG_GENERATOR_ARG}
-# git tag -d $TAG
-# git push --delete origin $TAG
 
 git diff -- CHANGELOG.md
 read -p "[? is the change log correct? (y/N):" yn

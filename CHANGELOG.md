@@ -1,5 +1,34 @@
 # Changelog
 
+## [v2.5.0](https://github.com/mob-sakai/UIEffect/tree/v2.5.0) (2018-05-31)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.4.1...v2.5.0)
+
+Shiny effect has been update!
+
+![v2.5.0](https://user-images.githubusercontent.com/12690315/40654533-8877c99c-6379-11e8-8ae7-b91995fc230b.gif)
+
+* NOTE: `UIEffect.shadow***` will be obsolete in the near future. Please use `UIShadow` component instead.
+* NOTE: `UIEffect.custom***` will be obsolete in the near future. Please use `UICustomEffect` component (experimental) instead.
+
+**Implemented enhancements:**
+
+- UIDissolve: Play effect from script/inspector [\#81](https://github.com/mob-sakai/UIEffect/issues/81)
+- UIShiny: Play effect from script/inspector [\#80](https://github.com/mob-sakai/UIEffect/issues/80)
+- During play mode, you can change the effect type, color type, and blur type \(in Editor\) [\#73](https://github.com/mob-sakai/UIEffect/issues/73)
+- Add shadow effect  as other component [\#72](https://github.com/mob-sakai/UIEffect/issues/72)
+- UIShiny : Visual update [\#68](https://github.com/mob-sakai/UIEffect/issues/68)
+- Add Custom effect as other component [\#60](https://github.com/mob-sakai/UIEffect/issues/60)
+
+**Fixed bugs:**
+
+- UIDissolve: When width=1 and location=0, image is lacked [\#79](https://github.com/mob-sakai/UIEffect/issues/79)
+
+**Closed issues:**
+
+- UIEffect inherit UIEffectBase  [\#74](https://github.com/mob-sakai/UIEffect/issues/74)
+- Change directory structure [\#56](https://github.com/mob-sakai/UIEffect/issues/56)
+
 ## [v2.4.1](https://github.com/mob-sakai/UIEffect/tree/v2.4.1) (2018-05-29)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.4.0...v2.4.1)
@@ -11,6 +40,11 @@
 ## [v2.4.0](https://github.com/mob-sakai/UIEffect/tree/v2.4.0) (2018-05-21)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.3.2...v2.4.0)
+
+UIDissolve has been updated!
+
+![v2.4.0](https://user-images.githubusercontent.com/12690315/40294019-a0bfb8aa-5d0e-11e8-8451-873502db6a99.gif)
+![editor](https://user-images.githubusercontent.com/12690315/40294212-9e1b1ce2-5d0f-11e8-88ce-78a8c0523dc2.png)
 
 **Implemented enhancements:**
 
@@ -35,6 +69,15 @@
 ## [v2.3.0](https://github.com/mob-sakai/UIEffect/tree/v2.3.0) (2018-05-08)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.2.0...v2.3.0)
+
+New components has been available!
+
+* **UIShiny** : Shiny effect WITHOUT Mask component. This will suppress extra draw calls and improve performance.
+* **UIDissolve** : Dissolve effect WITHOUT material instancing. This will suppress extra draw calls and improve performance.
+* **UIFlip** : Flip graphic horizontal/vertical.
+
+![v2.3.0](https://user-images.githubusercontent.com/12690315/40706142-cb98d2d0-6427-11e8-96fc-5cc5fd9c553a.gif)
+
 
 **Implemented enhancements:**
 
