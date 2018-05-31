@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.5.1](https://github.com/mob-sakai/UIEffect/tree/v2.5.1) (2018-05-31)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.5.0...v2.5.1)
+
+**Fixed bugs:**
+
+- Fix demo [\#82](https://github.com/mob-sakai/UIEffect/issues/82)
+
 ## [v2.5.0](https://github.com/mob-sakai/UIEffect/tree/v2.5.0) (2018-05-31)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.4.1...v2.5.0)
