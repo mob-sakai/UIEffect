@@ -67,6 +67,7 @@ AnimationClip is supported as a matter of course!
 
 1. Download UIEffect.unitypackage from [Releases](https://github.com/mob-sakai/UIEffect/releases).
 1. Import the package into your Unity project. Select `Import Package > Custom Package` from the `Assets` menu.
+1. In Unity5.6+, enable `TexCoord1` channel of canvas. See also [Development Note](##note-unity-56).
 1. Add any effect component to UI element (Image, RawImage, Text, etc...) from `Add Component` in inspector.
 1. Enjoy!
 
