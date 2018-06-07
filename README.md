@@ -34,7 +34,7 @@ AnimationClip is supported as a matter of course!
 |-|-|-|
 |**UIEffect**|Combine some visual effects.<br>See also [Development note](#why-is-uieffect-lightweight).<br><br>**ToneMode:** Grayscale, Sepia, Nega, Pixelation, Hue shift, Cutoff (alpha-based), Mono (alpha-based)<br>**ColorMode:** Overwrite, Additive, Subtract<br>**BlurMode:** Fast, Medium, Detail<br><br>*NOTE: ToneMode, ColorMode and BlurMode are changeable only in editor.*<br>*NOTE: Custom Effect feature will be obsolete. Please use `UICustomEffect` component instead.*<br>*NOTE: Shadow feature will be obsolete. Please use `UIShadow` component instead.*|<img src="https://user-images.githubusercontent.com/12690315/40757428-68277f0c-64c3-11e8-89e5-4a19616a85c1.png" width="1000px">|
 |**UICaptured EffectImage**|Capture a screenshot of a specific frame with effect, and display it.<br>See also [Development note](#how-does-uieffectcapturedimage-work).<br><br>**ToneMode:** Grayscale, Sepia, Nega, Pixelation, Hue shift<br>**ColorMode:** Overwrite, Additive, Subtract<br>**BlurMode:** Fast, Medium, Detail|<img src="https://user-images.githubusercontent.com/12690315/34619468-97e3c134-f285-11e7-90b2-3a75bde13911.gif"  width="1000px">|
-|**UIShiny**|Apply shinning effect to a graphic.<br><br>**Options:** Location, Width, Rotation, Softness, Brightness, Highlight|<img  src="https://user-images.githubusercontent.com/12690315/40716998-cd42e954-6445-11e8-899b-f8ba8f1fea83.gif" width="1000px">|
+|**UIShiny**|Apply shinning effect to a graphic.<br>The effect does not require Mask component or normal map.<br><br>**Options:** Location, Width, Rotation, Softness, Brightness, Highlight|<img  src="https://user-images.githubusercontent.com/12690315/40716998-cd42e954-6445-11e8-899b-f8ba8f1fea83.gif" width="1000px">|
 |**UIDissolve**|Apply dissolve effect to a graphic.<br><br>**ColorMode:** Overwrite, Additive, Subtract<br>**Options:** Location, Width, Rotation, Softness, Color|<img src="https://user-images.githubusercontent.com/12690315/40717609-f0c3ca40-6447-11e8-97aa-7c4242d12106.gif" width="1000px">|
 
 <br><br>
@@ -67,6 +67,7 @@ AnimationClip is supported as a matter of course!
 
 1. Download UIEffect.unitypackage from [Releases](https://github.com/mob-sakai/UIEffect/releases).
 1. Import the package into your Unity project. Select `Import Package > Custom Package` from the `Assets` menu.
+1. In Unity5.6+, enable `TexCoord1` channel of canvas. See also [Development Note](##note-unity-56).
 1. Add any effect component to UI element (Image, RawImage, Text, etc...) from `Add Component` in inspector.
 1. Enjoy!
 
