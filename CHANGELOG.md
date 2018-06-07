@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.5.2](https://github.com/mob-sakai/UIEffect/tree/v2.5.2) (2018-06-07)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.5.1...v2.5.2)
+
+**Fixed bugs:**
+
+- When `UIEFFECT\_SEPARATE` symbol is defined, UIDissolve does not work well [\#85](https://github.com/mob-sakai/UIEffect/issues/85)
+
 ## [v2.5.1](https://github.com/mob-sakai/UIEffect/tree/v2.5.1) (2018-05-31)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.5.0...v2.5.1)
