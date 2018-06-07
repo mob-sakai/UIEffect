@@ -59,9 +59,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-Effect-Dissolve-Set
+  m_Name: UI-Effect-Dissolve-Fill
   m_Shader: {fileID: 4800000, guid: e1b48dc831eb147e9886c049033213bf, type: 3}
-  m_ShaderKeywords: UI_COLOR_SET
+  m_ShaderKeywords: FILL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -112,9 +112,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-Effect-Dissolve-Sub
+  m_Name: UI-Effect-Dissolve-Subtract
   m_Shader: {fileID: 4800000, guid: e1b48dc831eb147e9886c049033213bf, type: 3}
-  m_ShaderKeywords: UI_COLOR_SUB
+  m_ShaderKeywords: SUBTRACT
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -167,7 +167,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: UI-Effect-Dissolve-Add
   m_Shader: {fileID: 4800000, guid: e1b48dc831eb147e9886c049033213bf, type: 3}
-  m_ShaderKeywords: UI_COLOR_ADD
+  m_ShaderKeywords: ADD
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
