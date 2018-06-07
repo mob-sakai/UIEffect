@@ -21,9 +21,9 @@ Shader "UI/Hidden/UI-EffectCapture"
 			#pragma fragment frag
 			#pragma target 2.0
 
-			#pragma shader_feature __ UI_TONE_GRAYSCALE UI_TONE_SEPIA UI_TONE_NEGA UI_TONE_PIXEL UI_TONE_MONO UI_TONE_CUTOFF UI_TONE_HUE 
-			#pragma shader_feature __ UI_COLOR_ADD UI_COLOR_SUB UI_COLOR_SET
-			#pragma shader_feature __ UI_BLUR_FAST UI_BLUR_MEDIUM UI_BLUR_DETAIL
+			#pragma shader_feature __ GRAYSCALE SEPIA NEGA PIXEL MONO CUTOFF HUE 
+			#pragma shader_feature __ ADD SUBTRACT FILL
+			#pragma shader_feature __ FASTBLUR MEDIUMBLUR DETAILBLUR
 			
 			#include "UnityCG.cginc"
 			#include "UI-Effect.cginc"
@@ -53,10 +53,10 @@ Shader "UI/Hidden/UI-EffectCapture"
 				OUT.texcoord = v.texcoord;
 				OUT.effectFactor = _EffectFactor;
 
-				#if UI_TONE_HUE
+				#if HUE
 				OUT.effectFactor.y = sin(OUT.effectFactor.x*3.14159265359*2);
 				OUT.effectFactor.x = cos(OUT.effectFactor.x*3.14159265359*2);
-				#elif UI_TONE_PIXEL
+				#elif PIXEL
 				OUT.effectFactor.xy = max(2, (1-OUT.effectFactor.x) * _MainTex_TexelSize.zw);
 				#endif
 				
@@ -74,7 +74,7 @@ Shader "UI/Hidden/UI-EffectCapture"
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
-				#if UI_TONE_PIXEL
+				#if PIXEL
 				IN.texcoord = round(IN.texcoord * IN.effectFactor.xy) / IN.effectFactor.xy;
 				#endif
 				
@@ -84,7 +84,7 @@ Shader "UI/Hidden/UI-EffectCapture"
 				half4 color = tex2D(_MainTex, IN.texcoord);
 				#endif
 
-				#if UI_TONE_HUE
+				#if HUE
 				color.rgb = shift_hue(color.rgb, IN.effectFactor.x, IN.effectFactor.y);
 				#elif defined (UI_TONE)
 				color = ApplyToneEffect(color, IN.effectFactor.x);

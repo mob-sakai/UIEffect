@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -6,10 +8,6 @@ using UnityEngine.UI;
 
 namespace Coffee.UIExtensions
 {
-	using BlurMode = UIEffect.BlurMode;
-	using ColorMode = UIEffect.ColorMode;
-	using ToneMode = UIEffect.ToneMode;
-
 	public static class MaterialBundle
 	{
 		[MenuItem("UIEffect/Generate Material Bundle")]
@@ -36,6 +34,13 @@ namespace Coffee.UIExtensions
 				, (BlurMode[])Enum.GetValues(typeof(BlurMode))
 			);
 
+			GenerateMaterialVariants(
+				Shader.Find(UIDissolve.shaderName)
+				, new ToneMode[]{ToneMode.None}
+				, (ColorMode[])Enum.GetValues(typeof(ColorMode))
+				, new BlurMode[]{BlurMode.None}
+			);
+
 			AssetDatabase.StopAssetEditing();
 			AssetDatabase.SaveAssets();
 			AssetDatabase.Refresh();
@@ -51,9 +56,10 @@ namespace Coffee.UIExtensions
 			for (int i = 0; i < combinations.Length; i++)
 			{
 				var comb = combinations[i];
-				
-				EditorUtility.DisplayProgressBar("Genarate Effect Material Bundle", UIEffect.GetVariantName(shader, comb.tone, comb.color, comb.blur), (float)i / combinations.Length);
-				UIEffect.GetOrGenerateMaterialVariant(shader, comb.tone, comb.color, comb.blur);
+				var name = MaterialResolver.GetVariantName(shader, comb.tone, comb.color, comb.blur);
+				EditorUtility.DisplayProgressBar("Genarate Effect Material Bundle", name, (float)i / combinations.Length);
+
+				MaterialResolver.GetOrGenerateMaterialVariant(shader, comb.tone, comb.color, comb.blur);
 			}
 			EditorUtility.ClearProgressBar();
 		}

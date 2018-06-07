@@ -52,21 +52,6 @@ namespace Coffee.UIExtensions
 		}
 
 		//################################
-		// Constant or Static Members.
-		//################################
-		/// <summary>
-		/// Shadow effect style.
-		/// </summary>
-		public enum ShadowStyle
-		{
-			None = 0,
-			Shadow,
-			Outline,
-			Outline8,
-			Shadow3,
-		}
-
-		//################################
 		// Serialize Members.
 		//################################
 		[SerializeField][Range(0, 1)] float m_Blur = 0.25f;

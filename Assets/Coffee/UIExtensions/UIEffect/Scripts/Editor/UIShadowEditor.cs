@@ -32,7 +32,7 @@ namespace Coffee.UIExtensions
 		{
 			spAdditionalShadows.InsertArrayElementAtIndex(ro.count);
 			var element = spAdditionalShadows.GetArrayElementAtIndex(ro.count - 1);
-			element.FindPropertyRelative("style").intValue = (int)UIShadow.ShadowStyle.Shadow;
+			element.FindPropertyRelative("style").intValue = (int)ShadowStyle.Shadow;
 			element.FindPropertyRelative("effectColor").colorValue = Color.black;
 			element.FindPropertyRelative("effectDistance").vector2Value = new Vector2(1f, -1f);
 			element.FindPropertyRelative("useGraphicAlpha").boolValue = true;
@@ -42,10 +42,10 @@ namespace Coffee.UIExtensions
 		float ElementHeightCallback(int index)
 		{
 			var element = spAdditionalShadows.GetArrayElementAtIndex(index);
-			if (element.FindPropertyRelative("style").intValue == (int)UIShadow.ShadowStyle.None)
+			if (element.FindPropertyRelative("style").intValue == (int)ShadowStyle.None)
 				return 16;
 			
-			return (uiEffect && uiEffect.blurMode != UIEffect.BlurMode.None ? 84 : 64) + (EditorGUIUtility.wideMode ? 0 : 18);
+			return (uiEffect && uiEffect.blurMode != BlurMode.None ? 84 : 64) + (EditorGUIUtility.wideMode ? 0 : 18);
 		}
 
 		/// <summary>
@@ -59,7 +59,7 @@ namespace Coffee.UIExtensions
 			r.height = EditorGUIUtility.singleLineHeight;
 			var spMode = sp.FindPropertyRelative("style");
 			EditorGUI.PropertyField(r, spMode);
-			if (spMode.intValue == (int)UIShadow.ShadowStyle.None)
+			if (spMode.intValue == (int)ShadowStyle.None)
 				return;
 
 			r.y += r.height;
@@ -69,7 +69,7 @@ namespace Coffee.UIExtensions
 			r.y += EditorGUIUtility.wideMode ? r.height : r.height * 2;
 			EditorGUI.PropertyField(r, sp.FindPropertyRelative("useGraphicAlpha"));
 
-			if (uiEffect && uiEffect.blurMode != UIEffect.BlurMode.None)
+			if (uiEffect && uiEffect.blurMode != BlurMode.None)
 			{
 				r.y += r.height;
 				EditorGUI.PropertyField(r, sp.FindPropertyRelative("blur"));
@@ -91,14 +91,14 @@ namespace Coffee.UIExtensions
 			EditorGUILayout.PropertyField(spShadowMode);
 
 			// When shadow is enable, show parameters.
-			if (spShadowMode.intValue != (int)UIShadow.ShadowStyle.None)
+			if (spShadowMode.intValue != (int)ShadowStyle.None)
 			{
 				EditorGUI.indentLevel++;
 				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_EffectDistance"));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_EffectColor"));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_UseGraphicAlpha"));
 
-				if (uiEffect && uiEffect.blurMode != UIEffect.BlurMode.None)
+				if (uiEffect && uiEffect.blurMode != BlurMode.None)
 				{
 					EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Blur"));
 				}

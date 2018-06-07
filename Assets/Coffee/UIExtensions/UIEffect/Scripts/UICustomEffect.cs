@@ -38,12 +38,6 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public Vector4 customFactor2 { get { return m_CustomFactor2; } set { m_CustomFactor2 = value; SetDirty(); } }
 
-//		protected override void OnValidate()
-//		{
-//			base.OnValidate();
-//			Debug.Log("hog!");
-//		}
-
 		/// <summary>
 		/// Modifies the mesh.
 		/// </summary>

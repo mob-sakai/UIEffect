@@ -38,7 +38,7 @@ namespace Coffee.UIExtensions
 			changed |= EditorGUI.EndChangeCheck();
 
 			// When tone is enable, show parameters.
-			if (spToneMode.intValue != (int)UIEffect.ToneMode.None)
+			if (spToneMode.intValue != (int)ToneMode.None)
 			{
 				EditorGUI.indentLevel++;
 				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_ToneLevel"));
@@ -54,7 +54,7 @@ namespace Coffee.UIExtensions
 			changed |= EditorGUI.EndChangeCheck();
 
 			// When color is enable, show parameters.
-			if (spColorMode.intValue != (int)UIEffect.ColorMode.None)
+			if (spColorMode.intValue != (int)ColorMode.Multiply)
 			{
 				EditorGUI.indentLevel++;
 				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_EffectColor"));
@@ -70,26 +70,26 @@ namespace Coffee.UIExtensions
 			changed |= EditorGUI.EndChangeCheck();
 
 			// When blur is enable, show parameters.
-			if (spBlurMode.intValue != (int)UIEffect.BlurMode.None)
+			if (spBlurMode.intValue != (int)BlurMode.None)
 			{
 				EditorGUI.indentLevel++;
 				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Blur"));
 				EditorGUI.indentLevel--;
 			}
 
-			// Set effect material.
-			if (!serializedObject.isEditingMultipleObjects && spToneMode.intValue == 0 && spColorMode.intValue == 0 && spBlurMode.intValue == 0)
-			{
-				spMaterial.objectReferenceValue = null;
-			}
-			else if (changed || !serializedObject.isEditingMultipleObjects)
-			{
-				spMaterial.objectReferenceValue = UIEffect.GetOrGenerateMaterialVariant(Shader.Find(shaderName),
-					(UIEffect.ToneMode)spToneMode.intValue,
-					(UIEffect.ColorMode)spColorMode.intValue,
-					(UIEffect.BlurMode)spBlurMode.intValue
-				);
-			}
+//			// Set effect material.
+//			if (!serializedObject.isEditingMultipleObjects && spToneMode.intValue == 0 && spColorMode.intValue == 0 && spBlurMode.intValue == 0)
+//			{
+//				spMaterial.objectReferenceValue = null;
+//			}
+//			else if (changed || !serializedObject.isEditingMultipleObjects)
+//			{
+//				spMaterial.objectReferenceValue = UIEffect.GetOrGenerateMaterialVariant(Shader.Find(shaderName),
+//					(UIEffect.ToneMode)spToneMode.intValue,
+//					(UIEffect.ColorMode)spColorMode.intValue,
+//					(UIEffect.BlurMode)spBlurMode.intValue
+//				);
+//			}
 		}
 
 		//################################
@@ -132,7 +132,7 @@ namespace Coffee.UIExtensions
 		{
 			_spAdditionalShadows.InsertArrayElementAtIndex(ro.count);
 			var element = _spAdditionalShadows.GetArrayElementAtIndex(ro.count - 1);
-			element.FindPropertyRelative("shadowMode").intValue = (int)UIEffect.ShadowStyle.Shadow;
+			element.FindPropertyRelative("shadowMode").intValue = (int)ShadowStyle.Shadow;
 			element.FindPropertyRelative("shadowColor").colorValue = Color.black;
 			element.FindPropertyRelative("effectDistance").vector2Value = new Vector2(1f, -1f);
 			element.FindPropertyRelative("useGraphicAlpha").boolValue = true;
@@ -142,10 +142,10 @@ namespace Coffee.UIExtensions
 		float ElementHeightCallback(int index)
 		{
 			var element = _spAdditionalShadows.GetArrayElementAtIndex(index);
-			if (element.FindPropertyRelative("shadowMode").intValue == (int)UIEffect.ShadowStyle.None)
+			if (element.FindPropertyRelative("shadowMode").intValue == (int)ShadowStyle.None)
 				return 16;
 
-			return (_spBlurMode.intValue == (int)UIEffect.BlurMode.None ? 66 : 84) + (EditorGUIUtility.wideMode ? 0 : 18);
+			return (_spBlurMode.intValue == (int)BlurMode.None ? 66 : 84) + (EditorGUIUtility.wideMode ? 0 : 18);
 		}
 
 		/// <summary>
@@ -159,7 +159,7 @@ namespace Coffee.UIExtensions
 			r.height = EditorGUIUtility.singleLineHeight;
 			var spMode = sp.FindPropertyRelative("shadowMode");
 			EditorGUI.PropertyField(r, spMode);
-			if (spMode.intValue == (int)UIEffect.ShadowStyle.None)
+			if (spMode.intValue == (int)ShadowStyle.None)
 				return;
 
 			r.y += r.height;
@@ -169,7 +169,7 @@ namespace Coffee.UIExtensions
 			r.y += EditorGUIUtility.wideMode ? r.height : r.height * 2;
 			EditorGUI.PropertyField(r, sp.FindPropertyRelative("useGraphicAlpha"));
 
-			if (_spBlurMode.intValue != (int)UIEffect.BlurMode.None)
+			if (_spBlurMode.intValue != (int)BlurMode.None)
 			{
 				r.y += r.height;
 				EditorGUI.PropertyField(r, sp.FindPropertyRelative("shadowBlur"));
@@ -209,14 +209,14 @@ namespace Coffee.UIExtensions
 			EditorGUILayout.PropertyField(spShadowMode);
 
 			// When shadow is enable, show parameters.
-			if (spShadowMode.intValue != (int)UIEffect.ShadowStyle.None)
+			if (spShadowMode.intValue != (int)ShadowStyle.None)
 			{
 				EditorGUI.indentLevel++;
 				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_EffectDistance"));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_ShadowColor"));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_UseGraphicAlpha"));
 
-				if (_spBlurMode.intValue != (int)UIEffect.BlurMode.None)
+				if (_spBlurMode.intValue != (int)BlurMode.None)
 				{
 					EditorGUILayout.PropertyField(serializedObject.FindProperty("m_ShadowBlur"));
 				}
