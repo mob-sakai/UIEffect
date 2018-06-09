@@ -8,7 +8,7 @@ namespace Coffee.UIExtensions
 	/// Dissolve effect for uGUI.
 	/// </summary>
 	[ExecuteInEditMode]
-	public class UIDissolve : UIEffectBase
+	public class UIDissolve : UIEffectBase, IMaterialModifier
 	{
 		//################################
 		// Constant or Static Members.
@@ -24,6 +24,7 @@ namespace Coffee.UIExtensions
 		[SerializeField] [Range(0, 1)] float m_Softness = 0.5f;
 		[SerializeField] [ColorUsage(false)] Color m_Color = new Color(0.0f, 0.25f, 1.0f);
 		[SerializeField] ColorMode m_ColorMode = ColorMode.Add;
+		[SerializeField] Texture m_NoiseTexture;
 		[Header("Play Effect")]
 		[SerializeField] bool m_Play = false;
 		[SerializeField][Range(0.1f, 10)] float m_Duration = 1;
@@ -102,6 +103,25 @@ namespace Coffee.UIExtensions
 		}
 
 		/// <summary>
+		/// Noise texture.
+		/// </summary>
+		public Texture noiseTexture
+		{
+			get { return m_NoiseTexture; }
+			set
+			{
+				if (m_NoiseTexture != value)
+				{
+					m_NoiseTexture = value;
+					if (graphic)
+					{
+						graphic.SetMaterialDirty();
+					}
+				}
+			}
+		}
+
+		/// <summary>
 		/// Color effect mode.
 		/// </summary>
 		public ColorMode colorMode { get { return m_ColorMode; } }
@@ -121,6 +141,34 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public AnimatorUpdateMode updateMode { get { return m_UpdateMode; } set { m_UpdateMode = value; } }
 
+		/// <summary>
+		/// Modifies the material.
+		/// </summary>
+		public Material GetModifiedMaterial(Material baseMaterial)
+		{
+			if (_materialCache != null && !_materialCache.IsMatch(m_ColorMode, m_NoiseTexture))
+			{
+				MaterialCache.Unregister(_materialCache);
+				_materialCache = null;
+			}
+
+			if (!isActiveAndEnabled || !m_NoiseTexture || !m_EffectMaterial)
+			{
+				return baseMaterial;
+			}
+			else if (_materialCache != null && _materialCache.IsMatch(m_ColorMode, m_NoiseTexture))
+			{
+				return _materialCache.material;
+			}
+
+			_materialCache = MaterialCache.Register(m_ColorMode, m_NoiseTexture, () =>
+				{
+					var mat = new Material(m_EffectMaterial);
+					mat.SetTexture("_NoiseTex", m_NoiseTexture);
+					return mat;
+				});
+			return _materialCache.material;
+		}
 
 		/// <summary>
 		/// Modifies the mesh.
@@ -172,12 +220,29 @@ namespace Coffee.UIExtensions
 			base.OnEnable();
 		}
 
+		protected override void OnDisable()
+		{
+			MaterialCache.Unregister(_materialCache);
+			_materialCache = null;
+			base.OnDisable();
+
+		}
+
 #if UNITY_EDITOR
+		protected override void OnValidate()
+		{
+			base.OnValidate();
+			if (graphic)
+			{
+				graphic.SetMaterialDirty();
+			}
+		}
+
 		/// <summary>
 		/// Gets the material.
 		/// </summary>
 		/// <returns>The material.</returns>
-		protected override Material GetMaterial ()
+		protected override Material GetMaterial()
 		{
 			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_ColorMode);
 		}
@@ -186,6 +251,7 @@ namespace Coffee.UIExtensions
 		//################################
 		// Private Members.
 		//################################
+		MaterialCache _materialCache = null;
 		float _time = 0;
 
 		void Update()
