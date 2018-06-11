@@ -25,6 +25,7 @@ namespace Coffee.UIExtensions
 		[SerializeField] [ColorUsage(false)] Color m_Color = new Color(0.0f, 0.25f, 1.0f);
 		[SerializeField] ColorMode m_ColorMode = ColorMode.Add;
 		[SerializeField] Texture m_NoiseTexture;
+		[SerializeField] protected EffectArea m_EffectArea;
 		[Header("Play Effect")]
 		[SerializeField] bool m_Play = false;
 		[SerializeField][Range(0.1f, 10)] float m_Duration = 1;
@@ -122,6 +123,22 @@ namespace Coffee.UIExtensions
 		}
 
 		/// <summary>
+		/// The area for effect.
+		/// </summary>
+		public EffectArea effectArea
+		{
+			get { return m_EffectArea; }
+			set
+			{
+				if (m_EffectArea != value)
+				{
+					m_EffectArea = value;
+					SetDirty();
+				}
+			}
+		}
+
+		/// <summary>
 		/// Color effect mode.
 		/// </summary>
 		public ColorMode colorMode { get { return m_ColorMode; } }
@@ -179,16 +196,26 @@ namespace Coffee.UIExtensions
 				return;
 
 			// rect.
-			Rect rect = targetGraphic.rectTransform.rect;
+			Rect rect = GetEffectArea(vh, m_EffectArea);
 
 			// Calculate vertex position.
 			UIVertex vertex = default(UIVertex);
+			bool effectEachCharacter = graphic is Text && m_EffectArea == EffectArea.Character;
+			float x, y;
 			for (int i = 0; i < vh.currentVertCount; i++)
 			{
 				vh.PopulateUIVertex(ref vertex, i);
 
-				var x = Mathf.Clamp01(vertex.position.x / rect.width + 0.5f);
-				var y = Mathf.Clamp01(vertex.position.y / rect.height + 0.5f);
+				if (effectEachCharacter)
+				{
+					x = splitedCharacterPosition[i%4].x;
+					y = splitedCharacterPosition[i%4].y;
+				}
+				else
+				{
+					x = Mathf.Clamp01(vertex.position.x / rect.width + 0.5f);
+					y = Mathf.Clamp01(vertex.position.y / rect.height + 0.5f);
+				}
 				vertex.uv1 = new Vector2(
 					Packer.ToFloat(x, y, location, m_Width),
 					Packer.ToFloat(m_Color.r, m_Color.g, m_Color.b, m_Softness)

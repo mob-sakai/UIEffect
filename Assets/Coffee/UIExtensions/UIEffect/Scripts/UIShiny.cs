@@ -19,9 +19,6 @@ namespace Coffee.UIExtensions
 	[ExecuteInEditMode]
 	[DisallowMultipleComponent]
 	public class UIShiny : UIEffectBase
-#if UNITY_EDITOR
-		, ISerializationCallbackReceiver
-#endif
 	{
 		//################################
 		// Constant or Static Members.
@@ -39,7 +36,8 @@ namespace Coffee.UIExtensions
 		[FormerlySerializedAs("m_Alpha")]
 		[SerializeField][Range(0, 1)] float m_Brightness = 1f;
 		[SerializeField][Range(0, 1)] float m_Highlight = 1;
-		[Space]
+		[SerializeField] protected EffectArea m_EffectArea;
+		[Header("Play Effect")]
 		[SerializeField] bool m_Play = false;
 		[SerializeField] bool m_Loop = false;
 		[SerializeField][Range(0.1f, 10)] float m_Duration = 1;
@@ -175,6 +173,22 @@ namespace Coffee.UIExtensions
 		}
 
 		/// <summary>
+		/// The area for effect.
+		/// </summary>
+		public EffectArea effectArea
+		{
+			get { return m_EffectArea; }
+			set
+			{
+				if (m_EffectArea != value)
+				{
+					m_EffectArea = value;
+					SetDirty();
+				}
+			}
+		}
+
+		/// <summary>
 		/// Play shinning on enable.
 		/// </summary>
 		public bool play { get { return m_Play; } set { m_Play = value; } }
@@ -268,7 +282,7 @@ namespace Coffee.UIExtensions
 				return;
 
 			// rect.
-			Rect rect = graphic.rectTransform.rect;
+			Rect rect = GetEffectArea(vh, m_EffectArea);
 
 			// rotation.
 			float rad = rotation * Mathf.Deg2Rad;
@@ -277,6 +291,8 @@ namespace Coffee.UIExtensions
 			dir = dir.normalized;
 
 			// Calculate vertex position.
+			bool effectEachCharacter = graphic is Text && m_EffectArea == EffectArea.Character;
+
 			UIVertex vertex = default(UIVertex);
 			Vector2 nomalizedPos;
 			Matrix2x3 localMatrix = new Matrix2x3(rect, dir.x, dir.y);	// Get local matrix.
@@ -286,6 +302,17 @@ namespace Coffee.UIExtensions
 
 				// Normalize vertex position by local matrix.
 				nomalizedPos = localMatrix * vertex.position;
+
+				// Normalize vertex position by local matrix.
+				if (effectEachCharacter)
+				{
+					// Each characters.
+					nomalizedPos = localMatrix * splitedCharacterPosition[i % 4];
+				}
+				else
+				{
+					nomalizedPos = localMatrix * vertex.position;
+				}
 
 				vertex.uv1 = new Vector2(
 					Packer.ToFloat(Mathf.Clamp01(nomalizedPos.y), softness, width, brightness),
