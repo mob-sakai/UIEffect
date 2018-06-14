@@ -4,7 +4,7 @@
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.5.2...v2.6.0)
 
-Blurring effect has been improved about 6 times faster!
+Blurring effect has been improved about 6 times faster!  
 ![](https://user-images.githubusercontent.com/12690315/41393724-08420b1e-6fe2-11e8-8741-721789c2d029.png)
 
 You can change noise texture for dissolve effect from inspector or script!  
