@@ -10,7 +10,10 @@ namespace Coffee.UIExtensions
 	[ExecuteInEditMode]
 	[RequireComponent(typeof(Graphic))]
 	[DisallowMultipleComponent]
-	public abstract class UIEffectBase : BaseMeshEffect, ISerializationCallbackReceiver
+	public abstract class UIEffectBase : BaseMeshEffect
+#if UNITY_EDITOR
+		, ISerializationCallbackReceiver
+#endif
 	{
 		protected static readonly Rect rectForCharacter = new Rect(0, 0, 1, 1);
 		protected static readonly Vector2[] splitedCharacterPosition = { Vector2.up, Vector2.one, Vector2.right, Vector2.zero };
@@ -28,15 +31,14 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public Material effectMaterial { get { return m_EffectMaterial; } }
 
+#if UNITY_EDITOR
 		/// <summary>
 		/// Raises the validate event.
 		/// </summary>
 		protected override void OnValidate ()
 		{
 			base.OnValidate ();
-#if UNITY_EDITOR
 			UnityEditor.EditorApplication.delayCall += () => UpdateMaterial(false);
-#endif
 		}
 
 		/// <summary>
@@ -51,12 +53,9 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public virtual void OnAfterDeserialize()
 		{
-#if UNITY_EDITOR
 			UnityEditor.EditorApplication.delayCall += () => UpdateMaterial(true);
-#endif
 		}
 
-#if UNITY_EDITOR
 		/// <summary>
 		/// Updates the material.
 		/// </summary>
