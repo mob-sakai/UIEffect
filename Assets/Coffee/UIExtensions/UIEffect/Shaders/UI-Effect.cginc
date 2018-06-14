@@ -34,54 +34,38 @@ fixed4 UnpackToVec4(float value)
     return color;
 }
 
-// Calculate blur effect.
-// Sample texture by blured uv, with bias.
-fixed4 Blur(sampler2D tex, half2 uv, half2 addUv, half bias)
-{
-	return 
-		(
-		tex2D(tex, uv + half2(addUv.x, addUv.y))
-		+ tex2D(tex, uv + half2(-addUv.x, addUv.y))
-		+ tex2D(tex, uv + half2(addUv.x, -addUv.y))
-		+ tex2D(tex, uv + half2(-addUv.x, -addUv.y))
-#if DETAILBLUR
-		+ tex2D(tex, uv + half2(addUv.x, 0))
-		+ tex2D(tex, uv + half2(-addUv.x, 0))
-		+ tex2D(tex, uv + half2(0, addUv.y))
-		+ tex2D(tex, uv + half2(0, -addUv.y))
-		)
-		* bias / 2;
-#else
-		)
-		* bias;
-#endif
-}
-
 // Sample texture with blurring.
-// * Fast: Sample texture with 3x4 blurring.
-// * Medium: Sample texture with 6x4 blurring.
-// * Detail: Sample texture with 6x8 blurring.
-fixed4 Tex2DBlurring(sampler2D tex, half2 uv, half2 blur)
+// * Fast: Sample texture with 3x3 kernel.
+// * Medium: Sample texture with 5x5 kernel.
+// * Detail: Sample texture with 7x7 kernel.
+fixed4 Tex2DBlurring (sampler2D tex, half2 uv, half2 blur)
 {
-	half4 color = tex2D(tex, uv);
-
 	#if FASTBLUR
-	return color * 0.41511
-		+ Blur( tex, uv, blur * 3, 0.12924 )
-		+ Blur( tex, uv, blur * 5, 0.01343 )
-		+ Blur( tex, uv, blur * 6, 0.00353 );
-
-	#elif MEDIUMBLUR | DETAILBLUR
-	return color * 0.14387
-		+ Blur( tex, uv, blur * 1, 0.06781 )
-		+ Blur( tex, uv, blur * 2, 0.05791 )
-		+ Blur( tex, uv, blur * 3, 0.04360 )
-		+ Blur( tex, uv, blur * 4, 0.02773 )
-		+ Blur( tex, uv, blur * 5, 0.01343 )
-		+ Blur( tex, uv, blur * 6, 0.00353 );
+	const int KERNEL_SIZE = 3;
+	#elif MEDIUMBLUR
+	const int KERNEL_SIZE = 5;
+	#elif DETAILBLUR
+	const int KERNEL_SIZE = 7;
 	#else
-	return color;
+	const int KERNEL_SIZE = 1;
 	#endif
+	float4 o = 0;
+	float sum = 0;
+	float weight;
+	half2 texcood;
+	for(int x = -KERNEL_SIZE/2; x <= KERNEL_SIZE/2; x++)
+	{
+		for(int y = -KERNEL_SIZE/2; y <= KERNEL_SIZE/2; y++)
+		{
+			texcood = uv;
+			texcood.x += blur.x * x;
+			texcood.y += blur.y * y;
+			weight = 1.0/(abs(x)+abs(y)+2);
+			o += tex2D(tex, texcood)*weight;
+			sum += weight;
+		}
+	}
+	return o / sum;
 }
 
 fixed3 shift_hue(fixed3 RGB, half VSU, half VSW)
