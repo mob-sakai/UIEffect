@@ -1,10 +1,18 @@
 # Changelog
 
+## [v2.6.1](https://github.com/mob-sakai/UIEffect/tree/v2.6.1) (2018-06-14)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.6.0...v2.6.1)
+
+**Fixed bugs:**
+
+- Errors occurred on build \(v2.6.0\) [\#90](https://github.com/mob-sakai/UIEffect/issues/90)
+
 ## [v2.6.0](https://github.com/mob-sakai/UIEffect/tree/v2.6.0) (2018-06-14)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.5.2...v2.6.0)
 
-Blurring effect has been improved about 6 times faster!
+Blurring effect has been improved about 6 times faster!  
 ![](https://user-images.githubusercontent.com/12690315/41393724-08420b1e-6fe2-11e8-8741-721789c2d029.png)
 
 You can change noise texture for dissolve effect from inspector or script!  
@@ -22,6 +30,7 @@ You can change noise texture for dissolve effect from inspector or script!
 **Closed issues:**
 
 - Change BlurMode correctly [\#84](https://github.com/mob-sakai/UIEffect/issues/84)
+- Refactoring to prepare v3.0.0 [\#83](https://github.com/mob-sakai/UIEffect/issues/83)
 - Change ColorMode correctly [\#51](https://github.com/mob-sakai/UIEffect/issues/51)
 
 ## [v2.5.2](https://github.com/mob-sakai/UIEffect/tree/v2.5.2) (2018-06-07)
@@ -31,10 +40,6 @@ You can change noise texture for dissolve effect from inspector or script!
 **Fixed bugs:**
 
 - When `UIEFFECT\_SEPARATE` symbol is defined, UIDissolve does not work well [\#85](https://github.com/mob-sakai/UIEffect/issues/85)
-
-**Closed issues:**
-
-- Refactoring to prepare v3.0.0 [\#83](https://github.com/mob-sakai/UIEffect/issues/83)
 
 ## [v2.5.1](https://github.com/mob-sakai/UIEffect/tree/v2.5.1) (2018-05-31)
 
