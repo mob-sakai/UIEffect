@@ -12,7 +12,7 @@ UIEffect contains visual effect components for uGUI element in Unity.
 
 << [Description](#Description) | [WebGL Demo](#demo) | [Download](https://github.com/mob-sakai/UIEffect/releases) | [Usage](#usage) | [Development Note](#development-note) >>
 
-### [RELEASE NOTE ![](https://img.shields.io/github/release-date/mob-sakai/UIEffect.svg?label=last%20updated&style=for-the-badge)](https://github.com/mob-sakai/UIEffect/blob/develop/CHANGELOG.md)
+### What's new? Please see [RELEASE NOTE ![](https://img.shields.io/github/release-date/mob-sakai/UIEffect.svg?label=last%20updated&style=for-the-badge)](https://github.com/mob-sakai/UIEffect/blob/develop/CHANGELOG.md)
 
 
 
@@ -24,7 +24,7 @@ Let's decorate your UI with effects!
 You can control parameters as you like from the script as well as inspector.  
 AnimationClip is supported as a matter of course!
 
-![thumbnail](https://user-images.githubusercontent.com/12690315/40760610-7ad82b38-64d2-11e8-9c18-f97229aada78.gif)
+![thumbnail](https://user-images.githubusercontent.com/12690315/41398364-155cf5a6-6ff2-11e8-8124-9d16ef6ca267.gif)
 ![image](https://user-images.githubusercontent.com/12690315/38594668-636dd3ac-3d82-11e8-9951-820964a6a95f.gif)
 
 <br><br>
@@ -34,8 +34,8 @@ AnimationClip is supported as a matter of course!
 |-|-|-|
 |**UIEffect**|Combine some visual effects.<br>See also [Development note](#why-is-uieffect-lightweight).<br><br>**ToneMode:** Grayscale, Sepia, Nega, Pixelation, Hue shift, Cutoff (alpha-based), Mono (alpha-based)<br>**ColorMode:** Overwrite, Additive, Subtract<br>**BlurMode:** Fast, Medium, Detail<br><br>*NOTE: ToneMode, ColorMode and BlurMode are changeable only in editor.*<br>*NOTE: Custom Effect feature will be obsolete. Please use `UICustomEffect` component instead.*<br>*NOTE: Shadow feature will be obsolete. Please use `UIShadow` component instead.*|<img src="https://user-images.githubusercontent.com/12690315/40757428-68277f0c-64c3-11e8-89e5-4a19616a85c1.png" width="1000px">|
 |**UICaptured EffectImage**|Capture a screenshot of a specific frame with effect, and display it.<br>See also [Development note](#how-does-uieffectcapturedimage-work).<br><br>**ToneMode:** Grayscale, Sepia, Nega, Pixelation, Hue shift<br>**ColorMode:** Overwrite, Additive, Subtract<br>**BlurMode:** Fast, Medium, Detail|<img src="https://user-images.githubusercontent.com/12690315/34619468-97e3c134-f285-11e7-90b2-3a75bde13911.gif"  width="1000px">|
-|**UIShiny**|Apply shinning effect to a graphic.<br>The effect does not require Mask component or normal map.<br><br>**Options:** Location, Width, Rotation, Softness, Brightness, Highlight|<img  src="https://user-images.githubusercontent.com/12690315/40716998-cd42e954-6445-11e8-899b-f8ba8f1fea83.gif" width="1000px">|
-|**UIDissolve**|Apply dissolve effect to a graphic.<br><br>**ColorMode:** Overwrite, Additive, Subtract<br>**Options:** Location, Width, Rotation, Softness, Color|<img src="https://user-images.githubusercontent.com/12690315/40717609-f0c3ca40-6447-11e8-97aa-7c4242d12106.gif" width="1000px">|
+|**UIShiny**|Apply shinning effect to a graphic.<br>The effect does not require Mask component or normal map.<br><br>**Options:** Location, Width, Rotation, Softness, Brightness, Highlight|<img  src="https://user-images.githubusercontent.com/12690315/41398144-5c2ca126-6ff1-11e8-954b-394b611e2316.gif" width="1000px">|
+|**UIDissolve**|Apply dissolve effect to a graphic.<br><br>**ColorMode:** Overwrite, Additive, Subtract<br>**Options:** Location, Width, Rotation, Softness, Color|<img src="https://user-images.githubusercontent.com/12690315/41397973-d1038f7e-6ff0-11e8-919f-affb427393ee.gif" width="1000px">|
 
 <br><br>
 ##### The following effects can be used with the above components.
