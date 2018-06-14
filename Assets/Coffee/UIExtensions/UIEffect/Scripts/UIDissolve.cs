@@ -1,25 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-#if UNITY_EDITOR
-using System.IO;
-using System.Linq;
-using UnityEditor;
-#endif
 
 namespace Coffee.UIExtensions
 {
 	/// <summary>
-	/// UIDissolve.
+	/// Dissolve effect for uGUI.
 	/// </summary>
 	[ExecuteInEditMode]
-	[DisallowMultipleComponent]
-	public class UIDissolve : BaseMeshEffect
-#if UNITY_EDITOR
-		, ISerializationCallbackReceiver
-#endif
+	public class UIDissolve : UIEffectBase, IMaterialModifier
 	{
 		//################################
 		// Constant or Static Members.
@@ -34,23 +23,21 @@ namespace Coffee.UIExtensions
 		[SerializeField] [Range(0, 1)] float m_Width = 0.5f;
 		[SerializeField] [Range(0, 1)] float m_Softness = 0.5f;
 		[SerializeField] [ColorUsage(false)] Color m_Color = new Color(0.0f, 0.25f, 1.0f);
-		[SerializeField] UIEffect.ColorMode m_ColorMode = UIEffect.ColorMode.Add;
-		[SerializeField] Material m_EffectMaterial;
-		[Space]
+		[SerializeField] ColorMode m_ColorMode = ColorMode.Add;
+		[SerializeField] Texture m_NoiseTexture;
+		[SerializeField] protected EffectArea m_EffectArea;
+		[Header("Play Effect")]
 		[SerializeField] bool m_Play = false;
 		[SerializeField][Range(0.1f, 10)] float m_Duration = 1;
 		[SerializeField] AnimatorUpdateMode m_UpdateMode = AnimatorUpdateMode.Normal;
 
+
 		//################################
 		// Public Members.
 		//################################
-		/// <summary>
-		/// Graphic affected by the UIEffect.
-		/// </summary>
-		new public Graphic graphic { get { return base.graphic; } }
 
 		/// <summary>
-		/// Location for effect.
+		/// Current location[0-1] for dissolve effect. 0 is not dissolved, 1 is completely dissolved.
 		/// </summary>
 		public float location
 		{
@@ -61,7 +48,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Location, value))
 				{
 					m_Location = value;
-					_SetDirty();
+					SetDirty();
 				}
 			}
 		}
@@ -78,7 +65,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Width, value))
 				{
 					m_Width = value;
-					_SetDirty();
+					SetDirty();
 				}
 			}
 		}
@@ -95,7 +82,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Softness, value))
 				{
 					m_Softness = value;
-					_SetDirty();
+					SetDirty();
 				}
 			}
 		}
@@ -111,7 +98,42 @@ namespace Coffee.UIExtensions
 				if (m_Color != value)
 				{
 					m_Color = value;
-					_SetDirty();
+					SetDirty();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Noise texture.
+		/// </summary>
+		public Texture noiseTexture
+		{
+			get { return m_NoiseTexture; }
+			set
+			{
+				if (m_NoiseTexture != value)
+				{
+					m_NoiseTexture = value;
+					if (graphic)
+					{
+						graphic.SetMaterialDirty();
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// The area for effect.
+		/// </summary>
+		public EffectArea effectArea
+		{
+			get { return m_EffectArea; }
+			set
+			{
+				if (m_EffectArea != value)
+				{
+					m_EffectArea = value;
+					SetDirty();
 				}
 			}
 		}
@@ -119,12 +141,7 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Color effect mode.
 		/// </summary>
-		public UIEffect.ColorMode colorMode { get { return m_ColorMode; } }
-
-		/// <summary>
-		/// Effect material.
-		/// </summary>
-		public virtual Material effectMaterial { get { return m_EffectMaterial; } }
+		public ColorMode colorMode { get { return m_ColorMode; } }
 
 		/// <summary>
 		/// Play dissolve on enable.
@@ -142,49 +159,33 @@ namespace Coffee.UIExtensions
 		public AnimatorUpdateMode updateMode { get { return m_UpdateMode; } set { m_UpdateMode = value; } }
 
 		/// <summary>
-		/// This function is called when the object becomes enabled and active.
+		/// Modifies the material.
 		/// </summary>
-		protected override void OnEnable()
+		public Material GetModifiedMaterial(Material baseMaterial)
 		{
-			_time = 0;
-			graphic.material = effectMaterial;
-			base.OnEnable();
-		}
-
-		/// <summary>
-		/// This function is called when the behaviour becomes disabled () or inactive.
-		/// </summary>
-		protected override void OnDisable()
-		{
-			graphic.material = null;
-			base.OnDisable();
-		}
-
-#if UNITY_EDITOR
-		public void OnBeforeSerialize()
-		{
-		}
-
-		public void OnAfterDeserialize()
-		{
-			var obj = this;
-			EditorApplication.delayCall += () =>
+			if (_materialCache != null && !_materialCache.IsMatch(m_ColorMode, m_NoiseTexture))
 			{
-				if (Application.isPlaying || !obj || !obj.graphic)
-					return;
-				
-				var mat = UIEffect.GetOrGenerateMaterialVariant(Shader.Find(shaderName), UIEffect.ToneMode.None, m_ColorMode, UIEffect.BlurMode.None);
+				MaterialCache.Unregister(_materialCache);
+				_materialCache = null;
+			}
 
-				if (m_EffectMaterial == mat && graphic.material == mat)
-					return;
+			if (!isActiveAndEnabled || !m_NoiseTexture || !m_EffectMaterial)
+			{
+				return baseMaterial;
+			}
+			else if (_materialCache != null && _materialCache.IsMatch(m_ColorMode, m_NoiseTexture))
+			{
+				return _materialCache.material;
+			}
 
-				graphic.material = m_EffectMaterial = mat;
-				EditorUtility.SetDirty(this);
-				EditorUtility.SetDirty(graphic);
-				EditorApplication.delayCall += AssetDatabase.SaveAssets;
-			};
+			_materialCache = MaterialCache.Register(m_ColorMode, m_NoiseTexture, () =>
+				{
+					var mat = new Material(m_EffectMaterial);
+					mat.SetTexture("_NoiseTex", m_NoiseTexture);
+					return mat;
+				});
+			return _materialCache.material;
 		}
-#endif
 
 		/// <summary>
 		/// Modifies the mesh.
@@ -195,16 +196,26 @@ namespace Coffee.UIExtensions
 				return;
 
 			// rect.
-			Rect rect = graphic.rectTransform.rect;
+			Rect rect = GetEffectArea(vh, m_EffectArea);
 
 			// Calculate vertex position.
 			UIVertex vertex = default(UIVertex);
+			bool effectEachCharacter = graphic is Text && m_EffectArea == EffectArea.Character;
+			float x, y;
 			for (int i = 0; i < vh.currentVertCount; i++)
 			{
 				vh.PopulateUIVertex(ref vertex, i);
 
-				var x = Mathf.Clamp01(vertex.position.x / rect.width + 0.5f);
-				var y = Mathf.Clamp01(vertex.position.y / rect.height + 0.5f);
+				if (effectEachCharacter)
+				{
+					x = splitedCharacterPosition[i%4].x;
+					y = splitedCharacterPosition[i%4].y;
+				}
+				else
+				{
+					x = Mathf.Clamp01(vertex.position.x / rect.width + 0.5f);
+					y = Mathf.Clamp01(vertex.position.y / rect.height + 0.5f);
+				}
 				vertex.uv1 = new Vector2(
 					Packer.ToFloat(x, y, location, m_Width),
 					Packer.ToFloat(m_Color.r, m_Color.g, m_Color.b, m_Softness)
@@ -223,9 +234,51 @@ namespace Coffee.UIExtensions
 			m_Play = true;
 		}
 
+
+		//################################
+		// Protected Members.
+		//################################
+		/// <summary>
+		/// This function is called when the object becomes enabled and active.
+		/// </summary>
+		protected override void OnEnable()
+		{
+			_time = 0;
+			base.OnEnable();
+		}
+
+		protected override void OnDisable()
+		{
+			MaterialCache.Unregister(_materialCache);
+			_materialCache = null;
+			base.OnDisable();
+
+		}
+
+#if UNITY_EDITOR
+		protected override void OnValidate()
+		{
+			base.OnValidate();
+			if (graphic)
+			{
+				graphic.SetMaterialDirty();
+			}
+		}
+
+		/// <summary>
+		/// Gets the material.
+		/// </summary>
+		/// <returns>The material.</returns>
+		protected override Material GetMaterial()
+		{
+			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_ColorMode);
+		}
+#endif
+
 		//################################
 		// Private Members.
 		//################################
+		MaterialCache _materialCache = null;
 		float _time = 0;
 
 		void Update()
@@ -245,15 +298,6 @@ namespace Coffee.UIExtensions
 				m_Play = false;
 				_time = 0;
 			}
-		}
-
-		/// <summary>
-		/// Mark the UIEffect as dirty.
-		/// </summary>
-		void _SetDirty()
-		{
-			if (graphic)
-				graphic.SetVerticesDirty();
 		}
 	}
 }

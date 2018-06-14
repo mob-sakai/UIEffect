@@ -29,9 +29,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Sepia-Add-Detail
+  m_Name: UI-EffectCapture-Sepia-Add-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_ADD UI_TONE_SEPIA
+  m_ShaderKeywords: DETAILBLUR ADD SEPIA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -52,9 +52,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Set
+  m_Name: UI-EffectCapture-Fill
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_SET
+  m_ShaderKeywords: FILL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -75,9 +75,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Pixel-Add-Detail
+  m_Name: UI-EffectCapture-Pixel-Add-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_ADD UI_TONE_PIXEL
+  m_ShaderKeywords: DETAILBLUR ADD PIXEL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -100,7 +100,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: UI-EffectCapture-Cutoff
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_TONE_CUTOFF
+  m_ShaderKeywords: CUTOFF
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -123,7 +123,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: UI-EffectCapture-Nega
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_TONE_NEGA
+  m_ShaderKeywords: NEGA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -144,9 +144,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Grayscale-Add-Detail
+  m_Name: UI-EffectCapture-Grayscale-Add-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_ADD UI_TONE_GRAYSCALE
+  m_ShaderKeywords: DETAILBLUR ADD GRAYSCALE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -167,9 +167,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Pixel-Detail
+  m_Name: UI-EffectCapture-Pixel-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_TONE_PIXEL
+  m_ShaderKeywords: DETAILBLUR PIXEL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -190,9 +190,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Cutoff-Set-Medium
+  m_Name: UI-EffectCapture-Cutoff-Fill-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_SET UI_TONE_CUTOFF
+  m_ShaderKeywords: MEDIUMBLUR FILL CUTOFF
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -213,9 +213,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Sepia-Set-Detail
+  m_Name: UI-EffectCapture-Sepia-Fill-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_SET UI_TONE_SEPIA
+  m_ShaderKeywords: DETAILBLUR FILL SEPIA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -236,9 +236,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Nega-Sub-Detail
+  m_Name: UI-EffectCapture-Nega-Subtract-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_SUB UI_TONE_NEGA
+  m_ShaderKeywords: DETAILBLUR SUBTRACT NEGA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -259,9 +259,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Sepia-Fast
+  m_Name: UI-EffectCapture-Sepia-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_TONE_SEPIA
+  m_ShaderKeywords: FASTBLUR SEPIA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -282,9 +282,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Sepia-Sub
+  m_Name: UI-EffectCapture-Sepia-Subtract
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_SUB UI_TONE_SEPIA
+  m_ShaderKeywords: SUBTRACT SEPIA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -305,9 +305,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Grayscale-Detail
+  m_Name: UI-EffectCapture-Grayscale-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_TONE_GRAYSCALE
+  m_ShaderKeywords: DETAILBLUR GRAYSCALE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -328,9 +328,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Sepia-Sub-Detail
+  m_Name: UI-EffectCapture-Sepia-Subtract-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_SUB UI_TONE_SEPIA
+  m_ShaderKeywords: DETAILBLUR SUBTRACT SEPIA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -351,9 +351,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Cutoff-Sub
+  m_Name: UI-EffectCapture-Cutoff-Subtract
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_SUB UI_TONE_CUTOFF
+  m_ShaderKeywords: SUBTRACT CUTOFF
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -374,9 +374,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Set-Fast
+  m_Name: UI-EffectCapture-Fill-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_SET
+  m_ShaderKeywords: FASTBLUR FILL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -397,9 +397,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Mono-Add-Detail
+  m_Name: UI-EffectCapture-Mono-Add-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_ADD UI_TONE_MONO
+  m_ShaderKeywords: DETAILBLUR ADD MONO
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -420,9 +420,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Mono-Sub
+  m_Name: UI-EffectCapture-Mono-Subtract
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_SUB UI_TONE_MONO
+  m_ShaderKeywords: SUBTRACT MONO
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -443,9 +443,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Cutoff-Sub-Fast
+  m_Name: UI-EffectCapture-Cutoff-Subtract-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_SUB UI_TONE_CUTOFF
+  m_ShaderKeywords: FASTBLUR SUBTRACT CUTOFF
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -466,9 +466,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Nega-Detail
+  m_Name: UI-EffectCapture-Nega-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_TONE_NEGA
+  m_ShaderKeywords: DETAILBLUR NEGA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -489,9 +489,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Pixel-Sub
+  m_Name: UI-EffectCapture-Pixel-Subtract
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_SUB UI_TONE_PIXEL
+  m_ShaderKeywords: SUBTRACT PIXEL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -512,9 +512,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Add-Medium
+  m_Name: UI-EffectCapture-Add-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_ADD
+  m_ShaderKeywords: MEDIUMBLUR ADD
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -535,9 +535,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Cutoff-Detail
+  m_Name: UI-EffectCapture-Cutoff-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_TONE_CUTOFF
+  m_ShaderKeywords: DETAILBLUR CUTOFF
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -558,9 +558,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Mono-Set
+  m_Name: UI-EffectCapture-Mono-Fill
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_SET UI_TONE_MONO
+  m_ShaderKeywords: FILL MONO
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -581,9 +581,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Mono-Sub-Fast
+  m_Name: UI-EffectCapture-Mono-Subtract-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_SUB UI_TONE_MONO
+  m_ShaderKeywords: FASTBLUR SUBTRACT MONO
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -606,7 +606,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: UI-EffectCapture-Add
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_ADD
+  m_ShaderKeywords: ADD
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -627,9 +627,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Cutoff-Fast
+  m_Name: UI-EffectCapture-Cutoff-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_TONE_CUTOFF
+  m_ShaderKeywords: FASTBLUR CUTOFF
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -650,9 +650,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Hue-Detail
+  m_Name: UI-EffectCapture-Hue-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_TONE_HUE
+  m_ShaderKeywords: DETAILBLUR HUE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -673,9 +673,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Nega-Set-Fast
+  m_Name: UI-EffectCapture-Nega-Fill-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_SET UI_TONE_NEGA
+  m_ShaderKeywords: FASTBLUR FILL NEGA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -696,9 +696,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Cutoff-Add-Detail
+  m_Name: UI-EffectCapture-Cutoff-Add-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_ADD UI_TONE_CUTOFF
+  m_ShaderKeywords: DETAILBLUR ADD CUTOFF
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -719,9 +719,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Sepia-Add-Fast
+  m_Name: UI-EffectCapture-Sepia-Add-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_ADD UI_TONE_SEPIA
+  m_ShaderKeywords: FASTBLUR ADD SEPIA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -742,9 +742,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Hue-Add-Detail
+  m_Name: UI-EffectCapture-Hue-Add-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_ADD UI_TONE_HUE
+  m_ShaderKeywords: DETAILBLUR ADD HUE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -767,7 +767,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: UI-EffectCapture-Hue
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_TONE_HUE
+  m_ShaderKeywords: HUE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -788,9 +788,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Sub-Medium
+  m_Name: UI-EffectCapture-Subtract-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_SUB
+  m_ShaderKeywords: MEDIUMBLUR SUBTRACT
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -811,9 +811,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Nega-Add-Fast
+  m_Name: UI-EffectCapture-Nega-Add-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_ADD UI_TONE_NEGA
+  m_ShaderKeywords: FASTBLUR ADD NEGA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -836,7 +836,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: UI-EffectCapture-Mono-Add
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_ADD UI_TONE_MONO
+  m_ShaderKeywords: ADD MONO
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -857,9 +857,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Nega-Fast
+  m_Name: UI-EffectCapture-Nega-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_TONE_NEGA
+  m_ShaderKeywords: FASTBLUR NEGA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -880,9 +880,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Cutoff-Add-Medium
+  m_Name: UI-EffectCapture-Cutoff-Add-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_ADD UI_TONE_CUTOFF
+  m_ShaderKeywords: MEDIUMBLUR ADD CUTOFF
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -903,9 +903,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Hue-Sub-Fast
+  m_Name: UI-EffectCapture-Hue-Subtract-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_SUB UI_TONE_HUE
+  m_ShaderKeywords: FASTBLUR SUBTRACT HUE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -928,7 +928,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: UI-EffectCapture-Hue-Add
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_ADD UI_TONE_HUE
+  m_ShaderKeywords: ADD HUE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -949,9 +949,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Cutoff-Medium
+  m_Name: UI-EffectCapture-Cutoff-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_TONE_CUTOFF
+  m_ShaderKeywords: MEDIUMBLUR CUTOFF
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -972,9 +972,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Hue-Add-Fast
+  m_Name: UI-EffectCapture-Hue-Add-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_ADD UI_TONE_HUE
+  m_ShaderKeywords: FASTBLUR ADD HUE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -995,9 +995,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Hue-Set
+  m_Name: UI-EffectCapture-Hue-Fill
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_SET UI_TONE_HUE
+  m_ShaderKeywords: FILL HUE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1018,9 +1018,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Hue-Sub
+  m_Name: UI-EffectCapture-Hue-Subtract
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_SUB UI_TONE_HUE
+  m_ShaderKeywords: SUBTRACT HUE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1041,9 +1041,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Hue-Sub-Medium
+  m_Name: UI-EffectCapture-Hue-Subtract-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_SUB UI_TONE_HUE
+  m_ShaderKeywords: MEDIUMBLUR SUBTRACT HUE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1064,9 +1064,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Pixel-Set
+  m_Name: UI-EffectCapture-Pixel-Fill
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_SET UI_TONE_PIXEL
+  m_ShaderKeywords: FILL PIXEL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1087,9 +1087,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Grayscale-Fast
+  m_Name: UI-EffectCapture-Grayscale-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_TONE_GRAYSCALE
+  m_ShaderKeywords: FASTBLUR GRAYSCALE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1112,7 +1112,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: UI-EffectCapture-Pixel-Add
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_ADD UI_TONE_PIXEL
+  m_ShaderKeywords: ADD PIXEL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1135,7 +1135,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: UI-EffectCapture-Grayscale-Add
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_ADD UI_TONE_GRAYSCALE
+  m_ShaderKeywords: ADD GRAYSCALE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1156,9 +1156,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Mono-Set-Medium
+  m_Name: UI-EffectCapture-Mono-Fill-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_SET UI_TONE_MONO
+  m_ShaderKeywords: MEDIUMBLUR FILL MONO
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1179,9 +1179,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Detail
+  m_Name: UI-EffectCapture-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL
+  m_ShaderKeywords: DETAILBLUR
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1202,9 +1202,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Grayscale-Set-Detail
+  m_Name: UI-EffectCapture-Grayscale-Fill-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_SET UI_TONE_GRAYSCALE
+  m_ShaderKeywords: DETAILBLUR FILL GRAYSCALE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1227,7 +1227,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: UI-EffectCapture-Sepia
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_TONE_SEPIA
+  m_ShaderKeywords: SEPIA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1248,9 +1248,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Set-Detail
+  m_Name: UI-EffectCapture-Fill-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_SET
+  m_ShaderKeywords: DETAILBLUR FILL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1271,9 +1271,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Mono-Add-Medium
+  m_Name: UI-EffectCapture-Mono-Add-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_ADD UI_TONE_MONO
+  m_ShaderKeywords: MEDIUMBLUR ADD MONO
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1294,9 +1294,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Mono-Set-Fast
+  m_Name: UI-EffectCapture-Mono-Fill-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_SET UI_TONE_MONO
+  m_ShaderKeywords: FASTBLUR FILL MONO
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1317,9 +1317,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Cutoff-Sub-Detail
+  m_Name: UI-EffectCapture-Cutoff-Subtract-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_SUB UI_TONE_CUTOFF
+  m_ShaderKeywords: DETAILBLUR SUBTRACT CUTOFF
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1340,9 +1340,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Fast
+  m_Name: UI-EffectCapture-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST
+  m_ShaderKeywords: FASTBLUR
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1363,9 +1363,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Sepia-Set-Fast
+  m_Name: UI-EffectCapture-Sepia-Fill-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_SET UI_TONE_SEPIA
+  m_ShaderKeywords: FASTBLUR FILL SEPIA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1386,9 +1386,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Grayscale-Set-Medium
+  m_Name: UI-EffectCapture-Grayscale-Fill-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_SET UI_TONE_GRAYSCALE
+  m_ShaderKeywords: MEDIUMBLUR FILL GRAYSCALE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1411,7 +1411,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: UI-EffectCapture-Grayscale
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_TONE_GRAYSCALE
+  m_ShaderKeywords: GRAYSCALE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1432,9 +1432,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Sepia-Sub-Fast
+  m_Name: UI-EffectCapture-Sepia-Subtract-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_SUB UI_TONE_SEPIA
+  m_ShaderKeywords: FASTBLUR SUBTRACT SEPIA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1455,9 +1455,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Hue-Sub-Detail
+  m_Name: UI-EffectCapture-Hue-Subtract-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_SUB UI_TONE_HUE
+  m_ShaderKeywords: DETAILBLUR SUBTRACT HUE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1478,9 +1478,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Cutoff-Set-Fast
+  m_Name: UI-EffectCapture-Cutoff-Fill-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_SET UI_TONE_CUTOFF
+  m_ShaderKeywords: FASTBLUR FILL CUTOFF
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1501,9 +1501,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Grayscale-Sub
+  m_Name: UI-EffectCapture-Grayscale-Subtract
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_SUB UI_TONE_GRAYSCALE
+  m_ShaderKeywords: SUBTRACT GRAYSCALE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1524,9 +1524,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Grayscale-Sub-Detail
+  m_Name: UI-EffectCapture-Grayscale-Subtract-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_SUB UI_TONE_GRAYSCALE
+  m_ShaderKeywords: DETAILBLUR SUBTRACT GRAYSCALE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1547,9 +1547,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Pixel-Fast
+  m_Name: UI-EffectCapture-Pixel-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_TONE_PIXEL
+  m_ShaderKeywords: FASTBLUR PIXEL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1570,9 +1570,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Sub-Fast
+  m_Name: UI-EffectCapture-Subtract-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_SUB
+  m_ShaderKeywords: FASTBLUR SUBTRACT
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1593,9 +1593,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Nega-Set-Detail
+  m_Name: UI-EffectCapture-Nega-Fill-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_SET UI_TONE_NEGA
+  m_ShaderKeywords: DETAILBLUR FILL NEGA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1618,7 +1618,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: UI-EffectCapture-Mono
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_TONE_MONO
+  m_ShaderKeywords: MONO
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1639,9 +1639,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Nega-Add-Detail
+  m_Name: UI-EffectCapture-Nega-Add-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_ADD UI_TONE_NEGA
+  m_ShaderKeywords: DETAILBLUR ADD NEGA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1662,9 +1662,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Hue-Set-Medium
+  m_Name: UI-EffectCapture-Hue-Fill-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_SET UI_TONE_HUE
+  m_ShaderKeywords: MEDIUMBLUR FILL HUE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1685,9 +1685,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Pixel-Add-Fast
+  m_Name: UI-EffectCapture-Pixel-Add-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_ADD UI_TONE_PIXEL
+  m_ShaderKeywords: FASTBLUR ADD PIXEL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1708,9 +1708,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Nega-Set-Medium
+  m_Name: UI-EffectCapture-Nega-Fill-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_SET UI_TONE_NEGA
+  m_ShaderKeywords: MEDIUMBLUR FILL NEGA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1731,9 +1731,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Sepia-Detail
+  m_Name: UI-EffectCapture-Sepia-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_TONE_SEPIA
+  m_ShaderKeywords: DETAILBLUR SEPIA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1754,9 +1754,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Medium
+  m_Name: UI-EffectCapture-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM
+  m_ShaderKeywords: MEDIUMBLUR
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1777,9 +1777,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Nega-Sub
+  m_Name: UI-EffectCapture-Nega-Subtract
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_SUB UI_TONE_NEGA
+  m_ShaderKeywords: SUBTRACT NEGA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1800,9 +1800,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Pixel-Set-Fast
+  m_Name: UI-EffectCapture-Pixel-Fill-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_SET UI_TONE_PIXEL
+  m_ShaderKeywords: FASTBLUR FILL PIXEL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1823,9 +1823,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Mono-Detail
+  m_Name: UI-EffectCapture-Mono-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_TONE_MONO
+  m_ShaderKeywords: DETAILBLUR MONO
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1846,9 +1846,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Nega-Sub-Medium
+  m_Name: UI-EffectCapture-Nega-Subtract-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_SUB UI_TONE_NEGA
+  m_ShaderKeywords: MEDIUMBLUR SUBTRACT NEGA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1869,9 +1869,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Pixel-Sub-Detail
+  m_Name: UI-EffectCapture-Pixel-Subtract-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_SUB UI_TONE_PIXEL
+  m_ShaderKeywords: DETAILBLUR SUBTRACT PIXEL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1892,9 +1892,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Sub
+  m_Name: UI-EffectCapture-Subtract
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_SUB
+  m_ShaderKeywords: SUBTRACT
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1915,9 +1915,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Pixel-Add-Medium
+  m_Name: UI-EffectCapture-Pixel-Add-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_ADD UI_TONE_PIXEL
+  m_ShaderKeywords: MEDIUMBLUR ADD PIXEL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1938,9 +1938,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Nega-Medium
+  m_Name: UI-EffectCapture-Nega-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_TONE_NEGA
+  m_ShaderKeywords: MEDIUMBLUR NEGA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1961,9 +1961,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Pixel-Sub-Fast
+  m_Name: UI-EffectCapture-Pixel-Subtract-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_SUB UI_TONE_PIXEL
+  m_ShaderKeywords: FASTBLUR SUBTRACT PIXEL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -1984,9 +1984,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Hue-Set-Detail
+  m_Name: UI-EffectCapture-Hue-Fill-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_SET UI_TONE_HUE
+  m_ShaderKeywords: DETAILBLUR FILL HUE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2007,9 +2007,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Pixel-Set-Medium
+  m_Name: UI-EffectCapture-Pixel-Fill-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_SET UI_TONE_PIXEL
+  m_ShaderKeywords: MEDIUMBLUR FILL PIXEL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2030,9 +2030,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Mono-Sub-Medium
+  m_Name: UI-EffectCapture-Mono-Subtract-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_SUB UI_TONE_MONO
+  m_ShaderKeywords: MEDIUMBLUR SUBTRACT MONO
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2053,9 +2053,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Nega-Add-Medium
+  m_Name: UI-EffectCapture-Nega-Add-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_ADD UI_TONE_NEGA
+  m_ShaderKeywords: MEDIUMBLUR ADD NEGA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2076,9 +2076,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Hue-Set-Fast
+  m_Name: UI-EffectCapture-Hue-Fill-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_SET UI_TONE_HUE
+  m_ShaderKeywords: FASTBLUR FILL HUE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2099,9 +2099,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Pixel-Sub-Medium
+  m_Name: UI-EffectCapture-Pixel-Subtract-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_SUB UI_TONE_PIXEL
+  m_ShaderKeywords: MEDIUMBLUR SUBTRACT PIXEL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2124,7 +2124,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: UI-EffectCapture-Nega-Add
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_ADD UI_TONE_NEGA
+  m_ShaderKeywords: ADD NEGA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2145,9 +2145,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Nega-Sub-Fast
+  m_Name: UI-EffectCapture-Nega-Subtract-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_SUB UI_TONE_NEGA
+  m_ShaderKeywords: FASTBLUR SUBTRACT NEGA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2170,7 +2170,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: UI-EffectCapture-Cutoff-Add
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_ADD UI_TONE_CUTOFF
+  m_ShaderKeywords: ADD CUTOFF
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2191,9 +2191,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Add-Detail
+  m_Name: UI-EffectCapture-Add-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_ADD
+  m_ShaderKeywords: DETAILBLUR ADD
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2214,9 +2214,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Sepia-Set
+  m_Name: UI-EffectCapture-Sepia-Fill
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_SET UI_TONE_SEPIA
+  m_ShaderKeywords: FILL SEPIA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2237,9 +2237,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Pixel-Medium
+  m_Name: UI-EffectCapture-Pixel-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_TONE_PIXEL
+  m_ShaderKeywords: MEDIUMBLUR PIXEL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2260,9 +2260,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Sepia-Sub-Medium
+  m_Name: UI-EffectCapture-Sepia-Subtract-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_SUB UI_TONE_SEPIA
+  m_ShaderKeywords: MEDIUMBLUR SUBTRACT SEPIA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2283,9 +2283,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Hue-Medium
+  m_Name: UI-EffectCapture-Hue-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_TONE_HUE
+  m_ShaderKeywords: MEDIUMBLUR HUE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2306,9 +2306,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Sepia-Add-Medium
+  m_Name: UI-EffectCapture-Sepia-Add-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_ADD UI_TONE_SEPIA
+  m_ShaderKeywords: MEDIUMBLUR ADD SEPIA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2329,9 +2329,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Mono-Fast
+  m_Name: UI-EffectCapture-Mono-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_TONE_MONO
+  m_ShaderKeywords: FASTBLUR MONO
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2352,9 +2352,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Grayscale-Set-Fast
+  m_Name: UI-EffectCapture-Grayscale-Fill-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_SET UI_TONE_GRAYSCALE
+  m_ShaderKeywords: FASTBLUR FILL GRAYSCALE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2375,9 +2375,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Cutoff-Add-Fast
+  m_Name: UI-EffectCapture-Cutoff-Add-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_ADD UI_TONE_CUTOFF
+  m_ShaderKeywords: FASTBLUR ADD CUTOFF
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2398,9 +2398,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Cutoff-Sub-Medium
+  m_Name: UI-EffectCapture-Cutoff-Subtract-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_SUB UI_TONE_CUTOFF
+  m_ShaderKeywords: MEDIUMBLUR SUBTRACT CUTOFF
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2421,9 +2421,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Grayscale-Medium
+  m_Name: UI-EffectCapture-Grayscale-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_TONE_GRAYSCALE
+  m_ShaderKeywords: MEDIUMBLUR GRAYSCALE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2444,9 +2444,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Hue-Add-Medium
+  m_Name: UI-EffectCapture-Hue-Add-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_ADD UI_TONE_HUE
+  m_ShaderKeywords: MEDIUMBLUR ADD HUE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2467,9 +2467,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Grayscale-Set
+  m_Name: UI-EffectCapture-Grayscale-Fill
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_SET UI_TONE_GRAYSCALE
+  m_ShaderKeywords: FILL GRAYSCALE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2490,9 +2490,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Add-Fast
+  m_Name: UI-EffectCapture-Add-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_ADD
+  m_ShaderKeywords: FASTBLUR ADD
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2515,7 +2515,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: UI-EffectCapture-Sepia-Add
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_ADD UI_TONE_SEPIA
+  m_ShaderKeywords: ADD SEPIA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2536,9 +2536,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Pixel-Set-Detail
+  m_Name: UI-EffectCapture-Pixel-Fill-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_SET UI_TONE_PIXEL
+  m_ShaderKeywords: DETAILBLUR FILL PIXEL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2561,7 +2561,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: UI-EffectCapture-Pixel
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_TONE_PIXEL
+  m_ShaderKeywords: PIXEL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2582,9 +2582,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Set-Medium
+  m_Name: UI-EffectCapture-Fill-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_SET
+  m_ShaderKeywords: MEDIUMBLUR FILL
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2605,9 +2605,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Grayscale-Sub-Fast
+  m_Name: UI-EffectCapture-Grayscale-Subtract-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_SUB UI_TONE_GRAYSCALE
+  m_ShaderKeywords: FASTBLUR SUBTRACT GRAYSCALE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2628,9 +2628,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Mono-Set-Detail
+  m_Name: UI-EffectCapture-Mono-Fill-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_SET UI_TONE_MONO
+  m_ShaderKeywords: DETAILBLUR FILL MONO
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2651,9 +2651,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Cutoff-Set-Detail
+  m_Name: UI-EffectCapture-Cutoff-Fill-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_SET UI_TONE_CUTOFF
+  m_ShaderKeywords: DETAILBLUR FILL CUTOFF
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2674,9 +2674,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Mono-Medium
+  m_Name: UI-EffectCapture-Mono-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_TONE_MONO
+  m_ShaderKeywords: MEDIUMBLUR MONO
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2697,9 +2697,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Sub-Detail
+  m_Name: UI-EffectCapture-Subtract-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_SUB
+  m_ShaderKeywords: DETAILBLUR SUBTRACT
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2720,9 +2720,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Sepia-Medium
+  m_Name: UI-EffectCapture-Sepia-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_TONE_SEPIA
+  m_ShaderKeywords: MEDIUMBLUR SEPIA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2743,9 +2743,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Cutoff-Set
+  m_Name: UI-EffectCapture-Cutoff-Fill
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_SET UI_TONE_CUTOFF
+  m_ShaderKeywords: FILL CUTOFF
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2766,9 +2766,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Grayscale-Add-Medium
+  m_Name: UI-EffectCapture-Grayscale-Add-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_ADD UI_TONE_GRAYSCALE
+  m_ShaderKeywords: MEDIUMBLUR ADD GRAYSCALE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2789,9 +2789,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Hue-Fast
+  m_Name: UI-EffectCapture-Hue-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_TONE_HUE
+  m_ShaderKeywords: FASTBLUR HUE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2812,9 +2812,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Mono-Add-Fast
+  m_Name: UI-EffectCapture-Mono-Add-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_ADD UI_TONE_MONO
+  m_ShaderKeywords: FASTBLUR ADD MONO
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2835,9 +2835,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Grayscale-Add-Fast
+  m_Name: UI-EffectCapture-Grayscale-Add-FastBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_FAST UI_COLOR_ADD UI_TONE_GRAYSCALE
+  m_ShaderKeywords: FASTBLUR ADD GRAYSCALE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2858,9 +2858,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Nega-Set
+  m_Name: UI-EffectCapture-Nega-Fill
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_COLOR_SET UI_TONE_NEGA
+  m_ShaderKeywords: FILL NEGA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2881,9 +2881,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Mono-Sub-Detail
+  m_Name: UI-EffectCapture-Mono-Subtract-DetailBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_DETAIL UI_COLOR_SUB UI_TONE_MONO
+  m_ShaderKeywords: DETAILBLUR SUBTRACT MONO
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2904,9 +2904,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Grayscale-Sub-Medium
+  m_Name: UI-EffectCapture-Grayscale-Subtract-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_SUB UI_TONE_GRAYSCALE
+  m_ShaderKeywords: MEDIUMBLUR SUBTRACT GRAYSCALE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -2927,9 +2927,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-EffectCapture-Sepia-Set-Medium
+  m_Name: UI-EffectCapture-Sepia-Fill-MediumBlur
   m_Shader: {fileID: 4800000, guid: 7a6f925a07c3c5846a1c782eaaeb7087, type: 3}
-  m_ShaderKeywords: UI_BLUR_MEDIUM UI_COLOR_SET UI_TONE_SEPIA
+  m_ShaderKeywords: MEDIUMBLUR FILL SEPIA
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}

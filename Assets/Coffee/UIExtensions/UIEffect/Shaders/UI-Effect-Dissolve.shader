@@ -56,7 +56,7 @@ Shader "UI/Hidden/UI-Effect-Dissolve"
 			#pragma target 2.0
 			
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
-			#pragma shader_feature __ UI_COLOR_ADD UI_COLOR_SUB UI_COLOR_SET
+			#pragma shader_feature __ ADD SUBTRACT FILL
 
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"

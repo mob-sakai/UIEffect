@@ -54,9 +54,9 @@ Shader "UI/Hidden/UI-Effect"
 			
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
 
-			#pragma shader_feature __ UI_TONE_GRAYSCALE UI_TONE_SEPIA UI_TONE_NEGA UI_TONE_PIXEL UI_TONE_MONO UI_TONE_CUTOFF UI_TONE_HUE 
-			#pragma shader_feature __ UI_COLOR_ADD UI_COLOR_SUB UI_COLOR_SET
-			#pragma shader_feature __ UI_BLUR_FAST UI_BLUR_MEDIUM UI_BLUR_DETAIL
+			#pragma shader_feature __ GRAYSCALE SEPIA NEGA PIXEL MONO CUTOFF HUE 
+			#pragma shader_feature __ ADD SUBTRACT FILL
+			#pragma shader_feature __ FASTBLUR MEDIUMBLUR DETAILBLUR
 
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
@@ -87,7 +87,7 @@ Shader "UI/Hidden/UI-Effect"
 				#if defined (UI_TONE) || defined (UI_BLUR)
 				half4 effectFactor : TEXCOORD2;
 				#endif
-				#if UI_TONE_HUE || UI_TONE_PIXEL
+				#if HUE || PIXEL
 				half4 extraFactor : TEXCOORD3;
 				#endif
 			};
@@ -114,10 +114,10 @@ Shader "UI/Hidden/UI-Effect"
 				OUT.effectFactor = UnpackToVec4(IN.uv1.x);
 				#endif
 
-				#if UI_TONE_HUE
+				#if HUE
 				OUT.extraFactor.x = cos(OUT.effectFactor.x*3.14159265359 * 2);
 				OUT.extraFactor.y = sin(OUT.effectFactor.x*3.14159265359 * 2);
-				#elif UI_TONE_PIXEL
+				#elif PIXEL
 				OUT.extraFactor.xy = max(2, (1-OUT.effectFactor.x*0.98) * _MainTex_TexelSize.zw);
 				#endif
 				
@@ -131,7 +131,7 @@ Shader "UI/Hidden/UI-Effect"
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
-				#if UI_TONE_PIXEL
+				#if PIXEL
 				IN.texcoord = round(IN.texcoord * IN.extraFactor.xy) / IN.extraFactor.xy;
 				#endif
 
@@ -142,18 +142,18 @@ Shader "UI/Hidden/UI-Effect"
 				#endif
 				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
 
-				#ifdef UI_TONE_CUTOFF
+				#ifdef CUTOFF
 				clip (color.a - 1 + IN.effectFactor.x * 1.001);
 				#elif UNITY_UI_ALPHACLIP
 				clip (color.a - 0.001);
 				#endif
 
-				#if UI_TONE_MONO
+				#if MONO
 				color.rgb = IN.color.rgb;
 				color.a = color.a * tex2D(_MainTex, IN.texcoord).a + IN.effectFactor.x * 2 - 1;
-				#elif UI_TONE_HUE
+				#elif HUE
 				color.rgb = shift_hue(color.rgb, IN.extraFactor.x, IN.extraFactor.y);
-				#elif defined (UI_TONE) & !UI_TONE_CUTOFF
+				#elif defined (UI_TONE) & !CUTOFF
 				color = ApplyToneEffect(color, IN.effectFactor.x);
 				#endif
 

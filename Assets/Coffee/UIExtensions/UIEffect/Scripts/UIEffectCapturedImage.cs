@@ -3,16 +3,8 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
 namespace Coffee.UIExtensions
 {
-	using BlurMode = UIEffect.BlurMode;
-	using ColorMode = UIEffect.ColorMode;
-	using ToneMode = UIEffect.ToneMode;
-
 	/// <summary>
 	/// UIEffectCapturedImage
 	/// </summary>
@@ -146,33 +138,6 @@ namespace Coffee.UIExtensions
 				base.OnPopulateMesh(vh);
 		}
 
-#if UNITY_EDITOR
-		public void OnBeforeSerialize()
-		{
-		}
-
-		public void OnAfterDeserialize()
-		{
-			var obj = this;
-			EditorApplication.delayCall += () =>
-				{
-					if (Application.isPlaying || !obj)
-						return;
-
-					var mat = (0 == toneMode) && (0 == colorMode) && (0 == blurMode)
-						? null
-						: UIEffect.GetOrGenerateMaterialVariant(Shader.Find(shaderName), toneMode, colorMode, blurMode);
-
-					if (m_EffectMaterial == mat)
-						return;
-
-					m_EffectMaterial = mat;
-					EditorUtility.SetDirty(this);
-					EditorApplication.delayCall += AssetDatabase.SaveAssets;
-				};
-		}
-#endif
-
 		/// <summary>
 		/// Gets the size of the desampling.
 		/// </summary>
@@ -301,6 +266,52 @@ namespace Coffee.UIExtensions
 		{
 			_Release(true);
 		}
+
+#if UNITY_EDITOR
+		/// <summary>
+		/// Raises the before serialize event.
+		/// </summary>
+		public void OnBeforeSerialize()
+		{
+		}
+
+		/// <summary>
+		/// Raises the after deserialize event.
+		/// </summary>
+		public void OnAfterDeserialize()
+		{
+			UnityEditor.EditorApplication.delayCall += () => UpdateMaterial(true);
+		}
+
+		/// <summary>
+		/// Raises the validate event.
+		/// </summary>
+		protected override void OnValidate ()
+		{
+			base.OnValidate ();
+			UnityEditor.EditorApplication.delayCall += () => UpdateMaterial(false);
+		}
+
+		/// <summary>
+		/// Updates the material.
+		/// </summary>
+		/// <param name="ignoreInPlayMode">If set to <c>true</c> ignore in play mode.</param>
+		protected void UpdateMaterial(bool ignoreInPlayMode)
+		{
+			if(!this || ignoreInPlayMode && Application.isPlaying)
+			{
+				return;
+			}
+
+			var mat =  MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_ToneMode, m_ColorMode, m_BlurMode);
+			if (m_EffectMaterial != mat)
+			{
+				material = null;
+				m_EffectMaterial = mat;
+				UnityEditor.EditorUtility.SetDirty(this);
+			}
+		}
+#endif
 
 
 

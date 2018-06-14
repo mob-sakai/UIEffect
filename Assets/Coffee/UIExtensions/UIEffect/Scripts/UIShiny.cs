@@ -18,10 +18,7 @@ namespace Coffee.UIExtensions
 	/// </summary>
 	[ExecuteInEditMode]
 	[DisallowMultipleComponent]
-	public class UIShiny : BaseMeshEffect
-#if UNITY_EDITOR
-		, ISerializationCallbackReceiver
-#endif
+	public class UIShiny : UIEffectBase
 	{
 		//################################
 		// Constant or Static Members.
@@ -39,8 +36,8 @@ namespace Coffee.UIExtensions
 		[FormerlySerializedAs("m_Alpha")]
 		[SerializeField][Range(0, 1)] float m_Brightness = 1f;
 		[SerializeField][Range(0, 1)] float m_Highlight = 1;
-		[SerializeField] Material m_EffectMaterial;
-		[Space]
+		[SerializeField] protected EffectArea m_EffectArea;
+		[Header("Play Effect")]
 		[SerializeField] bool m_Play = false;
 		[SerializeField] bool m_Loop = false;
 		[SerializeField][Range(0.1f, 10)] float m_Duration = 1;
@@ -51,10 +48,10 @@ namespace Coffee.UIExtensions
 		//################################
 		// Public Members.
 		//################################
-		/// <summary>
-		/// Graphic affected by the UIEffect.
-		/// </summary>
-		new public Graphic graphic { get { return base.graphic; } }
+//		/// <summary>
+//		/// Graphic affected by the UIEffect.
+//		/// </summary>
+//		new public Graphic graphic { get { return base.graphic; } }
 
 		/// <summary>
 		/// Location for shiny effect.
@@ -68,7 +65,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Location, value))
 				{
 					m_Location = value;
-					_SetDirty();
+					SetDirty();
 				}
 			}
 		}
@@ -85,7 +82,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Width, value))
 				{
 					m_Width = value;
-					_SetDirty();
+					SetDirty();
 				}
 			}
 		}
@@ -102,7 +99,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Softness, value))
 				{
 					m_Softness = value;
-					_SetDirty();
+					SetDirty();
 				}
 			}
 		}
@@ -120,7 +117,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Brightness, value))
 				{
 					m_Brightness = value;
-					_SetDirty();
+					SetDirty();
 				}
 			}
 		}
@@ -137,7 +134,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Brightness, value))
 				{
 					m_Brightness = value;
-					_SetDirty();
+					SetDirty();
 				}
 			}
 		}
@@ -154,7 +151,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Highlight, value))
 				{
 					m_Highlight = value;
-					_SetDirty();
+					SetDirty();
 				}
 			}
 		}
@@ -170,15 +167,26 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Rotation, value))
 				{
 					m_Rotation = value;
-					_SetDirty();
+					SetDirty();
 				}
 			}
 		}
 
 		/// <summary>
-		/// Effect material.
+		/// The area for effect.
 		/// </summary>
-		public virtual Material effectMaterial { get { return m_EffectMaterial; } }
+		public EffectArea effectArea
+		{
+			get { return m_EffectArea; }
+			set
+			{
+				if (m_EffectArea != value)
+				{
+					m_EffectArea = value;
+					SetDirty();
+				}
+			}
+		}
 
 		/// <summary>
 		/// Play shinning on enable.
@@ -211,52 +219,58 @@ namespace Coffee.UIExtensions
 		protected override void OnEnable()
 		{
 			_time = 0;
-			graphic.material = effectMaterial;
+//			graphic.material = effectMaterial;
 			base.OnEnable();
 		}
 
-		/// <summary>
-		/// This function is called when the behaviour becomes disabled () or inactive.
-		/// </summary>
-		protected override void OnDisable()
-		{
-			graphic.material = null;
-			base.OnDisable();
-		}
+
+//		/// <summary>
+//		/// This function is called when the behaviour becomes disabled () or inactive.
+//		/// </summary>
+//		protected override void OnDisable()
+//		{
+//			graphic.material = null;
+//			base.OnDisable();
+//		}
 
 #if UNITY_EDITOR
-		public void OnBeforeSerialize()
+		protected override Material GetMaterial()
 		{
+			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName));
 		}
 
-		public void OnAfterDeserialize()
-		{
-			var obj = this;
-			EditorApplication.delayCall += () =>
-			{
-				if (Application.isPlaying || !obj)
-					return;
-
-				var mat = GetMaterial(shaderName);
-				if (m_EffectMaterial == mat && graphic.material == mat)
-					return;
-
-				graphic.material = m_EffectMaterial = mat;
-				EditorUtility.SetDirty(this);
-				EditorUtility.SetDirty(graphic);
-				EditorApplication.delayCall += AssetDatabase.SaveAssets;
-			};
-		}
-
-		public static Material GetMaterial(string shaderName)
-		{
-			string name = Path.GetFileName(shaderName);
-			return AssetDatabase.FindAssets("t:Material " + name)
-				.Select(x => AssetDatabase.GUIDToAssetPath(x))
-				.SelectMany(x => AssetDatabase.LoadAllAssetsAtPath(x))
-				.OfType<Material>()
-				.FirstOrDefault(x => x.name == name);
-		}
+//		public void OnBeforeSerialize()
+//		{
+//		}
+//
+//		public void OnAfterDeserialize()
+//		{
+//			var obj = this;
+//			EditorApplication.delayCall += () =>
+//			{
+//				if (Application.isPlaying || !obj)
+//					return;
+//
+//				var mat = GetMaterial(shaderName);
+//				if (m_EffectMaterial == mat && graphic.material == mat)
+//					return;
+//
+//				graphic.material = m_EffectMaterial = mat;
+//				EditorUtility.SetDirty(this);
+//				EditorUtility.SetDirty(graphic);
+//				EditorApplication.delayCall += AssetDatabase.SaveAssets;
+//			};
+//		}
+//
+//		public static Material GetMaterial(string shaderName)
+//		{
+//			string name = Path.GetFileName(shaderName);
+//			return AssetDatabase.FindAssets("t:Material " + name)
+//				.Select(x => AssetDatabase.GUIDToAssetPath(x))
+//				.SelectMany(x => AssetDatabase.LoadAllAssetsAtPath(x))
+//				.OfType<Material>()
+//				.FirstOrDefault(x => x.name == name);
+//		}
 #endif
 
 		/// <summary>
@@ -268,7 +282,7 @@ namespace Coffee.UIExtensions
 				return;
 
 			// rect.
-			Rect rect = graphic.rectTransform.rect;
+			Rect rect = GetEffectArea(vh, m_EffectArea);
 
 			// rotation.
 			float rad = rotation * Mathf.Deg2Rad;
@@ -277,6 +291,8 @@ namespace Coffee.UIExtensions
 			dir = dir.normalized;
 
 			// Calculate vertex position.
+			bool effectEachCharacter = graphic is Text && m_EffectArea == EffectArea.Character;
+
 			UIVertex vertex = default(UIVertex);
 			Vector2 nomalizedPos;
 			Matrix2x3 localMatrix = new Matrix2x3(rect, dir.x, dir.y);	// Get local matrix.
@@ -286,6 +302,17 @@ namespace Coffee.UIExtensions
 
 				// Normalize vertex position by local matrix.
 				nomalizedPos = localMatrix * vertex.position;
+
+				// Normalize vertex position by local matrix.
+				if (effectEachCharacter)
+				{
+					// Each characters.
+					nomalizedPos = localMatrix * splitedCharacterPosition[i % 4];
+				}
+				else
+				{
+					nomalizedPos = localMatrix * vertex.position;
+				}
 
 				vertex.uv1 = new Vector2(
 					Packer.ToFloat(Mathf.Clamp01(nomalizedPos.y), softness, width, brightness),
@@ -330,13 +357,13 @@ namespace Coffee.UIExtensions
 			}
 		}
 
-		/// <summary>
-		/// Mark the UIEffect as dirty.
-		/// </summary>
-		void _SetDirty()
-		{
-			if (graphic)
-				graphic.SetVerticesDirty();
-		}
+//		/// <summary>
+//		/// Mark the UIEffect as dirty.
+//		/// </summary>
+//		void _SetDirty()
+//		{
+//			if (graphic)
+//				graphic.SetVerticesDirty();
+//		}
 	}
 }
