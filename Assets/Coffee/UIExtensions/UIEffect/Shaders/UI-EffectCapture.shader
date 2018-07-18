@@ -19,7 +19,11 @@ Shader "UI/Hidden/UI-EffectCapture"
 		CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
+			#if !defined(SHADER_API_D3D11_9X) && !defined(SHADER_API_D3D9)
 			#pragma target 2.0
+			#else
+			#pragma target 3.0
+			#endif
 
 			#pragma shader_feature __ GRAYSCALE SEPIA NEGA PIXEL MONO CUTOFF HUE 
 			#pragma shader_feature __ ADD SUBTRACT FILL

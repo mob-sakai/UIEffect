@@ -34,3 +34,5 @@ sysinfo.txt
 
 # Packages
 *.unitypackage
+build.app
+unity.log

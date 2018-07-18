@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.6.2](https://github.com/mob-sakai/UIEffect/tree/v2.6.2) (2018-07-18)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.6.1...v2.6.2)
+
+**Fixed bugs:**
+
+- Shader has compile errors in D3D9 or D3D11\_9X\(WSA\) [\#99](https://github.com/mob-sakai/UIEffect/issues/99)
+
 ## [v2.6.1](https://github.com/mob-sakai/UIEffect/tree/v2.6.1) (2018-06-14)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.6.0...v2.6.1)
