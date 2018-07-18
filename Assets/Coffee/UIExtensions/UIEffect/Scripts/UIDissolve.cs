@@ -196,7 +196,7 @@ namespace Coffee.UIExtensions
 				return;
 
 			// rect.
-			Rect rect = GetEffectArea(vh, m_EffectArea);
+			Rect rect = m_EffectArea.GetEffectArea(vh, graphic);
 
 			// Calculate vertex position.
 			UIVertex vertex = default(UIVertex);
