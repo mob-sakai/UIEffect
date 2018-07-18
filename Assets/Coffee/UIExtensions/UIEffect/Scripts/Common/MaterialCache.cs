@@ -6,10 +6,10 @@ namespace Coffee.UIExtensions
 {
 	public class MaterialCache
 	{
-		public ColorMode colorMode;
-		public int referenceCount = 0;
-		public Texture texture;
-		public Material material;
+		public ulong hash { get; private set; }
+		public int referenceCount { get; private set; }
+		public Texture texture { get; private set; }
+		public Material material { get; private set; }
 
 #if UNITY_EDITOR
 		[UnityEditor.InitializeOnLoadMethod]
@@ -21,9 +21,9 @@ namespace Coffee.UIExtensions
 
 		public static List<MaterialCache> materialCache = new List<MaterialCache>();
 
-		public static MaterialCache Register(ColorMode color, Texture tex, System.Func<Material> onCreateMaterial)
+		public static MaterialCache Register(ulong hash, Texture texture, System.Func<Material> onCreateMaterial)
 		{
-			var cache = materialCache.FirstOrDefault(x => x.IsMatch(color, tex));
+			var cache = materialCache.FirstOrDefault(x => x.hash == hash);
 			if (cache != null)
 			{
 				cache.referenceCount++;
@@ -32,8 +32,8 @@ namespace Coffee.UIExtensions
 			{
 				cache = new MaterialCache()
 				{
-					colorMode = color,
-					texture = tex,
+					hash = hash,
+					texture = texture,
 					material = onCreateMaterial(),
 					referenceCount = 1,
 				};
@@ -56,11 +56,6 @@ namespace Coffee.UIExtensions
 				cache.material = null;
 				cache.texture = null;
 			}
-		}
-
-		public bool IsMatch(ColorMode color, Texture tex)
-		{
-			return colorMode == color && texture == tex;
 		}
 	}
 }
