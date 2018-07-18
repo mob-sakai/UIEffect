@@ -1,8 +1,6 @@
 #ifndef UI_EFFECT_INCLUDED
 #define UI_EFFECT_INCLUDED
 
-#define PACKER_STEP 64
-
 #if GRAYSCALE | SEPIA | NEGA | PIXEL | MONO | CUTOFF | HUE
 #define UI_TONE
 #endif
@@ -15,24 +13,57 @@
 #define UI_BLUR
 #endif
 
-// Unpack float to low-precision [0-1] fixed4. 
+// Unpack float to low-precision [0-1] fixed4.
 fixed4 UnpackToVec4(float value)
-{   
+{
+	const int PACKER_STEP = 64;
 	const int PRECISION = PACKER_STEP - 1;
-	fixed4 color;
+	fixed4 unpacked;
 
-    color.r = (value % PACKER_STEP) / PRECISION;
-    value = floor(value / PACKER_STEP);
+	unpacked.x = (value % PACKER_STEP) / PRECISION;
+	value = floor(value / PACKER_STEP);
 
-    color.g = (value % PACKER_STEP) / PRECISION;
-    value = floor(value / PACKER_STEP);
+	unpacked.y = (value % PACKER_STEP) / PRECISION;
+	value = floor(value / PACKER_STEP);
 
-    color.b = (value % PACKER_STEP) / PRECISION;
-    value = floor(value / PACKER_STEP);
+	unpacked.z = (value % PACKER_STEP) / PRECISION;
+	value = floor(value / PACKER_STEP);
 
-    color.a = (value % PACKER_STEP) / PRECISION;
-    return color;
+	unpacked.w = (value % PACKER_STEP) / PRECISION;
+	return unpacked;
 }
+
+// Unpack float to low-precision [0-1] fixed3.
+fixed3 UnpackToVec3(float value)
+{
+	const int PACKER_STEP = 256;
+	const int PRECISION = PACKER_STEP - 1;
+	fixed3 unpacked;
+
+	unpacked.x = (value % (PACKER_STEP)) / (PACKER_STEP - 1);
+	value = floor(value / (PACKER_STEP));
+
+	unpacked.y = (value % PACKER_STEP) / (PACKER_STEP - 1);
+	value = floor(value / PACKER_STEP);
+
+	unpacked.z = (value % PACKER_STEP) / (PACKER_STEP - 1);
+	return unpacked;
+}
+
+// Unpack float to low-precision [0-1] half2.
+half2 UnpackToVec2(float value)
+{
+	const int PACKER_STEP = 4096;
+	const int PRECISION = PACKER_STEP - 1;
+	half2 unpacked;
+
+	unpacked.x = (value % (PACKER_STEP)) / (PACKER_STEP - 1);
+	value = floor(value / (PACKER_STEP));
+
+	unpacked.y = (value % PACKER_STEP) / (PACKER_STEP - 1);
+	return unpacked;
+}
+
 
 // Sample texture with blurring.
 // * Fast: Sample texture with 3x3 kernel.
