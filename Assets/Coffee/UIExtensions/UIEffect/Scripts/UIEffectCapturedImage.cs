@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
@@ -45,7 +46,8 @@ namespace Coffee.UIExtensions
 		[SerializeField] DesamplingRate m_ReductionRate;
 		[SerializeField] FilterMode m_FilterMode = FilterMode.Bilinear;
 		[SerializeField] Material m_EffectMaterial;
-		[SerializeField][Range(1, 8)] int m_Iterations = 1;
+		[FormerlySerializedAs("m_Iterations")]
+		[SerializeField][Range(1, 8)] int m_BlurIterations = 1;
 		[SerializeField] bool m_KeepCanvasSize = true;
 		[SerializeField] RenderTexture m_TargetTexture;
 
@@ -109,9 +111,15 @@ namespace Coffee.UIExtensions
 		public RenderTexture capturedTexture { get { return m_TargetTexture ? m_TargetTexture : _rt; } }
 		
 		/// <summary>
-		/// Iterations.
+		/// Blur iterations.
 		/// </summary>
-		public int iterations { get { return m_Iterations; } set { m_Iterations = value; } }
+		[System.Obsolete("Use blurIterations instead (UnityUpgradable) -> blurIterations")]
+		public int iterations { get { return m_BlurIterations; } set { m_BlurIterations = value; } }
+
+		/// <summary>
+		/// Blur iterations.
+		/// </summary>
+		public int blurIterations { get { return m_BlurIterations; } set { m_BlurIterations = value; } }
 
 		/// <summary>
 		/// Fits graphic size to the root canvas.
@@ -248,7 +256,7 @@ namespace Coffee.UIExtensions
 					if(m_BlurMode != BlurMode.None)
 					{
 						_buffer.GetTemporaryRT(s_EffectId2, w, h, 0, m_FilterMode);
-						for (int i = 0; i < m_Iterations; i++)
+						for (int i = 0; i < m_BlurIterations; i++)
 						{
 							// Apply effect (effect1 -> effect2, or effect2 -> effect1).
 							_buffer.SetGlobalVector(s_EffectFactorId, new Vector4(blur, 0));

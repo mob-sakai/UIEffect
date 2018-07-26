@@ -40,7 +40,7 @@ namespace Coffee.UIExtensions
 			_spDesamplingRate = serializedObject.FindProperty("m_DesamplingRate");
 			_spReductionRate = serializedObject.FindProperty("m_ReductionRate");
 			_spFilterMode = serializedObject.FindProperty("m_FilterMode");
-			_spIterations = serializedObject.FindProperty("m_Iterations");
+			_spIterations = serializedObject.FindProperty("m_BlurIterations");
 			_spKeepSizeToRootCanvas = serializedObject.FindProperty("m_KeepCanvasSize");
 			_spTargetTexture = serializedObject.FindProperty("m_TargetTexture");
 			_spBlurMode = serializedObject.FindProperty("m_BlurMode");
