@@ -253,9 +253,11 @@ namespace Coffee.UIExtensions
 			scaler.StartCoroutine(_CoUpdateTextureOnNextFrame());
 			if (m_KeepCanvasSize)
 			{
-				var size = (rootCanvas.transform as RectTransform).rect.size;
+				var rootTransform = rootCanvas.transform as RectTransform;
+				var size = rootTransform.rect.size;
 				rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
 				rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
+				rectTransform.position = rootTransform.position;
 			}
 		}
 
