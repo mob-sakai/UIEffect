@@ -298,6 +298,16 @@ namespace Coffee.UIExtensions
 		}
 
 #if UNITY_EDITOR
+		protected override void Reset()
+		{
+			// Set parameters as 'Detail'.
+			m_BlurIterations = 5;
+			m_FilterMode = FilterMode.Bilinear;
+			m_DesamplingRate = DesamplingRate.None;
+			m_ReductionRate = DesamplingRate.x1;
+			base.Reset();
+		}
+
 		/// <summary>
 		/// Raises the before serialize event.
 		/// </summary>
