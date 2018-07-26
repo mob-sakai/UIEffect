@@ -1,5 +1,27 @@
 # Changelog
 
+## [v2.7.0](https://github.com/mob-sakai/UIEffect/tree/v2.7.0) (2018-07-26)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.6.2...v2.7.0)
+
+UIHsvModifier: Modify hue, saturation, and value as you like!  
+![](https://user-images.githubusercontent.com/12690315/43200006-d6e2bf54-904e-11e8-9f22-0c0f9ce5912f.gif)  
+
+* Note: `Hue` mode in UIEffect component will be obsolete in the near future. Please use UIHsvModifier component instead.
+* Note: `Cutoff` and `Mono` mode in UIEffect component will be obsolete in the near future. Please use UITransitionEffect component instead.
+
+**Implemented enhancements:**
+
+- UIEffectCapturedImage: Support target RenderTexture to use external component [\#108](https://github.com/mob-sakai/UIEffect/issues/108)
+- Transition effect as other component [\#105](https://github.com/mob-sakai/UIEffect/issues/105)
+- Use multi-pass blurring to capture screenshot [\#96](https://github.com/mob-sakai/UIEffect/issues/96)
+- Feature: HSV modifier [\#44](https://github.com/mob-sakai/UIEffect/issues/44)
+
+**Fixed bugs:**
+
+- UIEffectCapturedImage: ColorMode is not working [\#109](https://github.com/mob-sakai/UIEffect/issues/109)
+- UIDissolve is not maskable [\#101](https://github.com/mob-sakai/UIEffect/issues/101)
+
 ## [v2.6.2](https://github.com/mob-sakai/UIEffect/tree/v2.6.2) (2018-07-18)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.6.1...v2.6.2)

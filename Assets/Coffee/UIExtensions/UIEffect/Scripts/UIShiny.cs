@@ -282,7 +282,7 @@ namespace Coffee.UIExtensions
 				return;
 
 			// rect.
-			Rect rect = GetEffectArea(vh, m_EffectArea);
+			Rect rect = m_EffectArea.GetEffectArea(vh, graphic);
 
 			// rotation.
 			float rad = rotation * Mathf.Deg2Rad;

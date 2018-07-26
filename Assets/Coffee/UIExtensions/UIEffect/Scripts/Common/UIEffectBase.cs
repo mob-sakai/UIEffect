@@ -11,11 +11,7 @@ namespace Coffee.UIExtensions
 	[RequireComponent(typeof(Graphic))]
 	[DisallowMultipleComponent]
 	public abstract class UIEffectBase : BaseMeshEffect
-#if UNITY_EDITOR
-		, ISerializationCallbackReceiver
-#endif
 	{
-		protected static readonly Rect rectForCharacter = new Rect(0, 0, 1, 1);
 		protected static readonly Vector2[] splitedCharacterPosition = { Vector2.up, Vector2.one, Vector2.right, Vector2.zero };
 		protected static readonly List<UIVertex> tempVerts = new List<UIVertex>();
 
@@ -32,48 +28,24 @@ namespace Coffee.UIExtensions
 		public Material effectMaterial { get { return m_EffectMaterial; } }
 
 #if UNITY_EDITOR
+		protected override void Reset()
+		{
+			OnValidate();
+		}
+
 		/// <summary>
 		/// Raises the validate event.
 		/// </summary>
 		protected override void OnValidate ()
 		{
-			base.OnValidate ();
-			UnityEditor.EditorApplication.delayCall += () => UpdateMaterial(false);
-		}
-
-		/// <summary>
-		/// Raises the before serialize event.
-		/// </summary>
-		public virtual void OnBeforeSerialize()
-		{
-		}
-
-		/// <summary>
-		/// Raises the after deserialize event.
-		/// </summary>
-		public virtual void OnAfterDeserialize()
-		{
-			UnityEditor.EditorApplication.delayCall += () => UpdateMaterial(true);
-		}
-
-		/// <summary>
-		/// Updates the material.
-		/// </summary>
-		/// <param name="ignoreInPlayMode">If set to <c>true</c> ignore in play mode.</param>
-		protected void UpdateMaterial(bool ignoreInPlayMode)
-		{
-			if(!this || ignoreInPlayMode && Application.isPlaying)
+			var mat = GetMaterial();
+			if (m_EffectMaterial != mat)
 			{
-				return;
-			}
-
-			var mat =  GetMaterial();
-			if (m_EffectMaterial != mat || targetGraphic.material != mat)
-			{
-				targetGraphic.material = m_EffectMaterial = mat;
+				m_EffectMaterial = mat;
 				UnityEditor.EditorUtility.SetDirty(this);
-				UnityEditor.EditorUtility.SetDirty(targetGraphic);
 			}
+			ModifyMaterial();
+			SetDirty();
 		}
 
 		/// <summary>
@@ -87,11 +59,19 @@ namespace Coffee.UIExtensions
 #endif
 
 		/// <summary>
+		/// Modifies the material.
+		/// </summary>
+		public virtual void ModifyMaterial()
+		{
+			targetGraphic.material = isActiveAndEnabled ? m_EffectMaterial : null;
+		}
+
+		/// <summary>
 		/// This function is called when the object becomes enabled and active.
 		/// </summary>
 		protected override void OnEnable()
 		{
-			targetGraphic.material = m_EffectMaterial;
+			ModifyMaterial();
 			base.OnEnable();
 		}
 
@@ -100,7 +80,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		protected override void OnDisable()
 		{
-			targetGraphic.material = null;
+			ModifyMaterial();
 			base.OnDisable();
 		}
 
@@ -112,36 +92,6 @@ namespace Coffee.UIExtensions
 			if (targetGraphic)
 			{
 				targetGraphic.SetVerticesDirty();
-			}
-		}
-
-		/// <summary>
-		/// Gets effect for area.
-		/// </summary>
-		protected Rect GetEffectArea(VertexHelper vh, EffectArea area)
-		{
-			switch(area)
-			{
-				case EffectArea.RectTransform: return graphic.rectTransform.rect;
-				case EffectArea.Character: return rectForCharacter;
-				case EffectArea.Fit:
-					{
-						// Fit to contents.
-						Rect rect = default(Rect);
-						UIVertex vertex = default(UIVertex);
-						rect.xMin = rect.yMin = float.MaxValue;
-						rect.xMax = rect.yMax = float.MinValue;
-						for (int i = 0; i < vh.currentVertCount; i++)
-						{
-							vh.PopulateUIVertex(ref vertex, i);
-							rect.xMin = Mathf.Min(rect.xMin, vertex.position.x);
-							rect.yMin = Mathf.Min(rect.yMin, vertex.position.y);
-							rect.xMax = Mathf.Max(rect.xMax, vertex.position.x);
-							rect.yMax = Mathf.Max(rect.yMax, vertex.position.y);
-						}
-						return rect;
-					}
-				default: return graphic.rectTransform.rect;
 			}
 		}
 	}

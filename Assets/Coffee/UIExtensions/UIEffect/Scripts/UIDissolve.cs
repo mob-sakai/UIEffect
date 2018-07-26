@@ -8,7 +8,7 @@ namespace Coffee.UIExtensions
 	/// Dissolve effect for uGUI.
 	/// </summary>
 	[ExecuteInEditMode]
-	public class UIDissolve : UIEffectBase, IMaterialModifier
+	public class UIDissolve : UIEffectBase
 	{
 		//################################
 		// Constant or Static Members.
@@ -116,7 +116,7 @@ namespace Coffee.UIExtensions
 					m_NoiseTexture = value;
 					if (graphic)
 					{
-						graphic.SetMaterialDirty();
+						ModifyMaterial();
 					}
 				}
 			}
@@ -161,30 +161,37 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Modifies the material.
 		/// </summary>
-		public Material GetModifiedMaterial(Material baseMaterial)
+		public override void ModifyMaterial()
 		{
-			if (_materialCache != null && !_materialCache.IsMatch(m_ColorMode, m_NoiseTexture))
+			ulong hash = (m_NoiseTexture ? (uint)m_NoiseTexture.GetInstanceID() : 0) + ((ulong)m_ColorMode << 32);
+			if (_materialCache != null && (_materialCache.hash != hash || !isActiveAndEnabled || !m_EffectMaterial))
 			{
 				MaterialCache.Unregister(_materialCache);
 				_materialCache = null;
 			}
 
-			if (!isActiveAndEnabled || !m_NoiseTexture || !m_EffectMaterial)
+			if (!isActiveAndEnabled || !m_EffectMaterial)
 			{
-				return baseMaterial;
+				graphic.material = null;
 			}
-			else if (_materialCache != null && _materialCache.IsMatch(m_ColorMode, m_NoiseTexture))
+			else if (!m_NoiseTexture)
 			{
-				return _materialCache.material;
+				graphic.material = m_EffectMaterial;
 			}
-
-			_materialCache = MaterialCache.Register(m_ColorMode, m_NoiseTexture, () =>
-				{
-					var mat = new Material(m_EffectMaterial);
-					mat.SetTexture("_NoiseTex", m_NoiseTexture);
-					return mat;
-				});
-			return _materialCache.material;
+			else if (_materialCache != null && _materialCache.hash == hash)
+			{
+				graphic.material = _materialCache.material;
+			}
+			else
+			{
+				_materialCache = MaterialCache.Register(hash, m_NoiseTexture, () =>
+					{
+						var mat = new Material(m_EffectMaterial);
+						mat.SetTexture("_NoiseTex", m_NoiseTexture);
+						return mat;
+					});
+				graphic.material = _materialCache.material;
+			}
 		}
 
 		/// <summary>
@@ -196,7 +203,7 @@ namespace Coffee.UIExtensions
 				return;
 
 			// rect.
-			Rect rect = GetEffectArea(vh, m_EffectArea);
+			Rect rect = m_EffectArea.GetEffectArea(vh, graphic);
 
 			// Calculate vertex position.
 			UIVertex vertex = default(UIVertex);
@@ -252,19 +259,9 @@ namespace Coffee.UIExtensions
 			MaterialCache.Unregister(_materialCache);
 			_materialCache = null;
 			base.OnDisable();
-
 		}
 
 #if UNITY_EDITOR
-		protected override void OnValidate()
-		{
-			base.OnValidate();
-			if (graphic)
-			{
-				graphic.SetMaterialDirty();
-			}
-		}
-
 		/// <summary>
 		/// Gets the material.
 		/// </summary>
