@@ -18,9 +18,9 @@ namespace Coffee.UIExtensions
 
 		public enum QualityMode : int
 		{
-			Fast = (DesamplingRate.x2 << 0) + (DesamplingRate.x2 << 4) + (FilterMode.Bilinear << 8) + (1 << 10),
-			Medium = (DesamplingRate.x1 << 0) + (DesamplingRate.x1 << 4) + (FilterMode.Bilinear << 8) + (1 << 10),
-			Detail = (DesamplingRate.None << 0) + (DesamplingRate.x1 << 4) + (FilterMode.Bilinear << 8) + (1 << 10),
+			Fast = (DesamplingRate.x2 << 0) + (DesamplingRate.x2 << 4) + (FilterMode.Bilinear << 8) + (2 << 10),
+			Medium = (DesamplingRate.x1 << 0) + (DesamplingRate.x1 << 4) + (FilterMode.Bilinear << 8) + (3 << 10),
+			Detail = (DesamplingRate.None << 0) + (DesamplingRate.x1 << 4) + (FilterMode.Bilinear << 8) + (5 << 10),
 			Custom = -1,
 		}
 
@@ -42,9 +42,11 @@ namespace Coffee.UIExtensions
 			_spFilterMode = serializedObject.FindProperty("m_FilterMode");
 			_spIterations = serializedObject.FindProperty("m_Iterations");
 			_spKeepSizeToRootCanvas = serializedObject.FindProperty("m_KeepCanvasSize");
-			
+			_spTargetTexture = serializedObject.FindProperty("m_TargetTexture");
+			_spBlurMode = serializedObject.FindProperty("m_BlurMode");
 
-			_customAdvancedOption = (qualityMode == QualityMode.Custom);
+
+			_customAdvancedOption = (qualityMode == QualityMode.Custom) || _spTargetTexture.objectReferenceValue;
 		}
 
 		/// <summary>
@@ -79,19 +81,38 @@ namespace Coffee.UIExtensions
 			quality = (QualityMode)EditorGUILayout.EnumPopup("Quality Mode", quality);
 			if(EditorGUI.EndChangeCheck())
 			{
-				_customAdvancedOption = (quality == QualityMode.Custom);
+				_customAdvancedOption = (quality == QualityMode.Custom) || _spTargetTexture.objectReferenceValue;
 				qualityMode = quality;
 			}
 
 			// When qualityMode is `Custom`, show advanced option.
 			if (_customAdvancedOption)
 			{
-				DrawDesamplingRate(_spDesamplingRate);// Desampling rate.
+				if(_spBlurMode.intValue != 0)
+				{
+					EditorGUILayout.PropertyField(_spIterations);// Iterations.
+				}
+				EditorGUILayout.PropertyField(_spKeepSizeToRootCanvas);// Keep Graphic Size To RootCanvas.
 				DrawDesamplingRate(_spReductionRate);// Reduction rate.
-				EditorGUILayout.PropertyField(_spFilterMode);// Filter Mode.
-				EditorGUILayout.PropertyField(_spIterations);// Iterations.
+
+				EditorGUILayout.Space();
+				EditorGUILayout.LabelField("Result Texture Setting", EditorStyles.boldLabel);
+
+				if(!_spTargetTexture.objectReferenceValue)
+				{
+					EditorGUILayout.PropertyField(_spFilterMode);// Filter Mode.
+					DrawDesamplingRate(_spDesamplingRate);// Desampling rate.
+				}
+				using (new EditorGUILayout.HorizontalScope())
+				{
+					EditorGUILayout.PropertyField(_spTargetTexture);// Target Texture.
+					Texture t = _spTargetTexture.objectReferenceValue as Texture;
+					if (t)
+					{
+						GUILayout.Label(string.Format("{0}x{1}", t.width, t.height), EditorStyles.miniLabel);
+					}
+				}
 			}
-			EditorGUILayout.PropertyField(_spKeepSizeToRootCanvas);// Iterations.
 
 			serializedObject.ApplyModifiedProperties();
 
@@ -140,8 +161,10 @@ namespace Coffee.UIExtensions
 		SerializedProperty _spDesamplingRate;
 		SerializedProperty _spReductionRate;
 		SerializedProperty _spFilterMode;
+		SerializedProperty _spBlurMode;
 		SerializedProperty _spIterations;
 		SerializedProperty _spKeepSizeToRootCanvas;
+		SerializedProperty _spTargetTexture;
 
 		QualityMode qualityMode
 		{

@@ -47,6 +47,7 @@ namespace Coffee.UIExtensions
 		[SerializeField] Material m_EffectMaterial;
 		[SerializeField][Range(1, 8)] int m_Iterations = 1;
 		[SerializeField] bool m_KeepCanvasSize = true;
+		[SerializeField] RenderTexture m_TargetTexture;
 
 
 		//################################
@@ -105,7 +106,7 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Captured texture.
 		/// </summary>
-		public RenderTexture capturedTexture { get { return _rt; } }
+		public RenderTexture capturedTexture { get { return m_TargetTexture ? m_TargetTexture : _rt; } }
 		
 		/// <summary>
 		/// Iterations.
@@ -116,6 +117,11 @@ namespace Coffee.UIExtensions
 		/// Fits graphic size to the root canvas.
 		/// </summary>
 		public bool keepCanvasSize { get { return m_KeepCanvasSize; } set { m_KeepCanvasSize = value; } }
+
+		/// <summary>
+		/// Target RenderTexture to capture.
+		/// </summary>
+		public RenderTexture targetTexture { get { return m_TargetTexture; } set { m_TargetTexture = value; } }
 
 		/// <summary>
 		/// This function is called when the MonoBehaviour will be destroyed.
@@ -175,34 +181,44 @@ namespace Coffee.UIExtensions
 			// If size of generated result RT has changed, relese it.
 			int w, h;
 			GetDesamplingSize(m_DesamplingRate, out w, out h);
-			if (_rt && (_rt.width != w || _rt.height != h))
+			if (m_TargetTexture)
 			{
 				_rtToRelease = _rt;
-				_rt = null;
 			}
-
-			// Generate result RT.
-			if (_rt == null)
+			else
 			{
-				_rt = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
-				_rt.filterMode = m_FilterMode;
-				_rt.useMipMap = false;
-				_rt.wrapMode = TextureWrapMode.Clamp;
-				_rt.hideFlags = HideFlags.HideAndDontSave;
+				if (_rt && (_rt.width != w || _rt.height != h))
+				{
+					_rtToRelease = _rt;
+					_rt = null;
+				}
+
+				// Generate result RT.
+				if (_rt == null)
+				{
+					_rt = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
+					_rt.filterMode = m_FilterMode;
+					_rt.useMipMap = false;
+					_rt.wrapMode = TextureWrapMode.Clamp;
+					_rt.hideFlags = HideFlags.HideAndDontSave;
+				}
 			}
 
 			// Create command buffer.
 			if (_buffer == null)
 			{
-				var rtId = new RenderTargetIdentifier(_rt);
+				var rtId = new RenderTargetIdentifier(m_TargetTexture ? m_TargetTexture : _rt);
 
 				// Material for effect.
 				Material mat = effectMaterial;
 
 				_buffer = new CommandBuffer();
-				_buffer.name =
-					_rt.name =
-						mat ? mat.name : "noeffect";
+				_buffer.name = mat ? mat.name : "noeffect";
+				if (_rt)
+				{
+					_rt.name = _buffer.name;
+				}
+						
 
 				// Copy to temporary RT.
 				_buffer.GetTemporaryRT(s_CopyId, -1, -1, 0, m_FilterMode);
@@ -342,7 +358,7 @@ namespace Coffee.UIExtensions
 		/// <param name="releaseRT">If set to <c>true</c> release cached RenderTexture.</param>
 		void _Release(bool releaseRT)
 		{
-			if (releaseRT)
+			if (releaseRT || m_TargetTexture)
 			{
 				texture = null;
 
@@ -376,7 +392,7 @@ namespace Coffee.UIExtensions
 			yield return new WaitForEndOfFrame();
 
 			_Release(false);
-			texture = _rt;
+			texture = m_TargetTexture ? m_TargetTexture : _rt;
 		}
 	}
 }
