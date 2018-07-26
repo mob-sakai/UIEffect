@@ -108,6 +108,24 @@ namespace Coffee.UIExtensions
 					UpdateTexture(false);
 				EditorGUI.EndDisabledGroup();
 			}
+
+			// Warning message for overlay rendering.
+			var graphic = (target as UIEffectCapturedImage);
+			if(graphic && graphic.canvas)
+			{
+				var canvas = graphic.canvas.rootCanvas;
+				if( canvas && canvas.renderMode != RenderMode.ScreenSpaceCamera)
+				{
+					using (new GUILayout.HorizontalScope())
+					{
+						EditorGUILayout.HelpBox("'ScreenSpace - Overlay' and 'WorldSpace - Camera' render modes are not supported. Change render mode of root canvas to 'ScreenSpace - Camera'.", MessageType.Warning);
+						if (GUILayout.Button("Canvas"))
+						{
+							Selection.activeGameObject = canvas.gameObject;
+						}
+					}
+				}
+			}
 		}
 
 		//################################
