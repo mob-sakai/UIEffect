@@ -167,6 +167,9 @@ namespace Coffee.UIExtensions
 				s_CopyId = Shader.PropertyToID("_UIEffectCapturedImage_ScreenCopyId");
 				s_EffectId1 = Shader.PropertyToID("_UIEffectCapturedImage_EffectId1");
 				s_EffectId2 = Shader.PropertyToID("_UIEffectCapturedImage_EffectId2");
+
+				s_EffectFactorId = Shader.PropertyToID("_EffectFactor");
+				s_ColorFactorId = Shader.PropertyToID("_ColorFactor");
 			}
 
 			// If size of generated result RT has changed, relese it.
@@ -206,8 +209,8 @@ namespace Coffee.UIExtensions
 				_buffer.Blit(BuiltinRenderTextureType.CurrentActive, s_CopyId);
 
 				// Set properties.
-				_buffer.SetGlobalVector("_EffectFactor", new Vector4(toneLevel, 0, blur, 1));
-				_buffer.SetGlobalVector("_ColorFactor", new Vector4(effectColor.r, effectColor.g, effectColor.b, effectColor.a));
+				_buffer.SetGlobalVector(s_EffectFactorId, new Vector4(toneLevel, 0));
+				_buffer.SetGlobalVector(s_ColorFactorId, new Vector4(effectColor.r, effectColor.g, effectColor.b, effectColor.a));
 
 				// Blit without effect.
 				if (!mat)
@@ -220,27 +223,28 @@ namespace Coffee.UIExtensions
 				{
 					GetDesamplingSize(m_ReductionRate, out w, out h);
 					_buffer.GetTemporaryRT(s_EffectId1, w, h, 0, m_FilterMode);
-					_buffer.Blit(s_CopyId, s_EffectId1, mat);    // Apply effect (copied screen -> effect1).
+
+					// Apply base effect (copied screen -> effect1).
+					_buffer.Blit(s_CopyId, s_EffectId1, mat, 0);
 					_buffer.ReleaseTemporaryRT(s_CopyId);
 					
 					// Iterate the operation.
-					if(1 < m_Iterations)
+					if(m_BlurMode != BlurMode.None)
 					{
-						_buffer.SetGlobalVector("_EffectFactor", new Vector4(toneLevel, 0, blur, 0));
 						_buffer.GetTemporaryRT(s_EffectId2, w, h, 0, m_FilterMode);
-						for (int i = 1; i < m_Iterations; i++)
+						for (int i = 0; i < m_Iterations; i++)
 						{
 							// Apply effect (effect1 -> effect2, or effect2 -> effect1).
-							_buffer.Blit(i % 2 == 0 ? s_EffectId2 : s_EffectId1, i % 2 == 0 ? s_EffectId1 : s_EffectId2, mat);
+							_buffer.SetGlobalVector(s_EffectFactorId, new Vector4(blur, 0));
+							_buffer.Blit(s_EffectId1, s_EffectId2, mat, 1);
+							_buffer.SetGlobalVector(s_EffectFactorId, new Vector4(0, blur));
+							_buffer.Blit(s_EffectId2, s_EffectId1, mat, 1);
 						}
-					}
-
-					_buffer.Blit(m_Iterations % 2 == 0 ? s_EffectId2 : s_EffectId1, rtId);
-					_buffer.ReleaseTemporaryRT(s_EffectId1);
-					if (1 < m_Iterations)
-					{
 						_buffer.ReleaseTemporaryRT(s_EffectId2);
 					}
+
+					_buffer.Blit(s_EffectId1, rtId);
+					_buffer.ReleaseTemporaryRT(s_EffectId1);
 				}
 			}
 
@@ -329,6 +333,8 @@ namespace Coffee.UIExtensions
 		static int s_CopyId;
 		static int s_EffectId1;
 		static int s_EffectId2;
+		static int s_EffectFactorId;
+		static int s_ColorFactorId;
 
 		/// <summary>
 		/// Release genarated objects.
