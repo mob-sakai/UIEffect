@@ -34,9 +34,9 @@ Shader "UI/Hidden/UI-EffectCapture"
 
 			fixed4 frag(v2f_img IN) : SV_Target
 			{
-				fixed effectFactor = _EffectFactor.x;
-				fixed blurFactor = _EffectFactor.z;
-				fixed colorFactor = _ColorFactor;
+				half effectFactor = _EffectFactor.x;
+				half blurFactor = _EffectFactor.z;
+				fixed4 colorFactor = _ColorFactor;
 				
 				#if PIXEL
 				half2 pixelScale = max(2, (1 - effectFactor) * _MainTex_TexelSize.zw);
