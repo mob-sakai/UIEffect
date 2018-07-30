@@ -19,38 +19,6 @@ namespace Coffee.UIExtensions
 	[DisallowMultipleComponent]
 	public class UIEffect : UIEffectBase
 	{
-		/// <summary>
-		/// Additional shadow.
-		/// </summary>
-		[System.Serializable]
-		public class AdditionalShadow
-		{
-			/// <summary>
-			/// How far is the blurring shadow from the graphic.
-			/// </summary>
-			[Range(0, 1)] public float shadowBlur = 0.25f;
-
-			/// <summary>
-			/// Shadow effect mode.
-			/// </summary>
-			public ShadowStyle shadowMode = ShadowStyle.Shadow;
-
-			/// <summary>
-			/// Color for the shadow effect.
-			/// </summary>
-			public Color shadowColor = Color.black;
-
-			/// <summary>
-			/// How far is the shadow from the graphic.
-			/// </summary>
-			public Vector2 effectDistance = new Vector2(1f, -1f);
-
-			/// <summary>
-			/// Should the shadow inherit the alpha from the graphic?
-			/// </summary>
-			public bool useGraphicAlpha = true;
-		}
-
 		//################################
 		// Constant or Static Members.
 		//################################
@@ -121,7 +89,8 @@ namespace Coffee.UIExtensions
 		[SerializeField] Vector2 m_EffectDistance = new Vector2(1f, -1f);
 		[SerializeField] bool m_UseGraphicAlpha = true;
 		[SerializeField] Color m_EffectColor = Color.white;
-		[SerializeField] List<AdditionalShadow> m_AdditionalShadows = new List<AdditionalShadow>();
+		[Obsolete][HideInInspector]
+		[SerializeField] List<UIShadow.AdditionalShadow> m_AdditionalShadows = new List<UIShadow.AdditionalShadow>();
 
 
 		[SerializeField] bool m_CustomEffect = false;
@@ -152,16 +121,6 @@ namespace Coffee.UIExtensions
 		public float blur { get { return m_Blur; } set { m_Blur = Mathf.Clamp(value, 0, 1); SetDirty(); } }
 
 		/// <summary>
-		/// How far is the blurring shadow from the graphic.
-		/// </summary>
-		public float shadowBlur { get { return m_ShadowBlur; } set { m_ShadowBlur = Mathf.Clamp(value, 0, 1); SetDirty(); } }
-
-		/// <summary>
-		/// Shadow effect mode.
-		/// </summary>
-		public ShadowStyle shadowStyle { get { return m_ShadowStyle; } set { m_ShadowStyle = value; SetDirty(); } }
-
-		/// <summary>
 		/// Tone effect mode.
 		/// </summary>
 		public ToneMode toneMode { get { return m_ToneMode; } }
@@ -177,34 +136,9 @@ namespace Coffee.UIExtensions
 		public BlurMode blurMode { get { return m_BlurMode; } }
 
 		/// <summary>
-		/// Color for the shadow effect.
-		/// </summary>
-		public Color shadowColor { get { return m_ShadowColor; } set { m_ShadowColor = value; SetDirty(); } }
-
-		/// <summary>
-		/// How far is the shadow from the graphic.
-		/// </summary>
-		public Vector2 effectDistance { get { return m_EffectDistance; } set { m_EffectDistance = value; SetDirty(); } }
-
-		/// <summary>
-		/// Should the shadow inherit the alpha from the graphic?
-		/// </summary>
-		public bool useGraphicAlpha { get { return m_UseGraphicAlpha; } set { m_UseGraphicAlpha = value; SetDirty(); } }
-
-		/// <summary>
 		/// Color for the color effect.
 		/// </summary>
 		public Color effectColor { get { return m_EffectColor; } set { m_EffectColor = value; SetDirty(); } }
-
-		/// <summary>
-		/// Additional Shadows.
-		/// </summary>
-		public List<AdditionalShadow> additionalShadows { get { return m_AdditionalShadows; } }
-
-		/// <summary>
-		/// Custom effect factor.
-		/// </summary>
-		public Vector4 customFactor { get { return m_CustomFactor; } set { m_CustomFactor = value; SetDirty(); } }
 
 		/// <summary>
 		/// Modifies the mesh.
@@ -219,43 +153,19 @@ namespace Coffee.UIExtensions
 			UIVertex vt;
 			vh.GetUIVertexStream(tempVerts);
 
-			//================================
-			// Effect modify original vertices.
-			//================================
+			// Pack some effect factors to 1 float.
+			Vector2 factor = new Vector2(
+				Packer.ToFloat(m_ToneLevel, m_ColorFactor, m_Blur, 0),
+				0
+			);
+
+			for (int i = 0; i < tempVerts.Count; i++)
 			{
-				// Pack some effect factors to 1 float.
-				Vector2 factor = new Vector2(
-					m_CustomEffect ? Packer.ToFloat(m_CustomFactor) : Packer.ToFloat(m_ToneLevel, m_ColorFactor, m_Blur, 0),
-					0
-				);
+				vt = tempVerts[i];
 
-				for (int i = 0; i < tempVerts.Count; i++)
-				{
-					vt = tempVerts[i];
-
-					// Set UIEffect prameters to vertex.
-					vt.uv1 = factor;
-					tempVerts[i] = vt;
-				}
-			}
-
-			//================================
-			// Append shadow vertices.
-			//================================
-			{
-				var inputVertCount = tempVerts.Count;
-				var start = 0;
-				var end = inputVertCount;
-
-				// Additional Shadows.
-				for (int i = additionalShadows.Count - 1; 0 <= i; i--)
-				{
-					AdditionalShadow shadow = additionalShadows[i];
-					_ApplyShadow(tempVerts, ref start, ref end, shadow.shadowMode, toneLevel, shadow.shadowBlur, shadow.effectDistance, shadow.shadowColor, shadow.useGraphicAlpha);
-				}
-
-				// Shadow.
-				_ApplyShadow(tempVerts, ref start, ref end, shadowStyle, toneLevel, shadowBlur, effectDistance, shadowColor, useGraphicAlpha);
+				// Set UIEffect prameters to vertex.
+				vt.uv1 = factor;
+				tempVerts[i] = vt;
 			}
 
 			vh.Clear();
@@ -393,91 +303,5 @@ namespace Coffee.UIExtensions
 		//################################
 		// Private Members.
 		//################################
-		/// <summary>
-		/// Append shadow vertices.
-		/// * It is similar to Shadow component implementation.
-		/// </summary>
-		void _ApplyShadow(List<UIVertex> verts, ref int start, ref int end, ShadowStyle mode, float toneLevel, float blur, Vector2 effectDistance, Color color, bool useGraphicAlpha)
-		{
-			if (ShadowStyle.None == mode)
-				return;
-
-			var factor = new Vector2(
-				Packer.ToFloat(toneLevel, 0, blur, 0),
-				Packer.ToFloat(color.r, color.g, color.b, 1)
-			);
-
-			// Append Shadow.
-			_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
-
-			// Append Shadow3.
-			if (ShadowStyle.Shadow3 == mode)
-			{
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, effectDistance.x, 0, factor, color, useGraphicAlpha);
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, 0, effectDistance.y, factor, color, useGraphicAlpha);
-			}
-
-			// Append Outline.
-			else if (ShadowStyle.Outline == mode)
-			{
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, -effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, -effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
-			}
-
-			// Append Outline8.
-			else if (ShadowStyle.Outline8 == mode)
-			{
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, -effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, -effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, -effectDistance.x, 0, factor, color, useGraphicAlpha);
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, 0, -effectDistance.y, factor, color, useGraphicAlpha);
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, effectDistance.x, 0, factor, color, useGraphicAlpha);
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, 0, effectDistance.y, factor, color, useGraphicAlpha);
-			}
-		}
-
-		/// <summary>
-		/// Append shadow vertices.
-		/// * It is similar to Shadow component implementation.
-		/// </summary>
-		void _ApplyShadowZeroAlloc(List<UIVertex> verts, ref int start, ref int end, float x, float y, Vector2 factor, Color color, bool useGraphicAlpha)
-		{
-			// Check list capacity.
-			var neededCapacity = verts.Count + end - start;
-			if (verts.Capacity < neededCapacity)
-				verts.Capacity = neededCapacity;
-
-			// Append shadow vertices to the front of list.
-			// * The original vertex is pushed backward.
-			UIVertex vt;
-			for (int i = start; i < end; ++i)
-			{
-				vt = verts[i];
-				verts.Add(vt);
-
-				Vector3 v = vt.position;
-				vt.position.Set(v.x + x, v.y + y, v.z);
-
-				Color vertColor = color;
-
-				if(colorMode != ColorMode.Multiply)
-				{
-					vertColor.r = vertColor.g = vertColor.b = 1;
-				}
-
-				vertColor.a = useGraphicAlpha ? color.a * vt.color.a / 255 : color.a;
-				vt.color = vertColor;
-
-				// Set UIEffect prameters to vertex.
-				vt.uv1 = factor;
-				verts[i] = vt;
-			}
-
-			// Update next shadow offset.
-			start = end;
-			end = verts.Count;
-		}
 	}
 }

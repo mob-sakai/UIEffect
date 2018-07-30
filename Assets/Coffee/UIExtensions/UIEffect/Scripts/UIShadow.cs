@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 #if UNITY_EDITOR
@@ -28,16 +29,19 @@ namespace Coffee.UIExtensions
 			/// <summary>
 			/// How far is the blurring shadow from the graphic.
 			/// </summary>
+			[FormerlySerializedAs("shadowBlur")]
 			[Range(0, 1)] public float blur = 0.25f;
 
 			/// <summary>
 			/// Shadow effect mode.
 			/// </summary>
+			[FormerlySerializedAs("shadowMode")]
 			public ShadowStyle style = ShadowStyle.Shadow;
 
 			/// <summary>
 			/// Color for the shadow effect.
 			/// </summary>
+			[FormerlySerializedAs("shadowColor")]
 			public Color effectColor = Color.black;
 
 			/// <summary>
