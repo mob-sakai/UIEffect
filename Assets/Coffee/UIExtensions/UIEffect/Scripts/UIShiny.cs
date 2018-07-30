@@ -248,6 +248,21 @@ namespace Coffee.UIExtensions
 			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName));
 		}
 
+		#pragma warning disable 0612
+		protected override void UpgradeIfNeeded()
+		{
+			// Upgrade for v3.0.0
+			if (IsShouldUpgrade(300))
+			{
+				m_Runner.running = m_Play;
+				m_Runner.duration = m_Duration;
+				m_Runner.loop = m_Loop;
+				m_Runner.loopDelay = m_LoopDelay;
+				m_Runner.updateMode = m_UpdateMode;
+			}
+		}
+		#pragma warning restore 0612
+
 //
 //		public static Material GetMaterial(string shaderName)
 //		{

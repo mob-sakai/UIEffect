@@ -306,6 +306,21 @@ namespace Coffee.UIExtensions
 		{
 			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_ColorMode);
 		}
+
+		#pragma warning disable 0612
+		protected override void UpgradeIfNeeded()
+		{
+			// Upgrade for v3.0.0
+			if (IsShouldUpgrade(300))
+			{
+				m_Runner.running = m_Play;
+				m_Runner.duration = m_Duration;
+				m_Runner.loop = false;
+				m_Runner.loopDelay = 1;
+				m_Runner.updateMode = m_UpdateMode;
+			}
+		}
+		#pragma warning restore 0612
 #endif
 
 		//################################

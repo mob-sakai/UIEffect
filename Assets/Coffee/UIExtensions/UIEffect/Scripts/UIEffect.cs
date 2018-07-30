@@ -80,13 +80,18 @@ namespace Coffee.UIExtensions
 		[SerializeField][Range(0, 1)] float m_ToneLevel = 1;
 		[SerializeField][Range(0, 1)] float m_ColorFactor = 1;
 		[SerializeField][Range(0, 1)] float m_Blur = 0.25f;
+		[Obsolete][HideInInspector]
 		[SerializeField][Range(0, 1)] float m_ShadowBlur = 0.25f;
+		[Obsolete][HideInInspector]
 		[SerializeField] ShadowStyle m_ShadowStyle;
 		[SerializeField] ToneMode m_ToneMode;
 		[SerializeField] ColorMode m_ColorMode;
 		[SerializeField] BlurMode m_BlurMode;
+		[Obsolete][HideInInspector]
 		[SerializeField] Color m_ShadowColor = Color.black;
+		[Obsolete][HideInInspector]
 		[SerializeField] Vector2 m_EffectDistance = new Vector2(1f, -1f);
+		[Obsolete][HideInInspector]
 		[SerializeField] bool m_UseGraphicAlpha = true;
 		[SerializeField] Color m_EffectColor = Color.white;
 		[Obsolete][HideInInspector]
@@ -95,6 +100,7 @@ namespace Coffee.UIExtensions
 
 		[SerializeField] bool m_CustomEffect = false;
 		[SerializeField] Vector4 m_CustomFactor = new Vector4();
+
 
 		//################################
 		// Public Members.
@@ -298,6 +304,44 @@ namespace Coffee.UIExtensions
 		{
 			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_ToneMode, m_ColorMode, m_BlurMode);
 		}
+
+		#pragma warning disable 0612
+		protected override void UpgradeIfNeeded()
+		{
+			// Upgrade for v3.0.0
+			if (IsShouldUpgrade(300))
+			{
+				if (m_ColorMode != ColorMode.Multiply)
+				{
+					Color col = targetGraphic.color;
+					col.r = m_EffectColor.r;
+					col.g = m_EffectColor.g;
+					col.b = m_EffectColor.b;
+					targetGraphic.color = col;
+					m_ColorFactor = m_EffectColor.a;
+				}
+
+				if (m_ShadowStyle != ShadowStyle.None || m_AdditionalShadows.Any(x=>x.style != ShadowStyle.None))
+				{
+					var shadow = gameObject.GetComponent<UIShadow>() ?? gameObject.AddComponent<UIShadow>();
+					shadow.style = m_ShadowStyle;
+					shadow.effectDistance = m_EffectDistance;
+					shadow.effectColor = m_ShadowColor;
+					shadow.useGraphicAlpha = m_UseGraphicAlpha;
+					shadow.blur = m_ShadowBlur;
+					shadow.additionalShadows.AddRange(m_AdditionalShadows);
+
+					m_ShadowStyle = ShadowStyle.None;
+					m_AdditionalShadows = null;
+
+					if (m_ToneMode == ToneMode.None && m_ColorMode == ColorMode.Multiply && m_BlurMode == BlurMode.None)
+					{
+						DestroyImmediate(this, true);
+					}
+				}
+			}
+		}
+		#pragma warning restore 0612
 #endif
 
 		//################################
