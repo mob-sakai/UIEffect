@@ -98,8 +98,6 @@ namespace Coffee.UIExtensions
 		[SerializeField] List<UIShadow.AdditionalShadow> m_AdditionalShadows = new List<UIShadow.AdditionalShadow>();
 
 
-		[SerializeField] bool m_CustomEffect = false;
-		[SerializeField] Vector4 m_CustomFactor = new Vector4();
 
 
 		//################################
