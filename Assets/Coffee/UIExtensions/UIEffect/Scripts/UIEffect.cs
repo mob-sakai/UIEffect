@@ -339,6 +339,16 @@ namespace Coffee.UIExtensions
 						DestroyImmediate(this, true);
 					}
 				}
+
+				if (m_ToneMode == ToneMode.Hue)
+				{
+					var go = gameObject;
+					var hue = m_ToneLevel;
+					DestroyImmediate(this, true);
+					var hsv = go.GetComponent<UIHsvModifier>() ?? go.AddComponent<UIHsvModifier>();
+					hsv.hue = hue;
+					hsv.range = 1;
+				}
 			}
 		}
 		#pragma warning restore 0612
