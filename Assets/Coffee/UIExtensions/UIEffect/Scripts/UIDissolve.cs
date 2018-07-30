@@ -27,9 +27,16 @@ namespace Coffee.UIExtensions
 		[SerializeField] Texture m_NoiseTexture;
 		[SerializeField] protected EffectArea m_EffectArea;
 		[SerializeField] bool m_KeepAspectRatio;
+
+		[Header("Effect Runner")]
+		[SerializeField] EffectRunner m_Runner;
+
 		[Header("Play Effect")]
+		[Obsolete][HideInInspector]
 		[SerializeField] bool m_Play = false;
+		[Obsolete][HideInInspector]
 		[SerializeField][Range(0.1f, 10)] float m_Duration = 1;
+		[Obsolete][HideInInspector]
 		[SerializeField] AnimatorUpdateMode m_UpdateMode = AnimatorUpdateMode.Normal;
 
 
@@ -161,19 +168,29 @@ namespace Coffee.UIExtensions
 		public ColorMode colorMode { get { return m_ColorMode; } }
 
 		/// <summary>
-		/// Play dissolve on enable.
+		/// Play effect on enable.
 		/// </summary>
-		public bool play { get { return m_Play; } set { m_Play = value; } }
+		public bool play { get { return m_Runner.running; } set { m_Runner.running = value; } }
 
 		/// <summary>
-		/// Dissolve duration.
+		/// Play effect loop.
 		/// </summary>
-		public float duration { get { return m_Duration; } set { m_Duration = Mathf.Max(value, 0.1f); } }
+		public bool loop { get { return m_Runner.loop; } set { m_Runner.loop = value; } }
 
 		/// <summary>
-		/// Dissolve update mode.
+		/// The duration for playing effect.
 		/// </summary>
-		public AnimatorUpdateMode updateMode { get { return m_UpdateMode; } set { m_UpdateMode = value; } }
+		public float duration { get { return m_Runner.duration; } set { m_Runner.duration = Mathf.Max(value, 0.1f); } }
+
+		/// <summary>
+		/// Delay on loop effect.
+		/// </summary>
+		public float loopDelay { get { return m_Runner.loopDelay; } set { m_Runner.loopDelay = Mathf.Max(value, 0); } }
+
+		/// <summary>
+		/// Update mode for playing effect.
+		/// </summary>
+		public AnimatorUpdateMode updateMode { get { return m_Runner.updateMode; } set { m_Runner.updateMode = value; } }
 
 		/// <summary>
 		/// Modifies the material.
@@ -256,8 +273,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public void Play()
 		{
-			_time = 0;
-			m_Play = true;
+			m_Runner.Play();
 		}
 
 
@@ -269,8 +285,8 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		protected override void OnEnable()
 		{
-			_time = 0;
 			base.OnEnable();
+			m_Runner.OnEnable(f => location = f);
 		}
 
 		protected override void OnDisable()
@@ -278,6 +294,7 @@ namespace Coffee.UIExtensions
 			MaterialCache.Unregister(_materialCache);
 			_materialCache = null;
 			base.OnDisable();
+			m_Runner.OnDisable();
 		}
 
 #if UNITY_EDITOR
@@ -295,25 +312,5 @@ namespace Coffee.UIExtensions
 		// Private Members.
 		//################################
 		MaterialCache _materialCache = null;
-		float _time = 0;
-
-		void Update()
-		{
-			if (!m_Play || !Application.isPlaying)
-			{
-				return;
-			}
-
-			_time += m_UpdateMode == AnimatorUpdateMode.UnscaledTime
-				? Time.unscaledDeltaTime
-				: Time.deltaTime;
-			location = _time / m_Duration;
-
-			if (m_Duration <= _time)
-			{
-				m_Play = false;
-				_time = 0;
-			}
-		}
 	}
 }

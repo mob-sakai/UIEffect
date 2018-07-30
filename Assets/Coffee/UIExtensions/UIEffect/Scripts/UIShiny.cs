@@ -37,11 +37,18 @@ namespace Coffee.UIExtensions
 		[SerializeField][Range(0, 1)] float m_Brightness = 1f;
 		[SerializeField][Range(0, 1)] float m_Highlight = 1;
 		[SerializeField] protected EffectArea m_EffectArea;
-		[Header("Play Effect")]
+		[Header("Effect Runner")]
+		[SerializeField] EffectRunner m_Runner;
+
+		[Obsolete][HideInInspector]
 		[SerializeField] bool m_Play = false;
+		[Obsolete][HideInInspector]
 		[SerializeField] bool m_Loop = false;
+		[Obsolete][HideInInspector]
 		[SerializeField][Range(0.1f, 10)] float m_Duration = 1;
+		[Obsolete][HideInInspector]
 		[SerializeField][Range(0, 10)] float m_LoopDelay = 1;
+		[Obsolete][HideInInspector]
 		[SerializeField] AnimatorUpdateMode m_UpdateMode = AnimatorUpdateMode.Normal;
 
 
@@ -191,46 +198,48 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Play shinning on enable.
 		/// </summary>
-		public bool play { get { return m_Play; } set { m_Play = value; } }
+		public bool play { get { return m_Runner.running; } set { m_Runner.running = value; } }
 
 		/// <summary>
 		/// Play shinning loop.
 		/// </summary>
-		public bool loop { get { return m_Loop; } set { m_Loop = value; } }
+		public bool loop { get { return m_Runner.loop; } set { m_Runner.loop = value; } }
 
 		/// <summary>
 		/// Shinning duration.
 		/// </summary>
-		public float duration { get { return m_Duration; } set { m_Duration = Mathf.Max(value, 0.1f); } }
+		public float duration { get { return m_Runner.duration; } set { m_Runner.duration = Mathf.Max(value, 0.1f); } }
 
 		/// <summary>
 		/// Delay on loop.
 		/// </summary>
-		public float loopDelay { get { return m_LoopDelay; } set { m_LoopDelay = Mathf.Max(value, 0); } }
+		public float loopDelay { get { return m_Runner.loopDelay; } set { m_Runner.loopDelay = Mathf.Max(value, 0); } }
 
 		/// <summary>
 		/// Shinning update mode.
 		/// </summary>
-		public AnimatorUpdateMode updateMode { get { return m_UpdateMode; } set { m_UpdateMode = value; } }
+		public AnimatorUpdateMode updateMode { get { return m_Runner.updateMode; } set { m_Runner.updateMode = value; } }
 
 		/// <summary>
 		/// This function is called when the object becomes enabled and active.
 		/// </summary>
 		protected override void OnEnable()
 		{
-			_time = 0;
-//			graphic.material = effectMaterial;
 			base.OnEnable();
+//			m_Runner.Register(m_Play, m_Duration, m_UpdateMode, m_Loop, m_LoopDelay, f => location = f);
+			m_Runner.OnEnable(f => location = f);
 		}
 
+		/// <summary>
+		/// This function is called when the behaviour becomes disabled () or inactive.
+		/// </summary>
+		protected override void OnDisable()
+		{
+			base.OnDisable();
+			m_Runner.OnDisable();
+		}
 
-//		/// <summary>
-//		/// This function is called when the behaviour becomes disabled () or inactive.
-//		/// </summary>
-//		protected override void OnDisable()
 //		{
-//			graphic.material = null;
-//			base.OnDisable();
 //		}
 
 #if UNITY_EDITOR
@@ -239,28 +248,6 @@ namespace Coffee.UIExtensions
 			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName));
 		}
 
-//		public void OnBeforeSerialize()
-//		{
-//		}
-//
-//		public void OnAfterDeserialize()
-//		{
-//			var obj = this;
-//			EditorApplication.delayCall += () =>
-//			{
-//				if (Application.isPlaying || !obj)
-//					return;
-//
-//				var mat = GetMaterial(shaderName);
-//				if (m_EffectMaterial == mat && graphic.material == mat)
-//					return;
-//
-//				graphic.material = m_EffectMaterial = mat;
-//				EditorUtility.SetDirty(this);
-//				EditorUtility.SetDirty(graphic);
-//				EditorApplication.delayCall += AssetDatabase.SaveAssets;
-//			};
-//		}
 //
 //		public static Material GetMaterial(string shaderName)
 //		{
@@ -328,42 +315,12 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public void Play()
 		{
-			_time = 0;
-			m_Play = true;
+			m_Runner.Play();
 		}
 
 
 		//################################
 		// Private Members.
 		//################################
-		float _time = 0;
-
-		void Update()
-		{
-			if (!m_Play || !Application.isPlaying)
-			{
-				return;
-			}
-
-			_time += m_UpdateMode == AnimatorUpdateMode.UnscaledTime
-					? Time.unscaledDeltaTime
-					: Time.deltaTime;
-			location = _time / m_Duration;
-
-			if (m_Duration <= _time)
-			{
-				m_Play = m_Loop;
-				_time = m_Loop ? -m_LoopDelay : 0;
-			}
-		}
-
-//		/// <summary>
-//		/// Mark the UIEffect as dirty.
-//		/// </summary>
-//		void _SetDirty()
-//		{
-//			if (graphic)
-//				graphic.SetVerticesDirty();
-//		}
 	}
 }
