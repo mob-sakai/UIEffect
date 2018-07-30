@@ -148,13 +148,18 @@ Shader "UI/Hidden/UI-Effect-Shiny"
 				clip (color.a - 0.001);
 				#endif
 
-				half pos = IN.effectFactor.x - IN.effectFactor2.x;
+				fixed nomalizedPos = IN.effectFactor.x;
+				fixed softness = IN.effectFactor.y;
+				fixed width = IN.effectFactor.z;
+				fixed brightness = IN.effectFactor.w;
+				half location = IN.effectFactor2.x;
+				half gloss = IN.effectFactor2.y;
 
-				half normalized = 1 - saturate(abs(pos / IN.effectFactor.z));
-				half shinePower = smoothstep(0, IN.effectFactor.y*2, normalized);
-				half3 reflectColor = lerp(1, color.rgb * 10, IN.effectFactor2.y);
+				half normalized = 1 - saturate(abs((nomalizedPos - location) / width));
+				half shinePower = smoothstep(0, softness*2, normalized);
+				half3 reflectColor = lerp(1, color.rgb * 10, gloss);
 
-				color.rgb += originAlpha * (shinePower / 2) * IN.effectFactor.w * reflectColor;
+				color.rgb += originAlpha * (shinePower / 2) * brightness * reflectColor;
 				return color;
 			}
 		ENDCG

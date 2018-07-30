@@ -35,8 +35,10 @@ namespace Coffee.UIExtensions
 		[SerializeField][Range(0.01f, 1)] float m_Softness = 1f;
 		[FormerlySerializedAs("m_Alpha")]
 		[SerializeField][Range(0, 1)] float m_Brightness = 1f;
-		[SerializeField][Range(0, 1)] float m_Highlight = 1;
+		[FormerlySerializedAs("m_Highlight")]
+		[SerializeField][Range(0, 1)] float m_Gloss = 1;
 		[SerializeField] protected EffectArea m_EffectArea;
+
 		[Header("Effect Runner")]
 		[SerializeField] EffectRunner m_Runner;
 
@@ -112,7 +114,7 @@ namespace Coffee.UIExtensions
 		}
 
 		/// <summary>
-		/// Alpha for shiny effect.
+		/// Brightness for shiny effect.
 		/// </summary>
 		[System.Obsolete("Use brightness instead (UnityUpgradable) -> brightness")]
 		public float alpha
@@ -147,17 +149,35 @@ namespace Coffee.UIExtensions
 		}
 
 		/// <summary>
-		/// Highlight factor for shiny effect.
+		/// Gloss factor for shiny effect.
 		/// </summary>
+		[System.Obsolete("Use gloss instead (UnityUpgradable) -> gloss")]
 		public float highlight
 		{
-			get { return m_Highlight; }
+			get { return m_Gloss; }
 			set
 			{
 				value = Mathf.Clamp(value, 0, 1);
-				if (!Mathf.Approximately(m_Highlight, value))
+				if (!Mathf.Approximately(m_Gloss, value))
 				{
-					m_Highlight = value;
+					m_Gloss = value;
+					SetDirty();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gloss factor for shiny effect.
+		/// </summary>
+		public float gloss
+		{
+			get { return m_Gloss; }
+			set
+			{
+				value = Mathf.Clamp(value, 0, 1);
+				if (!Mathf.Approximately(m_Gloss, value))
+				{
+					m_Gloss = value;
 					SetDirty();
 				}
 			}
@@ -303,12 +323,8 @@ namespace Coffee.UIExtensions
 				vh.PopulateUIVertex(ref vertex, i);
 
 				// Normalize vertex position by local matrix.
-				nomalizedPos = localMatrix * vertex.position;
-
-				// Normalize vertex position by local matrix.
 				if (effectEachCharacter)
 				{
-					// Each characters.
 					nomalizedPos = localMatrix * splitedCharacterPosition[i % 4];
 				}
 				else
@@ -317,8 +333,8 @@ namespace Coffee.UIExtensions
 				}
 
 				vertex.uv1 = new Vector2(
-					Packer.ToFloat(Mathf.Clamp01(nomalizedPos.y), softness, width, brightness),
-					Packer.ToFloat(location, highlight)
+					Packer.ToFloat(Mathf.Clamp01(nomalizedPos.y), m_Softness, m_Width, m_Brightness),
+					Packer.ToFloat(m_Location, m_Gloss)
 				);
 
 				vh.SetUIVertex(vertex, i);
