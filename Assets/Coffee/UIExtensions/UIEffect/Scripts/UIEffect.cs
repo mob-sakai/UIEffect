@@ -349,6 +349,22 @@ namespace Coffee.UIExtensions
 					hsv.hue = hue;
 					hsv.range = 1;
 				}
+
+				if (m_ToneMode == ToneMode.Cutoff || m_ToneMode == ToneMode.Mono)
+				{
+					var go = gameObject;
+					var factor = m_ToneLevel;
+					var transitionMode = m_ToneMode == ToneMode.Cutoff
+						? UITransitionEffect.EffectMode.Cutoff
+						: UITransitionEffect.EffectMode.Mono;
+					DestroyImmediate(this, true);
+					var trans = go.GetComponent<UITransitionEffect>() ?? go.AddComponent<UITransitionEffect>();
+					trans.effectFactor = factor;
+
+					var sp = new SerializedObject(trans).FindProperty("m_EffectMode");
+					sp.intValue = (int)transitionMode;
+					sp.serializedObject.ApplyModifiedProperties();
+				}
 			}
 		}
 		#pragma warning restore 0612
