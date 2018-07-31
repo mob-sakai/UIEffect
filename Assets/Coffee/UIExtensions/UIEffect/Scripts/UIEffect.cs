@@ -100,8 +100,13 @@ namespace Coffee.UIExtensions
 		[Obsolete][HideInInspector]
 		[SerializeField] List<UIShadow.AdditionalShadow> m_AdditionalShadows = new List<UIShadow.AdditionalShadow>();
 
+		[SerializeField] bool m_AdvancedBlur = false;
 
-
+		public enum BlurEx
+		{
+			None = 0,
+			Ex = 1,
+		}
 
 		//################################
 		// Public Members.
@@ -162,19 +167,119 @@ namespace Coffee.UIExtensions
 				return;
 			}
 
-			UIVertex vt = default(UIVertex);
-			int count = vh.currentVertCount;
+//			UIVertex vt = default(UIVertex);
+//			int count = vh.currentVertCount;
 			float normalizedIndex = ptex.GetNormalizedIndex(this);
+//
+//			for (int i = 0; i < count; i++)
+//			{
+//				// Set prameters to vertex.
+//				vh.PopulateUIVertex(ref vt, i);
+//				vt.uv0 = new Vector2(
+//					Packer.ToFloat(vt.uv0.x, vt.uv0.y),
+//					normalizedIndex
+//				);
+//				vh.SetUIVertex(vt, i);
+//			}
 
-			for (int i = 0; i < count; i++)
+
+
+			if (m_AdvancedBlur)
 			{
-				// Set prameters to vertex.
-				vh.PopulateUIVertex(ref vt, i);
-				vt.uv0 = new Vector2(
-					Packer.ToFloat(vt.uv0.x, vt.uv0.y),
-					normalizedIndex
-				);
-				vh.SetUIVertex(vt, i);
+				vh.GetUIVertexStream(tempVerts);
+				vh.Clear();
+				var count = tempVerts.Count;
+
+				// Bundle
+				int bundleSize = targetGraphic is Text ? 6 : count;
+				Rect posBounds = default(Rect);
+				Rect uvBounds = default(Rect);
+				Vector3 size = default(Vector3);
+				Vector3 tPos = default(Vector3);
+				Vector3 tUV = default(Vector3);
+				float expand = (float)blurMode * 6 * 2;
+
+				for (int i = 0; i < count; i += bundleSize)
+				{
+					// Quadバンドル単位での最大/最小値
+					GetBounds(tempVerts, i, bundleSize, ref posBounds, ref uvBounds, true);
+
+					// Pack uv mask.
+					Vector2 uvMask = new Vector2(Packer.ToFloat(uvBounds.xMin, uvBounds.yMin), Packer.ToFloat(uvBounds.xMax, uvBounds.yMax));
+
+					// Quad
+					for (int j = 0; j < bundleSize; j += 6)
+					{
+						Vector3 cornerPos1 = tempVerts[i + j + 1].position;
+						Vector3 cornerPos2 = tempVerts[i + j + 4].position;
+
+						// 外周Quadかどうか.
+						bool hasOuterEdge = (bundleSize == 6)
+							|| !posBounds.Contains(cornerPos1)
+							|| !posBounds.Contains(cornerPos2);
+						if (hasOuterEdge)
+						{
+							Vector3 cornerUv1 = tempVerts[i + j + 1].uv0;
+							Vector3 cornerUv2 = tempVerts[i + j + 4].uv0;
+
+							Vector3 centerPos = (cornerPos1 + cornerPos2) / 2;
+							Vector3 centerUV = (cornerUv1 + cornerUv2) / 2;
+							size = (cornerPos1 - cornerPos2);
+
+							size.x = 1 + expand / Mathf.Abs(size.x);
+							size.y = 1 + expand / Mathf.Abs(size.y);
+							size.z = 1 + expand / Mathf.Abs(size.z);
+
+							tPos = centerPos - Vector3.Scale(size, centerPos);
+							tUV = centerUV - Vector3.Scale(size, centerUV);
+						}
+
+						// Vertex
+						for (int k = 0; k < 6; k++)
+						{
+							UIVertex vt = tempVerts[i + j + k];
+
+							Vector3 pos = vt.position;
+							Vector2 uv0 = vt.uv0;
+
+							if (hasOuterEdge && (pos.x < posBounds.xMin || posBounds.xMax < pos.x))
+							{
+								pos.x = pos.x * size.x + tPos.x;
+								uv0.x = uv0.x * size.x + tUV.x;
+							}
+							if (hasOuterEdge && (pos.y < posBounds.yMin || posBounds.yMax < pos.y))
+							{
+								pos.y = pos.y * size.y + tPos.y;
+								uv0.y = uv0.y * size.y + tUV.y;
+							}
+
+//							vt.uv0 = new Vector2(Packer.ToFloat((uv0.x + 0.5f) / 2f, (uv0.y + 0.5f) / 2f), blur);
+							vt.uv0 = new Vector2(Packer.ToFloat((uv0.x + 0.5f) / 2f, (uv0.y + 0.5f) / 2f), normalizedIndex);
+							vt.position = pos;
+							vt.uv1 = uvMask;
+
+							tempVerts[i + j + k] = vt;
+						}
+					}
+				}
+
+				vh.AddUIVertexTriangleStream(tempVerts);
+				tempVerts.Clear();
+			}
+			else
+			{
+				int count = vh.currentVertCount;
+				UIVertex vt = default(UIVertex);
+				for (int i = 0; i < count; i++)
+				{
+					vh.PopulateUIVertex(ref vt, i);
+					Vector2 uv0 = vt.uv0;
+					vt.uv0 = new Vector2(
+						Packer.ToFloat((uv0.x + 0.5f) / 2f, (uv0.y + 0.5f) / 2f),
+						normalizedIndex
+					);
+					vh.SetUIVertex(vt, i);
+				}
 			}
 		}
 
@@ -312,7 +417,7 @@ namespace Coffee.UIExtensions
 			{
 				return null;
 			}
-			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_ToneMode, m_ColorMode, m_BlurMode);
+			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_ToneMode, m_ColorMode, m_BlurMode, m_AdvancedBlur ? BlurEx.Ex : BlurEx.None);
 		}
 
 		#pragma warning disable 0612
@@ -367,7 +472,11 @@ namespace Coffee.UIExtensions
 					}
 				}
 
-				if (m_ToneMode == ToneMode.Hue)
+				int tone = (int)m_ToneMode;
+				const int Mono = 5;
+				const int Cutoff = 6;
+				const int Hue = 7;
+				if (tone == Hue)
 				{
 					var go = gameObject;
 					var hue = m_ToneLevel;
@@ -377,13 +486,14 @@ namespace Coffee.UIExtensions
 					hsv.range = 1;
 				}
 
-				if (m_ToneMode == ToneMode.Cutoff || m_ToneMode == ToneMode.Mono)
+				// Cutoff/Mono
+				if (tone == Cutoff || tone == Mono)
 				{
 					var go = gameObject;
 					var factor = m_ToneLevel;
-					var transitionMode = m_ToneMode == ToneMode.Cutoff
+					var transitionMode = tone == Cutoff
 						? UITransitionEffect.EffectMode.Cutoff
-						: UITransitionEffect.EffectMode.Mono;
+						: UITransitionEffect.EffectMode.Fade;
 					DestroyImmediate(this, true);
 					var trans = go.GetComponent<UITransitionEffect>() ?? go.AddComponent<UITransitionEffect>();
 					trans.effectFactor = factor;
@@ -400,5 +510,45 @@ namespace Coffee.UIExtensions
 		//################################
 		// Private Members.
 		//################################
+		static void GetBounds(List<UIVertex> verts, int start, int count, ref Rect posBounds, ref Rect uvBounds, bool global)
+		{
+			Vector2 minPos = new Vector2(float.MaxValue, float.MaxValue);
+			Vector2 maxPos = new Vector2(float.MinValue, float.MinValue);
+			Vector2 minUV = new Vector2(float.MaxValue, float.MaxValue);
+			Vector2 maxUV = new Vector2(float.MinValue, float.MinValue);
+			for (int i = start; i < start + count; i++)
+			{
+				UIVertex vt = verts[i];
+
+				Vector2 uv = vt.uv0;
+				Vector3 pos = vt.position;
+
+				// Left-Bottom
+				if (minPos.x >= pos.x && minPos.y >= pos.y)
+				{
+					minPos = pos;
+				}
+				// Right-Top
+				else if (maxPos.x <= pos.x && maxPos.y <= pos.y)
+				{
+					maxPos = pos;
+				}
+
+				// Left-Bottom
+				if (minUV.x >= uv.x && minUV.y >= uv.y)
+				{
+					minUV = uv;
+				}
+				// Right-Top
+				else if (maxUV.x <= uv.x && maxUV.y <= uv.y)
+				{
+					maxUV = uv;
+				}
+			}
+
+			// Shrink coordinate for detect edge
+			posBounds.Set(minPos.x + 0.001f, minPos.y + 0.001f, maxPos.x - minPos.x - 0.002f, maxPos.y - minPos.y - 0.002f);
+			uvBounds.Set(minUV.x, minUV.y, maxUV.x - minUV.x, maxUV.y - minUV.y);
+		}
 	}
 }

@@ -90,6 +90,12 @@ namespace Coffee.UIExtensions
 			{
 				EditorGUI.indentLevel++;
 				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Blur"));
+
+				var spAdvancedBlur = serializedObject.FindProperty("m_AdvancedBlur");
+				if (spAdvancedBlur != null)
+				{
+					EditorGUILayout.PropertyField(spAdvancedBlur);
+				}
 				EditorGUI.indentLevel--;
 			}
 

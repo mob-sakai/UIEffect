@@ -63,6 +63,7 @@ Shader "UI/Hidden/UI-Effect"
 			#pragma shader_feature __ GRAYSCALE SEPIA NEGA PIXEL 
 			#pragma shader_feature __ ADD SUBTRACT FILL
 			#pragma shader_feature __ FASTBLUR MEDIUMBLUR DETAILBLUR
+			#pragma shader_feature __ EX
 
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
@@ -74,6 +75,10 @@ Shader "UI/Hidden/UI-Effect"
 				float4 color    : COLOR;
 				float2 texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
+
+				#if defined(EX)
+				float2 uvMask : TEXCOORD1;
+				#endif
 			};
 
 			struct v2f
@@ -85,6 +90,10 @@ Shader "UI/Hidden/UI-Effect"
 				UNITY_VERTEX_OUTPUT_STEREO
 
 				half param : TEXCOORD2;
+
+				#if defined(EX)
+				half4 uvMask : TEXCOORD3;
+				#endif
 			};
 			
 			fixed4 _Color;
@@ -102,12 +111,16 @@ Shader "UI/Hidden/UI-Effect"
 				OUT.worldPosition = IN.vertex;
 				OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
 
-				OUT.texcoord = IN.texcoord;
-				
 				OUT.color = IN.color * _Color;
 
-				OUT.texcoord = UnpackToVec2(IN.texcoord.x);
+				OUT.texcoord = UnpackToVec2(IN.texcoord.x) * 2 - 0.5;
+
 				OUT.param = IN.texcoord.y;
+
+				#if defined(EX)
+				OUT.uvMask.xy = UnpackToVec2(IN.uvMask.x);
+				OUT.uvMask.zw = UnpackToVec2(IN.uvMask.y);
+				#endif
 				
 				return OUT;
 			}
@@ -120,14 +133,14 @@ Shader "UI/Hidden/UI-Effect"
                 fixed colorFactor = param.y;
                 fixed blurFactor = param.z;
 
-				//return fixed4(IN.color.rgb, colorFactor);
-                
 				#if PIXEL
 				half2 pixelSize = max(2, (1-effectFactor*0.95) * _MainTex_TexelSize.zw);
 				IN.texcoord = round(IN.texcoord * pixelSize) / pixelSize;
 				#endif
 
-				#if defined (UI_BLUR)
+				#if defined(UI_BLUR) && EX
+				half4 color = (Tex2DBlurring(_MainTex, IN.texcoord, blurFactor * _MainTex_TexelSize.xy * 2, IN.uvMask) + _TextureSampleAdd);
+				#elif defined(UI_BLUR)
 				half4 color = (Tex2DBlurring(_MainTex, IN.texcoord, blurFactor * _MainTex_TexelSize.xy * 2) + _TextureSampleAdd);
 				#else
 				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd);
