@@ -16,13 +16,18 @@ namespace Coffee.UIExtensions
 	/// UIEffect.
 	/// </summary>
 //	[ExecuteInEditMode]
-//	[RequireComponent(typeof(Graphic))]
+	[RequireComponent(typeof(Graphic))]
 //	[DisallowMultipleComponent]
 	public class UIShadow : Shadow, IParameterTexture
+#if UNITY_EDITOR
+	, ISerializationCallbackReceiver
+#endif
 	{
+
 		/// <summary>
 		/// Additional shadow.
 		/// </summary>
+		[System.Obsolete]
 		[System.Serializable]
 		public class AdditionalShadow
 		{
@@ -58,19 +63,15 @@ namespace Coffee.UIExtensions
 		//################################
 		// Serialize Members.
 		//################################
-		[SerializeField][Range(0, 1)] float m_Blur = 0.25f;
+		[SerializeField][Range(0, 1)] float m_Blur = 1;
 		[SerializeField] ShadowStyle m_Style = ShadowStyle.Shadow;
+		[HideInInspector][System.Obsolete]
 		[SerializeField] List<AdditionalShadow> m_AdditionalShadows = new List<AdditionalShadow>();
 
 
 		//################################
 		// Public Members.
 		//################################
-		/// <summary>
-		/// Graphic affected by the UIEffect.
-		/// </summary>
-		new public Graphic graphic { get { return base.graphic; } }
-		
 		/// <summary>
 		/// How far is the blurring shadow from the graphic.
 		/// </summary>
@@ -80,11 +81,6 @@ namespace Coffee.UIExtensions
 		/// Shadow effect mode.
 		/// </summary>
 		public ShadowStyle style { get { return m_Style; } set { m_Style = value; _SetDirty(); } }
-		
-		/// <summary>
-		/// Additional Shadows.
-		/// </summary>
-		public List<AdditionalShadow> additionalShadows { get { return m_AdditionalShadows; } }
 
 		/// <summary>
 		/// Gets or sets the parameter index.
@@ -96,9 +92,21 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public ParameterTexture ptex{get;private set;}
 
+		int _graphicVertexCount;
+		int _start;
+		int _end;
+		static readonly List<UIShadow> tmpShadows = new List<UIShadow>();
+
 		protected override void OnEnable()
 		{
 			base.OnEnable();
+
+//			GetComponents<UIShadow>(_shadows);
+//			foreach(var s in _shadows)
+//			{
+//				s._shadows = _shadows;
+//			}
+
 			_uiEffect = GetComponent<UIEffect>();
 			if(_uiEffect)
 			{
@@ -118,27 +126,54 @@ namespace Coffee.UIExtensions
 			}
 		}
 
+//		protected override void OnDestroy()
+//		{
+//			_shadows.Remove(this);
+//			foreach(var s in _shadows)
+//			{
+//				s._shadows = _shadows;
+//			}
+//			_shadows = null;
+//		}
+
 		/// <summary>
 		/// Modifies the mesh.
 		/// </summary>
 		public override void ModifyMesh(VertexHelper vh)
 		{
-			if (!isActiveAndEnabled || vh.currentVertCount <= 0)
+			if (!isActiveAndEnabled || vh.currentVertCount <= 0 || m_Style == ShadowStyle.None)
 			{
 				return;
 			}
 
 			vh.GetUIVertexStream(s_Verts);
 
+			GetComponents<UIShadow>(tmpShadows);
+
+			foreach (var s in tmpShadows)
+			{
+				if (s.isActiveAndEnabled)
+				{
+					if (s == this)
+					{
+						foreach (var s2 in tmpShadows)
+						{
+							s2._graphicVertexCount = s_Verts.Count;
+						}
+					}
+					break;
+				}
+			}
+
+			tmpShadows.Clear();
+
 			//================================
 			// Append shadow vertices.
 			//================================
 			{
 				_uiEffect = GetComponent<UIEffect>();
-				var inputVertCount = s_Verts.Count;
-				var start = 0;
-				var end = inputVertCount;
-				var toneLevel = _uiEffect && _uiEffect.isActiveAndEnabled ? _uiEffect.toneLevel : 0;
+				var start = s_Verts.Count - _graphicVertexCount;
+				var end = s_Verts.Count;
 
 				if(ptex != null && _uiEffect && _uiEffect.isActiveAndEnabled)
 				{
@@ -147,16 +182,6 @@ namespace Coffee.UIExtensions
 					ptex.SetData(this, 2, m_Blur);	// param.z : blur factor
 				}
 
-//				// Additional Shadows.
-//				for (int i = additionalShadows.Count - 1; 0 <= i; i--)
-//				{
-//					AdditionalShadow shadow = additionalShadows[i];
-//					UpdateFactor(toneLevel, shadow.blur, shadow.effectColor);
-//					_ApplyShadow(s_Verts, shadow.effectColor, ref start, ref end, shadow.effectDistance, shadow.style, shadow.useGraphicAlpha);
-//				}
-
-				// Shadow.
-//				UpdateFactor(toneLevel, blur, effectColor);
 				_ApplyShadow(s_Verts, effectColor, ref start, ref end, effectDistance, style, useGraphicAlpha);
 			}
 
@@ -167,20 +192,11 @@ namespace Coffee.UIExtensions
 		}
 
 		UIEffect _uiEffect;
-//		Vector2 _factor;
 
 		//################################
 		// Private Members.
 		//################################
 		static readonly List<UIVertex> s_Verts = new List<UIVertex>();
-
-//		void UpdateFactor(float tone, float blur, Color color)
-//		{
-//			if (_uiEffect && _uiEffect.isActiveAndEnabled)
-//			{
-//				_factor = new Vector2(Packer.ToFloat(tone, 1, blur, 0), 0);
-//			}
-//		}
 
 		/// <summary>
 		/// Append shadow vertices.
@@ -229,7 +245,8 @@ namespace Coffee.UIExtensions
 		void _ApplyShadowZeroAlloc(List<UIVertex> verts, Color color, ref int start, ref int end, float x, float y, bool useGraphicAlpha)
 		{
 			// Check list capacity.
-			var neededCapacity = verts.Count + end - start;
+			int count = end - start;
+			var neededCapacity = verts.Count + count;
 			if (verts.Capacity < neededCapacity)
 				verts.Capacity = neededCapacity;
 
@@ -237,13 +254,24 @@ namespace Coffee.UIExtensions
 				? ptex.GetNormalizedIndex(this)
 				: -1;
 
+			// Add 
+			UIVertex vt = default(UIVertex);
+			for (int i = 0; i < count; i++)
+			{
+				verts.Add(vt);
+			}
+
+			// Move
+			for (int i = verts.Count-1; count <= i; i--)
+			{
+				verts[i] = verts[i - count];
+			}
+
 			// Append shadow vertices to the front of list.
 			// * The original vertex is pushed backward.
-			UIVertex vt;
-			for (int i = start; i < end; ++i)
+			for (int i = 0; i < count; ++i)
 			{
-				vt = verts[i];
-				verts.Add(vt);
+				vt = verts[i + start + count];
 
 				Vector3 v = vt.position;
 				vt.position.Set(v.x + x, v.y + y, v.z);
@@ -279,5 +307,41 @@ namespace Coffee.UIExtensions
 			if(graphic)
 				graphic.SetVerticesDirty();
 		}
+
+#if UNITY_EDITOR
+		public void OnBeforeSerialize()
+		{
+		}
+
+		public void OnAfterDeserialize()
+		{
+			EditorApplication.delayCall += UpgradeIfNeeded;
+		}
+
+
+		#pragma warning disable 0612
+		void UpgradeIfNeeded()
+		{
+			if (0 < m_AdditionalShadows.Count)
+			{
+				foreach (var s in m_AdditionalShadows)
+				{
+					if (s.style == ShadowStyle.None)
+					{
+						continue;
+					}
+
+					var shadow = gameObject.AddComponent<UIShadow>();
+					shadow.style = s.style;
+					shadow.effectDistance = s.effectDistance;
+					shadow.effectColor = s.effectColor;
+					shadow.useGraphicAlpha = s.useGraphicAlpha;
+					shadow.blur = s.blur;
+				}
+				m_AdditionalShadows = null;
+			}
+		}
+		#pragma warning restore 0612
+#endif
 	}
 }

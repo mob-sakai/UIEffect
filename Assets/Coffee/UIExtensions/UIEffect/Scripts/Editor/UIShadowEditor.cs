@@ -105,11 +105,6 @@ namespace Coffee.UIExtensions
 				EditorGUI.indentLevel--;
 			}
 
-			//================
-			// Additional shadow setting.
-			//================
-			roAdditionalShadows.DoLayoutList();
-
 			serializedObject.ApplyModifiedProperties();
 		}
 	}

@@ -333,13 +333,30 @@ namespace Coffee.UIExtensions
 
 				if (m_ShadowStyle != ShadowStyle.None || m_AdditionalShadows.Any(x=>x.style != ShadowStyle.None))
 				{
-					var shadow = gameObject.GetComponent<UIShadow>() ?? gameObject.AddComponent<UIShadow>();
-					shadow.style = m_ShadowStyle;
-					shadow.effectDistance = m_EffectDistance;
-					shadow.effectColor = m_ShadowColor;
-					shadow.useGraphicAlpha = m_UseGraphicAlpha;
-					shadow.blur = m_ShadowBlur;
-					shadow.additionalShadows.AddRange(m_AdditionalShadows);
+					if (m_ShadowStyle != ShadowStyle.None)
+					{
+						var shadow = gameObject.GetComponent<UIShadow>() ?? gameObject.AddComponent<UIShadow>();
+						shadow.style = m_ShadowStyle;
+						shadow.effectDistance = m_EffectDistance;
+						shadow.effectColor = m_ShadowColor;
+						shadow.useGraphicAlpha = m_UseGraphicAlpha;
+						shadow.blur = m_ShadowBlur;
+					}
+
+					foreach(var s in m_AdditionalShadows)
+					{
+						if (s.style == ShadowStyle.None)
+						{
+							continue;
+						}
+
+						var shadow = gameObject.AddComponent<UIShadow>();
+						shadow.style = s.style;
+						shadow.effectDistance = s.effectDistance;
+						shadow.effectColor = s.effectColor;
+						shadow.useGraphicAlpha = s.useGraphicAlpha;
+						shadow.blur = s.blur;
+					}
 
 					m_ShadowStyle = ShadowStyle.None;
 					m_AdditionalShadows = null;
