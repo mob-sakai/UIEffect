@@ -55,6 +55,7 @@ namespace Coffee.UIExtensions
 
 		public void OnEnable(Action<float> callback)
 		{
+			Canvas.willRenderCanvases -= OnWillRenderCanvases;
 			Canvas.willRenderCanvases += OnWillRenderCanvases;
 
 			_time = 0;

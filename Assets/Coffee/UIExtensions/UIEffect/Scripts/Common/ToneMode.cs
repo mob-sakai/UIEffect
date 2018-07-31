@@ -10,8 +10,11 @@
 		Sepia = 2,
 		Nega = 3,
 		Pixel = 4,
+		[System.Obsolete]
 		Mono = 5,
+		[System.Obsolete]
 		Cutoff = 6,
+		[System.Obsolete]
 		Hue = 7,
 	}
 }

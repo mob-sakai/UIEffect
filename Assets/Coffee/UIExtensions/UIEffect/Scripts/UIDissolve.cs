@@ -14,6 +14,7 @@ namespace Coffee.UIExtensions
 		// Constant or Static Members.
 		//################################
 		public const string shaderName = "UI/Hidden/UI-Effect-Dissolve";
+		static readonly ParameterTexture _ptex = new ParameterTexture(8, 128, "_ParamTex");
 
 
 		//################################
@@ -193,6 +194,11 @@ namespace Coffee.UIExtensions
 		public AnimatorUpdateMode updateMode { get { return m_Runner.updateMode; } set { m_Runner.updateMode = value; } }
 
 		/// <summary>
+		/// Gets the parameter texture.
+		/// </summary>
+		public override ParameterTexture ptex { get { return _ptex; } }
+
+		/// <summary>
 		/// Modifies the material.
 		/// </summary>
 		public override void ModifyMaterial()
@@ -236,6 +242,8 @@ namespace Coffee.UIExtensions
 			if (!isActiveAndEnabled)
 				return;
 
+			float normalizedIndex = ptex.GetNormalizedIndex(this);
+
 			// rect.
 			var tex = noiseTexture;
 			var aspectRatio = m_KeepAspectRatio && tex ? ((float)tex.width) / tex.height : -1;
@@ -245,7 +253,8 @@ namespace Coffee.UIExtensions
 			UIVertex vertex = default(UIVertex);
 			bool effectEachCharacter = graphic is Text && m_EffectArea == EffectArea.Character;
 			float x, y;
-			for (int i = 0; i < vh.currentVertCount; i++)
+			int count = vh.currentVertCount;
+			for (int i = 0; i < count; i++)
 			{
 				vh.PopulateUIVertex(ref vertex, i);
 
@@ -259,13 +268,25 @@ namespace Coffee.UIExtensions
 					x = Mathf.Clamp01(vertex.position.x / rect.width + 0.5f);
 					y = Mathf.Clamp01(vertex.position.y / rect.height + 0.5f);
 				}
-				vertex.uv1 = new Vector2(
-					Packer.ToFloat(x, y, location, m_Width),
-					Packer.ToFloat(m_Color.r, m_Color.g, m_Color.b, m_Softness)
+
+				vertex.uv0 = new Vector2(
+					Packer.ToFloat(vertex.uv0.x, vertex.uv0.y),
+					Packer.ToFloat(x, y, normalizedIndex)
 				);
 
 				vh.SetUIVertex(vertex, i);
 			}
+		}
+
+		protected override void SetDirty()
+		{
+			ptex.RegisterMaterial(targetGraphic.material);
+			ptex.SetData(this, 0, m_Location);	// param1.x : location
+			ptex.SetData(this, 1, m_Width);		// param1.y : width
+			ptex.SetData(this, 2, m_Softness);	// param1.z : softness
+			ptex.SetData(this, 4, m_Color.r);	// param2.x : red
+			ptex.SetData(this, 5, m_Color.g);	// param2.y : green
+			ptex.SetData(this, 6, m_Color.b);	// param2.z : blue
 		}
 
 		/// <summary>
@@ -286,6 +307,10 @@ namespace Coffee.UIExtensions
 		protected override void OnEnable()
 		{
 			base.OnEnable();
+			if (m_Runner == null)
+			{
+				m_Runner = new EffectRunner();
+			}
 			m_Runner.OnEnable(f => location = f);
 		}
 
@@ -293,8 +318,8 @@ namespace Coffee.UIExtensions
 		{
 			MaterialCache.Unregister(_materialCache);
 			_materialCache = null;
-			base.OnDisable();
 			m_Runner.OnDisable();
+			base.OnDisable();
 		}
 
 #if UNITY_EDITOR

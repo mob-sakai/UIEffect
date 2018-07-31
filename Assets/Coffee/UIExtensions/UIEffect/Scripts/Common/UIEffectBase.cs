@@ -10,7 +10,7 @@ namespace Coffee.UIExtensions
 	[ExecuteInEditMode]
 	[RequireComponent(typeof(Graphic))]
 	[DisallowMultipleComponent]
-	public abstract class UIEffectBase : BaseMeshEffect
+	public abstract class UIEffectBase : BaseMeshEffect, IParameterTexture
 #if UNITY_EDITOR
 	, ISerializationCallbackReceiver
 #endif
@@ -21,6 +21,17 @@ namespace Coffee.UIExtensions
 		[HideInInspector]
 		[SerializeField] int m_Version;
 		[SerializeField] protected Material m_EffectMaterial;
+
+		/// <summary>
+		/// Gets or sets the parameter index.
+		/// </summary>
+		public int parameterIndex { get; set; }
+
+		/// <summary>
+		/// Gets the parameter texture.
+		/// </summary>
+		public virtual ParameterTexture ptex { get{return null;} }
+
 
 		/// <summary>
 		/// Gets target graphic for effect.
@@ -51,6 +62,7 @@ namespace Coffee.UIExtensions
 				UnityEditor.EditorUtility.SetDirty(this);
 			}
 			ModifyMaterial();
+			targetGraphic.SetVerticesDirty();
 			SetDirty();
 		}
 
@@ -73,7 +85,7 @@ namespace Coffee.UIExtensions
 				//UnityEditor.EditorApplication.delayCall += () =>
 				{
 					UnityEditor.EditorUtility.SetDirty(this);
-					if (gameObject && gameObject.scene.IsValid())
+					if (!Application.isPlaying && gameObject && gameObject.scene.IsValid())
 					{
 						UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(gameObject.scene);
 					}
@@ -110,8 +122,13 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		protected override void OnEnable()
 		{
+			if (ptex != null)
+			{
+				ptex.Register(this);
+			}
 			ModifyMaterial();
-			base.OnEnable();
+			targetGraphic.SetVerticesDirty();
+			SetDirty();
 		}
 
 		/// <summary>
@@ -120,18 +137,24 @@ namespace Coffee.UIExtensions
 		protected override void OnDisable()
 		{
 			ModifyMaterial();
-			base.OnDisable();
+			targetGraphic.SetVerticesDirty();
+			if (ptex != null)
+			{
+				ptex.Unregister(this);
+			}
 		}
 
 		/// <summary>
 		/// Mark the UIEffect as dirty.
 		/// </summary>
-		protected void SetDirty()
+		protected virtual void SetDirty()
 		{
-			if (targetGraphic)
-			{
-				targetGraphic.SetVerticesDirty();
-			}
+			targetGraphic.SetVerticesDirty();
+		}
+
+		protected override void OnDidApplyAnimationProperties()
+		{
+			SetDirty();
 		}
 	}
 }

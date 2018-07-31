@@ -14,6 +14,8 @@ Shader "UI/Hidden/UI-Effect"
 		_ColorMask ("Color Mask", Float) = 15
 
 		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
+
+		_ParamTex ("Parameter Texture", 2D) = "white" {}
 	}
 
 	SubShader
@@ -58,7 +60,7 @@ Shader "UI/Hidden/UI-Effect"
 			
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
 
-			#pragma shader_feature __ GRAYSCALE SEPIA NEGA PIXEL MONO CUTOFF HUE 
+			#pragma shader_feature __ GRAYSCALE SEPIA NEGA PIXEL 
 			#pragma shader_feature __ ADD SUBTRACT FILL
 			#pragma shader_feature __ FASTBLUR MEDIUMBLUR DETAILBLUR
 
@@ -72,8 +74,6 @@ Shader "UI/Hidden/UI-Effect"
 				float4 color    : COLOR;
 				float2 texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
-
-				float2 uv1 : TEXCOORD1;
 			};
 
 			struct v2f
@@ -83,11 +83,8 @@ Shader "UI/Hidden/UI-Effect"
 				float2 texcoord  : TEXCOORD0;
 				float4 worldPosition : TEXCOORD1;
 				UNITY_VERTEX_OUTPUT_STEREO
-				
-				half4 effectFactor : TEXCOORD2;
-				#if HUE || PIXEL
-				half2 extraFactor : TEXCOORD3;
-				#endif
+
+				half param : TEXCOORD2;
 			};
 			
 			fixed4 _Color;
@@ -95,6 +92,7 @@ Shader "UI/Hidden/UI-Effect"
 			float4 _ClipRect;
 			sampler2D _MainTex;
 			float4 _MainTex_TexelSize;
+			sampler2D _ParamTex;
 			
 			v2f vert(appdata_t IN)
 			{
@@ -108,14 +106,8 @@ Shader "UI/Hidden/UI-Effect"
 				
 				OUT.color = IN.color * _Color;
 
-				OUT.effectFactor = UnpackToVec4(IN.uv1.x);
-
-				#if HUE
-				OUT.extraFactor.x = cos(OUT.effectFactor.x*3.14159265359 * 2);
-				OUT.extraFactor.y = sin(OUT.effectFactor.x*3.14159265359 * 2);
-				#elif PIXEL
-				OUT.extraFactor.xy = max(2, (1-OUT.effectFactor.x*0.98) * _MainTex_TexelSize.zw);
-				#endif
+				OUT.texcoord = UnpackToVec2(IN.texcoord.x);
+				OUT.param = IN.texcoord.y;
 				
 				return OUT;
 			}
@@ -123,33 +115,35 @@ Shader "UI/Hidden/UI-Effect"
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
+				fixed4 param = tex2D(_ParamTex, float2(0.5, IN.param));
+                fixed effectFactor = param.x;
+                fixed colorFactor = param.y;
+                fixed blurFactor = param.z;
+
+				//return fixed4(IN.color.rgb, colorFactor);
+                
 				#if PIXEL
-				IN.texcoord = round(IN.texcoord * IN.extraFactor.xy) / IN.extraFactor.xy;
+				half2 pixelSize = max(2, (1-effectFactor*0.95) * _MainTex_TexelSize.zw);
+				IN.texcoord = round(IN.texcoord * pixelSize) / pixelSize;
 				#endif
 
 				#if defined (UI_BLUR)
-				half4 color = (Tex2DBlurring(_MainTex, IN.texcoord, IN.effectFactor.z * _MainTex_TexelSize.xy * 2) + _TextureSampleAdd);
+				half4 color = (Tex2DBlurring(_MainTex, IN.texcoord, blurFactor * _MainTex_TexelSize.xy * 2) + _TextureSampleAdd);
 				#else
 				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd);
 				#endif
+
 				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
 
-				#ifdef CUTOFF
-				clip (color.a - 1 + IN.effectFactor.x * 1.001);
-				#elif UNITY_UI_ALPHACLIP
+				#if UNITY_UI_ALPHACLIP
 				clip (color.a - 0.001);
 				#endif
 
-				#if MONO
-				color.rgb = IN.color.rgb;
-				color.a = color.a * tex2D(_MainTex, IN.texcoord).a + IN.effectFactor.x * 2 - 1;
-				#elif HUE
-				color.rgb = shift_hue(color.rgb, IN.extraFactor.x, IN.extraFactor.y);
-				#elif defined (UI_TONE) & !CUTOFF
-				color = ApplyToneEffect(color, IN.effectFactor.x);
+				#if defined (UI_TONE)
+				color = ApplyToneEffect(color, effectFactor);
 				#endif
 
-				color = ApplyColorEffect(color, fixed4(IN.color.rgb, IN.effectFactor.y));
+				color = ApplyColorEffect(color, fixed4(IN.color.rgb, colorFactor));
 				color.a *= IN.color.a;
 
 				return color;

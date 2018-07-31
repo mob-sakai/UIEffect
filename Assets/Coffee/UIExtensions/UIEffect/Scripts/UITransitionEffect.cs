@@ -12,6 +12,7 @@ namespace Coffee.UIExtensions
 		// Constant or Static Members.
 		//################################
 		public const string shaderName = "UI/Hidden/UI-Effect-Transition";
+		static readonly ParameterTexture _ptex = new ParameterTexture(1, 128, "_ParamTex");
 
 		/// <summary>
 		/// Effect mode.
@@ -89,10 +90,14 @@ namespace Coffee.UIExtensions
 				if (m_KeepAspectRatio != value)
 				{
 					m_KeepAspectRatio = value;
-					SetDirty();
+					targetGraphic.SetVerticesDirty();
 				}
 			}
 		}
+		
+		/// Gets the parameter texture.
+		/// </summary>
+		public override ParameterTexture ptex { get { return _ptex; } }
 
 		/// <summary>
 		/// Modifies the material.
@@ -146,10 +151,12 @@ namespace Coffee.UIExtensions
 			Rect rect = m_EffectArea.GetEffectArea(vh, graphic, aspectRatio);
 
 			// Set prameters to vertex.
+			float normalizedIndex = ptex.GetNormalizedIndex(this);
 			UIVertex vertex = default(UIVertex);
 			bool effectEachCharacter = graphic is Text && m_EffectArea == EffectArea.Character;
 			float x, y;
-			for (int i = 0; i < vh.currentVertCount; i++)
+			int count = vh.currentVertCount;
+			for (int i = 0; i < count; i++)
 			{
 				vh.PopulateUIVertex(ref vertex, i);
 
@@ -163,15 +170,14 @@ namespace Coffee.UIExtensions
 					x = Mathf.Clamp01(vertex.position.x / rect.width + 0.5f);
 					y = Mathf.Clamp01(vertex.position.y / rect.height + 0.5f);
 				}
-				vertex.uv1 = new Vector2(
-					effectFactor,
-					Packer.ToFloat (x, y)
-				);
 
+				vertex.uv0 = new Vector2(
+					Packer.ToFloat(vertex.uv0.x, vertex.uv0.y),
+					Packer.ToFloat(x, y, normalizedIndex)
+				);
 				vh.SetUIVertex(vertex, i);
 			}
 		}
-
 
 		//################################
 		// Protected Members.
@@ -181,6 +187,11 @@ namespace Coffee.UIExtensions
 			MaterialCache.Unregister(_materialCache);
 			_materialCache = null;
 			base.OnDisable();
+		}
+		protected override void SetDirty()
+		{
+			ptex.RegisterMaterial(targetGraphic.material);
+			ptex.SetData(this, 0, m_EffectFactor);	// param1.x : effect factor
 		}
 
 #if UNITY_EDITOR

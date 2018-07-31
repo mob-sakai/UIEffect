@@ -17,6 +17,7 @@ Shader "UI/Hidden/UI-Effect-Transition"
 
 		[Header(Transition)]
 		_TransitionTexture("Transition Texture (A)", 2D) = "white" {}
+		_ParamTex ("Parameter Texture", 2D) = "white" {}
 	}
 
 	SubShader
@@ -67,7 +68,6 @@ Shader "UI/Hidden/UI-Effect-Transition"
 				float4 vertex	: POSITION;
 				float4 color	: COLOR;
 				float2 texcoord	: TEXCOORD0;
-				half2 factor	: TEXCOORD1;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -77,7 +77,7 @@ Shader "UI/Hidden/UI-Effect-Transition"
 				fixed4 color	: COLOR;
 				float2 texcoord	: TEXCOORD0;
 				float4 wpos		: TEXCOORD1;
-				half3 factor	: TEXCOORD2;
+				half3 param		: TEXCOORD2;
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 			
@@ -86,6 +86,7 @@ Shader "UI/Hidden/UI-Effect-Transition"
 			float4 _ClipRect;
 			sampler2D _MainTex;
 			sampler2D _TransitionTexture;
+			sampler2D _ParamTex;
 			
 			v2f vert(appdata_t IN)
 			{
@@ -95,10 +96,10 @@ Shader "UI/Hidden/UI-Effect-Transition"
 				OUT.wpos = IN.vertex;
 				OUT.vertex = UnityObjectToClipPos(OUT.wpos);
 
-				OUT.texcoord = IN.texcoord;
+				OUT.texcoord = UnpackToVec2(IN.texcoord.x);
+				OUT.param = UnpackToVec3(IN.texcoord.y);
 				
 				OUT.color = IN.color * _Color;
-				OUT.factor = half3(IN.factor.x, UnpackToVec2(IN.factor.y));
 				
 				return OUT;
 			}
@@ -106,8 +107,8 @@ Shader "UI/Hidden/UI-Effect-Transition"
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
-				half effectFactor = IN.factor.x;
-				half alpha = tex2D(_TransitionTexture, IN.factor.yz).a;
+				half effectFactor = tex2D(_ParamTex, float2(0.5, IN.param.z)).x;
+				half alpha = tex2D(_TransitionTexture, IN.param.xy).a;
 
 				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd);
 				color.a *= UnityGet2DClipping(IN.wpos.xy, _ClipRect);

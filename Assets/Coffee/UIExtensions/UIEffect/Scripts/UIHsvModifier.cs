@@ -16,6 +16,7 @@ namespace Coffee.UIExtensions
 		// Constant or Static Members.
 		//################################
 		public const string shaderName = "UI/Hidden/UI-Effect-HSV";
+		static readonly ParameterTexture _ptex = new ParameterTexture(7, 128, "_ParamTex");
 
 
 		//################################
@@ -117,6 +118,11 @@ namespace Coffee.UIExtensions
 			}
 		}
 
+		/// <summary>
+		/// Gets the parameter texture.
+		/// </summary>
+		public override ParameterTexture ptex { get { return _ptex; } }
+
 #if UNITY_EDITOR
 		protected override Material GetMaterial()
 		{
@@ -132,26 +138,34 @@ namespace Coffee.UIExtensions
 			if (!isActiveAndEnabled)
 				return;
 
-			vh.GetUIVertexStream(tempVerts);
-			vh.Clear();
+			float normalizedIndex = ptex.GetNormalizedIndex(this);
+			UIVertex vertex = default(UIVertex);
+			int count = vh.currentVertCount;
+			for (int i = 0; i < count; i++)
+			{
+				vh.PopulateUIVertex(ref vertex, i);
 
+				vertex.uv0 = new Vector2(
+					Packer.ToFloat(vertex.uv0.x, vertex.uv0.y),
+					normalizedIndex
+				);
+				vh.SetUIVertex(vertex, i);
+			}
+		}
+
+		protected override void SetDirty()
+		{
 			float h,s,v;
 			Color.RGBToHSV(m_TargetColor, out h, out s, out v);
 
-			// Pack some effect factors to 1 float.
-			Vector2 factor = new Vector2(
-				Packer.ToFloat(h, s, v, m_Range),
-				Packer.ToFloat(m_Hue + 0.5f, m_Saturation + 0.5f, m_Value + 0.5f)
-			);
-
-			for (int i = 0; i < tempVerts.Count; i++)
-			{
-				UIVertex vt = tempVerts[i];
-				vt.uv1 = factor;
-				tempVerts[i] = vt;
-			}
-
-			vh.AddUIVertexTriangleStream(tempVerts);
+			ptex.RegisterMaterial(targetGraphic.material);
+			ptex.SetData(this, 0, h);	// param1.x : target hue
+			ptex.SetData(this, 1, s);	// param1.y : target saturation
+			ptex.SetData(this, 2, v);	// param1.z : target value
+			ptex.SetData(this, 3, m_Range);		// param1.w : target range
+			ptex.SetData(this, 4, m_Hue + 0.5f);		// param2.x : hue shift
+			ptex.SetData(this, 5, m_Saturation + 0.5f);	// param2.y : saturation shift
+			ptex.SetData(this, 6, m_Value + 0.5f);		// param2.z : value shift
 		}
 
 		//################################

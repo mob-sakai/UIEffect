@@ -24,6 +24,7 @@ namespace Coffee.UIExtensions
 		// Constant or Static Members.
 		//################################
 		public const string shaderName = "UI/Hidden/UI-Effect-Shiny";
+		static readonly ParameterTexture _ptex = new ParameterTexture(8, 128, "_ParamTex");
 
 
 		//################################
@@ -241,12 +242,20 @@ namespace Coffee.UIExtensions
 		public AnimatorUpdateMode updateMode { get { return m_Runner.updateMode; } set { m_Runner.updateMode = value; } }
 
 		/// <summary>
+		/// Gets the parameter texture.
+		/// </summary>
+		public override ParameterTexture ptex { get { return _ptex; } }
+
+		/// <summary>
 		/// This function is called when the object becomes enabled and active.
 		/// </summary>
 		protected override void OnEnable()
 		{
 			base.OnEnable();
-//			m_Runner.Register(m_Play, m_Duration, m_UpdateMode, m_Loop, m_LoopDelay, f => location = f);
+			if (m_Runner == null)
+			{
+				m_Runner = new EffectRunner();
+			}
 			m_Runner.OnEnable(f => location = f);
 		}
 
@@ -303,6 +312,8 @@ namespace Coffee.UIExtensions
 			if (!isActiveAndEnabled)
 				return;
 
+			float normalizedIndex = ptex.GetNormalizedIndex(this);
+
 			// rect.
 			Rect rect = m_EffectArea.GetEffectArea(vh, graphic);
 
@@ -322,6 +333,7 @@ namespace Coffee.UIExtensions
 			{
 				vh.PopulateUIVertex(ref vertex, i);
 
+
 				// Normalize vertex position by local matrix.
 				if (effectEachCharacter)
 				{
@@ -332,9 +344,9 @@ namespace Coffee.UIExtensions
 					nomalizedPos = localMatrix * vertex.position;
 				}
 
-				vertex.uv1 = new Vector2(
-					Packer.ToFloat(Mathf.Clamp01(nomalizedPos.y), m_Softness, m_Width, m_Brightness),
-					Packer.ToFloat(m_Location, m_Gloss)
+				vertex.uv0 = new Vector2(
+					Packer.ToFloat(vertex.uv0.x, vertex.uv0.y),
+					Packer.ToFloat(nomalizedPos.y, normalizedIndex)
 				);
 
 				vh.SetUIVertex(vertex, i);
@@ -349,9 +361,25 @@ namespace Coffee.UIExtensions
 			m_Runner.Play();
 		}
 
+		protected override void SetDirty()
+		{
+			ptex.RegisterMaterial(targetGraphic.material);
+			ptex.SetData(this, 0, m_Location);	// param1.x : location
+			ptex.SetData(this, 1, m_Width);		// param1.y : width
+			ptex.SetData(this, 2, m_Softness);	// param1.z : softness
+			ptex.SetData(this, 3, m_Brightness);// param1.w : blightness
+			ptex.SetData(this, 4, m_Gloss);		// param2.x : gloss
+
+			if (!Mathf.Approximately(_lastRotation, m_Rotation) && targetGraphic)
+			{
+				_lastRotation = m_Rotation;
+				targetGraphic.SetVerticesDirty();
+			}
+		}
 
 		//################################
 		// Private Members.
 		//################################
+		float _lastRotation;
 	}
 }

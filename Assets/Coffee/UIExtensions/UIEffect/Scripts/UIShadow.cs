@@ -15,10 +15,10 @@ namespace Coffee.UIExtensions
 	/// <summary>
 	/// UIEffect.
 	/// </summary>
-	[ExecuteInEditMode]
-	[RequireComponent(typeof(Graphic))]
-	[DisallowMultipleComponent]
-	public class UIShadow : Shadow
+//	[ExecuteInEditMode]
+//	[RequireComponent(typeof(Graphic))]
+//	[DisallowMultipleComponent]
+	public class UIShadow : Shadow, IParameterTexture
 	{
 		/// <summary>
 		/// Additional shadow.
@@ -87,6 +87,38 @@ namespace Coffee.UIExtensions
 		public List<AdditionalShadow> additionalShadows { get { return m_AdditionalShadows; } }
 
 		/// <summary>
+		/// Gets or sets the parameter index.
+		/// </summary>
+		public int parameterIndex { get; set; }
+
+		/// <summary>
+		/// Gets the parameter texture.
+		/// </summary>
+		public ParameterTexture ptex{get;private set;}
+
+		protected override void OnEnable()
+		{
+			base.OnEnable();
+			_uiEffect = GetComponent<UIEffect>();
+			if(_uiEffect)
+			{
+				ptex = _uiEffect.ptex;
+				ptex.Register(this);
+			}
+		}
+
+		protected override void OnDisable()
+		{
+			base.OnDisable();
+			_uiEffect = null;
+			if(ptex != null)
+			{
+				ptex.Unregister(this);
+				ptex = null;
+			}
+		}
+
+		/// <summary>
 		/// Modifies the mesh.
 		/// </summary>
 		public override void ModifyMesh(VertexHelper vh)
@@ -108,16 +140,23 @@ namespace Coffee.UIExtensions
 				var end = inputVertCount;
 				var toneLevel = _uiEffect && _uiEffect.isActiveAndEnabled ? _uiEffect.toneLevel : 0;
 
-				// Additional Shadows.
-				for (int i = additionalShadows.Count - 1; 0 <= i; i--)
+				if(ptex != null && _uiEffect && _uiEffect.isActiveAndEnabled)
 				{
-					AdditionalShadow shadow = additionalShadows[i];
-					UpdateFactor(toneLevel, shadow.blur, shadow.effectColor);
-					_ApplyShadow(s_Verts, shadow.effectColor, ref start, ref end, shadow.effectDistance, shadow.style, shadow.useGraphicAlpha);
+					ptex.SetData(this, 0, _uiEffect.toneLevel);	// param.x : effect factor
+					ptex.SetData(this, 1, 255);	// param.y : color factor
+					ptex.SetData(this, 2, m_Blur);	// param.z : blur factor
 				}
 
+//				// Additional Shadows.
+//				for (int i = additionalShadows.Count - 1; 0 <= i; i--)
+//				{
+//					AdditionalShadow shadow = additionalShadows[i];
+//					UpdateFactor(toneLevel, shadow.blur, shadow.effectColor);
+//					_ApplyShadow(s_Verts, shadow.effectColor, ref start, ref end, shadow.effectDistance, shadow.style, shadow.useGraphicAlpha);
+//				}
+
 				// Shadow.
-				UpdateFactor(toneLevel, blur, effectColor);
+//				UpdateFactor(toneLevel, blur, effectColor);
 				_ApplyShadow(s_Verts, effectColor, ref start, ref end, effectDistance, style, useGraphicAlpha);
 			}
 
@@ -128,20 +167,20 @@ namespace Coffee.UIExtensions
 		}
 
 		UIEffect _uiEffect;
-		Vector2 _factor;
+//		Vector2 _factor;
 
 		//################################
 		// Private Members.
 		//################################
 		static readonly List<UIVertex> s_Verts = new List<UIVertex>();
 
-		void UpdateFactor(float tone, float blur, Color color)
-		{
-			if (_uiEffect && _uiEffect.isActiveAndEnabled)
-			{
-				_factor = new Vector2(Packer.ToFloat(tone, 1, blur, 0), 0);
-			}
-		}
+//		void UpdateFactor(float tone, float blur, Color color)
+//		{
+//			if (_uiEffect && _uiEffect.isActiveAndEnabled)
+//			{
+//				_factor = new Vector2(Packer.ToFloat(tone, 1, blur, 0), 0);
+//			}
+//		}
 
 		/// <summary>
 		/// Append shadow vertices.
@@ -194,6 +233,10 @@ namespace Coffee.UIExtensions
 			if (verts.Capacity < neededCapacity)
 				verts.Capacity = neededCapacity;
 
+			float normalizedIndex = ptex != null && _uiEffect && _uiEffect.isActiveAndEnabled
+				? ptex.GetNormalizedIndex(this)
+				: -1;
+
 			// Append shadow vertices to the front of list.
 			// * The original vertex is pushed backward.
 			UIVertex vt;
@@ -209,9 +252,17 @@ namespace Coffee.UIExtensions
 				vertColor.a = useGraphicAlpha ? color.a * vt.color.a / 255 : color.a;
 				vt.color = vertColor;
 
-				// Set UIEffect prameters to vertex.
-				if(_uiEffect)
-					vt.uv1 = _factor;
+				vt.color = effectColor;
+
+				// Set UIEffect prameters
+				if (0 <= normalizedIndex)
+				{
+					vt.uv0 = new Vector2(
+						vt.uv0.x,
+						normalizedIndex
+					);
+				}
+
 				verts[i] = vt;
 			}
 

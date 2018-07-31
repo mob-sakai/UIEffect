@@ -24,6 +24,9 @@ namespace Coffee.UIExtensions
 		//################################
 		public const string shaderName = "UI/Hidden/UI-Effect";
 
+		static readonly ParameterTexture _ptex = new ParameterTexture(4, 1024, "_ParamTex");
+
+
 //		/// <summary>
 //		/// Tone effect mode.
 //		/// </summary>
@@ -79,9 +82,9 @@ namespace Coffee.UIExtensions
 		//################################
 		[SerializeField][Range(0, 1)] float m_ToneLevel = 1;
 		[SerializeField][Range(0, 1)] float m_ColorFactor = 1;
-		[SerializeField][Range(0, 1)] float m_Blur = 0.25f;
+		[SerializeField][Range(0, 1)] float m_Blur = 1;
 		[Obsolete][HideInInspector]
-		[SerializeField][Range(0, 1)] float m_ShadowBlur = 0.25f;
+		[SerializeField][Range(0, 1)] float m_ShadowBlur = 1;
 		[Obsolete][HideInInspector]
 		[SerializeField] ShadowStyle m_ShadowStyle;
 		[SerializeField] ToneMode m_ToneMode;
@@ -145,37 +148,42 @@ namespace Coffee.UIExtensions
 		public Color effectColor { get { return m_EffectColor; } set { m_EffectColor = value; SetDirty(); } }
 
 		/// <summary>
+		/// Gets the parameter texture.
+		/// </summary>
+		public override ParameterTexture ptex { get { return _ptex; } }
+
+		/// <summary>
 		/// Modifies the mesh.
 		/// </summary>
 		public override void ModifyMesh(VertexHelper vh)
 		{
-			if (!isActiveAndEnabled)
+			if (!isActiveAndEnabled || (m_ToneMode == ToneMode.None && m_ColorMode == ColorMode.Multiply && m_BlurMode == BlurMode.None))
 			{
 				return;
 			}
 
-			UIVertex vt;
-			vh.GetUIVertexStream(tempVerts);
+			UIVertex vt = default(UIVertex);
+			int count = vh.currentVertCount;
+			float normalizedIndex = ptex.GetNormalizedIndex(this);
 
-			// Pack some effect factors to 1 float.
-			Vector2 factor = new Vector2(
-				Packer.ToFloat(m_ToneLevel, m_ColorFactor, m_Blur, 0),
-				0
-			);
-
-			for (int i = 0; i < tempVerts.Count; i++)
+			for (int i = 0; i < count; i++)
 			{
-				vt = tempVerts[i];
-
-				// Set UIEffect prameters to vertex.
-				vt.uv1 = factor;
-				tempVerts[i] = vt;
+				// Set prameters to vertex.
+				vh.PopulateUIVertex(ref vt, i);
+				vt.uv0 = new Vector2(
+					Packer.ToFloat(vt.uv0.x, vt.uv0.y),
+					normalizedIndex
+				);
+				vh.SetUIVertex(vt, i);
 			}
+		}
 
-			vh.Clear();
-			vh.AddUIVertexTriangleStream(tempVerts);
-
-			tempVerts.Clear();
+		protected override void SetDirty()
+		{
+			ptex.RegisterMaterial(m_EffectMaterial);
+			ptex.SetData(this, 0, m_ToneLevel);	// param.x : effect factor
+			ptex.SetData(this, 1, m_ColorFactor);	// param.y : color factor
+			ptex.SetData(this, 2, m_Blur);	// param.z : blur factor
 		}
 
 //#if UNITY_EDITOR
@@ -300,6 +308,10 @@ namespace Coffee.UIExtensions
 		/// <returns>The material.</returns>
 		protected override Material GetMaterial ()
 		{
+			if (m_ToneMode == ToneMode.None && m_ColorMode == ColorMode.Multiply && m_BlurMode == BlurMode.None)
+			{
+				return null;
+			}
 			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_ToneMode, m_ColorMode, m_BlurMode);
 		}
 

@@ -27,8 +27,8 @@ public static class Packer
 	}
 
 	/// <summary>
-	/// Pack 3 low-precision [0-1] floats values to a float.
-	/// Each value [0-1] has 256 steps(8 bits).
+	/// Pack 1 middle-precision & 2 low-precision [0-1] floats values to a float.
+	/// z value [0-1] has 4096 steps(12 bits) and xy value [0-1] has 64 steps(6 bits).
 	/// </summary>
 	public static float ToFloat(float x, float y, float z)
 	{
