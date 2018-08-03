@@ -17,7 +17,7 @@ Shader "UI/Hidden/UI-EffectCapture"
 			Name "Effect-Base"
 
 		CGPROGRAM
-			#pragma vertex vert_img
+			#pragma vertex vert
 			#pragma fragment frag
 			#pragma target 2.0
 
@@ -31,6 +31,17 @@ Shader "UI/Hidden/UI-EffectCapture"
 			float4 _MainTex_TexelSize;
 			half4 _EffectFactor;
 			fixed4 _ColorFactor;
+
+			v2f_img vert(appdata_img v)
+			{
+				v2f_img o;
+				o.pos = UnityObjectToClipPos(v.vertex);
+				o.uv = v.texcoord;
+				#if UNITY_UV_STARTS_AT_TOP
+				o.uv.y = 1 - o.uv.y;
+				#endif
+				return o;
+			}
 
 			fixed4 frag(v2f_img IN) : SV_Target
 			{
