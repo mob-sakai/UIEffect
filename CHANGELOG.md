@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.7.1](https://github.com/mob-sakai/UIEffect/tree/v2.7.1) (2018-08-06)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.7.0...v2.7.1)
+
+**Fixed bugs:**
+
+- In v2.7.0, UIEffectCapturedImage is flipped vertically on Windows [\#112](https://github.com/mob-sakai/UIEffect/issues/112)
+
 ## [v2.7.0](https://github.com/mob-sakai/UIEffect/tree/v2.7.0) (2018-07-26)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.6.2...v2.7.0)
