@@ -44,6 +44,7 @@ namespace Coffee.UIExtensions
 			_spKeepSizeToRootCanvas = serializedObject.FindProperty("m_KeepCanvasSize");
 			_spTargetTexture = serializedObject.FindProperty("m_TargetTexture");
 			_spBlurMode = serializedObject.FindProperty("m_BlurMode");
+			_spCaptureOnEnable = serializedObject.FindProperty("m_CaptureOnEnable");
 
 
 			_customAdvancedOption = (qualityMode == QualityMode.Custom) || _spTargetTexture.objectReferenceValue;
@@ -75,6 +76,8 @@ namespace Coffee.UIExtensions
 			//================
 			GUILayout.Space(10);
 			EditorGUILayout.LabelField("Advanced Option", EditorStyles.boldLabel);
+
+			EditorGUILayout.PropertyField(_spCaptureOnEnable);// CaptureOnEnable.
 
 			EditorGUI.BeginChangeCheck();
 			QualityMode quality = qualityMode;
@@ -165,6 +168,7 @@ namespace Coffee.UIExtensions
 		SerializedProperty _spIterations;
 		SerializedProperty _spKeepSizeToRootCanvas;
 		SerializedProperty _spTargetTexture;
+		SerializedProperty _spCaptureOnEnable;
 
 		QualityMode qualityMode
 		{

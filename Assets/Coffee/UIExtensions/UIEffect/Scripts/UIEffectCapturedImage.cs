@@ -50,6 +50,7 @@ namespace Coffee.UIExtensions
 		[SerializeField][Range(1, 8)] int m_BlurIterations = 1;
 		[SerializeField] bool m_KeepCanvasSize = true;
 		[SerializeField] RenderTexture m_TargetTexture;
+		[SerializeField] bool m_CaptureOnEnable = false;
 
 
 		//################################
@@ -130,6 +131,18 @@ namespace Coffee.UIExtensions
 		/// Target RenderTexture to capture.
 		/// </summary>
 		public RenderTexture targetTexture { get { return m_TargetTexture; } set { m_TargetTexture = value; } }
+
+		/// <summary>
+		/// This function is called when the object becomes enabled and active.
+		/// </summary>
+		protected override void OnEnable()
+		{
+			base.OnEnable();
+			if (m_CaptureOnEnable && Application.isPlaying)
+			{
+				Capture();
+			}
+		}
 
 		/// <summary>
 		/// This function is called when the MonoBehaviour will be destroyed.
