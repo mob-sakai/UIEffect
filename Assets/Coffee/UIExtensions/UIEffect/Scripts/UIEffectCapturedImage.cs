@@ -49,7 +49,8 @@ namespace Coffee.UIExtensions
 		[SerializeField] Material m_EffectMaterial;
 		[FormerlySerializedAs("m_Iterations")]
 		[SerializeField][Range(1, 8)] int m_BlurIterations = 1;
-		[SerializeField] bool m_KeepCanvasSize = true;
+		[FormerlySerializedAs("m_KeepCanvasSize")]
+		[SerializeField] bool m_FitToScreen = true;
 		[SerializeField] RenderTexture m_TargetTexture;
 		[SerializeField] bool m_CaptureOnEnable = false;
 
@@ -124,9 +125,15 @@ namespace Coffee.UIExtensions
 		public int blurIterations { get { return m_BlurIterations; } set { m_BlurIterations = value; } }
 
 		/// <summary>
-		/// Fits graphic size to the root canvas.
+		/// Fits graphic size to screen.
 		/// </summary>
-		public bool keepCanvasSize { get { return m_KeepCanvasSize; } set { m_KeepCanvasSize = value; } }
+		[System.Obsolete("Use fitToScreen instead (UnityUpgradable) -> fitToScreen")]
+		public bool keepCanvasSize { get { return m_FitToScreen; } set { m_FitToScreen = value; } }
+
+		/// <summary>
+		/// Fits graphic size to screen.
+		/// </summary>
+		public bool fitToScreen { get { return m_FitToScreen; } set { m_FitToScreen = value; } }
 
 		/// <summary>
 		/// Target RenderTexture to capture.
@@ -187,7 +194,7 @@ namespace Coffee.UIExtensions
 		public void Capture()
 		{
 			var rootCanvas = canvas.rootCanvas;
-			if (m_KeepCanvasSize)
+			if (m_FitToScreen)
 			{
 				var rootTransform = rootCanvas.transform as RectTransform;
 				var size = rootTransform.rect.size;

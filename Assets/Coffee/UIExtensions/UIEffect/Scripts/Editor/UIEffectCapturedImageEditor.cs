@@ -41,7 +41,7 @@ namespace Coffee.UIExtensions
 			_spReductionRate = serializedObject.FindProperty("m_ReductionRate");
 			_spFilterMode = serializedObject.FindProperty("m_FilterMode");
 			_spIterations = serializedObject.FindProperty("m_BlurIterations");
-			_spKeepSizeToRootCanvas = serializedObject.FindProperty("m_KeepCanvasSize");
+			_spKeepSizeToRootCanvas = serializedObject.FindProperty("m_FitToScreen");
 			_spTargetTexture = serializedObject.FindProperty("m_TargetTexture");
 			_spBlurMode = serializedObject.FindProperty("m_BlurMode");
 			_spCaptureOnEnable = serializedObject.FindProperty("m_CaptureOnEnable");
@@ -55,6 +55,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public override void OnInspectorGUI()
 		{
+			var graphic = (target as UIEffectCapturedImage);
 			serializedObject.Update();
 
 			//================
@@ -78,6 +79,7 @@ namespace Coffee.UIExtensions
 			EditorGUILayout.LabelField("Advanced Option", EditorStyles.boldLabel);
 
 			EditorGUILayout.PropertyField(_spCaptureOnEnable);// CaptureOnEnable.
+			EditorGUILayout.PropertyField(_spKeepSizeToRootCanvas);// Keep Graphic Size To RootCanvas.
 
 			EditorGUI.BeginChangeCheck();
 			QualityMode quality = qualityMode;
@@ -95,7 +97,6 @@ namespace Coffee.UIExtensions
 				{
 					EditorGUILayout.PropertyField(_spIterations);// Iterations.
 				}
-				EditorGUILayout.PropertyField(_spKeepSizeToRootCanvas);// Keep Graphic Size To RootCanvas.
 				DrawDesamplingRate(_spReductionRate);// Reduction rate.
 
 				EditorGUILayout.Space();
