@@ -30,7 +30,8 @@ namespace Coffee.UIExtensions
 		[SerializeField] EffectMode m_EffectMode;
 		[SerializeField][Range(0, 1)] float m_EffectFactor = 1;
 		[SerializeField] Texture m_TransitionTexture;
-		[SerializeField] protected EffectArea m_EffectArea;
+		[SerializeField] EffectArea m_EffectArea;
+		[SerializeField] bool m_KeepAspectRatio;
 
 
 		//################################
@@ -76,6 +77,22 @@ namespace Coffee.UIExtensions
 		/// Effect mode.
 		/// </summary>
 		public EffectMode effectMode { get { return m_EffectMode; } }
+
+		/// <summary>
+		/// Keep aspect ratio.
+		/// </summary>
+		public bool keepAspectRatio
+		{
+			get { return m_KeepAspectRatio; }
+			set
+			{
+				if (m_KeepAspectRatio != value)
+				{
+					m_KeepAspectRatio = value;
+					SetDirty();
+				}
+			}
+		}
 
 		/// <summary>
 		/// Modifies the material.
@@ -124,7 +141,9 @@ namespace Coffee.UIExtensions
 			}
 
 			// rect.
-			Rect rect = m_EffectArea.GetEffectArea(vh, graphic);
+			var tex = transitionTexture;
+			var aspectRatio = m_KeepAspectRatio && tex ? ((float)tex.width) / tex.height : -1;
+			Rect rect = m_EffectArea.GetEffectArea(vh, graphic, aspectRatio);
 
 			// Set prameters to vertex.
 			UIVertex vertex = default(UIVertex);

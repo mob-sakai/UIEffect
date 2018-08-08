@@ -181,10 +181,19 @@ namespace Coffee.UIExtensions
 			var cam = canvas.worldCamera ?? Camera.main;
 			h = cam.pixelHeight;
 			w = cam.pixelWidth;
-			if (rate != DesamplingRate.None)
+			if (rate == DesamplingRate.None)
+				return;
+
+			float aspect = (float)w / h;
+			if (w < h)
 			{
 				h = Mathf.ClosestPowerOfTwo(h / (int)rate);
+				w = Mathf.CeilToInt(h * aspect);
+			}
+			else
+			{
 				w = Mathf.ClosestPowerOfTwo(w / (int)rate);
+				h = Mathf.CeilToInt(w / aspect);
 			}
 		}
 
