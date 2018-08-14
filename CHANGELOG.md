@@ -1,5 +1,26 @@
 # Changelog
 
+## [v2.8.0](https://github.com/mob-sakai/UIEffect/tree/v2.8.0) (2018-08-14)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.7.1...v2.8.0)
+
+* Create a screen transition!  
+![8 -08-2018 19-29-38](https://user-images.githubusercontent.com/12690315/43832265-dbdecc98-9b41-11e8-8ab5-9f49420a6a16.gif)
+
+* Some updates make UIEffectCapturedImage easier to use!
+
+
+**Implemented enhancements:**
+
+- UIEffectCapturedImage: Supports 'ScreenSpace - Overlay' [\#115](https://github.com/mob-sakai/UIEffect/issues/115)
+- UIEffectCapturedImage: Keep aspect ratio [\#114](https://github.com/mob-sakai/UIEffect/issues/114)
+- UIEffectCapturedImage: 'Capture on enable' option [\#113](https://github.com/mob-sakai/UIEffect/issues/113)
+- UITransitionEffect: Change transition texture [\#111](https://github.com/mob-sakai/UIEffect/issues/111)
+
+**Closed issues:**
+
+- UIEffectCapturedImage: change parameter name `keepCanvasSize` to `fitToScreen` [\#116](https://github.com/mob-sakai/UIEffect/issues/116)
+
 ## [v2.7.1](https://github.com/mob-sakai/UIEffect/tree/v2.7.1) (2018-08-06)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.7.0...v2.7.1)
