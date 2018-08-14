@@ -805,9 +805,9 @@ Material:
   m_ObjectHideFlags: 9
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI-Effect-Transition-Mono
+  m_Name: UI-Effect-Transition-Fade
   m_Shader: {fileID: 4800000, guid: 85ad24dd0759947ddb117625e108d49c, type: 3}
-  m_ShaderKeywords: MONO
+  m_ShaderKeywords: FADE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}

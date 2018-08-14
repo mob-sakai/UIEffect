@@ -26,6 +26,7 @@ namespace Coffee.UIExtensions
 		[SerializeField] ColorMode m_ColorMode = ColorMode.Add;
 		[SerializeField] Texture m_NoiseTexture;
 		[SerializeField] protected EffectArea m_EffectArea;
+		[SerializeField] bool m_KeepAspectRatio;
 		[Header("Play Effect")]
 		[SerializeField] bool m_Play = false;
 		[SerializeField][Range(0.1f, 10)] float m_Duration = 1;
@@ -108,7 +109,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public Texture noiseTexture
 		{
-			get { return m_NoiseTexture; }
+			get { return m_NoiseTexture ?? graphic.material.GetTexture("_NoiseTex"); }
 			set
 			{
 				if (m_NoiseTexture != value)
@@ -133,6 +134,22 @@ namespace Coffee.UIExtensions
 				if (m_EffectArea != value)
 				{
 					m_EffectArea = value;
+					SetDirty();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Keep aspect ratio.
+		/// </summary>
+		public bool keepAspectRatio
+		{
+			get { return m_KeepAspectRatio; }
+			set
+			{
+				if (m_KeepAspectRatio != value)
+				{
+					m_KeepAspectRatio = value;
 					SetDirty();
 				}
 			}
@@ -203,7 +220,9 @@ namespace Coffee.UIExtensions
 				return;
 
 			// rect.
-			Rect rect = m_EffectArea.GetEffectArea(vh, graphic);
+			var tex = noiseTexture;
+			var aspectRatio = m_KeepAspectRatio && tex ? ((float)tex.width) / tex.height : -1;
+			Rect rect = m_EffectArea.GetEffectArea(vh, graphic, aspectRatio);
 
 			// Calculate vertex position.
 			UIVertex vertex = default(UIVertex);

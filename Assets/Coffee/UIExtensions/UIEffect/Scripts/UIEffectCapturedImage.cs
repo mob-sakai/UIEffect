@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Rendering;
@@ -48,8 +49,10 @@ namespace Coffee.UIExtensions
 		[SerializeField] Material m_EffectMaterial;
 		[FormerlySerializedAs("m_Iterations")]
 		[SerializeField][Range(1, 8)] int m_BlurIterations = 1;
-		[SerializeField] bool m_KeepCanvasSize = true;
+		[FormerlySerializedAs("m_KeepCanvasSize")]
+		[SerializeField] bool m_FitToScreen = true;
 		[SerializeField] RenderTexture m_TargetTexture;
+		[SerializeField] bool m_CaptureOnEnable = false;
 
 
 		//################################
@@ -109,7 +112,7 @@ namespace Coffee.UIExtensions
 		/// Captured texture.
 		/// </summary>
 		public RenderTexture capturedTexture { get { return m_TargetTexture ? m_TargetTexture : _rt; } }
-		
+
 		/// <summary>
 		/// Blur iterations.
 		/// </summary>
@@ -122,9 +125,15 @@ namespace Coffee.UIExtensions
 		public int blurIterations { get { return m_BlurIterations; } set { m_BlurIterations = value; } }
 
 		/// <summary>
-		/// Fits graphic size to the root canvas.
+		/// Fits graphic size to screen.
 		/// </summary>
-		public bool keepCanvasSize { get { return m_KeepCanvasSize; } set { m_KeepCanvasSize = value; } }
+		[System.Obsolete("Use fitToScreen instead (UnityUpgradable) -> fitToScreen")]
+		public bool keepCanvasSize { get { return m_FitToScreen; } set { m_FitToScreen = value; } }
+
+		/// <summary>
+		/// Fits graphic size to screen.
+		/// </summary>
+		public bool fitToScreen { get { return m_FitToScreen; } set { m_FitToScreen = value; } }
 
 		/// <summary>
 		/// Target RenderTexture to capture.
@@ -132,11 +141,33 @@ namespace Coffee.UIExtensions
 		public RenderTexture targetTexture { get { return m_TargetTexture; } set { m_TargetTexture = value; } }
 
 		/// <summary>
+		/// This function is called when the object becomes enabled and active.
+		/// </summary>
+		protected override void OnEnable()
+		{
+			base.OnEnable();
+			if (m_CaptureOnEnable && Application.isPlaying)
+			{
+				Capture();
+			}
+		}
+
+		protected override void OnDisable()
+		{
+			base.OnDisable();
+			if (m_CaptureOnEnable && Application.isPlaying)
+			{
+				_Release(false);
+				texture = null;
+			}
+		}
+
+		/// <summary>
 		/// This function is called when the MonoBehaviour will be destroyed.
 		/// </summary>
 		protected override void OnDestroy()
 		{
-			_Release(true);
+			Release();
 			base.OnDestroy();
 		}
 
@@ -160,10 +191,19 @@ namespace Coffee.UIExtensions
 			var cam = canvas.worldCamera ?? Camera.main;
 			h = cam.pixelHeight;
 			w = cam.pixelWidth;
-			if (rate != DesamplingRate.None)
+			if (rate == DesamplingRate.None)
+				return;
+
+			float aspect = (float)w / h;
+			if (w < h)
 			{
 				h = Mathf.ClosestPowerOfTwo(h / (int)rate);
+				w = Mathf.CeilToInt(h * aspect);
+			}
+			else
+			{
 				w = Mathf.ClosestPowerOfTwo(w / (int)rate);
+				h = Mathf.CeilToInt(w / aspect);
 			}
 		}
 
@@ -172,6 +212,16 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public void Capture()
 		{
+			var rootCanvas = canvas.rootCanvas;
+			if (m_FitToScreen)
+			{
+				var rootTransform = rootCanvas.transform as RectTransform;
+				var size = rootTransform.rect.size;
+				rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
+				rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
+				rectTransform.position = rootTransform.position;
+			}
+
 			// Camera for command buffer.
 			_camera = canvas.worldCamera ?? Camera.main;
 
@@ -211,82 +261,129 @@ namespace Coffee.UIExtensions
 					_rt.hideFlags = HideFlags.HideAndDontSave;
 				}
 			}
+			SetupCommandBuffer();
+		}
 
-			// Create command buffer.
-			if (_buffer == null)
+		void SetupCommandBuffer()
+		{
+			if (_buffer != null)
 			{
-				var rtId = new RenderTargetIdentifier(m_TargetTexture ? m_TargetTexture : _rt);
+				return;
+			}
 
-				// Material for effect.
-				Material mat = effectMaterial;
+			bool isOverlay = canvas.rootCanvas.renderMode == RenderMode.ScreenSpaceOverlay;
+			int w, h;
+			GetDesamplingSize(m_DesamplingRate, out w, out h);
 
-				_buffer = new CommandBuffer();
-				_buffer.name = mat ? mat.name : "noeffect";
-				if (_rt)
+			var rtId = new RenderTargetIdentifier(m_TargetTexture ? m_TargetTexture : _rt);
+
+			// Material for effect.
+			Material mat = effectMaterial;
+
+			_buffer = new CommandBuffer();
+			_buffer.name = mat ? mat.name : "noeffect";
+			if (_rt)
+			{
+				_rt.name = _buffer.name;
+			}
+
+			// Copy to temporary RT.
+			_buffer.GetTemporaryRT(s_CopyId, -1, -1, 0, m_FilterMode);
+
+			if (isOverlay)
+			{
+				if (!s_renderedResult)
 				{
-					_rt.name = _buffer.name;
+					s_renderedResult = new Texture2D(Screen.width, Screen.height, TextureFormat.ARGB32, false, false);
+					s_renderedResult.filterMode = FilterMode.Point;
 				}
-						
+				else if (s_renderedResult.width != Screen.width || s_renderedResult.height != Screen.height)
+				{
+					s_renderedResult.Resize(Screen.width, Screen.height, TextureFormat.ARGB32, false);
+				}
 
-				// Copy to temporary RT.
-				_buffer.GetTemporaryRT(s_CopyId, -1, -1, 0, m_FilterMode);
+#if UNITY_EDITOR
+				if (!Application.isPlaying)
+				{
+					RenderTexture.active = Resources.FindObjectsOfTypeAll<RenderTexture>().FirstOrDefault(x=>x.name == "GameView RT");
+					s_renderedResult.ReadPixels(new Rect(0, 0, s_renderedResult.width, s_renderedResult.height), 0, 0);
+					s_renderedResult.Apply(false, false);
+					RenderTexture.active = null;
+				}
+#endif
+
+				_buffer.Blit(new RenderTargetIdentifier(s_renderedResult), s_CopyId);
+			}
+			else
+			{
 				_buffer.Blit(BuiltinRenderTextureType.CurrentActive, s_CopyId);
-
-				// Set properties.
-				_buffer.SetGlobalVector(s_EffectFactorId, new Vector4(toneLevel, 0));
-				_buffer.SetGlobalVector(s_ColorFactorId, new Vector4(effectColor.r, effectColor.g, effectColor.b, effectColor.a));
-
-				// Blit without effect.
-				if (!mat)
-				{
-					_buffer.Blit(s_CopyId, rtId);
-					_buffer.ReleaseTemporaryRT(s_CopyId);
-				}
-				// Blit with effect.
-				else
-				{
-					GetDesamplingSize(m_ReductionRate, out w, out h);
-					_buffer.GetTemporaryRT(s_EffectId1, w, h, 0, m_FilterMode);
-
-					// Apply base effect (copied screen -> effect1).
-					_buffer.Blit(s_CopyId, s_EffectId1, mat, 0);
-					_buffer.ReleaseTemporaryRT(s_CopyId);
-					
-					// Iterate the operation.
-					if(m_BlurMode != BlurMode.None)
-					{
-						_buffer.GetTemporaryRT(s_EffectId2, w, h, 0, m_FilterMode);
-						for (int i = 0; i < m_BlurIterations; i++)
-						{
-							// Apply effect (effect1 -> effect2, or effect2 -> effect1).
-							_buffer.SetGlobalVector(s_EffectFactorId, new Vector4(blur, 0));
-							_buffer.Blit(s_EffectId1, s_EffectId2, mat, 1);
-							_buffer.SetGlobalVector(s_EffectFactorId, new Vector4(0, blur));
-							_buffer.Blit(s_EffectId2, s_EffectId1, mat, 1);
-						}
-						_buffer.ReleaseTemporaryRT(s_EffectId2);
-					}
-
-					_buffer.Blit(s_EffectId1, rtId);
-					_buffer.ReleaseTemporaryRT(s_EffectId1);
-				}
 			}
 
-			// Add command buffer to camera.
-			_camera.AddCommandBuffer(kCameraEvent, _buffer);
+			// Set properties.
+			_buffer.SetGlobalVector(s_EffectFactorId, new Vector4(toneLevel, 0));
+			_buffer.SetGlobalVector(s_ColorFactorId, new Vector4(effectColor.r, effectColor.g, effectColor.b, effectColor.a));
 
-			// StartCoroutine by CanvasScaler.
-			var rootCanvas = canvas.rootCanvas;
-			var scaler = rootCanvas.GetComponent<CanvasScaler>();
-			scaler.StartCoroutine(_CoUpdateTextureOnNextFrame());
-			if (m_KeepCanvasSize)
+			// Blit without effect.
+			if (!mat)
 			{
-				var rootTransform = rootCanvas.transform as RectTransform;
-				var size = rootTransform.rect.size;
-				rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
-				rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
-				rectTransform.position = rootTransform.position;
+				_buffer.Blit(s_CopyId, rtId);
+				_buffer.ReleaseTemporaryRT(s_CopyId);
 			}
+			// Blit with effect.
+			else
+			{
+				GetDesamplingSize(m_ReductionRate, out w, out h);
+				_buffer.GetTemporaryRT(s_EffectId1, w, h, 0, m_FilterMode);
+
+				// Apply base effect (copied screen -> effect1).
+				_buffer.Blit(s_CopyId, s_EffectId1, mat, 0);
+				_buffer.ReleaseTemporaryRT(s_CopyId);
+
+				// Iterate the operation.
+				if (m_BlurMode != BlurMode.None)
+				{
+					_buffer.GetTemporaryRT(s_EffectId2, w, h, 0, m_FilterMode);
+					for (int i = 0; i < m_BlurIterations; i++)
+					{
+						// Apply effect (effect1 -> effect2, or effect2 -> effect1).
+						_buffer.SetGlobalVector(s_EffectFactorId, new Vector4(blur, 0));
+						_buffer.Blit(s_EffectId1, s_EffectId2, mat, 1);
+						_buffer.SetGlobalVector(s_EffectFactorId, new Vector4(0, blur));
+						_buffer.Blit(s_EffectId2, s_EffectId1, mat, 1);
+					}
+					_buffer.ReleaseTemporaryRT(s_EffectId2);
+				}
+
+				_buffer.Blit(s_EffectId1, rtId);
+				_buffer.ReleaseTemporaryRT(s_EffectId1);
+			}
+
+#if UNITY_EDITOR
+			// Start rendering for editor mode.
+			if (!Application.isPlaying)
+			{
+				_cameraEvent = CameraEvent.AfterEverything;
+				_camera.AddCommandBuffer(_cameraEvent, _buffer);
+				texture = null;
+				_SetDirty();
+
+				UnityEditor.EditorApplication.delayCall += () =>
+					{
+						_Release(false);
+						texture = capturedTexture;
+						_SetDirty();
+					};
+				return;
+			}
+#endif
+
+			// Start rendering coroutine by CanvasScaler.
+			var scaler = canvas.rootCanvas.GetComponent<CanvasScaler>();
+			scaler.StartCoroutine(
+				isOverlay
+				? _CoUpdateTextureOnNextFrameOverlay()
+				: _CoUpdateTextureOnNextFrame()
+			);
 		}
 
 		/// <summary>
@@ -295,6 +392,8 @@ namespace Coffee.UIExtensions
 		public void Release()
 		{
 			_Release(true);
+			texture = null;
+			_SetDirty();
 		}
 
 #if UNITY_EDITOR
@@ -348,7 +447,7 @@ namespace Coffee.UIExtensions
 			{
 				material = null;
 				m_EffectMaterial = mat;
-				UnityEditor.EditorUtility.SetDirty(this);
+				_SetDirty();
 			}
 		}
 #endif
@@ -358,12 +457,13 @@ namespace Coffee.UIExtensions
 		//################################
 		// Private Members.
 		//################################
-		const CameraEvent kCameraEvent = CameraEvent.AfterEverything;
+		CameraEvent _cameraEvent = CameraEvent.AfterEverything;
 		Camera _camera;
 		RenderTexture _rt;
 		RenderTexture _rtToRelease;
 		CommandBuffer _buffer;
 
+		public Texture2D s_renderedResult;
 		static int s_CopyId;
 		static int s_EffectId1;
 		static int s_EffectId2;
@@ -379,26 +479,43 @@ namespace Coffee.UIExtensions
 			if (releaseRT || m_TargetTexture)
 			{
 				texture = null;
-
-				if (_rt != null)
-				{
-					_rt.Release();
-					_rt = null;
-				}
+				_Release(ref _rt);
 			}
 
 			if (_buffer != null)
 			{
 				if (_camera != null)
-					_camera.RemoveCommandBuffer(kCameraEvent, _buffer);
+					_camera.RemoveCommandBuffer(_cameraEvent, _buffer);
 				_buffer.Release();
 				_buffer = null;
 			}
 
-			if (_rtToRelease)
+			_Release(ref _rtToRelease);
+		}
+
+		[System.Diagnostics.Conditional("UNITY_EDITOR")]
+		void _SetDirty()
+		{
+#if UNITY_EDITOR
+			if(Application.isPlaying)
 			{
-				_rtToRelease.Release();
-				_rtToRelease = null;
+				UnityEditor.EditorUtility.SetDirty(this);
+			}
+#endif
+		}
+
+		void _Release(ref RenderTexture obj)
+		{
+			if (obj)
+			{
+				obj.Release();
+#if UNITY_EDITOR
+				if(!Application.isPlaying)
+					DestroyImmediate(obj);
+				else
+#endif
+					Destroy(obj);
+				obj = null;
 			}
 		}
 
@@ -407,10 +524,31 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		IEnumerator _CoUpdateTextureOnNextFrame()
 		{
+			// Add command buffer to camera.
+			_cameraEvent = CameraEvent.AfterEverything;
+			_camera.AddCommandBuffer(_cameraEvent, _buffer);
 			yield return new WaitForEndOfFrame();
 
 			_Release(false);
 			texture = m_TargetTexture ? m_TargetTexture : _rt;
+		}
+
+		/// <summary>
+		/// Set texture on next frame (for overlay).
+		/// </summary>
+		IEnumerator _CoUpdateTextureOnNextFrameOverlay()
+		{
+			// Add command buffer to camera.
+			yield return new WaitForEndOfFrame();
+			s_renderedResult.ReadPixels(new Rect(0, 0, s_renderedResult.width, s_renderedResult.height), 0, 0);
+			s_renderedResult.Apply(false, false);
+
+			_cameraEvent = CameraEvent.BeforeForwardOpaque;
+			_camera.AddCommandBuffer(_cameraEvent, _buffer);
+			texture = m_TargetTexture ? m_TargetTexture : _rt;
+
+			yield return new WaitForEndOfFrame();
+			_Release(false);
 		}
 	}
 }

@@ -41,9 +41,10 @@ namespace Coffee.UIExtensions
 			_spReductionRate = serializedObject.FindProperty("m_ReductionRate");
 			_spFilterMode = serializedObject.FindProperty("m_FilterMode");
 			_spIterations = serializedObject.FindProperty("m_BlurIterations");
-			_spKeepSizeToRootCanvas = serializedObject.FindProperty("m_KeepCanvasSize");
+			_spKeepSizeToRootCanvas = serializedObject.FindProperty("m_FitToScreen");
 			_spTargetTexture = serializedObject.FindProperty("m_TargetTexture");
 			_spBlurMode = serializedObject.FindProperty("m_BlurMode");
+			_spCaptureOnEnable = serializedObject.FindProperty("m_CaptureOnEnable");
 
 
 			_customAdvancedOption = (qualityMode == QualityMode.Custom) || _spTargetTexture.objectReferenceValue;
@@ -54,6 +55,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public override void OnInspectorGUI()
 		{
+			var graphic = (target as UIEffectCapturedImage);
 			serializedObject.Update();
 
 			//================
@@ -76,6 +78,9 @@ namespace Coffee.UIExtensions
 			GUILayout.Space(10);
 			EditorGUILayout.LabelField("Advanced Option", EditorStyles.boldLabel);
 
+			EditorGUILayout.PropertyField(_spCaptureOnEnable);// CaptureOnEnable.
+			EditorGUILayout.PropertyField(_spKeepSizeToRootCanvas);// Keep Graphic Size To RootCanvas.
+
 			EditorGUI.BeginChangeCheck();
 			QualityMode quality = qualityMode;
 			quality = (QualityMode)EditorGUILayout.EnumPopup("Quality Mode", quality);
@@ -92,7 +97,6 @@ namespace Coffee.UIExtensions
 				{
 					EditorGUILayout.PropertyField(_spIterations);// Iterations.
 				}
-				EditorGUILayout.PropertyField(_spKeepSizeToRootCanvas);// Keep Graphic Size To RootCanvas.
 				DrawDesamplingRate(_spReductionRate);// Reduction rate.
 
 				EditorGUILayout.Space();
@@ -122,24 +126,28 @@ namespace Coffee.UIExtensions
 				GUILayout.Label("Debug");
 
 				if (GUILayout.Button("Capture", "ButtonLeft"))
-					UpdateTexture(true);
+				{
+					graphic.Release();
+					EditorApplication.delayCall += graphic.Capture;
+				}
 
 				EditorGUI.BeginDisabledGroup(!(target as UIEffectCapturedImage).capturedTexture);
 				if (GUILayout.Button("Release", "ButtonRight"))
-					UpdateTexture(false);
+				{
+					graphic.Release();
+				}
 				EditorGUI.EndDisabledGroup();
 			}
 
 			// Warning message for overlay rendering.
-			var graphic = (target as UIEffectCapturedImage);
 			if(graphic && graphic.canvas)
 			{
 				var canvas = graphic.canvas.rootCanvas;
-				if( canvas && canvas.renderMode != RenderMode.ScreenSpaceCamera)
+				if( canvas && canvas.renderMode == RenderMode.WorldSpace)
 				{
 					using (new GUILayout.HorizontalScope())
 					{
-						EditorGUILayout.HelpBox("'ScreenSpace - Overlay' and 'WorldSpace - Camera' render modes are not supported. Change render mode of root canvas to 'ScreenSpace - Camera'.", MessageType.Warning);
+						EditorGUILayout.HelpBox("'WorldSpace - Camera' render modes is not supported. Change render mode of root canvas.", MessageType.Warning);
 						if (GUILayout.Button("Canvas"))
 						{
 							Selection.activeGameObject = canvas.gameObject;
@@ -165,6 +173,7 @@ namespace Coffee.UIExtensions
 		SerializedProperty _spIterations;
 		SerializedProperty _spKeepSizeToRootCanvas;
 		SerializedProperty _spTargetTexture;
+		SerializedProperty _spCaptureOnEnable;
 
 		QualityMode qualityMode
 		{
@@ -205,21 +214,6 @@ namespace Coffee.UIExtensions
 				(target as UIEffectCapturedImage).GetDesamplingSize((UIEffectCapturedImage.DesamplingRate)sp.intValue, out w, out h);
 				GUILayout.Label(string.Format("{0}x{1}", w, h), EditorStyles.miniLabel);
 			}
-		}
-
-		/// <summary>
-		/// Updates the texture.
-		/// </summary>
-		void UpdateTexture(bool capture)
-		{
-			var current = target as UIEffectCapturedImage;
-			bool enable = current.enabled;
-			current.enabled = false;
-			current.Release();
-			if (capture)
-				current.Capture();
-			
-			EditorApplication.delayCall += () => current.enabled = enable;
 		}
 	}
 }
