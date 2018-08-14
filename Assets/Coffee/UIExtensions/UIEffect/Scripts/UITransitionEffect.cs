@@ -19,7 +19,7 @@ namespace Coffee.UIExtensions
 		public enum EffectMode
 		{
 			None = 0,
-			Mono = 1,
+			Fade = 1,
 			Cutoff = 2,
 		}
 

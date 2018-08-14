@@ -56,7 +56,7 @@ Shader "UI/Hidden/UI-Effect-Transition"
 			#pragma target 2.0
 			
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
-			#pragma shader_feature __ MONO CUTOFF
+			#pragma shader_feature __ FADE CUTOFF
 
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
@@ -112,7 +112,7 @@ Shader "UI/Hidden/UI-Effect-Transition"
 				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd);
 				color.a *= UnityGet2DClipping(IN.wpos.xy, _ClipRect);
 
-				#if MONO
+				#if FADE
 				color.a = color.a * alpha + (effectFactor * 2 - 1);
 				color.a *= step(0.001, color.a);
 				#elif CUTOFF

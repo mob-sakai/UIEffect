@@ -152,12 +152,22 @@ namespace Coffee.UIExtensions
 			}
 		}
 
+		protected override void OnDisable()
+		{
+			base.OnDisable();
+			if (m_CaptureOnEnable && Application.isPlaying)
+			{
+				_Release(false);
+				texture = null;
+			}
+		}
+
 		/// <summary>
 		/// This function is called when the MonoBehaviour will be destroyed.
 		/// </summary>
 		protected override void OnDestroy()
 		{
-			_Release(true);
+			Release();
 			base.OnDestroy();
 		}
 
@@ -487,7 +497,10 @@ namespace Coffee.UIExtensions
 		void _SetDirty()
 		{
 #if UNITY_EDITOR
-			UnityEditor.EditorUtility.SetDirty(this);
+			if(Application.isPlaying)
+			{
+				UnityEditor.EditorUtility.SetDirty(this);
+			}
 #endif
 		}
 
