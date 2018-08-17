@@ -5,7 +5,7 @@ UIEffect contains visual effect components for uGUI element in Unity.
 
 [![](https://img.shields.io/github/release/mob-sakai/UIEffect.svg?label=latest%20version)](https://github.com/mob-sakai/UIEffect/releases)
 [![](https://img.shields.io/github/release-date/mob-sakai/UIEffect.svg)](https://github.com/mob-sakai/UIEffect/releases)
-![](https://img.shields.io/badge/unity-5.5%2B-green.svg)
+![](https://img.shields.io/badge/unity-5.5%2B%2C+2017.1%2B%2C+2018.1%2B-green.svg)
 [![](https://img.shields.io/github/license/mob-sakai/UIEffect.svg)](https://github.com/mob-sakai/UIEffect/blob/master/LICENSE.txt)
 
 
