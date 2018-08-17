@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.8.1](https://github.com/mob-sakai/UIEffect/tree/v2.8.1) (2018-08-17)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.8.0...v2.8.1)
+
+**Fixed bugs:**
+
+- \(Demo\) "Transition capture & dissolve" is incorrect [\#119](https://github.com/mob-sakai/UIEffect/issues/119)
+
 ## [v2.8.0](https://github.com/mob-sakai/UIEffect/tree/v2.8.0) (2018-08-14)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.7.1...v2.8.0)
