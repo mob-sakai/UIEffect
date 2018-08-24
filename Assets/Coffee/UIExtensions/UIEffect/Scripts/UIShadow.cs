@@ -276,11 +276,10 @@ namespace Coffee.UIExtensions
 				Vector3 v = vt.position;
 				vt.position.Set(v.x + x, v.y + y, v.z);
 
-				Color vertColor = color;
+				Color vertColor = effectColor;
 				vertColor.a = useGraphicAlpha ? color.a * vt.color.a / 255 : color.a;
 				vt.color = vertColor;
 
-				vt.color = effectColor;
 
 				// Set UIEffect prameters
 				if (0 <= normalizedIndex)
