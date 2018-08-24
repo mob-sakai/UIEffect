@@ -114,8 +114,7 @@ Shader "UI/Hidden/UI-Effect-Transition"
 				color.a *= UnityGet2DClipping(IN.wpos.xy, _ClipRect);
 
 				#if FADE
-				color.a = color.a * alpha + (effectFactor * 2 - 1);
-				color.a *= step(0.001, color.a);
+				color.a *= saturate(alpha + (effectFactor * 2 - 1));
 				#elif CUTOFF
 				color.a = step(0.001, color.a * alpha - 1 + effectFactor);
 				#endif
