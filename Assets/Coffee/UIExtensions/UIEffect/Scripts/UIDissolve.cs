@@ -203,7 +203,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public override void ModifyMaterial()
 		{
-			ulong hash = (m_NoiseTexture ? (uint)m_NoiseTexture.GetInstanceID() : 0) + ((ulong)m_ColorMode << 32);
+			ulong hash = (m_NoiseTexture ? (uint)m_NoiseTexture.GetInstanceID() : 0) + ((ulong)1 << 32) + ((ulong)m_ColorMode << 36);
 			if (_materialCache != null && (_materialCache.hash != hash || !isActiveAndEnabled || !m_EffectMaterial))
 			{
 				MaterialCache.Unregister(_materialCache);
@@ -227,6 +227,7 @@ namespace Coffee.UIExtensions
 				_materialCache = MaterialCache.Register(hash, m_NoiseTexture, () =>
 					{
 						var mat = new Material(m_EffectMaterial);
+						mat.name += "_" + m_NoiseTexture.name;
 						mat.SetTexture("_NoiseTex", m_NoiseTexture);
 						return mat;
 					});
@@ -260,8 +261,8 @@ namespace Coffee.UIExtensions
 
 				if (effectEachCharacter)
 				{
-					x = splitedCharacterPosition[i%4].x;
-					y = splitedCharacterPosition[i%4].y;
+					x = splitedCharacterPosition[i % 4].x;
+					y = splitedCharacterPosition[i % 4].y;
 				}
 				else
 				{

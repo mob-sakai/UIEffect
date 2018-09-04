@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
+using System.IO;
 
 namespace Coffee.UIExtensions
 {
@@ -21,6 +23,7 @@ namespace Coffee.UIExtensions
 		[HideInInspector]
 		[SerializeField] int m_Version;
 		[SerializeField] protected Material m_EffectMaterial;
+		[SerializeField] protected Material m_PtexMaterial;
 
 		/// <summary>
 		/// Gets or sets the parameter index.
@@ -30,8 +33,12 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Gets the parameter texture.
 		/// </summary>
-		public virtual ParameterTexture ptex { get{return null;} }
+		public virtual ParameterTexture ptex { get { return null; } }
 
+		/// <summary>
+		/// Gets the ptex material.
+		/// </summary>
+		public virtual Material ptexMaterial { get { return m_PtexMaterial; } }
 
 		/// <summary>
 		/// Gets target graphic for effect.
@@ -53,14 +60,18 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Raises the validate event.
 		/// </summary>
-		protected override void OnValidate ()
+		protected override void OnValidate()
 		{
+#if UNITY_EDITOR
+			SetupPtexMaterial();
+#endif
 			var mat = GetMaterial();
 			if (m_EffectMaterial != mat)
 			{
 				m_EffectMaterial = mat;
 				UnityEditor.EditorUtility.SetDirty(this);
 			}
+
 			ModifyMaterial();
 			targetGraphic.SetVerticesDirty();
 			SetDirty();
@@ -72,6 +83,7 @@ namespace Coffee.UIExtensions
 
 		public void OnAfterDeserialize()
 		{
+			UnityEditor.EditorApplication.delayCall += SetupPtexMaterial;
 			UnityEditor.EditorApplication.delayCall += UpgradeIfNeeded;
 		}
 
@@ -89,7 +101,8 @@ namespace Coffee.UIExtensions
 					{
 						UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(gameObject.scene);
 					}
-				};
+				}
+				;
 				return true;
 			}
 			return false;
@@ -107,6 +120,18 @@ namespace Coffee.UIExtensions
 		{
 			return null;
 		}
+
+		protected void SetupPtexMaterial()
+		{
+			if (!m_PtexMaterial)
+			{
+				m_PtexMaterial = UnityEditor.AssetDatabase.FindAssets("t:Material ParameterTexture")
+					.Select(x => UnityEditor.AssetDatabase.GUIDToAssetPath(x))
+					.Where(x => Path.GetFileNameWithoutExtension(x) == "ParameterTexture")
+					.Select(x => UnityEditor.AssetDatabase.LoadAssetAtPath<Material>(x))
+					.FirstOrDefault();
+			}
+		}
 #endif
 
 		/// <summary>
@@ -122,6 +147,9 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		protected override void OnEnable()
 		{
+#if UNITY_EDITOR
+			SetupPtexMaterial();
+#endif
 			if (ptex != null)
 			{
 				ptex.Register(this);

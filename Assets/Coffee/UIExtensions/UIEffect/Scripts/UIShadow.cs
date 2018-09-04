@@ -92,6 +92,11 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public ParameterTexture ptex{get;private set;}
 
+		/// <summary>
+		/// Gets the ptex material.
+		/// </summary>
+		public virtual Material ptexMaterial { get { return null; } }
+
 		int _graphicVertexCount;
 		int _start;
 		int _end;
