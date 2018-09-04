@@ -12,7 +12,7 @@ namespace Coffee.UIExtensions
 		// Constant or Static Members.
 		//################################
 		public const string shaderName = "UI/Hidden/UI-Effect-Transition";
-		static readonly ParameterTexture _ptex = new ParameterTexture(1, 128, "_ParamTex");
+		static readonly ParameterTexture _ptex = new ParameterTexture(8, 128, "_ParamTex");
 
 		/// <summary>
 		/// Effect mode.
@@ -22,17 +22,21 @@ namespace Coffee.UIExtensions
 			None = 0,
 			Fade = 1,
 			Cutoff = 2,
+			Dissolve = 3,
 		}
 
 
 		//################################
 		// Serialize Members.
 		//################################
-		[SerializeField] EffectMode m_EffectMode;
+		[SerializeField] EffectMode m_EffectMode = EffectMode.Cutoff;
 		[SerializeField][Range(0, 1)] float m_EffectFactor = 1;
 		[SerializeField] Texture m_TransitionTexture;
 		[SerializeField] EffectArea m_EffectArea;
 		[SerializeField] bool m_KeepAspectRatio;
+		[SerializeField] [Range(0, 1)] float m_DissolveWidth = 0.5f;
+		[SerializeField] [Range(0, 1)] float m_DissolveSoftness = 0.5f;
+		[SerializeField] [ColorUsage(false)] Color m_DissolveColor = new Color(0.0f, 0.25f, 1.0f);
 
 
 		//################################
@@ -94,17 +98,67 @@ namespace Coffee.UIExtensions
 				}
 			}
 		}
-		
+
 		/// Gets the parameter texture.
 		/// </summary>
 		public override ParameterTexture ptex { get { return _ptex; } }
+
+		/// <summary>
+		/// Dissolve edge width.
+		/// </summary>
+		public float dissolveWidth
+		{
+			get { return m_DissolveWidth; }
+			set
+			{
+				value = Mathf.Clamp(value, 0, 1);
+				if (!Mathf.Approximately(m_DissolveWidth, value))
+				{
+					m_DissolveWidth = value;
+					SetDirty();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Dissolve edge softness.
+		/// </summary>
+		public float dissolveSoftness
+		{
+			get { return m_DissolveSoftness; }
+			set
+			{
+				value = Mathf.Clamp(value, 0, 1);
+				if (!Mathf.Approximately(m_DissolveSoftness, value))
+				{
+					m_DissolveSoftness = value;
+					SetDirty();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Dissolve edge color.
+		/// </summary>
+		public Color dissolveColor
+		{
+			get { return m_DissolveColor; }
+			set
+			{
+				if (m_DissolveColor != value)
+				{
+					m_DissolveColor = value;
+					SetDirty();
+				}
+			}
+		}
 
 		/// <summary>
 		/// Modifies the material.
 		/// </summary>
 		public override void ModifyMaterial()
 		{
-			ulong hash = (m_TransitionTexture ? (uint)m_TransitionTexture.GetInstanceID() : 0) + (uint)m_EffectMode;
+			ulong hash = (m_TransitionTexture ? (uint)m_TransitionTexture.GetInstanceID() : 0) + ((ulong)2 << 32) + ((ulong)m_EffectMode << 36);
 			if (_materialCache != null && (_materialCache.hash != hash || !isActiveAndEnabled || !m_EffectMaterial))
 			{
 				MaterialCache.Unregister(_materialCache);
@@ -128,6 +182,7 @@ namespace Coffee.UIExtensions
 				_materialCache = MaterialCache.Register(hash, m_TransitionTexture, () =>
 					{
 						var mat = new Material(m_EffectMaterial);
+						mat.name += "_" + m_TransitionTexture.name;
 						mat.SetTexture("_TransitionTexture", m_TransitionTexture);
 						return mat;
 					});
@@ -162,8 +217,8 @@ namespace Coffee.UIExtensions
 
 				if (effectEachCharacter)
 				{
-					x = splitedCharacterPosition[i%4].x;
-					y = splitedCharacterPosition[i%4].y;
+					x = splitedCharacterPosition[i % 4].x;
+					y = splitedCharacterPosition[i % 4].y;
 				}
 				else
 				{
@@ -188,10 +243,19 @@ namespace Coffee.UIExtensions
 			_materialCache = null;
 			base.OnDisable();
 		}
+
 		protected override void SetDirty()
 		{
 			ptex.RegisterMaterial(targetGraphic.material);
 			ptex.SetData(this, 0, m_EffectFactor);	// param1.x : effect factor
+			if (m_EffectMode == EffectMode.Dissolve)
+			{
+				ptex.SetData(this, 1, m_DissolveWidth);		// param1.y : width
+				ptex.SetData(this, 2, m_DissolveSoftness);	// param1.z : softness
+				ptex.SetData(this, 4, m_DissolveColor.r);	// param2.x : red
+				ptex.SetData(this, 5, m_DissolveColor.g);	// param2.y : green
+				ptex.SetData(this, 6, m_DissolveColor.b);	// param2.z : blue
+			}
 		}
 
 #if UNITY_EDITOR
