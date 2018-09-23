@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEditor;
@@ -10,6 +11,8 @@ namespace Coffee.UIExtensions
 	public class MaterialResolver
 	{
 		static readonly StringBuilder s_StringBuilder = new StringBuilder ();
+
+		static readonly Dictionary<string, Material> s_MaterialMap = new Dictionary<string, Material> ();
 
 		public static Material GetOrGenerateMaterialVariant (Shader shader, params object[] append)
 		{
@@ -34,35 +37,46 @@ namespace Coffee.UIExtensions
 				return mat;
 			}
 
-			var variantName = GetVariantName (shader, append);
+			string variantName = GetVariantName (shader, append);
+			if(s_MaterialMap.TryGetValue(variantName, out mat) && mat)
+			{
+				return mat;
+			}
+
 			Debug.Log ("Generate material : " + variantName);
 			mat = new Material (shader);
 			mat.shaderKeywords = keywords;
 
 			mat.name = variantName;
 			mat.hideFlags |= HideFlags.NotEditable;
+			s_MaterialMap [variantName] = mat;
+
+			bool isMainAsset = append.Cast<int> ().All (x => x == 0);
+			EditorApplication.delayCall += () => SaveMaterial (mat, shader, isMainAsset);
+			return mat;
+		}
+
+		static void SaveMaterial (Material mat, Shader shader, bool isMainAsset)
+		{
+			string materialPath = GetDefaultMaterialPath (shader);
 
 #if UIEFFECT_SEPARATE
-				string dir = Path.GetDirectoryName(GetDefaultMaterialPath (shader));
-				string materialPath = Path.Combine(Path.Combine(dir, "Separated"), mat.name + ".mat");
-
+			string dir = Path.GetDirectoryName(materialPath);
+			materialPath = Path.Combine(Path.Combine(dir, "Separated"), mat.name + ".mat");
+			isMainAsset = true;
+#endif
+			if (isMainAsset)
+			{
 				Directory.CreateDirectory (Path.GetDirectoryName (materialPath));
 				AssetDatabase.CreateAsset (mat, materialPath);
-				AssetDatabase.SaveAssets ();
-#else
-			if (append.Cast<int> ().All (x => x == 0)) {
-				string materialPath = GetDefaultMaterialPath (shader);
-				Directory.CreateDirectory (Path.GetDirectoryName (materialPath));
-				AssetDatabase.CreateAsset (mat, materialPath);
-				AssetDatabase.SaveAssets ();
-			} else {
+			}
+			else
+			{
 				GetOrGenerateMaterialVariant (shader);
-				string materialPath = GetDefaultMaterialPath (shader);
 				mat.hideFlags |= HideFlags.HideInHierarchy;
 				AssetDatabase.AddObjectToAsset (mat, materialPath);
 			}
-#endif
-			return mat;
+			AssetDatabase.SaveAssets ();
 		}
 
 		public static Material GetMaterial (Shader shader, params object[] append)
