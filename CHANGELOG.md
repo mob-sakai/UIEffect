@@ -1,5 +1,16 @@
 # Changelog
 
+## [v2.8.2](https://github.com/mob-sakai/UIEffect/tree/v2.8.2) (2018-09-26)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.8.1...v2.8.2)
+
+**Fixed bugs:**
+
+- UICapturedEffectImage does not work with 'ScreenSpace - Overlay' in edit mode [\#128](https://github.com/mob-sakai/UIEffect/issues/128)
+- The UIEffectCapturedImage is upside down with 'ScreenSpace - Overlay' mode [\#127](https://github.com/mob-sakai/UIEffect/issues/127)
+- When "UI-Effect.mat" is created automatically, Unity hangs up. [\#126](https://github.com/mob-sakai/UIEffect/issues/126)
+- UICapturedEffectImage does not work with Lightweight Render Pipeline LWRP [\#125](https://github.com/mob-sakai/UIEffect/issues/125)
+
 ## [v2.8.1](https://github.com/mob-sakai/UIEffect/tree/v2.8.1) (2018-08-17)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.8.0...v2.8.1)
