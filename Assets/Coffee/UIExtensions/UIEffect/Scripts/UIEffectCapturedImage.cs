@@ -188,9 +188,20 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public void GetDesamplingSize(DesamplingRate rate, out int w, out int h)
 		{
-			var cam = canvas.worldCamera ?? Camera.main;
-			h = cam.pixelHeight;
-			w = cam.pixelWidth;
+#if UNITY_EDITOR
+			if (!Application.isPlaying)
+			{
+				var res = UnityEditor.UnityStats.screenRes.Split('x');
+				w = int.Parse(res[0]);
+				h = int.Parse(res[1]);
+			}
+			else
+#endif
+			{
+				w = Screen.width;
+				h = Screen.height;
+			}
+
 			if (rate == DesamplingRate.None)
 				return;
 
@@ -212,6 +223,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public void Capture()
 		{
+            // Fit to screen.
 			var rootCanvas = canvas.rootCanvas;
 			if (m_FitToScreen)
 			{
@@ -222,10 +234,7 @@ namespace Coffee.UIExtensions
 				rectTransform.position = rootTransform.position;
 			}
 
-			// Camera for command buffer.
-			_camera = canvas.worldCamera ?? Camera.main;
-
-			// Cache id for RT.
+			// Cache some ids.
 			if (s_CopyId == 0)
 			{
 				s_CopyId = Shader.PropertyToID("_UIEffectCapturedImage_ScreenCopyId");
@@ -234,24 +243,25 @@ namespace Coffee.UIExtensions
 
 				s_EffectFactorId = Shader.PropertyToID("_EffectFactor");
 				s_ColorFactorId = Shader.PropertyToID("_ColorFactor");
+                s_CommandBuffer = new CommandBuffer();
 			}
 
-			// If size of generated result RT has changed, relese it.
-			int w, h;
-			GetDesamplingSize(m_DesamplingRate, out w, out h);
+			// If target texture exists, release result RT.
 			if (m_TargetTexture)
 			{
-				_rtToRelease = _rt;
+                _Release(ref _rt);
 			}
 			else
 			{
+				// If size of result RT has changed, release it.
+				int w, h;
+				GetDesamplingSize (m_DesamplingRate, out w, out h);
 				if (_rt && (_rt.width != w || _rt.height != h))
 				{
-					_rtToRelease = _rt;
-					_rt = null;
+					_Release (ref _rt);
 				}
 
-				// Generate result RT.
+				// Generate RT for result.
 				if (_rt == null)
 				{
 					_rt = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
@@ -266,124 +276,73 @@ namespace Coffee.UIExtensions
 
 		void SetupCommandBuffer()
 		{
-			if (_buffer != null)
-			{
-				return;
-			}
-
-			bool isOverlay = canvas.rootCanvas.renderMode == RenderMode.ScreenSpaceOverlay;
-			int w, h;
-			GetDesamplingSize(m_DesamplingRate, out w, out h);
-
-			var rtId = new RenderTargetIdentifier(m_TargetTexture ? m_TargetTexture : _rt);
-
 			// Material for effect.
 			Material mat = effectMaterial;
 
-			_buffer = new CommandBuffer();
-			_buffer.name = mat ? mat.name : "noeffect";
+			if(s_CommandBuffer == null)
+			{
+				s_CommandBuffer = new CommandBuffer ();
+			}
+			s_CommandBuffer.name = mat ? mat.name : "noeffect";
 			if (_rt)
 			{
-				_rt.name = _buffer.name;
+				_rt.name = s_CommandBuffer.name;
 			}
 
-			// Copy to temporary RT.
-			_buffer.GetTemporaryRT(s_CopyId, -1, -1, 0, m_FilterMode);
-
-			if (isOverlay)
-			{
-				if (!s_renderedResult)
-				{
-					s_renderedResult = new Texture2D(Screen.width, Screen.height, TextureFormat.ARGB32, false, false);
-					s_renderedResult.filterMode = FilterMode.Point;
-				}
-				else if (s_renderedResult.width != Screen.width || s_renderedResult.height != Screen.height)
-				{
-					s_renderedResult.Resize(Screen.width, Screen.height, TextureFormat.ARGB32, false);
-				}
-
+			// [1] Capture from back buffer (back buffer -> copied screen).
+			int w, h;
+			GetDesamplingSize(DesamplingRate.None, out w, out h);
+			s_CommandBuffer.GetTemporaryRT(s_CopyId, w, h, 0, m_FilterMode);
 #if UNITY_EDITOR
-				if (!Application.isPlaying)
-				{
-					RenderTexture.active = Resources.FindObjectsOfTypeAll<RenderTexture>().FirstOrDefault(x=>x.name == "GameView RT");
-					s_renderedResult.ReadPixels(new Rect(0, 0, s_renderedResult.width, s_renderedResult.height), 0, 0);
-					s_renderedResult.Apply(false, false);
-					RenderTexture.active = null;
-				}
+			s_CommandBuffer.Blit(Resources.FindObjectsOfTypeAll<RenderTexture>().FirstOrDefault(x => x.name == "GameView RT"), s_CopyId);
+#else
+			s_CommandBuffer.Blit(BuiltinRenderTextureType.BindableTexture, s_CopyId);
 #endif
 
-				_buffer.Blit(new RenderTargetIdentifier(s_renderedResult), s_CopyId);
-			}
-			else
+			// Set properties for effect.
+			s_CommandBuffer.SetGlobalVector(s_EffectFactorId, new Vector4(toneLevel, 0));
+			s_CommandBuffer.SetGlobalVector(s_ColorFactorId, new Vector4(effectColor.r, effectColor.g, effectColor.b, effectColor.a));
+
+			// [2] Apply base effect with reduction buffer (copied screen -> effect1).
+			GetDesamplingSize (m_ReductionRate, out w, out h);
+			s_CommandBuffer.GetTemporaryRT (s_EffectId1, w, h, 0, m_FilterMode);
+			s_CommandBuffer.Blit(s_CopyId, s_EffectId1, mat, 0);
+			s_CommandBuffer.ReleaseTemporaryRT(s_CopyId);
+
+			// Iterate blurring operation.
+			if (m_BlurMode != BlurMode.None)
 			{
-				_buffer.Blit(BuiltinRenderTextureType.CurrentActive, s_CopyId);
-			}
-
-			// Set properties.
-			_buffer.SetGlobalVector(s_EffectFactorId, new Vector4(toneLevel, 0));
-			_buffer.SetGlobalVector(s_ColorFactorId, new Vector4(effectColor.r, effectColor.g, effectColor.b, effectColor.a));
-
-			// Blit without effect.
-			if (!mat)
-			{
-				_buffer.Blit(s_CopyId, rtId);
-				_buffer.ReleaseTemporaryRT(s_CopyId);
-			}
-			// Blit with effect.
-			else
-			{
-				GetDesamplingSize(m_ReductionRate, out w, out h);
-				_buffer.GetTemporaryRT(s_EffectId1, w, h, 0, m_FilterMode);
-
-				// Apply base effect (copied screen -> effect1).
-				_buffer.Blit(s_CopyId, s_EffectId1, mat, 0);
-				_buffer.ReleaseTemporaryRT(s_CopyId);
-
-				// Iterate the operation.
-				if (m_BlurMode != BlurMode.None)
+				s_CommandBuffer.GetTemporaryRT(s_EffectId2, w, h, 0, m_FilterMode);
+				for (int i = 0; i < m_BlurIterations; i++)
 				{
-					_buffer.GetTemporaryRT(s_EffectId2, w, h, 0, m_FilterMode);
-					for (int i = 0; i < m_BlurIterations; i++)
-					{
-						// Apply effect (effect1 -> effect2, or effect2 -> effect1).
-						_buffer.SetGlobalVector(s_EffectFactorId, new Vector4(blur, 0));
-						_buffer.Blit(s_EffectId1, s_EffectId2, mat, 1);
-						_buffer.SetGlobalVector(s_EffectFactorId, new Vector4(0, blur));
-						_buffer.Blit(s_EffectId2, s_EffectId1, mat, 1);
-					}
-					_buffer.ReleaseTemporaryRT(s_EffectId2);
+					// [3] Apply blurring with reduction buffer (effect1 -> effect2, or effect2 -> effect1).
+					s_CommandBuffer.SetGlobalVector(s_EffectFactorId, new Vector4(blur, 0));
+					s_CommandBuffer.Blit(s_EffectId1, s_EffectId2, mat, 1);
+					s_CommandBuffer.SetGlobalVector(s_EffectFactorId, new Vector4(0, blur));
+					s_CommandBuffer.Blit(s_EffectId2, s_EffectId1, mat, 1);
 				}
-
-				_buffer.Blit(s_EffectId1, rtId);
-				_buffer.ReleaseTemporaryRT(s_EffectId1);
+				s_CommandBuffer.ReleaseTemporaryRT(s_EffectId2);
 			}
+
+            // [4] Copy to result RT.
+			s_CommandBuffer.Blit(s_EffectId1, new RenderTargetIdentifier (capturedTexture));
+			s_CommandBuffer.ReleaseTemporaryRT(s_EffectId1);
 
 #if UNITY_EDITOR
-			// Start rendering for editor mode.
-			if (!Application.isPlaying)
+			if(!Application.isPlaying)
 			{
-				_cameraEvent = CameraEvent.AfterEverything;
-				_camera.AddCommandBuffer(_cameraEvent, _buffer);
 				texture = null;
-				_SetDirty();
+				_SetDirty ();
+				Graphics.ExecuteCommandBuffer (s_CommandBuffer);
 
-				UnityEditor.EditorApplication.delayCall += () =>
-					{
-						_Release(false);
-						texture = capturedTexture;
-						_SetDirty();
-					};
+				_Release(false);
+				texture = capturedTexture;
+				_SetDirty ();
 				return;
 			}
 #endif
-
-			// Start rendering coroutine by CanvasScaler.
-			var scaler = canvas.rootCanvas.GetComponent<CanvasScaler>();
-			scaler.StartCoroutine(
-				isOverlay
-				? _CoUpdateTextureOnNextFrameOverlay()
-				: _CoUpdateTextureOnNextFrame()
-			);
+			// Execute command buffer.
+			canvas.rootCanvas.GetComponent<CanvasScaler> ().StartCoroutine(_CoUpdateTextureOnNextFrame ());
 		}
 
 		/// <summary>
@@ -457,18 +416,14 @@ namespace Coffee.UIExtensions
 		//################################
 		// Private Members.
 		//################################
-		CameraEvent _cameraEvent = CameraEvent.AfterEverything;
-		Camera _camera;
 		RenderTexture _rt;
-		RenderTexture _rtToRelease;
-		CommandBuffer _buffer;
 
-		public Texture2D s_renderedResult;
 		static int s_CopyId;
 		static int s_EffectId1;
 		static int s_EffectId2;
 		static int s_EffectFactorId;
 		static int s_ColorFactorId;
+        static CommandBuffer s_CommandBuffer;
 
 		/// <summary>
 		/// Release genarated objects.
@@ -482,22 +437,23 @@ namespace Coffee.UIExtensions
 				_Release(ref _rt);
 			}
 
-			if (_buffer != null)
+			if (s_CommandBuffer != null)
 			{
-				if (_camera != null)
-					_camera.RemoveCommandBuffer(_cameraEvent, _buffer);
-				_buffer.Release();
-				_buffer = null;
-			}
+                s_CommandBuffer.Clear();
 
-			_Release(ref _rtToRelease);
+				if(releaseRT)
+				{
+					s_CommandBuffer.Release ();
+					s_CommandBuffer = null;
+				}
+			}
 		}
 
 		[System.Diagnostics.Conditional("UNITY_EDITOR")]
 		void _SetDirty()
 		{
 #if UNITY_EDITOR
-			if(Application.isPlaying)
+			if(!Application.isPlaying)
 			{
 				UnityEditor.EditorUtility.SetDirty(this);
 			}
@@ -522,33 +478,16 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Set texture on next frame.
 		/// </summary>
-		IEnumerator _CoUpdateTextureOnNextFrame()
+		IEnumerator _CoUpdateTextureOnNextFrame ()
 		{
-			// Add command buffer to camera.
-			_cameraEvent = CameraEvent.AfterEverything;
-			_camera.AddCommandBuffer(_cameraEvent, _buffer);
-			yield return new WaitForEndOfFrame();
+			yield return new WaitForEndOfFrame ();
 
-			_Release(false);
-			texture = m_TargetTexture ? m_TargetTexture : _rt;
+			// Execute command buffer.
+			Graphics.ExecuteCommandBuffer (s_CommandBuffer);
+
+			_Release (false);
+			texture = capturedTexture;
 		}
 
-		/// <summary>
-		/// Set texture on next frame (for overlay).
-		/// </summary>
-		IEnumerator _CoUpdateTextureOnNextFrameOverlay()
-		{
-			// Add command buffer to camera.
-			yield return new WaitForEndOfFrame();
-			s_renderedResult.ReadPixels(new Rect(0, 0, s_renderedResult.width, s_renderedResult.height), 0, 0);
-			s_renderedResult.Apply(false, false);
-
-			_cameraEvent = CameraEvent.BeforeForwardOpaque;
-			_camera.AddCommandBuffer(_cameraEvent, _buffer);
-			texture = m_TargetTexture ? m_TargetTexture : _rt;
-
-			yield return new WaitForEndOfFrame();
-			_Release(false);
-		}
 	}
 }

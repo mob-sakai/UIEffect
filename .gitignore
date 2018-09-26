@@ -36,3 +36,9 @@ sysinfo.txt
 *.unitypackage
 build.app
 unity.log
+
+.vs/
+_Android/
+_iOS/
+_WebGL/
+_Standalone/

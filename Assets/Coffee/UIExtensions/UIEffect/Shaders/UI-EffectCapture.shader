@@ -46,7 +46,6 @@ Shader "UI/Hidden/UI-EffectCapture"
 			fixed4 frag(v2f_img IN) : SV_Target
 			{
 				half effectFactor = _EffectFactor.x;
-				half blurFactor = _EffectFactor.z;
 				fixed4 colorFactor = _ColorFactor;
 				
 				#if PIXEL
