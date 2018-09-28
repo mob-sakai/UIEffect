@@ -20,7 +20,7 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Draw effect properties.
 		/// </summary>
-		public static void DrawEffectProperties(string shaderName, SerializedObject serializedObject)
+		public static void DrawEffectProperties(SerializedObject serializedObject)
 		{
 			bool changed = false;
 
@@ -57,7 +57,7 @@ namespace Coffee.UIExtensions
 			changed |= EditorGUI.EndChangeCheck();
 
 			// When color is enable, show parameters.
-			if (spColorMode.intValue != (int)ColorMode.Multiply)
+			//if (spColorMode.intValue != (int)ColorMode.Multiply)
 			{
 				EditorGUI.indentLevel++;
 
@@ -125,7 +125,7 @@ namespace Coffee.UIExtensions
 		{
 			serializedObject.Update();
 
-			DrawEffectProperties(UIEffect.shaderName, serializedObject);
+			DrawEffectProperties(serializedObject);
 
 			serializedObject.ApplyModifiedProperties();
 
