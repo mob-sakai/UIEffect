@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 namespace Coffee.UIExtensions
 {
@@ -37,39 +38,27 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public AnimatorUpdateMode updateMode;//  { get; set; }
 
-//		/// <summary>
-//		/// Register runner.
-//		/// </summary>
-//		public void Register(bool running,float duration, AnimatorUpdateMode updateMode, bool loop, float loopDelay, Action<float> callback)
-//		{
-//			Canvas.willRenderCanvases += OnWillRenderCanvases;
-//
-//			_time = 0;
-//			this._callback = callback;
-//			this.loop = loop;
-//			this.running = running;
-//			this.duration = duration;
-//			this.loopDelay = loopDelay;
-//			this.updateMode = updateMode;
-//		}
+		static List<Action> s_UpdateActions;
 
 		public void OnEnable(Action<float> callback)
 		{
-			Canvas.willRenderCanvases -= OnWillRenderCanvases;
-			Canvas.willRenderCanvases += OnWillRenderCanvases;
+
+			if (s_UpdateActions == null)
+			{
+				s_UpdateActions = new List<Action>();
+				Canvas.willRenderCanvases += ()=>{
+					var count = s_UpdateActions.Count;
+					for (int i = 0; i < count; i++)
+					{
+						s_UpdateActions[i].Invoke();
+					}
+				};
+			}
+			s_UpdateActions.Add(OnWillRenderCanvases);
 
 			_time = 0;
 			this._callback = callback;
 		}
-
-//		/// <summary>
-//		/// Unregister runner.
-//		/// </summary>
-//		public void Unregister()
-//		{
-//			_callback = null;
-//			Canvas.willRenderCanvases -= OnWillRenderCanvases;
-//		}
 
 		/// <summary>
 		/// Unregister runner.
@@ -77,7 +66,7 @@ namespace Coffee.UIExtensions
 		public void OnDisable()
 		{
 			_callback = null;
-			Canvas.willRenderCanvases -= OnWillRenderCanvases;
+			s_UpdateActions.Remove(OnWillRenderCanvases);
 		}
 
 		/// <summary>
