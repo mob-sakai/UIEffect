@@ -19,7 +19,6 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public enum EffectMode
 		{
-			None = 0,
 			Fade = 1,
 			Cutoff = 2,
 			Dissolve = 3,
@@ -195,7 +194,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public override void ModifyMesh(VertexHelper vh)
 		{
-			if (!isActiveAndEnabled || m_EffectMode == EffectMode.None)
+			if (!isActiveAndEnabled)
 			{
 				return;
 			}
@@ -265,9 +264,7 @@ namespace Coffee.UIExtensions
 		/// <returns>The material.</returns>
 		protected override Material GetMaterial()
 		{
-			return m_EffectMode != EffectMode.None
-				? MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_EffectMode)
-				: null;
+			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_EffectMode);
 		}
 #endif
 
