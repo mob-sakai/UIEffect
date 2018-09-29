@@ -340,6 +340,10 @@ namespace Coffee.UIExtensions
 				_SetDirty ();
 				return;
 			}
+			else
+			{
+				Graphics.ExecuteCommandBuffer(s_CommandBuffer);
+			}
 #endif
 			// Execute command buffer.
 			canvas.rootCanvas.GetComponent<CanvasScaler> ().StartCoroutine(_CoUpdateTextureOnNextFrame ());
@@ -482,11 +486,13 @@ namespace Coffee.UIExtensions
 		{
 			yield return new WaitForEndOfFrame ();
 
+#if !UNITY_EDITOR
 			// Execute command buffer.
 			Graphics.ExecuteCommandBuffer (s_CommandBuffer);
-
-			_Release (false);
+#endif
+			_Release(false);
 			texture = capturedTexture;
+			_SetDirty();
 		}
 
 	}
