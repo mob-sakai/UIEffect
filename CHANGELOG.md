@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.8.3](https://github.com/mob-sakai/UIEffect/tree/v2.8.3) (2018-09-29)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.8.2...v2.8.3)
+
+**Fixed bugs:**
+
+- UIEffectCapturedImage: Black screen with Unity 2018.1+ editor on Windows  [\#131](https://github.com/mob-sakai/UIEffect/issues/131)
+
 ## [v2.8.2](https://github.com/mob-sakai/UIEffect/tree/v2.8.2) (2018-09-26)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.8.1...v2.8.2)
