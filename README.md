@@ -7,6 +7,7 @@ UIEffect contains visual effect components for uGUI element in Unity.
 [![](https://img.shields.io/github/release-date/mob-sakai/UIEffect.svg)](https://github.com/mob-sakai/UIEffect/releases)
 ![](https://img.shields.io/badge/unity-5.5%2B-green.svg)
 [![](https://img.shields.io/github/license/mob-sakai/UIEffect.svg)](https://github.com/mob-sakai/UIEffect/blob/master/LICENSE.txt)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-orange.svg)](http://makeapullrequest.com)
 
 
 
@@ -32,10 +33,10 @@ AnimationClip is supported as a matter of course!
 
 | Component | Features | Screenshot |
 |-|-|-|
-|**UIEffect**|Combine some visual effects.<br><br>**ToneMode:** Grayscale, Sepia, Nega, Pixelation, Hue shift, Cutoff (alpha-based), Mono (alpha-based)<br>**ColorMode:** Multiply, Fill, Additive, Subtract<br>**BlurMode:** Fast, Medium, Detail<br><br>*NOTE: ToneMode, ColorMode and BlurMode are changeable only in editor.*<br>*NOTE: Custom Effect feature is deprecated. Please use `UICustomEffect` component instead.*<br>*NOTE: Shadow feature is deprecated. Please use `UIShadow` component instead.*<br>*NOTE: Hue is deprecated. Please use UIHsvModifier component instead.*<br>*NOTE: Cutoff and Mono is deprecated. Please use UITransitionEffect component instead.*|<img src="https://user-images.githubusercontent.com/12690315/40757428-68277f0c-64c3-11e8-89e5-4a19616a85c1.png" width="1000px">|
-|**UICaptured EffectImage**|Capture a screenshot of a specific frame with effect, and display it.<br>This effect is non-realtime, light-weight, less-camera, but be effective enough.<br><br>**ToneMode:** Grayscale, Sepia, Nega, Pixelation<br>**ColorMode:** Multiply, Fill, Additive, Subtract<br>**BlurMode:** Fast, Medium, Detail<br>**QualityMode:** Fast, Medium, Detail, Custom<br>**Options:** Capture on enable, Blur iterations, Reduction rate, Target texture, Fit size to screen.<br><br>NOTE: Use this component in 'ScreenSpace - Camera' or  'ScreenSpace - Overlay' mode.|<img src="https://user-images.githubusercontent.com/12690315/44078752-4c2e4114-9fe2-11e8-97f0-54d3a36a562e.gif"  width="1000px">|
-|**UIShiny**|Apply shinning effect to a graphic.<br>The effect does not require Mask component or normal map.<br><br>**Options:** Location, Width, Rotation, Softness, Brightness, Highlight|<img  src="https://user-images.githubusercontent.com/12690315/41398144-5c2ca126-6ff1-11e8-954b-394b611e2316.gif" width="1000px">|
-|**UIDissolve**|Apply dissolve effect to a graphic.<br><br>**ColorMode:** Overwrite, Additive, Subtract<br>**Options:** Location, Width, Rotation, Softness, Color|<img src="https://user-images.githubusercontent.com/12690315/41397973-d1038f7e-6ff0-11e8-919f-affb427393ee.gif" width="1000px">|
+|**UIEffect**|Combine some visual effects.<br><br>**ToneMode:** Grayscale, Sepia, Nega, Pixelation<br>**ColorMode:** Multiply, Fill, Additive, Subtract<br>**BlurMode:** Fast, Medium, Detail<br>**AdvancedBlur:** Enable more beautiful blurring|<img src="https://user-images.githubusercontent.com/12690315/40757428-68277f0c-64c3-11e8-89e5-4a19616a85c1.png" width="1000px">|
+|**UICaptured EffectImage**|Capture a screenshot of a specific frame with effect, and display it.<br>This effect is non-realtime, light-weight, less-camera, but be effective enough.<br><br>**Tone Mode:** Grayscale, Sepia, Nega, Pixelation<br>**Color Mode:** Multiply, Fill, Additive, Subtract<br>**Blur Mode:** Fast, Medium, Detail<br>**Quality Mode:** Fast, Medium, Detail, Custom<br>**Capture On Enable:** When the component is enable, capture screen automatically.<br>**Blur iterations:** Number of blur iterations.<br>**Reduction/Downsampling Rate:** None, x1, x2, x4, x8<br>**Fit size to screen:** Fit RectTransform to the screen.|<img src="https://user-images.githubusercontent.com/12690315/44078752-4c2e4114-9fe2-11e8-97f0-54d3a36a562e.gif"  width="1000px">|
+|**UIShiny**|Apply shinning effect to a graphic.<br>The effect does not require Mask component or normal map.<br><br>**Parameters:** Location, Width, Rotation, Softness, Brightness, Gloss|<img  src="https://user-images.githubusercontent.com/12690315/41398144-5c2ca126-6ff1-11e8-954b-394b611e2316.gif" width="1000px">|
+|**UIDissolve**|Apply dissolve effect to a graphic.<br><br>**ColorMode:** Overwrite, Additive, Subtract<br>**Parameters:** Location, Width, Rotation, Softness, Color|<img src="https://user-images.githubusercontent.com/12690315/41397973-d1038f7e-6ff0-11e8-919f-affb427393ee.gif" width="1000px">|
 |**UIHsvModifier**|Modify HSV for graphic.<br><br>**Target:** Color, Range<br>**Adjustment:** Hue, Saturation, Value|<img src="https://user-images.githubusercontent.com/12690315/43200006-d6e2bf54-904e-11e8-9f22-0c0f9ce5912f.gif"  width="1000px">|
 |**UITransition Effect**|Apply transition effect with a single channel texture.<br><br>**EffectMode:** Cutoff, Fade|<img src="https://user-images.githubusercontent.com/12690315/44077521-f1b07c82-9fde-11e8-8487-2294c8d8f843.gif"  width="1000px">|
 
@@ -44,7 +45,7 @@ AnimationClip is supported as a matter of course!
 
 | Component | Features | Screenshot |
 |-|-|-|
-|**UIShadow**|Add shadow/outline to a graphic.<br>Performance is better than the default Shadow/Outline component.<br>See also [Development note](#the-issue-of-default-outline-component).<br><br>**ShadowStyle:** Shadow, Shadow3, Outline, Outline8<br>**Additional Shadows** reduce vertices for multiple Shadows or Outlines.<br>*NOTE: AdditionalShadow is deprecated. Please use multiple `UIShadow` component instead.*|<img src="https://user-images.githubusercontent.com/12690315/40716994-ca5c13d2-6445-11e8-96d0-25a3ce704e2e.png" width="1000px">|
+|**UIShadow**|Add shadow/outline to a graphic.<br>The performance is better than the default Shadow/Outline component.<br><br>**ShadowStyle:** Shadow, Shadow3, Outline, Outline8|<img src="https://user-images.githubusercontent.com/12690315/40716994-ca5c13d2-6445-11e8-96d0-25a3ce704e2e.png" width="1000px">|
 |**UIGradient**|Change vertex color as gradient with angle and offset.<br><br>**Direction:** Horizontal, Vertical, Angle, Diagonal<br>**Options:** Offset, Color space|<img src="https://user-images.githubusercontent.com/12690315/40716995-ca87665e-6445-11e8-8233-ec2e21fefd6b.png" width="1000px">|
 |**UIFlip**|Flip a graphic.<br><br>**Direction:** Horizontal, Vertical, Both|<img src="https://user-images.githubusercontent.com/12690315/40716996-cab1fd7e-6445-11e8-9753-962d23991d86.png"  width="1000px">|
 
@@ -68,16 +69,34 @@ AnimationClip is supported as a matter of course!
 ## Usage
 
 1. Download UIEffect.unitypackage from [Releases](https://github.com/mob-sakai/UIEffect/releases).
-1. Import the package into your Unity project. Select `Import Package > Custom Package` from the `Assets` menu.
-1. In Unity5.6+, enable `TexCoord1` channel of canvas. See also [Development Note](##note-unity-56).
-1. Add any effect component to UI element (Image, RawImage, Text, etc...) from `Add Component` in inspector.
-1. Enjoy!
+2. Import the package into your Unity project. Select `Import Package > Custom Package` from the `Assets` menu.
+3. In Unity5.6+, enable `TexCoord1` channel of canvas. See also [Development Note](##note-unity-56).
+4. Add any effect component to UI element (Image, RawImage, Text, etc...) from `Add Component` in inspector.
+5. Enjoy!
 
 
 ##### Requirement
 
 * Unity 5.5+ *(included Unity 2018.x)*
 * No other SDK are required
+
+
+
+
+<br><br><br><br>
+## Example of using
+
+| Title | Description | Screenshot |
+|-|-|-|
+|Lock/unlock contents|Use UIEffect for grayscale.<br>Indicate to user that the content is unavailable.||
+|Silhouette|Use UIEffect for filling color.||
+|Soft shadow(outer glow)|Use UIEffect and UIShadow for blurring shadow.<br>To blur only shadow, set `Blur Factor` to 0.||
+|Colored shadow|Use UIEffect and UIShadow for filling colored shadow.<br>To fill color only shadow, set `Color Factor` to 0.||
+|Blurred dynamic text|Use UIEffect for blurring.<br>To blur dynamic font cleanly, enable `Advanced Blur` option.||
+|Text with outline & shadow|Use two UIShadow for outline and shadow.<br>There is less overdraw than default Outline/Shadow `(Default: 1 x 5 x 2 = 10 draw calls, UIShadow: 4 + 1 = 5 draw calls)`.||
+|Shinning button|Use UIShiny for shinning button.<br>Shine the button and indicate to user that you can press the button.<br>Enable `Play On Enable` and `Loop` option to shine it without any AnimationClip.||
+|Blurring the background of a menu|Use UIEffectCapturedImage to blur the background of a menu.<br>UIEffectCapturedImage applies an effect to the screen of the previous frame, without adding a camera or layer.<br>It's not a real-time post effect, so it's good performance and works well on mobile.||
+|Screen transition|Use UITransitionEffect to create screen transition.<br>You can change transition texture (single channel texture).||
 
 
 
@@ -120,6 +139,12 @@ See also [Demo](#demo).
 |-|-|-|-|-|
 | x(32bit float) | Tone level | *Empty* | Blur level | *Empty* |
 | y(32bit float) | Red channel | Green channel | Blue channel | Alpha channel |
+
+* In v3.0.0+, UIEffect uploads the parameter value to a shared texture and the shader refers to it.  
+This approach has the following advantages:
+  * More parameters for the effect are available.
+  * The parameter accuracy is improved from 6 bits to 8 bits.
+  * ModifyMesh is not called when parameter value is changed.
 
 
 #### Note: Unity 5.6+
