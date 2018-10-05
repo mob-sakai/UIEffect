@@ -45,6 +45,7 @@ namespace Coffee.UIExtensions
 			_spTargetTexture = serializedObject.FindProperty("m_TargetTexture");
 			_spBlurMode = serializedObject.FindProperty("m_BlurMode");
 			_spCaptureOnEnable = serializedObject.FindProperty("m_CaptureOnEnable");
+			_spImmediateCapturing = serializedObject.FindProperty("m_ImmediateCapturing");
 
 
 			_customAdvancedOption = (qualityMode == QualityMode.Custom) || _spTargetTexture.objectReferenceValue;
@@ -80,6 +81,7 @@ namespace Coffee.UIExtensions
 
 			EditorGUILayout.PropertyField(_spCaptureOnEnable);// CaptureOnEnable.
 			EditorGUILayout.PropertyField(_spKeepSizeToRootCanvas);// Keep Graphic Size To RootCanvas.
+			EditorGUILayout.PropertyField(_spImmediateCapturing);// Capture immediately.
 
 			EditorGUI.BeginChangeCheck();
 			QualityMode quality = qualityMode;
@@ -174,6 +176,7 @@ namespace Coffee.UIExtensions
 		SerializedProperty _spKeepSizeToRootCanvas;
 		SerializedProperty _spTargetTexture;
 		SerializedProperty _spCaptureOnEnable;
+		SerializedProperty _spImmediateCapturing;
 
 		QualityMode qualityMode
 		{

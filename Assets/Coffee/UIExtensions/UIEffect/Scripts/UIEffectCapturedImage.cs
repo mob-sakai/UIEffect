@@ -54,6 +54,7 @@ namespace Coffee.UIExtensions
 		[SerializeField] bool m_FitToScreen = true;
 		[SerializeField] RenderTexture m_TargetTexture;
 		[SerializeField] bool m_CaptureOnEnable = false;
+		[SerializeField] bool m_ImmediateCapturing = false;
 
 
 		//################################
@@ -145,6 +146,11 @@ namespace Coffee.UIExtensions
 		/// Target RenderTexture to capture.
 		/// </summary>
 		public RenderTexture targetTexture { get { return m_TargetTexture; } set { m_TargetTexture = value; } }
+
+		/// <summary>
+		/// Capture immediately.
+		/// </summary>
+		public bool immediateCapturing { get { return m_ImmediateCapturing; } set { m_ImmediateCapturing = value; } }
 
 		/// <summary>
 		/// This function is called when the object becomes enabled and active.
@@ -350,13 +356,9 @@ namespace Coffee.UIExtensions
 #if UNITY_EDITOR
 			if(!Application.isPlaying)
 			{
-				texture = null;
-				_SetDirty ();
 				Graphics.ExecuteCommandBuffer (s_CommandBuffer);
 
-				_Release(false);
-				texture = capturedTexture;
-				_SetDirty ();
+				UpdateTexture();
 				return;
 			}
 			else
@@ -364,8 +366,15 @@ namespace Coffee.UIExtensions
 				Graphics.ExecuteCommandBuffer(s_CommandBuffer);
 			}
 #endif
-			// Execute command buffer.
-			canvas.rootCanvas.GetComponent<CanvasScaler> ().StartCoroutine(_CoUpdateTextureOnNextFrame ());
+			if (m_ImmediateCapturing)
+			{
+				UpdateTexture();
+			}
+			else
+			{
+				// Execute command buffer.
+				canvas.rootCanvas.GetComponent<CanvasScaler>().StartCoroutine(_CoUpdateTextureOnNextFrame());
+			}
 		}
 
 		/// <summary>
@@ -504,7 +513,11 @@ namespace Coffee.UIExtensions
 		IEnumerator _CoUpdateTextureOnNextFrame ()
 		{
 			yield return new WaitForEndOfFrame ();
+			UpdateTexture();
+		}
 
+		void UpdateTexture()
+		{
 #if !UNITY_EDITOR
 			// Execute command buffer.
 			Graphics.ExecuteCommandBuffer (s_CommandBuffer);
