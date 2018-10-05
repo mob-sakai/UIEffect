@@ -28,13 +28,28 @@ namespace Coffee.UIExtensions
 		//################################
 		// Serialize Members.
 		//################################
+		[Tooltip("Effect mode.")]
 		[SerializeField] EffectMode m_EffectMode = EffectMode.Cutoff;
+
+		[Tooltip("Effect factor between 0(no effect) and 1(complete effect).")]
 		[SerializeField][Range(0, 1)] float m_EffectFactor = 1;
+
+		[Tooltip("Transition texture (single channel texture).")]
 		[SerializeField] Texture m_TransitionTexture;
+
+		[Tooltip("The area for effect.")]
 		[SerializeField] EffectArea m_EffectArea;
+
+		[Tooltip("Keep effect aspect ratio.")]
 		[SerializeField] bool m_KeepAspectRatio;
+
+		[Tooltip("Dissolve edge width.")]
 		[SerializeField] [Range(0, 1)] float m_DissolveWidth = 0.5f;
+
+		[Tooltip("Dissolve edge softness.")]
 		[SerializeField] [Range(0, 1)] float m_DissolveSoftness = 0.5f;
+
+		[Tooltip("Dissolve edge color.")]
 		[SerializeField] [ColorUsage(false)] Color m_DissolveColor = new Color(0.0f, 0.25f, 1.0f);
 
 

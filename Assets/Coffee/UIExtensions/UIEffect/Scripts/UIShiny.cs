@@ -28,14 +28,27 @@ namespace Coffee.UIExtensions
 		//################################
 		// Serialize Members.
 		//################################
+		[Tooltip("Location for shiny effect.")]
 		[SerializeField] [Range(0, 1)] float m_Location = 0;
+
+		[Tooltip("Width for shiny effect.")]
 		[SerializeField] [Range(0, 1)] float m_Width = 0.25f;
+
+		[Tooltip("Rotation for shiny effect.")]
 		[SerializeField] [Range(-180, 180)] float m_Rotation;
+
+		[Tooltip("Softness for shiny effect.")]
 		[SerializeField][Range(0.01f, 1)] float m_Softness = 1f;
+
+		[Tooltip("Brightness for shiny effect.")]
 		[FormerlySerializedAs("m_Alpha")]
 		[SerializeField][Range(0, 1)] float m_Brightness = 1f;
+
+		[Tooltip("Gloss factor for shiny effect.")]
 		[FormerlySerializedAs("m_Highlight")]
 		[SerializeField][Range(0, 1)] float m_Gloss = 1;
+
+		[Tooltip("The area for effect.")]
 		[SerializeField] protected EffectArea m_EffectArea;
 
 		[Header("Effect Runner")]

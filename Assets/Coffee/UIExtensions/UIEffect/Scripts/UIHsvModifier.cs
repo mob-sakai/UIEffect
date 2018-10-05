@@ -21,11 +21,22 @@ namespace Coffee.UIExtensions
 		// Serialize Members.
 		//################################
 		[Header("Target")]
+
+		[Tooltip("Target color to affect hsv shift.")]
 		[SerializeField] [ColorUsage(false)] Color m_TargetColor = Color.red;
+
+		[Tooltip("Color range to affect hsv shift [0 ~ 1].")]
 		[SerializeField] [Range(0, 1)] float m_Range = 0.1f;
+
 		[Header("Adjustment")]
+
+		[Tooltip("Hue shift [-0.5 ~ 0.5].")]
 		[SerializeField] [Range(-0.5f, 0.5f)] float m_Hue;
+
+		[Tooltip("Saturation shift [-0.5 ~ 0.5].")]
 		[SerializeField] [Range(-0.5f, 0.5f)] float m_Saturation;
+
+		[Tooltip("Value shift [-0.5 ~ 0.5].")]
 		[SerializeField] [Range(-0.5f, 0.5f)] float m_Value;
 
 

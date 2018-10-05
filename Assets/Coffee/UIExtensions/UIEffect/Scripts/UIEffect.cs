@@ -31,18 +31,33 @@ namespace Coffee.UIExtensions
 		// Serialize Members.
 		//################################
 		[FormerlySerializedAs("m_ToneLevel")]
+		[Tooltip("Effect factor between 0(no effect) and 1(complete effect).")]
 		[SerializeField][Range(0, 1)] float m_EffectFactor = 1;
+
+		[Tooltip("Color effect factor between 0(no effect) and 1(complete effect).")]
 		[SerializeField][Range(0, 1)] float m_ColorFactor = 1;
+
 		[FormerlySerializedAs("m_Blur")]
+		[Tooltip("How far is the blurring from the graphic.")]
 		[SerializeField][Range(0, 1)] float m_BlurFactor = 1;
+
+		[FormerlySerializedAs("m_ToneMode")]
+		[Tooltip("Effect mode")]
+		[SerializeField] EffectMode m_EffectMode;
+
+		[Tooltip("Color effect mode")]
+		[SerializeField] ColorMode m_ColorMode;
+
+		[Tooltip("Blur effect mode")]
+		[SerializeField] BlurMode m_BlurMode;
+
+		[Tooltip("Advanced blurring remove common artifacts in the blur effect for uGUI.")]
+		[SerializeField] bool m_AdvancedBlur = false;
+
 		[Obsolete][HideInInspector]
 		[SerializeField][Range(0, 1)] float m_ShadowBlur = 1;
 		[Obsolete][HideInInspector]
 		[SerializeField] ShadowStyle m_ShadowStyle;
-		[FormerlySerializedAs("m_ToneMode")]
-		[SerializeField] EffectMode m_EffectMode;
-		[SerializeField] ColorMode m_ColorMode;
-		[SerializeField] BlurMode m_BlurMode;
 		[Obsolete][HideInInspector]
 		[SerializeField] Color m_ShadowColor = Color.black;
 		[Obsolete][HideInInspector]
@@ -53,7 +68,6 @@ namespace Coffee.UIExtensions
 		[SerializeField] Color m_EffectColor = Color.white;
 		[Obsolete][HideInInspector]
 		[SerializeField] List<UIShadow.AdditionalShadow> m_AdditionalShadows = new List<UIShadow.AdditionalShadow>();
-		[SerializeField] bool m_AdvancedBlur = false;
 
 		public enum BlurEx
 		{

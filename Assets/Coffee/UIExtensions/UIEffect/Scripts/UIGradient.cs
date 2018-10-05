@@ -38,16 +38,38 @@ namespace Coffee.UIExtensions
 		//################################
 		// Serialize Members.
 		//################################
+
+		[Tooltip("Gradient Direction.")]
 		[SerializeField] Direction m_Direction;
+
+		[Tooltip("Color1: Top or Left.")]
 		[SerializeField] Color m_Color1 = Color.white;
+
+		[Tooltip("Color2: Bottom or Right.")]
 		[SerializeField] Color m_Color2 = Color.white;
+
+		[Tooltip("Color3: For diagonal.")]
 		[SerializeField] Color m_Color3 = Color.white;
+
+		[Tooltip("Color4: For diagonal.")]
 		[SerializeField] Color m_Color4 = Color.white;
+
+		[Tooltip("Gradient rotation.")]
 		[SerializeField][Range(-180, 180)] float m_Rotation;
+
+		[Tooltip("Gradient offset for Horizontal, Vertical or Angle.")]
 		[SerializeField][Range(-1, 1)] float m_Offset1;
+
+		[Tooltip("Gradient offset for Diagonal.")]
 		[SerializeField][Range(-1, 1)] float m_Offset2;
+
+		[Tooltip("Gradient style for Text.")]
 		[SerializeField] GradientStyle m_GradientStyle;
+
+		[Tooltip("Color space to correct color.")]
 		[SerializeField] ColorSpace m_ColorSpace = ColorSpace.Uninitialized;
+
+		[Tooltip("Ignore aspect ratio.")]
 		[SerializeField] bool m_IgnoreAspectRatio = true;
 
 

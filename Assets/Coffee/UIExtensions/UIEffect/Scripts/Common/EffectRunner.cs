@@ -16,26 +16,31 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Gets or sets a value indicating whether is running.
 		/// </summary>
+		[Tooltip("Running.")]
 		public bool running;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether can loop.
 		/// </summary>
+		[Tooltip("Loop.")]
 		public bool loop;
 
 		/// <summary>
 		/// Gets or sets the duration.
 		/// </summary>
+		[Tooltip("Duration.")]
 		public float duration;
 
 		/// <summary>
 		/// Gets or sets the delay before looping.
 		/// </summary>
+		[Tooltip("Delay before looping.")]
 		public float loopDelay;
 
 		/// <summary>
 		/// Gets or sets the update mode.
 		/// </summary>
+		[Tooltip("Update mode")]
 		public AnimatorUpdateMode updateMode;
 
 		static List<Action> s_UpdateActions;

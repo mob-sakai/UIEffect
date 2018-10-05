@@ -37,26 +37,57 @@ namespace Coffee.UIExtensions
 		//################################
 		// Serialize Members.
 		//################################
+		[Tooltip("Effect factor between 0(no effect) and 1(complete effect).")]
 		[FormerlySerializedAs("m_ToneLevel")]
 		[SerializeField][Range(0, 1)] float m_EffectFactor = 1;
+
+		[Tooltip("Color effect factor between 0(no effect) and 1(complete effect).")]
 		[SerializeField][Range(0, 1)] float m_ColorFactor = 1;
+
+		[Tooltip("How far is the blurring from the graphic.")]
 		[FormerlySerializedAs("m_Blur")]
 		[SerializeField][Range(0, 1)] float m_BlurFactor = 1;
+
+		[Tooltip("Effect mode.")]
 		[FormerlySerializedAs("m_ToneMode")]
 		[SerializeField] EffectMode m_EffectMode;
+
+		[Tooltip("Color effect mode.")]
 		[SerializeField] ColorMode m_ColorMode;
+
+		[Tooltip("Blur effect mode.")]
 		[SerializeField] BlurMode m_BlurMode;
+
+		[Tooltip("Color for the color effect.")]
 		[SerializeField] Color m_EffectColor = Color.white;
+
+		[Tooltip("Desampling rate of the generated RenderTexture.")]
 		[SerializeField] DesamplingRate m_DesamplingRate;
+
+		[Tooltip("Desampling rate of reduction buffer to apply effect.")]
 		[SerializeField] DesamplingRate m_ReductionRate;
+
+		[Tooltip("FilterMode for capturing.")]
 		[SerializeField] FilterMode m_FilterMode = FilterMode.Bilinear;
+
+		[Tooltip("Effect material.")]
 		[SerializeField] Material m_EffectMaterial;
+
+		[Tooltip("Blur iterations.")]
 		[FormerlySerializedAs("m_Iterations")]
 		[SerializeField][Range(1, 8)] int m_BlurIterations = 1;
+
+		[Tooltip("Fits graphic size to screen on captured.")]
 		[FormerlySerializedAs("m_KeepCanvasSize")]
 		[SerializeField] bool m_FitToScreen = true;
+
+		[Tooltip("Target RenderTexture to capture.")]
 		[SerializeField] RenderTexture m_TargetTexture;
+
+		[Tooltip("Capture automatically on enable.")]
 		[SerializeField] bool m_CaptureOnEnable = false;
+
+		[Tooltip("Capture immediately.")]
 		[SerializeField] bool m_ImmediateCapturing = true;
 
 
@@ -64,13 +95,13 @@ namespace Coffee.UIExtensions
 		// Public Members.
 		//################################
 		/// <summary>
-		/// Tone effect level between 0(no effect) and 1(complete effect).
+		/// Effect factor between 0(no effect) and 1(complete effect).
 		/// </summary>
 		[System.Obsolete("Use effectFactor instead (UnityUpgradable) -> effectFactor")]
 		public float toneLevel { get { return m_EffectFactor; } set { m_EffectFactor = Mathf.Clamp(value, 0, 1); } }
 
 		/// <summary>
-		/// Tone effect level between 0(no effect) and 1(complete effect).
+		/// Effect factor between 0(no effect) and 1(complete effect).
 		/// </summary>
 		public float effectFactor { get { return m_EffectFactor; } set { m_EffectFactor = Mathf.Clamp(value, 0, 1); } }
 
@@ -97,7 +128,7 @@ namespace Coffee.UIExtensions
 		public EffectMode toneMode { get { return m_EffectMode; } }
 
 		/// <summary>
-		/// Tone effect mode.
+		/// Effect mode.
 		/// </summary>
 		public EffectMode effectMode { get { return m_EffectMode; } }
 
@@ -132,7 +163,7 @@ namespace Coffee.UIExtensions
 		public DesamplingRate reductionRate { get { return m_ReductionRate; } set { m_ReductionRate = value; } }
 
 		/// <summary>
-		/// FilterMode for capture.
+		/// FilterMode for capturing.
 		/// </summary>
 		public FilterMode filterMode { get { return m_FilterMode; } set { m_FilterMode = value; } }
 
@@ -159,7 +190,7 @@ namespace Coffee.UIExtensions
 		public bool keepCanvasSize { get { return m_FitToScreen; } set { m_FitToScreen = value; } }
 
 		/// <summary>
-		/// Fits graphic size to screen.
+		/// Fits graphic size to screen on captured.
 		/// </summary>
 		public bool fitToScreen { get { return m_FitToScreen; } set { m_FitToScreen = value; } }
 
@@ -167,6 +198,11 @@ namespace Coffee.UIExtensions
 		/// Target RenderTexture to capture.
 		/// </summary>
 		public RenderTexture targetTexture { get { return m_TargetTexture; } set { m_TargetTexture = value; } }
+
+		/// <summary>
+		/// Capture automatically on enable.
+		/// </summary>
+		public bool captureOnEnable { get { return m_CaptureOnEnable; } set { m_CaptureOnEnable = value; } }
 
 		/// <summary>
 		/// Capture immediately.

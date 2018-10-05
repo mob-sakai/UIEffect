@@ -61,8 +61,13 @@ namespace Coffee.UIExtensions
 		//################################
 		// Serialize Members.
 		//################################
-		[SerializeField][Range(0, 1)] float m_Blur = 1;
+		[Tooltip("How far is the blurring shadow from the graphic.")]
+		[FormerlySerializedAs("m_Blur")]
+		[SerializeField][Range(0, 1)] float m_BlurFactor = 1;
+
+		[Tooltip("Shadow effect style.")]
 		[SerializeField] ShadowStyle m_Style = ShadowStyle.Shadow;
+
 		[HideInInspector][System.Obsolete]
 		[SerializeField] List<AdditionalShadow> m_AdditionalShadows = new List<AdditionalShadow>();
 
@@ -98,7 +103,7 @@ namespace Coffee.UIExtensions
 		}
 
 		/// <summary>
-		/// Shadow effect mode.
+		/// Shadow effect style.
 		/// </summary>
 		public ShadowStyle style
 		{
