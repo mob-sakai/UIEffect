@@ -329,7 +329,7 @@ namespace Coffee.UIExtensions
 						shadow.effectDistance = m_EffectDistance;
 						shadow.effectColor = m_ShadowColor;
 						shadow.useGraphicAlpha = m_UseGraphicAlpha;
-						shadow.blur = m_ShadowBlur;
+						shadow.blurFactor = m_ShadowBlur;
 					}
 
 					foreach (var s in m_AdditionalShadows)
@@ -344,7 +344,7 @@ namespace Coffee.UIExtensions
 						shadow.effectDistance = s.effectDistance;
 						shadow.effectColor = s.effectColor;
 						shadow.useGraphicAlpha = s.useGraphicAlpha;
-						shadow.blur = s.blur;
+						shadow.blurFactor = s.blur;
 					}
 
 					m_ShadowStyle = ShadowStyle.None;

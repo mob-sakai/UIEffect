@@ -98,6 +98,7 @@ namespace Coffee.UIExtensions
 			}
 		}
 
+		/// <summary>
 		/// Gets the parameter texture.
 		/// </summary>
 		public override ParameterTexture ptex { get { return _ptex; } }

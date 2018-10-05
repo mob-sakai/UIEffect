@@ -73,12 +73,26 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// How far is the blurring shadow from the graphic.
 		/// </summary>
+		[System.Obsolete("Use blurFactor instead (UnityUpgradable) -> blurFactor")]
 		public float blur
 		{
-			get { return m_Blur; }
+			get { return m_BlurFactor; }
 			set
 			{
-				m_Blur = Mathf.Clamp(value, 0, 2);
+				m_BlurFactor = Mathf.Clamp(value, 0, 2);
+				_SetDirty();
+			}
+		}
+
+		/// <summary>
+		/// How far is the blurring shadow from the graphic.
+		/// </summary>
+		public float blurFactor
+		{
+			get { return m_BlurFactor; }
+			set
+			{
+				m_BlurFactor = Mathf.Clamp(value, 0, 2);
 				_SetDirty();
 			}
 		}
@@ -119,12 +133,6 @@ namespace Coffee.UIExtensions
 		protected override void OnEnable()
 		{
 			base.OnEnable();
-
-//			GetComponents<UIShadow>(_shadows);
-//			foreach(var s in _shadows)
-//			{
-//				s._shadows = _shadows;
-//			}
 
 			_uiEffect = GetComponent<UIEffect>();
 			if (_uiEffect)
@@ -189,7 +197,7 @@ namespace Coffee.UIExtensions
 				{
 					ptex.SetData(this, 0, _uiEffect.effectFactor);	// param.x : effect factor
 					ptex.SetData(this, 1, 255);	// param.y : color factor
-					ptex.SetData(this, 2, m_Blur);	// param.z : blur factor
+					ptex.SetData(this, 2, m_BlurFactor);	// param.z : blur factor
 				}
 
 				_ApplyShadow(s_Verts, effectColor, ref start, ref end, effectDistance, style, useGraphicAlpha);
@@ -345,7 +353,7 @@ namespace Coffee.UIExtensions
 					shadow.effectDistance = s.effectDistance;
 					shadow.effectColor = s.effectColor;
 					shadow.useGraphicAlpha = s.useGraphicAlpha;
-					shadow.blur = s.blur;
+					shadow.blurFactor = s.blur;
 				}
 				m_AdditionalShadows = null;
 			}
