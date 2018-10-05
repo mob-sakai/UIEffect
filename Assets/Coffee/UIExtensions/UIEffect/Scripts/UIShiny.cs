@@ -16,8 +16,6 @@ namespace Coffee.UIExtensions
 	/// <summary>
 	/// UIEffect.
 	/// </summary>
-	[ExecuteInEditMode]
-	[DisallowMultipleComponent]
 	public class UIShiny : UIEffectBase
 	{
 		//################################
@@ -58,10 +56,6 @@ namespace Coffee.UIExtensions
 		//################################
 		// Public Members.
 		//################################
-//		/// <summary>
-//		/// Graphic affected by the UIEffect.
-//		/// </summary>
-//		new public Graphic graphic { get { return base.graphic; } }
 
 		/// <summary>
 		/// Location for shiny effect.
@@ -268,8 +262,6 @@ namespace Coffee.UIExtensions
 			m_Runner.OnDisable();
 		}
 
-//		{
-//		}
 
 #if UNITY_EDITOR
 		protected override Material GetMaterial()
@@ -292,16 +284,6 @@ namespace Coffee.UIExtensions
 		}
 		#pragma warning restore 0612
 
-//
-//		public static Material GetMaterial(string shaderName)
-//		{
-//			string name = Path.GetFileName(shaderName);
-//			return AssetDatabase.FindAssets("t:Material " + name)
-//				.Select(x => AssetDatabase.GUIDToAssetPath(x))
-//				.SelectMany(x => AssetDatabase.LoadAllAssetsAtPath(x))
-//				.OfType<Material>()
-//				.FirstOrDefault(x => x.name == name);
-//		}
 #endif
 
 		/// <summary>
@@ -318,7 +300,7 @@ namespace Coffee.UIExtensions
 			Rect rect = m_EffectArea.GetEffectArea(vh, graphic);
 
 			// rotation.
-			float rad = rotation * Mathf.Deg2Rad;
+			float rad = m_Rotation * Mathf.Deg2Rad;
 			Vector2 dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
 			dir.x *= rect.height / rect.width;
 			dir = dir.normalized;

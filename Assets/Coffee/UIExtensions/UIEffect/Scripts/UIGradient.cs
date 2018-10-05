@@ -54,32 +54,87 @@ namespace Coffee.UIExtensions
 		//################################
 		// Public Members.
 		//################################
-		new public Graphic graphic { get { return base.graphic; } }
+		public Graphic targetGraphic { get { return base.graphic; } }
 
 		/// <summary>
 		/// Gradient Direction.
 		/// </summary>
-		public Direction direction { get { return m_Direction; } set { if (m_Direction != value) { m_Direction = value; graphic.SetVerticesDirty(); } } }
+		public Direction direction
+		{
+			get { return m_Direction; }
+			set
+			{
+				if (m_Direction != value)
+				{
+					m_Direction = value;
+					graphic.SetVerticesDirty();
+				}
+			}
+		}
 
 		/// <summary>
 		/// Color1: Top or Left.
 		/// </summary>
-		public Color color1 { get { return m_Color1; } set { if (m_Color1 != value) { m_Color1 = value; graphic.SetVerticesDirty(); } } }
+		public Color color1
+		{
+			get { return m_Color1; }
+			set
+			{
+				if (m_Color1 != value)
+				{
+					m_Color1 = value;
+					graphic.SetVerticesDirty();
+				}
+			}
+		}
 
 		/// <summary>
 		/// Color2: Bottom or Right.
 		/// </summary>
-		public Color color2 { get { return m_Color2; } set { if (m_Color2 != value) { m_Color2 = value; graphic.SetVerticesDirty(); } } }
+		public Color color2
+		{
+			get { return m_Color2; }
+			set
+			{
+				if (m_Color2 != value)
+				{
+					m_Color2 = value;
+					graphic.SetVerticesDirty();
+				}
+			}
+		}
 
 		/// <summary>
 		/// Color3: For diagonal.
 		/// </summary>
-		public Color color3 { get { return m_Color3; } set { if (m_Color3 != value) { m_Color3 = value; graphic.SetVerticesDirty(); } } }
+		public Color color3
+		{
+			get { return m_Color3; }
+			set
+			{
+				if (m_Color3 != value)
+				{
+					m_Color3 = value;
+					graphic.SetVerticesDirty();
+				}
+			}
+		}
 
 		/// <summary>
 		/// Color4: For diagonal.
 		/// </summary>
-		public Color color4 { get { return m_Color4; } set { if (m_Color4 != value) { m_Color4 = value; graphic.SetVerticesDirty(); } } }
+		public Color color4
+		{
+			get { return m_Color4; }
+			set
+			{
+				if (m_Color4 != value)
+				{
+					m_Color4 = value;
+					graphic.SetVerticesDirty();
+				}
+			}
+		}
 
 		/// <summary>
 		/// Gradient rotation.
@@ -92,33 +147,96 @@ namespace Coffee.UIExtensions
 						: m_Direction == Direction.Vertical ? 0
 						: m_Rotation;
 			}
-			set { if (!Mathf.Approximately(m_Rotation, value)) { m_Rotation = value; graphic.SetVerticesDirty(); } }
+			set
+			{
+				if (!Mathf.Approximately(m_Rotation, value))
+				{
+					m_Rotation = value;
+					graphic.SetVerticesDirty();
+				}
+			}
 		}
 
 		/// <summary>
 		/// Gradient offset for Horizontal, Vertical or Angle.
 		/// </summary>
-		public float offset { get { return m_Offset1; } set { if (m_Offset1 != value) { m_Offset1 = value; graphic.SetVerticesDirty(); } } }
+		public float offset
+		{
+			get { return m_Offset1; }
+			set
+			{
+				if (m_Offset1 != value)
+				{
+					m_Offset1 = value;
+					graphic.SetVerticesDirty();
+				}
+			}
+		}
 
 		/// <summary>
 		/// Gradient offset for Diagonal.
 		/// </summary>
-		public Vector2 offset2 { get { return new Vector2(m_Offset2, m_Offset1); } set { if (m_Offset1 != value.y || m_Offset2 != value.x) { m_Offset1 = value.y; m_Offset2 = value.x; graphic.SetVerticesDirty(); } } }
+		public Vector2 offset2
+		{
+			get { return new Vector2(m_Offset2, m_Offset1); }
+			set
+			{
+				if (m_Offset1 != value.y || m_Offset2 != value.x)
+				{
+					m_Offset1 = value.y;
+					m_Offset2 = value.x;
+					graphic.SetVerticesDirty();
+				}
+			}
+		}
 
 		/// <summary>
 		/// Gradient style for Text.
 		/// </summary>
-		public GradientStyle gradientStyle { get { return m_GradientStyle; } set { if (m_GradientStyle != value) { m_GradientStyle = value; graphic.SetVerticesDirty(); } } }
+		public GradientStyle gradientStyle
+		{
+			get { return m_GradientStyle; }
+			set
+			{
+				if (m_GradientStyle != value)
+				{
+					m_GradientStyle = value;
+					graphic.SetVerticesDirty();
+				}
+			}
+		}
 
 		/// <summary>
 		/// Color space to correct color.
 		/// </summary>
-		public ColorSpace colorSpace { get { return m_ColorSpace; } set { if (m_ColorSpace != value) { m_ColorSpace = value; graphic.SetVerticesDirty(); } } }
+		public ColorSpace colorSpace
+		{
+			get { return m_ColorSpace; }
+			set
+			{
+				if (m_ColorSpace != value)
+				{
+					m_ColorSpace = value;
+					graphic.SetVerticesDirty();
+				}
+			}
+		}
 
 		/// <summary>
 		/// Ignore aspect ratio.
 		/// </summary>
-		public bool ignoreAspectRatio { get { return m_IgnoreAspectRatio; } set { if (m_IgnoreAspectRatio != value) { m_IgnoreAspectRatio = value; graphic.SetVerticesDirty(); } } }
+		public bool ignoreAspectRatio
+		{
+			get { return m_IgnoreAspectRatio; }
+			set
+			{
+				if (m_IgnoreAspectRatio != value)
+				{
+					m_IgnoreAspectRatio = value;
+					graphic.SetVerticesDirty();
+				}
+			}
+		}
 
 
 		/// <summary>

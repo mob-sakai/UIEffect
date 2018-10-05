@@ -54,7 +54,7 @@ namespace Coffee.UIExtensions
 		[SerializeField] bool m_FitToScreen = true;
 		[SerializeField] RenderTexture m_TargetTexture;
 		[SerializeField] bool m_CaptureOnEnable = false;
-		[SerializeField] bool m_ImmediateCapturing = false;
+		[SerializeField] bool m_ImmediateCapturing = true;
 
 
 		//################################
@@ -83,12 +83,12 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Color effect mode.
 		/// </summary>
-		public ColorMode colorMode { get { return m_ColorMode; } set { m_ColorMode = value; } }
+		public ColorMode colorMode { get { return m_ColorMode; } }
 
 		/// <summary>
 		/// Blur effect mode.
 		/// </summary>
-		public BlurMode blurMode { get { return m_BlurMode; } set { m_BlurMode = value; } }
+		public BlurMode blurMode { get { return m_BlurMode; } }
 
 		/// <summary>
 		/// Color for the color effect.
@@ -189,7 +189,7 @@ namespace Coffee.UIExtensions
 		protected override void OnPopulateMesh(VertexHelper vh)
 		{
 			// When not displaying, clear vertex.
-			if (texture == null || effectColor.a < 1 / 255f || canvasRenderer.GetAlpha() < 1 / 255f)
+			if (texture == null || color.a < 1 / 255f || canvasRenderer.GetAlpha() < 1 / 255f)
 			{
 				vh.Clear();
 			}
@@ -248,7 +248,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public void Capture()
 		{
-            // Fit to screen.
+			// Fit to screen.
 			var rootCanvas = canvas.rootCanvas;
 			if (m_FitToScreen)
 			{
@@ -268,22 +268,22 @@ namespace Coffee.UIExtensions
 
 				s_EffectFactorId = Shader.PropertyToID("_EffectFactor");
 				s_ColorFactorId = Shader.PropertyToID("_ColorFactor");
-                s_CommandBuffer = new CommandBuffer();
+				s_CommandBuffer = new CommandBuffer();
 			}
 
 			// If target texture exists, release result RT.
 			if (m_TargetTexture)
 			{
-                _Release(ref _rt);
+				_Release(ref _rt);
 			}
 			else
 			{
 				// If size of result RT has changed, release it.
 				int w, h;
-				GetDesamplingSize (m_DesamplingRate, out w, out h);
+				GetDesamplingSize(m_DesamplingRate, out w, out h);
 				if (_rt && (_rt.width != w || _rt.height != h))
 				{
-					_Release (ref _rt);
+					_Release(ref _rt);
 				}
 
 				// Generate RT for result.
@@ -304,9 +304,9 @@ namespace Coffee.UIExtensions
 			// Material for effect.
 			Material mat = effectMaterial;
 
-			if(s_CommandBuffer == null)
+			if (s_CommandBuffer == null)
 			{
-				s_CommandBuffer = new CommandBuffer ();
+				s_CommandBuffer = new CommandBuffer();
 			}
 			s_CommandBuffer.name = mat ? mat.name : "noeffect";
 			if (_rt)
@@ -329,8 +329,8 @@ namespace Coffee.UIExtensions
 			s_CommandBuffer.SetGlobalVector(s_ColorFactorId, new Vector4(effectColor.r, effectColor.g, effectColor.b, effectColor.a));
 
 			// [2] Apply base effect with reduction buffer (copied screen -> effect1).
-			GetDesamplingSize (m_ReductionRate, out w, out h);
-			s_CommandBuffer.GetTemporaryRT (s_EffectId1, w, h, 0, m_FilterMode);
+			GetDesamplingSize(m_ReductionRate, out w, out h);
+			s_CommandBuffer.GetTemporaryRT(s_EffectId1, w, h, 0, m_FilterMode);
 			s_CommandBuffer.Blit(s_CopyId, s_EffectId1, mat, 0);
 			s_CommandBuffer.ReleaseTemporaryRT(s_CopyId);
 
@@ -349,14 +349,14 @@ namespace Coffee.UIExtensions
 				s_CommandBuffer.ReleaseTemporaryRT(s_EffectId2);
 			}
 
-            // [4] Copy to result RT.
-			s_CommandBuffer.Blit(s_EffectId1, new RenderTargetIdentifier (capturedTexture));
+			// [4] Copy to result RT.
+			s_CommandBuffer.Blit(s_EffectId1, new RenderTargetIdentifier(capturedTexture));
 			s_CommandBuffer.ReleaseTemporaryRT(s_EffectId1);
 
 #if UNITY_EDITOR
-			if(!Application.isPlaying)
+			if (!Application.isPlaying)
 			{
-				Graphics.ExecuteCommandBuffer (s_CommandBuffer);
+				Graphics.ExecuteCommandBuffer(s_CommandBuffer);
 
 				UpdateTexture();
 				return;
@@ -416,9 +416,9 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Raises the validate event.
 		/// </summary>
-		protected override void OnValidate ()
+		protected override void OnValidate()
 		{
-			base.OnValidate ();
+			base.OnValidate();
 			UnityEditor.EditorApplication.delayCall += () => UpdateMaterial(false);
 		}
 
@@ -428,12 +428,12 @@ namespace Coffee.UIExtensions
 		/// <param name="ignoreInPlayMode">If set to <c>true</c> ignore in play mode.</param>
 		protected void UpdateMaterial(bool ignoreInPlayMode)
 		{
-			if(!this || ignoreInPlayMode && Application.isPlaying)
+			if (!this || ignoreInPlayMode && Application.isPlaying)
 			{
 				return;
 			}
 
-			var mat =  MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_ToneMode, m_ColorMode, m_BlurMode);
+			var mat = MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_ToneMode, m_ColorMode, m_BlurMode);
 			if (m_EffectMaterial != mat)
 			{
 				material = null;
@@ -455,7 +455,7 @@ namespace Coffee.UIExtensions
 		static int s_EffectId2;
 		static int s_EffectFactorId;
 		static int s_ColorFactorId;
-        static CommandBuffer s_CommandBuffer;
+		static CommandBuffer s_CommandBuffer;
 
 		/// <summary>
 		/// Release genarated objects.
@@ -471,11 +471,11 @@ namespace Coffee.UIExtensions
 
 			if (s_CommandBuffer != null)
 			{
-                s_CommandBuffer.Clear();
+				s_CommandBuffer.Clear();
 
-				if(releaseRT)
+				if (releaseRT)
 				{
-					s_CommandBuffer.Release ();
+					s_CommandBuffer.Release();
 					s_CommandBuffer = null;
 				}
 			}
@@ -485,7 +485,7 @@ namespace Coffee.UIExtensions
 		void _SetDirty()
 		{
 #if UNITY_EDITOR
-			if(!Application.isPlaying)
+			if (!Application.isPlaying)
 			{
 				UnityEditor.EditorUtility.SetDirty(this);
 			}
@@ -498,7 +498,7 @@ namespace Coffee.UIExtensions
 			{
 				obj.Release();
 #if UNITY_EDITOR
-				if(!Application.isPlaying)
+				if (!Application.isPlaying)
 					DestroyImmediate(obj);
 				else
 #endif
@@ -510,9 +510,9 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Set texture on next frame.
 		/// </summary>
-		IEnumerator _CoUpdateTextureOnNextFrame ()
+		IEnumerator _CoUpdateTextureOnNextFrame()
 		{
-			yield return new WaitForEndOfFrame ();
+			yield return new WaitForEndOfFrame();
 			UpdateTexture();
 		}
 

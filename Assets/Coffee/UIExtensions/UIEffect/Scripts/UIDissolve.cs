@@ -7,7 +7,6 @@ namespace Coffee.UIExtensions
 	/// <summary>
 	/// Dissolve effect for uGUI.
 	/// </summary>
-	[ExecuteInEditMode]
 	public class UIDissolve : UIEffectBase
 	{
 		//################################

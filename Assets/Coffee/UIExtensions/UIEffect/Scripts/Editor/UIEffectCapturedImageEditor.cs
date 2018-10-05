@@ -86,7 +86,7 @@ namespace Coffee.UIExtensions
 			EditorGUI.BeginChangeCheck();
 			QualityMode quality = qualityMode;
 			quality = (QualityMode)EditorGUILayout.EnumPopup("Quality Mode", quality);
-			if(EditorGUI.EndChangeCheck())
+			if (EditorGUI.EndChangeCheck())
 			{
 				_customAdvancedOption = (quality == QualityMode.Custom) || _spTargetTexture.objectReferenceValue;
 				qualityMode = quality;
@@ -95,7 +95,7 @@ namespace Coffee.UIExtensions
 			// When qualityMode is `Custom`, show advanced option.
 			if (_customAdvancedOption)
 			{
-				if(_spBlurMode.intValue != 0)
+				if (_spBlurMode.intValue != 0)
 				{
 					EditorGUILayout.PropertyField(_spIterations);// Iterations.
 				}
@@ -104,7 +104,7 @@ namespace Coffee.UIExtensions
 				EditorGUILayout.Space();
 				EditorGUILayout.LabelField("Result Texture Setting", EditorStyles.boldLabel);
 
-				if(!_spTargetTexture.objectReferenceValue)
+				if (!_spTargetTexture.objectReferenceValue)
 				{
 					EditorGUILayout.PropertyField(_spFilterMode);// Filter Mode.
 					DrawDesamplingRate(_spDesamplingRate);// Desampling rate.
@@ -142,10 +142,10 @@ namespace Coffee.UIExtensions
 			}
 
 			// Warning message for overlay rendering.
-			if(graphic && graphic.canvas)
+			if (graphic && graphic.canvas)
 			{
 				var canvas = graphic.canvas.rootCanvas;
-				if( canvas && canvas.renderMode == RenderMode.WorldSpace)
+				if (canvas && canvas.renderMode == RenderMode.WorldSpace)
 				{
 					using (new GUILayout.HorizontalScope())
 					{
@@ -186,9 +186,9 @@ namespace Coffee.UIExtensions
 					return QualityMode.Custom;
 
 				int qualityValue = (_spDesamplingRate.intValue << 0)
-					+ (_spReductionRate.intValue << 4)
-					+ (_spFilterMode.intValue << 8)
-					+ (_spIterations.intValue << 10);
+				                   + (_spReductionRate.intValue << 4)
+				                   + (_spFilterMode.intValue << 8)
+				                   + (_spIterations.intValue << 10);
 
 				return System.Enum.IsDefined(typeof(QualityMode), qualityValue) ? (QualityMode)qualityValue : QualityMode.Custom;
 			}

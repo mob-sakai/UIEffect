@@ -16,27 +16,27 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Gets or sets a value indicating whether is running.
 		/// </summary>
-		public bool running;// { get; set; }
+		public bool running;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether can loop.
 		/// </summary>
-		public bool loop;//  { get; set; }
+		public bool loop;
 
 		/// <summary>
 		/// Gets or sets the duration.
 		/// </summary>
-		public float duration;//  { get; set; }
+		public float duration;
 
 		/// <summary>
 		/// Gets or sets the delay before looping.
 		/// </summary>
-		public float loopDelay;//  { get; set; }
+		public float loopDelay;
 
 		/// <summary>
 		/// Gets or sets the update mode.
 		/// </summary>
-		public AnimatorUpdateMode updateMode;//  { get; set; }
+		public AnimatorUpdateMode updateMode;
 
 		static List<Action> s_UpdateActions;
 
@@ -46,7 +46,8 @@ namespace Coffee.UIExtensions
 			if (s_UpdateActions == null)
 			{
 				s_UpdateActions = new List<Action>();
-				Canvas.willRenderCanvases += ()=>{
+				Canvas.willRenderCanvases += () =>
+				{
 					var count = s_UpdateActions.Count;
 					for (int i = 0; i < count; i++)
 					{

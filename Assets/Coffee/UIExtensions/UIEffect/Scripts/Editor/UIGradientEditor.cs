@@ -87,7 +87,7 @@ namespace Coffee.UIExtensions
 			EditorGUILayout.LabelField("Advanced Options", EditorStyles.boldLabel);
 			EditorGUI.indentLevel++;
 			{
-				if ((target as UIGradient).graphic is Text)
+				if ((target as UIGradient).targetGraphic is Text)
 					EditorGUILayout.PropertyField(serializedObject.FindProperty("m_GradientStyle"));
 				
 				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_ColorSpace"));

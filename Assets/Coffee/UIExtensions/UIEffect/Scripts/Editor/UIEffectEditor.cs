@@ -98,20 +98,6 @@ namespace Coffee.UIExtensions
 				}
 				EditorGUI.indentLevel--;
 			}
-
-//			// Set effect material.
-//			if (!serializedObject.isEditingMultipleObjects && spToneMode.intValue == 0 && spColorMode.intValue == 0 && spBlurMode.intValue == 0)
-//			{
-//				spMaterial.objectReferenceValue = null;
-//			}
-//			else if (changed || !serializedObject.isEditingMultipleObjects)
-//			{
-//				spMaterial.objectReferenceValue = UIEffect.GetOrGenerateMaterialVariant(Shader.Find(shaderName),
-//					(UIEffect.ToneMode)spToneMode.intValue,
-//					(UIEffect.ColorMode)spColorMode.intValue,
-//					(UIEffect.BlurMode)spBlurMode.intValue
-//				);
-//			}
 		}
 
 		//################################

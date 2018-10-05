@@ -15,9 +15,7 @@ namespace Coffee.UIExtensions
 	/// <summary>
 	/// UIEffect.
 	/// </summary>
-//	[ExecuteInEditMode]
 	[RequireComponent(typeof(Graphic))]
-//	[DisallowMultipleComponent]
 	public class UIShadow : Shadow, IParameterTexture
 #if UNITY_EDITOR
 	, ISerializationCallbackReceiver
@@ -75,12 +73,28 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// How far is the blurring shadow from the graphic.
 		/// </summary>
-		public float blur { get { return m_Blur; } set { m_Blur = Mathf.Clamp(value, 0, 2); _SetDirty(); } }
+		public float blur
+		{
+			get { return m_Blur; }
+			set
+			{
+				m_Blur = Mathf.Clamp(value, 0, 2);
+				_SetDirty();
+			}
+		}
 
 		/// <summary>
 		/// Shadow effect mode.
 		/// </summary>
-		public ShadowStyle style { get { return m_Style; } set { m_Style = value; _SetDirty(); } }
+		public ShadowStyle style
+		{
+			get { return m_Style; }
+			set
+			{
+				m_Style = value;
+				_SetDirty();
+			}
+		}
 
 		/// <summary>
 		/// Gets or sets the parameter index.
@@ -90,7 +104,7 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Gets the parameter texture.
 		/// </summary>
-		public ParameterTexture ptex{get;private set;}
+		public ParameterTexture ptex{ get; private set; }
 
 		/// <summary>
 		/// Gets the ptex material.
@@ -113,7 +127,7 @@ namespace Coffee.UIExtensions
 //			}
 
 			_uiEffect = GetComponent<UIEffect>();
-			if(_uiEffect)
+			if (_uiEffect)
 			{
 				ptex = _uiEffect.ptex;
 				ptex.Register(this);
@@ -124,22 +138,13 @@ namespace Coffee.UIExtensions
 		{
 			base.OnDisable();
 			_uiEffect = null;
-			if(ptex != null)
+			if (ptex != null)
 			{
 				ptex.Unregister(this);
 				ptex = null;
 			}
 		}
 
-//		protected override void OnDestroy()
-//		{
-//			_shadows.Remove(this);
-//			foreach(var s in _shadows)
-//			{
-//				s._shadows = _shadows;
-//			}
-//			_shadows = null;
-//		}
 
 		/// <summary>
 		/// Modifies the mesh.
@@ -180,7 +185,7 @@ namespace Coffee.UIExtensions
 				var start = s_Verts.Count - _graphicVertexCount;
 				var end = s_Verts.Count;
 
-				if(ptex != null && _uiEffect && _uiEffect.isActiveAndEnabled)
+				if (ptex != null && _uiEffect && _uiEffect.isActiveAndEnabled)
 				{
 					ptex.SetData(this, 0, _uiEffect.toneLevel);	// param.x : effect factor
 					ptex.SetData(this, 1, 255);	// param.y : color factor
@@ -267,7 +272,7 @@ namespace Coffee.UIExtensions
 			}
 
 			// Move
-			for (int i = verts.Count-1; count <= i; i--)
+			for (int i = verts.Count - 1; count <= i; i--)
 			{
 				verts[i] = verts[i - count];
 			}
@@ -308,7 +313,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		void _SetDirty()
 		{
-			if(graphic)
+			if (graphic)
 				graphic.SetVerticesDirty();
 		}
 

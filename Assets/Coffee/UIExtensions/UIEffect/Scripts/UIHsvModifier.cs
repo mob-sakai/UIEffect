@@ -8,8 +8,6 @@ namespace Coffee.UIExtensions
 	/// <summary>
 	/// HSV Modifier.
 	/// </summary>
-	[ExecuteInEditMode]
-	[DisallowMultipleComponent]
 	public class UIHsvModifier : UIEffectBase
 	{
 		//################################
@@ -155,7 +153,7 @@ namespace Coffee.UIExtensions
 
 		protected override void SetDirty()
 		{
-			float h,s,v;
+			float h, s, v;
 			Color.RGBToHSV(m_TargetColor, out h, out s, out v);
 
 			ptex.RegisterMaterial(targetGraphic.material);
