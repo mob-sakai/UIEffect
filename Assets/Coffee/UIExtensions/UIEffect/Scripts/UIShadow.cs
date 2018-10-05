@@ -187,7 +187,7 @@ namespace Coffee.UIExtensions
 
 				if (ptex != null && _uiEffect && _uiEffect.isActiveAndEnabled)
 				{
-					ptex.SetData(this, 0, _uiEffect.toneLevel);	// param.x : effect factor
+					ptex.SetData(this, 0, _uiEffect.effectFactor);	// param.x : effect factor
 					ptex.SetData(this, 1, 255);	// param.y : color factor
 					ptex.SetData(this, 2, m_Blur);	// param.z : blur factor
 				}

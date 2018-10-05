@@ -35,16 +35,16 @@ namespace Coffee.UIExtensions
 			//================
 			// Tone setting.
 			//================
-			var spToneMode = serializedObject.FindProperty("m_ToneMode");
+			var spToneMode = serializedObject.FindProperty("m_EffectMode");
 			EditorGUI.BeginChangeCheck();
 			EditorGUILayout.PropertyField(spToneMode);
 			changed |= EditorGUI.EndChangeCheck();
 
 			// When tone is enable, show parameters.
-			if (spToneMode.intValue != (int)ToneMode.None)
+			if (spToneMode.intValue != (int)EffectMode.None)
 			{
 				EditorGUI.indentLevel++;
-				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_ToneLevel"));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_EffectFactor"));
 				EditorGUI.indentLevel--;
 			}
 
@@ -89,7 +89,7 @@ namespace Coffee.UIExtensions
 			if (spBlurMode.intValue != (int)BlurMode.None)
 			{
 				EditorGUI.indentLevel++;
-				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Blur"));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_BlurFactor"));
 
 				var spAdvancedBlur = serializedObject.FindProperty("m_AdvancedBlur");
 				if (spAdvancedBlur != null)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Serialization;
 
 #if UNITY_EDITOR
 using System.IO;
@@ -29,14 +30,17 @@ namespace Coffee.UIExtensions
 		//################################
 		// Serialize Members.
 		//################################
-		[SerializeField][Range(0, 1)] float m_ToneLevel = 1;
+		[FormerlySerializedAs("m_ToneLevel")]
+		[SerializeField][Range(0, 1)] float m_EffectFactor = 1;
 		[SerializeField][Range(0, 1)] float m_ColorFactor = 1;
-		[SerializeField][Range(0, 1)] float m_Blur = 1;
+		[FormerlySerializedAs("m_Blur")]
+		[SerializeField][Range(0, 1)] float m_BlurFactor = 1;
 		[Obsolete][HideInInspector]
 		[SerializeField][Range(0, 1)] float m_ShadowBlur = 1;
 		[Obsolete][HideInInspector]
 		[SerializeField] ShadowStyle m_ShadowStyle;
-		[SerializeField] ToneMode m_ToneMode;
+		[FormerlySerializedAs("m_ToneMode")]
+		[SerializeField] EffectMode m_EffectMode;
 		[SerializeField] ColorMode m_ColorMode;
 		[SerializeField] BlurMode m_BlurMode;
 		[Obsolete][HideInInspector]
@@ -62,20 +66,28 @@ namespace Coffee.UIExtensions
 		//################################
 
 		/// <summary>
-		/// Graphic affected by the UIEffect.
+		/// Effect factor between 0(no effect) and 1(complete effect).
 		/// </summary>
-		[System.Obsolete("Use targetGraphic instead (UnityUpgradable) -> targetGraphic")]
-		new public Graphic graphic { get { return base.graphic; } }
-
-		/// <summary>
-		/// Tone effect level between 0(no effect) and 1(complete effect).
-		/// </summary>
+		[System.Obsolete("Use effectFactor instead (UnityUpgradable) -> effectFactor")]
 		public float toneLevel
 		{
-			get { return m_ToneLevel; }
+			get { return m_EffectFactor; }
 			set
 			{
-				m_ToneLevel = Mathf.Clamp(value, 0, 1);
+				m_EffectFactor = Mathf.Clamp(value, 0, 1);
+				SetDirty();
+			}
+		}
+
+		/// <summary>
+		/// Effect factor between 0(no effect) and 1(complete effect).
+		/// </summary>
+		public float effectFactor
+		{
+			get { return m_EffectFactor; }
+			set
+			{
+				m_EffectFactor = Mathf.Clamp(value, 0, 1);
 				SetDirty();
 			}
 		}
@@ -96,28 +108,49 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// How far is the blurring from the graphic.
 		/// </summary>
+		[System.Obsolete("Use blurFactor instead (UnityUpgradable) -> blurFactor")]
 		public float blur
 		{
-			get { return m_Blur; }
+			get { return m_BlurFactor; }
 			set
 			{
-				m_Blur = Mathf.Clamp(value, 0, 1);
+				m_BlurFactor = Mathf.Clamp(value, 0, 1);
 				SetDirty();
 			}
 		}
 
 		/// <summary>
-		/// Tone effect mode.
+		/// How far is the blurring from the graphic.
 		/// </summary>
-		public ToneMode toneMode { get { return m_ToneMode; } }
+		[System.Obsolete("Use effectFactor instead (UnityUpgradable) -> effectFactor")]
+		public float blurFactor
+		{
+			get { return m_BlurFactor; }
+			set
+			{
+				m_BlurFactor = Mathf.Clamp(value, 0, 1);
+				SetDirty();
+			}
+		}
 
 		/// <summary>
-		/// Color effect mode.
+		/// Effect mode(readonly).
+		/// </summary>
+		[System.Obsolete("Use effectMode instead (UnityUpgradable) -> effectMode")]
+		public EffectMode toneMode { get { return m_EffectMode; } }
+
+		/// <summary>
+		/// Effect mode(readonly).
+		/// </summary>
+		public EffectMode effectMode { get { return m_EffectMode; } }
+
+		/// <summary>
+		/// Color effect mode(readonly).
 		/// </summary>
 		public ColorMode colorMode { get { return m_ColorMode; } }
 
 		/// <summary>
-		/// Blur effect mode.
+		/// Blur effect mode(readonly).
 		/// </summary>
 		public BlurMode blurMode { get { return m_BlurMode; } }
 
@@ -144,7 +177,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public override void ModifyMesh(VertexHelper vh)
 		{
-			if (!isActiveAndEnabled || (m_ToneMode == ToneMode.None && m_ColorMode == ColorMode.Multiply && m_BlurMode == BlurMode.None))
+			if (!isActiveAndEnabled || (m_EffectMode == EffectMode.None && m_ColorMode == ColorMode.Multiply && m_BlurMode == BlurMode.None))
 			{
 				return;
 			}
@@ -252,9 +285,9 @@ namespace Coffee.UIExtensions
 		protected override void SetDirty()
 		{
 			ptex.RegisterMaterial(m_EffectMaterial);
-			ptex.SetData(this, 0, m_ToneLevel);	// param.x : effect factor
+			ptex.SetData(this, 0, m_EffectFactor);	// param.x : effect factor
 			ptex.SetData(this, 1, m_ColorFactor);	// param.y : color factor
-			ptex.SetData(this, 2, m_Blur);	// param.z : blur factor
+			ptex.SetData(this, 2, m_BlurFactor);	// param.z : blur factor
 		}
 
 #if UNITY_EDITOR
@@ -264,11 +297,11 @@ namespace Coffee.UIExtensions
 		/// <returns>The material.</returns>
 		protected override Material GetMaterial()
 		{
-			if (m_ToneMode == ToneMode.None && m_ColorMode == ColorMode.Multiply && m_BlurMode == BlurMode.None)
+			if (m_EffectMode == EffectMode.None && m_ColorMode == ColorMode.Multiply && m_BlurMode == BlurMode.None)
 			{
 				return null;
 			}
-			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_ToneMode, m_ColorMode, m_BlurMode, m_AdvancedBlur ? BlurEx.Ex : BlurEx.None);
+			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_EffectMode, m_ColorMode, m_BlurMode, m_AdvancedBlur ? BlurEx.Ex : BlurEx.None);
 		}
 
 		#pragma warning disable 0612
@@ -317,20 +350,20 @@ namespace Coffee.UIExtensions
 					m_ShadowStyle = ShadowStyle.None;
 					m_AdditionalShadows = null;
 
-					if (m_ToneMode == ToneMode.None && m_ColorMode == ColorMode.Multiply && m_BlurMode == BlurMode.None)
+					if (m_EffectMode == EffectMode.None && m_ColorMode == ColorMode.Multiply && m_BlurMode == BlurMode.None)
 					{
 						DestroyImmediate(this, true);
 					}
 				}
 
-				int tone = (int)m_ToneMode;
+				int tone = (int)m_EffectMode;
 				const int Mono = 5;
 				const int Cutoff = 6;
 				const int Hue = 7;
 				if (tone == Hue)
 				{
 					var go = gameObject;
-					var hue = m_ToneLevel;
+					var hue = m_EffectFactor;
 					DestroyImmediate(this, true);
 					var hsv = go.GetComponent<UIHsvModifier>() ?? go.AddComponent<UIHsvModifier>();
 					hsv.hue = hue;
@@ -341,7 +374,7 @@ namespace Coffee.UIExtensions
 				if (tone == Cutoff || tone == Mono)
 				{
 					var go = gameObject;
-					var factor = m_ToneLevel;
+					var factor = m_EffectFactor;
 					var transitionMode = tone == Cutoff
 						? UITransitionEffect.EffectMode.Cutoff
 						: UITransitionEffect.EffectMode.Fade;

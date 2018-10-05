@@ -37,10 +37,13 @@ namespace Coffee.UIExtensions
 		//################################
 		// Serialize Members.
 		//################################
-		[SerializeField][Range(0, 1)] float m_ToneLevel = 1;
+		[FormerlySerializedAs("m_ToneLevel")]
+		[SerializeField][Range(0, 1)] float m_EffectFactor = 1;
 		[SerializeField][Range(0, 1)] float m_ColorFactor = 1;
-		[SerializeField][Range(0, 1)] float m_Blur = 0;
-		[SerializeField] ToneMode m_ToneMode;
+		[FormerlySerializedAs("m_Blur")]
+		[SerializeField][Range(0, 1)] float m_BlurFactor = 1;
+		[FormerlySerializedAs("m_ToneMode")]
+		[SerializeField] EffectMode m_EffectMode;
 		[SerializeField] ColorMode m_ColorMode;
 		[SerializeField] BlurMode m_BlurMode;
 		[SerializeField] Color m_EffectColor = Color.white;
@@ -63,7 +66,13 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Tone effect level between 0(no effect) and 1(complete effect).
 		/// </summary>
-		public float toneLevel { get { return m_ToneLevel; } set { m_ToneLevel = Mathf.Clamp(value, 0, 1); } }
+		[System.Obsolete("Use effectFactor instead (UnityUpgradable) -> effectFactor")]
+		public float toneLevel { get { return m_EffectFactor; } set { m_EffectFactor = Mathf.Clamp(value, 0, 1); } }
+
+		/// <summary>
+		/// Tone effect level between 0(no effect) and 1(complete effect).
+		/// </summary>
+		public float effectFactor { get { return m_EffectFactor; } set { m_EffectFactor = Mathf.Clamp(value, 0, 1); } }
 
 		/// <summary>
 		/// Color effect factor between 0(no effect) and 1(complete effect).
@@ -73,12 +82,24 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// How far is the blurring from the graphic.
 		/// </summary>
-		public float blur { get { return m_Blur; } set { m_Blur = Mathf.Clamp(value, 0, 4); } }
+		[System.Obsolete("Use blurFactor instead (UnityUpgradable) -> blurFactor")]
+		public float blur { get { return m_BlurFactor; } set { m_BlurFactor = Mathf.Clamp(value, 0, 4); } }
+
+		/// <summary>
+		/// How far is the blurring from the graphic.
+		/// </summary>
+		public float blurFactor { get { return m_BlurFactor; } set { m_BlurFactor = Mathf.Clamp(value, 0, 4); } }
 
 		/// <summary>
 		/// Tone effect mode.
 		/// </summary>
-		public ToneMode toneMode { get { return m_ToneMode; } set { m_ToneMode = value; } }
+		[System.Obsolete("Use effectMode instead (UnityUpgradable) -> effectMode")]
+		public EffectMode toneMode { get { return m_EffectMode; } }
+
+		/// <summary>
+		/// Tone effect mode.
+		/// </summary>
+		public EffectMode effectMode { get { return m_EffectMode; } }
 
 		/// <summary>
 		/// Color effect mode.
@@ -302,7 +323,7 @@ namespace Coffee.UIExtensions
 		void SetupCommandBuffer()
 		{
 			// Material for effect.
-			Material mat = effectMaterial;
+			Material mat = m_EffectMaterial;
 
 			if (s_CommandBuffer == null)
 			{
@@ -325,8 +346,8 @@ namespace Coffee.UIExtensions
 #endif
 
 			// Set properties for effect.
-			s_CommandBuffer.SetGlobalVector(s_EffectFactorId, new Vector4(toneLevel, 0));
-			s_CommandBuffer.SetGlobalVector(s_ColorFactorId, new Vector4(effectColor.r, effectColor.g, effectColor.b, effectColor.a));
+			s_CommandBuffer.SetGlobalVector(s_EffectFactorId, new Vector4(m_EffectFactor, 0));
+			s_CommandBuffer.SetGlobalVector(s_ColorFactorId, new Vector4(m_EffectColor.r, m_EffectColor.g, m_EffectColor.b, m_EffectColor.a));
 
 			// [2] Apply base effect with reduction buffer (copied screen -> effect1).
 			GetDesamplingSize(m_ReductionRate, out w, out h);
@@ -341,9 +362,9 @@ namespace Coffee.UIExtensions
 				for (int i = 0; i < m_BlurIterations; i++)
 				{
 					// [3] Apply blurring with reduction buffer (effect1 -> effect2, or effect2 -> effect1).
-					s_CommandBuffer.SetGlobalVector(s_EffectFactorId, new Vector4(blur, 0));
+					s_CommandBuffer.SetGlobalVector(s_EffectFactorId, new Vector4(m_BlurFactor, 0));
 					s_CommandBuffer.Blit(s_EffectId1, s_EffectId2, mat, 1);
-					s_CommandBuffer.SetGlobalVector(s_EffectFactorId, new Vector4(0, blur));
+					s_CommandBuffer.SetGlobalVector(s_EffectFactorId, new Vector4(0, m_BlurFactor));
 					s_CommandBuffer.Blit(s_EffectId2, s_EffectId1, mat, 1);
 				}
 				s_CommandBuffer.ReleaseTemporaryRT(s_EffectId2);
@@ -433,7 +454,7 @@ namespace Coffee.UIExtensions
 				return;
 			}
 
-			var mat = MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_ToneMode, m_ColorMode, m_BlurMode);
+			var mat = MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_EffectMode, m_ColorMode, m_BlurMode);
 			if (m_EffectMaterial != mat)
 			{
 				material = null;
