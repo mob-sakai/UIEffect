@@ -194,7 +194,7 @@ namespace Coffee.UIExtensions
 			// Append shadow vertices.
 			//================================
 			{
-				_uiEffect = GetComponent<UIEffect>();
+				_uiEffect = _uiEffect ?? GetComponent<UIEffect>();
 				var start = s_Verts.Count - _graphicVertexCount;
 				var end = s_Verts.Count;
 

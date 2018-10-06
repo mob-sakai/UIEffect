@@ -191,14 +191,14 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public override void ModifyMesh(VertexHelper vh)
 		{
-			if (!isActiveAndEnabled || (m_EffectMode == EffectMode.None && m_ColorMode == ColorMode.Multiply && m_BlurMode == BlurMode.None))
+			if (!isActiveAndEnabled)
 			{
 				return;
 			}
 
 			float normalizedIndex = ptex.GetNormalizedIndex(this);
 
-			if (m_AdvancedBlur)
+			if (m_BlurMode != BlurMode.None && m_AdvancedBlur)
 			{
 				vh.GetUIVertexStream(tempVerts);
 				vh.Clear();
@@ -311,10 +311,6 @@ namespace Coffee.UIExtensions
 		/// <returns>The material.</returns>
 		protected override Material GetMaterial()
 		{
-			if (m_EffectMode == EffectMode.None && m_ColorMode == ColorMode.Multiply && m_BlurMode == BlurMode.None)
-			{
-				return null;
-			}
 			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_EffectMode, m_ColorMode, m_BlurMode, m_AdvancedBlur ? BlurEx.Ex : BlurEx.None);
 		}
 
