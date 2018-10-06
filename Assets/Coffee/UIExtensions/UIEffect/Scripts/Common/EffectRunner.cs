@@ -45,7 +45,7 @@ namespace Coffee.UIExtensions
 
 		static List<Action> s_UpdateActions;
 
-		public void OnEnable(Action<float> callback)
+		public void OnEnable(Action<float> callback = null)
 		{
 
 			if (s_UpdateActions == null)
@@ -63,7 +63,7 @@ namespace Coffee.UIExtensions
 			s_UpdateActions.Add(OnWillRenderCanvases);
 
 			_time = 0;
-			this._callback = callback;
+			_callback = callback;
 		}
 
 		/// <summary>
@@ -78,10 +78,14 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Play runner.
 		/// </summary>
-		public void Play()
+		public void Play(Action<float> callback = null)
 		{
 			_time = 0;
 			running = true;
+			if(callback != null)
+			{
+				_callback = callback;
+			}
 		}
 
 		//################################
@@ -92,7 +96,7 @@ namespace Coffee.UIExtensions
 
 		void OnWillRenderCanvases()
 		{
-			if (!running || !Application.isPlaying)
+			if (!running || !Application.isPlaying || _callback == null)
 			{
 				return;
 			}
