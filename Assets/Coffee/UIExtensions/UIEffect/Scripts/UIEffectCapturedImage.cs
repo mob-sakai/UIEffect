@@ -63,10 +63,10 @@ namespace Coffee.UIExtensions
 		[SerializeField] Color m_EffectColor = Color.white;
 
 		[Tooltip("Desampling rate of the generated RenderTexture.")]
-		[SerializeField] DesamplingRate m_DesamplingRate;
+		[SerializeField] DesamplingRate m_DesamplingRate = DesamplingRate.x1;
 
 		[Tooltip("Desampling rate of reduction buffer to apply effect.")]
-		[SerializeField] DesamplingRate m_ReductionRate;
+		[SerializeField] DesamplingRate m_ReductionRate = DesamplingRate.x1;
 
 		[Tooltip("FilterMode for capturing.")]
 		[SerializeField] FilterMode m_FilterMode = FilterMode.Bilinear;
@@ -76,7 +76,7 @@ namespace Coffee.UIExtensions
 
 		[Tooltip("Blur iterations.")]
 		[FormerlySerializedAs("m_Iterations")]
-		[SerializeField][Range(1, 8)] int m_BlurIterations = 1;
+		[SerializeField][Range(1, 8)] int m_BlurIterations = 3;
 
 		[Tooltip("Fits graphic size to screen on captured.")]
 		[FormerlySerializedAs("m_KeepCanvasSize")]
@@ -448,10 +448,10 @@ namespace Coffee.UIExtensions
 #if UNITY_EDITOR
 		protected override void Reset()
 		{
-			// Set parameters as 'Detail'.
-			m_BlurIterations = 5;
+			// Set parameters as 'Medium'.
+			m_BlurIterations = 3;
 			m_FilterMode = FilterMode.Bilinear;
-			m_DesamplingRate = DesamplingRate.None;
+			m_DesamplingRate = DesamplingRate.x1;
 			m_ReductionRate = DesamplingRate.x1;
 			base.Reset();
 		}

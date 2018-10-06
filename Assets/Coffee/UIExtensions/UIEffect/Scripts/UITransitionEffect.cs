@@ -32,7 +32,7 @@ namespace Coffee.UIExtensions
 		[Tooltip("Effect mode.")]
 		[SerializeField] EffectMode m_EffectMode = EffectMode.Cutoff;
 
-		[Tooltip("Effect factor between 0(no effect) and 1(complete effect).")]
+		[Tooltip("Effect factor between 0(hidden) and 1(shown).")]
 		[SerializeField][Range(0, 1)] float m_EffectFactor = 1;
 
 		[Tooltip("Transition texture (single channel texture).")]

@@ -39,17 +39,17 @@ namespace Coffee.UIExtensions
 		protected void OnEnable()
 		{
 			_spMaterial = serializedObject.FindProperty("m_EffectMaterial");
-			_spEffectMode= serializedObject.FindProperty("m_EffectMode");
-			_spEffectFactor= serializedObject.FindProperty("m_EffectFactor");
-			_spEffectArea= serializedObject.FindProperty("m_EffectArea");
-			_spKeepAspectRatio= serializedObject.FindProperty("m_KeepAspectRatio");
-			_spDissolveWidth= serializedObject.FindProperty("m_DissolveWidth");
-			_spDissolveSoftness= serializedObject.FindProperty("m_DissolveSoftness");
-			_spDissolveColor= serializedObject.FindProperty("m_DissolveColor");
-			_spTransitionTexture= serializedObject.FindProperty("m_TransitionTexture");
+			_spEffectMode = serializedObject.FindProperty("m_EffectMode");
+			_spEffectFactor = serializedObject.FindProperty("m_EffectFactor");
+			_spEffectArea = serializedObject.FindProperty("m_EffectArea");
+			_spKeepAspectRatio = serializedObject.FindProperty("m_KeepAspectRatio");
+			_spDissolveWidth = serializedObject.FindProperty("m_DissolveWidth");
+			_spDissolveSoftness = serializedObject.FindProperty("m_DissolveSoftness");
+			_spDissolveColor = serializedObject.FindProperty("m_DissolveColor");
+			_spTransitionTexture = serializedObject.FindProperty("m_TransitionTexture");
 			var player = serializedObject.FindProperty("m_Player");
-			_spDuration= player.FindPropertyRelative("duration");
-			_spUpdateMode= player.FindPropertyRelative("updateMode");
+			_spDuration = player.FindPropertyRelative("duration");
+			_spUpdateMode = player.FindPropertyRelative("updateMode");
 		}
 
 

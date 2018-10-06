@@ -140,23 +140,6 @@ namespace Coffee.UIExtensions
 				}
 				EditorGUI.EndDisabledGroup();
 			}
-
-			// Warning message for overlay rendering.
-			if (graphic && graphic.canvas)
-			{
-				var canvas = graphic.canvas.rootCanvas;
-				if (canvas && canvas.renderMode == RenderMode.WorldSpace)
-				{
-					using (new GUILayout.HorizontalScope())
-					{
-						EditorGUILayout.HelpBox("'WorldSpace - Camera' render modes is not supported. Change render mode of root canvas.", MessageType.Warning);
-						if (GUILayout.Button("Canvas"))
-						{
-							Selection.activeGameObject = canvas.gameObject;
-						}
-					}
-				}
-			}
 		}
 
 		//################################
