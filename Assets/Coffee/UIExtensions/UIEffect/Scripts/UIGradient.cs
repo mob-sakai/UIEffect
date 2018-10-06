@@ -7,6 +7,7 @@ namespace Coffee.UIExtensions
 	/// UIGradient.
 	/// </summary>
 	[DisallowMultipleComponent]
+	[AddComponentMenu("UI/UIEffect/UIGradient",101)]
 	public class UIGradient : BaseMeshEffect
 	{
 		//################################

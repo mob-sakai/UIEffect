@@ -8,6 +8,7 @@ namespace Coffee.UIExtensions
 	/// <summary>
 	/// HSV Modifier.
 	/// </summary>
+	[AddComponentMenu("UI/UIEffect/UIHsvModifier", 4)]
 	public class UIHsvModifier : UIEffectBase
 	{
 		//################################

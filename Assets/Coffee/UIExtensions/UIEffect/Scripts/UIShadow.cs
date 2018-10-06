@@ -16,6 +16,7 @@ namespace Coffee.UIExtensions
 	/// UIEffect.
 	/// </summary>
 	[RequireComponent(typeof(Graphic))]
+	[AddComponentMenu("UI/UIEffect/UIShadow", 100)]
 	public class UIShadow : Shadow, IParameterTexture
 #if UNITY_EDITOR
 	, ISerializationCallbackReceiver

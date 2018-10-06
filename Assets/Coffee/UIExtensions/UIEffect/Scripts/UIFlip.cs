@@ -8,6 +8,7 @@ namespace Coffee.UIExtensions
 
 	[RequireComponent(typeof(Graphic))]
 	[DisallowMultipleComponent]
+	[AddComponentMenu("UI/UIEffect/UIFlip",102)]
 	public class UIFlip : BaseMeshEffect
 	{
 		//################################

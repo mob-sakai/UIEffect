@@ -16,6 +16,7 @@ namespace Coffee.UIExtensions
 	/// <summary>
 	/// UIEffect.
 	/// </summary>
+	[AddComponentMenu("UI/UIEffect/UIShiny", 2)]
 	public class UIShiny : UIEffectBase
 	{
 		//################################

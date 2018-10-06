@@ -6,6 +6,7 @@ namespace Coffee.UIExtensions
 	/// <summary>
 	/// Transition effect.
 	/// </summary>
+	[AddComponentMenu("UI/UIEffect/UITransitionEffect", 5)]
 	public class UITransitionEffect : UIEffectBase
 	{
 		//################################

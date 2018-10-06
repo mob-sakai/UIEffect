@@ -10,6 +10,7 @@ namespace Coffee.UIExtensions
 	/// <summary>
 	/// UIEffectCapturedImage
 	/// </summary>
+	[AddComponentMenu("UI/UIEffect/UIEffectCapturedImage", 200)]
 	public class UIEffectCapturedImage : RawImage
 #if UNITY_EDITOR
 		, ISerializationCallbackReceiver
