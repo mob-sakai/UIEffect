@@ -52,6 +52,8 @@ namespace Coffee.UIExtensions
 		[Tooltip("Dissolve edge color.")]
 		[SerializeField] [ColorUsage(false)] Color m_DissolveColor = new Color(0.0f, 0.25f, 1.0f);
 
+		[Header("Effect Runner")]
+		[SerializeField] EffectRunner m_Runner;
 
 		//################################
 		// Public Members.
@@ -169,6 +171,24 @@ namespace Coffee.UIExtensions
 		}
 
 		/// <summary>
+		/// Show transition.
+		/// </summary>
+		public void Show()
+		{
+			_runner.loop = false;
+			_runner.Play(f => effectFactor = f);
+		}
+
+		/// <summary>
+		/// Hide transition.
+		/// </summary>
+		public void Hide()
+		{
+			_runner.loop = false;
+			_runner.Play(f => effectFactor = 1 - f);
+		}
+
+		/// <summary>
 		/// Modifies the material.
 		/// </summary>
 		public override void ModifyMaterial()
@@ -252,11 +272,26 @@ namespace Coffee.UIExtensions
 		//################################
 		// Protected Members.
 		//################################
+
+		/// <summary>
+		/// This function is called when the object becomes enabled and active.
+		/// </summary>
+		protected override void OnEnable()
+		{
+			base.OnEnable();
+			_runner.OnEnable(null);
+			_runner.loop = false;
+		}
+
+		/// <summary>
+		/// This function is called when the behaviour becomes disabled () or inactive.
+		/// </summary>
 		protected override void OnDisable()
 		{
 			MaterialCache.Unregister(_materialCache);
 			_materialCache = null;
 			base.OnDisable();
+			_runner.OnDisable();
 		}
 
 		protected override void SetDirty()
@@ -288,5 +323,7 @@ namespace Coffee.UIExtensions
 		// Private Members.
 		//################################
 		MaterialCache _materialCache = null;
+
+		EffectRunner _runner{get{ return m_Runner ?? (m_Runner = new EffectRunner());}}
 	}
 }
