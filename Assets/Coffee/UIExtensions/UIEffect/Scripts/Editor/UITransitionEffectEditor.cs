@@ -3,7 +3,7 @@ using UnityEditorInternal;
 using UnityEngine;
 using System.Linq;
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIExtensions.Editors
 {
 	/// <summary>
 	/// UIEffect editor.

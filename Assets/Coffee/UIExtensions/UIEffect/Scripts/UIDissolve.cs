@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Serialization;
 
 namespace Coffee.UIExtensions
 {
@@ -21,7 +22,8 @@ namespace Coffee.UIExtensions
 		// Serialize Members.
 		//################################
 		[Tooltip("Current location[0-1] for dissolve effect. 0 is not dissolved, 1 is completely dissolved.")]
-		[SerializeField] [Range(0, 1)] float m_Location = 0.5f;
+		[FormerlySerializedAs("m_Location")]
+		[SerializeField] [Range(0, 1)] float m_EffectFactor = 0.5f;
 
 		[Tooltip("Edge width.")]
 		[SerializeField] [Range(0, 1)] float m_Width = 0.5f;
@@ -48,7 +50,7 @@ namespace Coffee.UIExtensions
 		[SerializeField] EffectPlayer m_Player;
 
 		[Obsolete][HideInInspector]
-		[SerializeField] bool m_Play = false;
+		[SerializeField] bool m_Play;
 		[Obsolete][HideInInspector]
 		[SerializeField][Range(0.1f, 10)] float m_Duration = 1;
 		[Obsolete][HideInInspector]
@@ -60,17 +62,35 @@ namespace Coffee.UIExtensions
 		//################################
 
 		/// <summary>
-		/// Current location[0-1] for dissolve effect. 0 is not dissolved, 1 is completely dissolved.
+		/// Effect factor between 0(start) and 1(end).
 		/// </summary>
+		[System.Obsolete("Use effectFactor instead (UnityUpgradable) -> effectFactor")]
 		public float location
 		{
-			get { return m_Location; }
+			get { return m_EffectFactor; }
 			set
 			{
 				value = Mathf.Clamp(value, 0, 1);
-				if (!Mathf.Approximately(m_Location, value))
+				if (!Mathf.Approximately(m_EffectFactor, value))
 				{
-					m_Location = value;
+					m_EffectFactor = value;
+					SetDirty();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Effect factor between 0(start) and 1(end).
+		/// </summary>
+		public float effectFactor
+		{
+			get { return m_EffectFactor; }
+			set
+			{ 
+				value = Mathf.Clamp(value, 0, 1);
+				if (!Mathf.Approximately(m_EffectFactor, value))
+				{
+					m_EffectFactor = value;
 					SetDirty();
 				}
 			}
@@ -185,6 +205,7 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Play effect on enable.
 		/// </summary>
+		[System.Obsolete("Use Show/Hide method instead")]
 		public bool play { get { return _player.play; } set { _player.play = value; } }
 
 		/// <summary>
@@ -298,7 +319,7 @@ namespace Coffee.UIExtensions
 		protected override void SetDirty()
 		{
 			ptex.RegisterMaterial(targetGraphic.material);
-			ptex.SetData(this, 0, m_Location);	// param1.x : location
+			ptex.SetData(this, 0, m_EffectFactor);	// param1.x : location
 			ptex.SetData(this, 1, m_Width);		// param1.y : width
 			ptex.SetData(this, 2, m_Softness);	// param1.z : softness
 			ptex.SetData(this, 4, m_Color.r);	// param2.x : red
@@ -314,6 +335,13 @@ namespace Coffee.UIExtensions
 			_player.Play();
 		}
 
+		/// <summary>
+		/// Stop effect.
+		/// </summary>
+		public void Stop()
+		{
+			_player.Stop();
+		}
 
 		//################################
 		// Protected Members.
@@ -324,7 +352,7 @@ namespace Coffee.UIExtensions
 		protected override void OnEnable()
 		{
 			base.OnEnable();
-			_player.OnEnable(f => location = f);
+			_player.OnEnable(f => effectFactor = f);
 		}
 
 		protected override void OnDisable()
@@ -351,7 +379,7 @@ namespace Coffee.UIExtensions
 			// Upgrade for v3.0.0
 			if (IsShouldUpgrade(300))
 			{
-				_player.play = m_Play;
+				_player.play = false;
 				_player.duration = m_Duration;
 				_player.loop = false;
 				_player.loopDelay = 1;

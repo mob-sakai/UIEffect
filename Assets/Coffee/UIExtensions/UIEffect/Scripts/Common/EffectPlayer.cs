@@ -93,6 +93,14 @@ namespace Coffee.UIExtensions
 			}
 		}
 
+		/// <summary>
+		/// Stop playing.
+		/// </summary>
+		public void Stop()
+		{
+			play = false;
+		}
+
 		//################################
 		// Private Members.
 		//################################

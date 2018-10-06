@@ -6,7 +6,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace Coffee.UIExtensions.UIEffectDepricated
+namespace Coffee.UIExtensions.Editors
 {
 	/// <summary>
 	/// Remove deprecated files in old .unitypackage, after compiling.

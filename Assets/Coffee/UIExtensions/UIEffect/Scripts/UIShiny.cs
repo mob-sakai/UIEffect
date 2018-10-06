@@ -30,7 +30,8 @@ namespace Coffee.UIExtensions
 		// Serialize Members.
 		//################################
 		[Tooltip("Location for shiny effect.")]
-		[SerializeField] [Range(0, 1)] float m_Location = 0;
+		[FormerlySerializedAs("m_Location")]
+		[SerializeField] [Range(0, 1)] float m_EffectFactor = 0;
 
 		[Tooltip("Width for shiny effect.")]
 		[SerializeField] [Range(0, 1)] float m_Width = 0.25f;
@@ -52,7 +53,6 @@ namespace Coffee.UIExtensions
 		[Tooltip("The area for effect.")]
 		[SerializeField] protected EffectArea m_EffectArea;
 
-		[Header("Effect Player")]
 		[SerializeField] EffectPlayer m_Player;
 
 		[Obsolete][HideInInspector]
@@ -72,17 +72,35 @@ namespace Coffee.UIExtensions
 		//################################
 
 		/// <summary>
-		/// Location for shiny effect.
+		/// Effect factor between 0(start) and 1(end).
 		/// </summary>
+		[System.Obsolete("Use effectFactor instead (UnityUpgradable) -> effectFactor")]
 		public float location
 		{
-			get { return m_Location; }
+			get { return m_EffectFactor; }
 			set
 			{ 
 				value = Mathf.Clamp(value, 0, 1);
-				if (!Mathf.Approximately(m_Location, value))
+				if (!Mathf.Approximately(m_EffectFactor, value))
 				{
-					m_Location = value;
+					m_EffectFactor = value;
+					SetDirty();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Effect factor between 0(start) and 1(end).
+		/// </summary>
+		public float effectFactor
+		{
+			get { return m_EffectFactor; }
+			set
+			{ 
+				value = Mathf.Clamp(value, 0, 1);
+				if (!Mathf.Approximately(m_EffectFactor, value))
+				{
+					m_EffectFactor = value;
 					SetDirty();
 				}
 			}
@@ -260,7 +278,7 @@ namespace Coffee.UIExtensions
 		protected override void OnEnable()
 		{
 			base.OnEnable();
-			_player.OnEnable(f => location = f);
+			_player.OnEnable(f => effectFactor = f);
 		}
 
 		/// <summary>
@@ -353,10 +371,18 @@ namespace Coffee.UIExtensions
 			_player.Play();
 		}
 
+		/// <summary>
+		/// Stop effect.
+		/// </summary>
+		public void Stop()
+		{
+			_player.Stop();
+		}
+
 		protected override void SetDirty()
 		{
 			ptex.RegisterMaterial(targetGraphic.material);
-			ptex.SetData(this, 0, m_Location);	// param1.x : location
+			ptex.SetData(this, 0, m_EffectFactor);	// param1.x : location
 			ptex.SetData(this, 1, m_Width);		// param1.y : width
 			ptex.SetData(this, 2, m_Softness);	// param1.z : softness
 			ptex.SetData(this, 3, m_Brightness);// param1.w : blightness

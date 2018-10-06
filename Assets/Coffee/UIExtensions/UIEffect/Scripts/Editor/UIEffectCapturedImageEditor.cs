@@ -3,7 +3,7 @@ using UnityEditor.UI;
 using UnityEngine;
 using DesamplingRate = Coffee.UIExtensions.UIEffectCapturedImage.DesamplingRate;
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIExtensions.Editors
 {
 	/// <summary>
 	/// UIEffectCapturedImage editor.

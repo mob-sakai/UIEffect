@@ -111,13 +111,13 @@ Shader "UI/Hidden/UI-Effect-Transition"
                 fixed effectFactor = param1.x;
 				float alpha = tex2D(_TransitionTexture, IN.param.xy).a;
 				
-				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
+				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd);
 				color.a *= UnityGet2DClipping(IN.wpos.xy, _ClipRect);
 
 				#if FADE
 				color.a *= saturate(alpha + (effectFactor * 2 - 1));
 				#elif CUTOFF
-				color.a = step(0.001, color.a * alpha - 1 + effectFactor);
+				color.a *= step(0.001, color.a * alpha - 1 + effectFactor);
 				#elif DISSOLVE
 
                 fixed width = param1.y/4;
@@ -125,16 +125,13 @@ Shader "UI/Hidden/UI-Effect-Transition"
 				fixed3 dissolveColor = tex2D(_ParamTex, float2(0.75, IN.param.z)).rgb;
 				float factor = alpha - (1 - effectFactor) * ( 1 + width ) + width;
 
-//				#ifdef UNITY_UI_ALPHACLIP
-//				clip (min(color.a - 0.01, factor));
-//				#endif
-
-//				color *= IN.color;
 				fixed edgeLerp = step(factor, color.a) * saturate((width - factor)*16/ softness);
 				color.rgb += dissolveColor.rgb * edgeLerp;
 				color.a *= saturate((factor)*32/ softness);
 
 				#endif
+
+				color *= IN.color;
 
 				#if UNITY_UI_ALPHACLIP
 				clip (color.a - 0.001);
