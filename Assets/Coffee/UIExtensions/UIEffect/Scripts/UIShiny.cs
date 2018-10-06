@@ -51,8 +51,8 @@ namespace Coffee.UIExtensions
 		[Tooltip("The area for effect.")]
 		[SerializeField] protected EffectArea m_EffectArea;
 
-		[Header("Effect Runner")]
-		[SerializeField] EffectRunner m_Runner;
+		[Header("Effect Player")]
+		[SerializeField] EffectPlayer m_Player;
 
 		[Obsolete][HideInInspector]
 		[SerializeField] bool m_Play = false;
@@ -226,27 +226,27 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Play shinning on enable.
 		/// </summary>
-		public bool play { get { return m_Runner.running; } set { m_Runner.running = value; } }
+		public bool play { get { return _player.play; } set { _player.play = value; } }
 
 		/// <summary>
 		/// Play shinning loop.
 		/// </summary>
-		public bool loop { get { return m_Runner.loop; } set { m_Runner.loop = value; } }
+		public bool loop { get { return _player.loop; } set { _player.loop = value; } }
 
 		/// <summary>
 		/// Shinning duration.
 		/// </summary>
-		public float duration { get { return m_Runner.duration; } set { m_Runner.duration = Mathf.Max(value, 0.1f); } }
+		public float duration { get { return _player.duration; } set { _player.duration = Mathf.Max(value, 0.1f); } }
 
 		/// <summary>
 		/// Delay on loop.
 		/// </summary>
-		public float loopDelay { get { return m_Runner.loopDelay; } set { m_Runner.loopDelay = Mathf.Max(value, 0); } }
+		public float loopDelay { get { return _player.loopDelay; } set { _player.loopDelay = Mathf.Max(value, 0); } }
 
 		/// <summary>
 		/// Shinning update mode.
 		/// </summary>
-		public AnimatorUpdateMode updateMode { get { return m_Runner.updateMode; } set { m_Runner.updateMode = value; } }
+		public AnimatorUpdateMode updateMode { get { return _player.updateMode; } set { _player.updateMode = value; } }
 
 		/// <summary>
 		/// Gets the parameter texture.
@@ -259,11 +259,7 @@ namespace Coffee.UIExtensions
 		protected override void OnEnable()
 		{
 			base.OnEnable();
-			if (m_Runner == null)
-			{
-				m_Runner = new EffectRunner();
-			}
-			m_Runner.OnEnable(f => location = f);
+			_player.OnEnable(f => location = f);
 		}
 
 		/// <summary>
@@ -272,7 +268,7 @@ namespace Coffee.UIExtensions
 		protected override void OnDisable()
 		{
 			base.OnDisable();
-			m_Runner.OnDisable();
+			_player.OnDisable();
 		}
 
 
@@ -288,11 +284,11 @@ namespace Coffee.UIExtensions
 			// Upgrade for v3.0.0
 			if (IsShouldUpgrade(300))
 			{
-				m_Runner.running = m_Play;
-				m_Runner.duration = m_Duration;
-				m_Runner.loop = m_Loop;
-				m_Runner.loopDelay = m_LoopDelay;
-				m_Runner.updateMode = m_UpdateMode;
+				_player.play = m_Play;
+				_player.duration = m_Duration;
+				_player.loop = m_Loop;
+				_player.loopDelay = m_LoopDelay;
+				_player.updateMode = m_UpdateMode;
 			}
 		}
 		#pragma warning restore 0612
@@ -353,7 +349,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public void Play()
 		{
-			m_Runner.Play();
+			_player.Play();
 		}
 
 		protected override void SetDirty()
@@ -376,5 +372,7 @@ namespace Coffee.UIExtensions
 		// Private Members.
 		//################################
 		float _lastRotation;
+
+		EffectPlayer _player{ get { return m_Player ?? (m_Player = new EffectPlayer()); } }
 	}
 }

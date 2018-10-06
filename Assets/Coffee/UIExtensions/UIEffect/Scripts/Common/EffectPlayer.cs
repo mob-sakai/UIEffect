@@ -5,46 +5,51 @@ using System.Collections.Generic;
 namespace Coffee.UIExtensions
 {
 	/// <summary>
-	/// Effect Runner.
+	/// Effect player.
 	/// </summary>
 	[Serializable]
-	public class EffectRunner
+	public class EffectPlayer
 	{
 		//################################
 		// Public Members.
 		//################################
 		/// <summary>
-		/// Gets or sets a value indicating whether is running.
+		/// Gets or sets a value indicating whether is playing.
 		/// </summary>
-		[Tooltip("Running.")]
-		public bool running;
+		[Tooltip("Playing.")]
+		public bool play = false;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether can loop.
 		/// </summary>
 		[Tooltip("Loop.")]
-		public bool loop;
+		public bool loop = false;
 
 		/// <summary>
 		/// Gets or sets the duration.
 		/// </summary>
 		[Tooltip("Duration.")]
-		public float duration;
+		[Range(0.01f,10f)]
+		public float duration = 1;
 
 		/// <summary>
 		/// Gets or sets the delay before looping.
 		/// </summary>
 		[Tooltip("Delay before looping.")]
-		public float loopDelay;
+		[Range(0f,10f)]
+		public float loopDelay = 0;
 
 		/// <summary>
 		/// Gets or sets the update mode.
 		/// </summary>
 		[Tooltip("Update mode")]
-		public AnimatorUpdateMode updateMode;
+		public AnimatorUpdateMode updateMode = AnimatorUpdateMode.Normal;
 
 		static List<Action> s_UpdateActions;
 
+		/// <summary>
+		/// Register player.
+		/// </summary>
 		public void OnEnable(Action<float> callback = null)
 		{
 
@@ -67,7 +72,7 @@ namespace Coffee.UIExtensions
 		}
 
 		/// <summary>
-		/// Unregister runner.
+		/// Unregister player.
 		/// </summary>
 		public void OnDisable()
 		{
@@ -76,13 +81,13 @@ namespace Coffee.UIExtensions
 		}
 
 		/// <summary>
-		/// Play runner.
+		/// Start playing.
 		/// </summary>
 		public void Play(Action<float> callback = null)
 		{
 			_time = 0;
-			running = true;
-			if(callback != null)
+			play = true;
+			if (callback != null)
 			{
 				_callback = callback;
 			}
@@ -96,7 +101,7 @@ namespace Coffee.UIExtensions
 
 		void OnWillRenderCanvases()
 		{
-			if (!running || !Application.isPlaying || _callback == null)
+			if (!play || !Application.isPlaying || _callback == null)
 			{
 				return;
 			}
@@ -108,7 +113,7 @@ namespace Coffee.UIExtensions
 
 			if (duration <= _time)
 			{
-				running = loop;
+				play = loop;
 				_time = loop ? -loopDelay : 0;
 			}
 			_callback(current);

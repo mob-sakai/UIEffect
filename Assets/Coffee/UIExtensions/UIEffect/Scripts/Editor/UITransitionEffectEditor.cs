@@ -21,7 +21,6 @@ namespace Coffee.UIExtensions
 		SerializedProperty _spDissolveSoftness;
 		SerializedProperty _spDissolveColor;
 		SerializedProperty _spTransitionTexture;
-		SerializedProperty _spRunner;
 		SerializedProperty _spDuration;
 		SerializedProperty _spUpdateMode;
 
@@ -48,9 +47,9 @@ namespace Coffee.UIExtensions
 			_spDissolveSoftness= serializedObject.FindProperty("m_DissolveSoftness");
 			_spDissolveColor= serializedObject.FindProperty("m_DissolveColor");
 			_spTransitionTexture= serializedObject.FindProperty("m_TransitionTexture");
-			var runner = serializedObject.FindProperty("m_Runner");
-			_spDuration= runner.FindPropertyRelative("duration");
-			_spUpdateMode= runner.FindPropertyRelative("updateMode");
+			var player = serializedObject.FindProperty("m_Player");
+			_spDuration= player.FindPropertyRelative("duration");
+			_spUpdateMode= player.FindPropertyRelative("updateMode");
 		}
 
 
@@ -97,7 +96,7 @@ namespace Coffee.UIExtensions
 			// Effect runner.
 			//================
 			GUILayout.Space(10);
-			EditorGUILayout.LabelField("Effect Runner", EditorStyles.boldLabel);
+			EditorGUILayout.LabelField("Effect Player", EditorStyles.boldLabel);
 			EditorGUILayout.PropertyField(_spDuration);
 			EditorGUILayout.PropertyField(_spUpdateMode);
 

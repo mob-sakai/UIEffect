@@ -52,8 +52,8 @@ namespace Coffee.UIExtensions
 		[Tooltip("Dissolve edge color.")]
 		[SerializeField] [ColorUsage(false)] Color m_DissolveColor = new Color(0.0f, 0.25f, 1.0f);
 
-		[Header("Effect Runner")]
-		[SerializeField] EffectRunner m_Runner;
+		[Header("Effect Player")]
+		[SerializeField] EffectPlayer m_Player;
 
 		//################################
 		// Public Members.
@@ -171,12 +171,22 @@ namespace Coffee.UIExtensions
 		}
 
 		/// <summary>
+		/// Duration for showing/hiding.
+		/// </summary>
+		public float duration { get { return _player.duration; } set { _player.duration = Mathf.Max(value, 0.1f); } }
+
+		/// <summary>
+		/// Update mode for showing/hiding.
+		/// </summary>
+		public AnimatorUpdateMode updateMode { get { return _player.updateMode; } set { _player.updateMode = value; } }
+
+		/// <summary>
 		/// Show transition.
 		/// </summary>
 		public void Show()
 		{
-			_runner.loop = false;
-			_runner.Play(f => effectFactor = f);
+			_player.loop = false;
+			_player.Play(f => effectFactor = f);
 		}
 
 		/// <summary>
@@ -184,8 +194,8 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public void Hide()
 		{
-			_runner.loop = false;
-			_runner.Play(f => effectFactor = 1 - f);
+			_player.loop = false;
+			_player.Play(f => effectFactor = 1 - f);
 		}
 
 		/// <summary>
@@ -279,8 +289,8 @@ namespace Coffee.UIExtensions
 		protected override void OnEnable()
 		{
 			base.OnEnable();
-			_runner.OnEnable(null);
-			_runner.loop = false;
+			_player.OnEnable(null);
+			_player.loop = false;
 		}
 
 		/// <summary>
@@ -291,7 +301,7 @@ namespace Coffee.UIExtensions
 			MaterialCache.Unregister(_materialCache);
 			_materialCache = null;
 			base.OnDisable();
-			_runner.OnDisable();
+			_player.OnDisable();
 		}
 
 		protected override void SetDirty()
@@ -324,6 +334,6 @@ namespace Coffee.UIExtensions
 		//################################
 		MaterialCache _materialCache = null;
 
-		EffectRunner _runner{get{ return m_Runner ?? (m_Runner = new EffectRunner());}}
+		EffectPlayer _player{ get { return m_Player ?? (m_Player = new EffectPlayer()); } }
 	}
 }
