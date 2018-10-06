@@ -22,8 +22,6 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public static void DrawEffectProperties(SerializedObject serializedObject)
 		{
-			bool changed = false;
-
 			//================
 			// Effect material.
 			//================
@@ -33,12 +31,10 @@ namespace Coffee.UIExtensions
 			EditorGUI.EndDisabledGroup();
 
 			//================
-			// Tone setting.
+			// Effect setting.
 			//================
 			var spToneMode = serializedObject.FindProperty("m_EffectMode");
-			EditorGUI.BeginChangeCheck();
 			EditorGUILayout.PropertyField(spToneMode);
-			changed |= EditorGUI.EndChangeCheck();
 
 			// When tone is enable, show parameters.
 			if (spToneMode.intValue != (int)EffectMode.None)
@@ -52,9 +48,7 @@ namespace Coffee.UIExtensions
 			// Color setting.
 			//================
 			var spColorMode = serializedObject.FindProperty("m_ColorMode");
-			EditorGUI.BeginChangeCheck();
 			EditorGUILayout.PropertyField(spColorMode);
-			changed |= EditorGUI.EndChangeCheck();
 
 			// When color is enable, show parameters.
 			//if (spColorMode.intValue != (int)ColorMode.Multiply)
@@ -81,9 +75,7 @@ namespace Coffee.UIExtensions
 			// Blur setting.
 			//================
 			var spBlurMode = serializedObject.FindProperty("m_BlurMode");
-			EditorGUI.BeginChangeCheck();
 			EditorGUILayout.PropertyField(spBlurMode);
-			changed |= EditorGUI.EndChangeCheck();
 
 			// When blur is enable, show parameters.
 			if (spBlurMode.intValue != (int)BlurMode.None)
