@@ -53,6 +53,9 @@ namespace Coffee.UIExtensions
 		[Tooltip("Dissolve edge color.")]
 		[SerializeField] [ColorUsage(false)] Color m_DissolveColor = new Color(0.0f, 0.25f, 1.0f);
 
+		[Tooltip("Disable graphic's raycast target on hidden.")]
+		[SerializeField] bool m_PassRayOnHidden;
+
 		[Header("Effect Player")]
 		[SerializeField] EffectPlayer m_Player;
 
@@ -316,6 +319,12 @@ namespace Coffee.UIExtensions
 				ptex.SetData(this, 4, m_DissolveColor.r);	// param2.x : red
 				ptex.SetData(this, 5, m_DissolveColor.g);	// param2.y : green
 				ptex.SetData(this, 6, m_DissolveColor.b);	// param2.z : blue
+			}
+
+			// Disable graphic's raycastTarget on hidden.
+			if (m_PassRayOnHidden)
+			{
+				graphic.raycastTarget = 0 < m_EffectFactor;
 			}
 		}
 

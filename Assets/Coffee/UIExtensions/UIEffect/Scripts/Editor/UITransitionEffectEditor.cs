@@ -23,11 +23,7 @@ namespace Coffee.UIExtensions
 		SerializedProperty _spTransitionTexture;
 		SerializedProperty _spDuration;
 		SerializedProperty _spUpdateMode;
-
-		
-		
-		
-		
+		SerializedProperty _spPassRayOnHidden;
 		
 		
 		//################################
@@ -50,6 +46,7 @@ namespace Coffee.UIExtensions
 			var player = serializedObject.FindProperty("m_Player");
 			_spDuration = player.FindPropertyRelative("duration");
 			_spUpdateMode = player.FindPropertyRelative("updateMode");
+			_spPassRayOnHidden = serializedObject.FindProperty("m_PassRayOnHidden");
 		}
 
 
@@ -91,6 +88,7 @@ namespace Coffee.UIExtensions
 			EditorGUILayout.PropertyField(_spEffectArea);
 			EditorGUILayout.PropertyField(_spTransitionTexture);
 			EditorGUILayout.PropertyField(_spKeepAspectRatio);
+			EditorGUILayout.PropertyField(_spPassRayOnHidden);
 
 			//================
 			// Effect runner.
