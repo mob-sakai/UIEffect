@@ -46,7 +46,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_ToneLevel
+    attribute: m_EffectFactor
     path: 
     classID: 114
     script: {fileID: 11500000, guid: f8b2ed11d675446c5a49da1ea296d490, type: 3}
@@ -124,7 +124,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_Location
+    attribute: m_EffectFactor
     path: 
     classID: 114
     script: {fileID: 11500000, guid: ce76b7a490bd74f34a2f2752641aea24, type: 3}
@@ -280,7 +280,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_ToneLevel
+    attribute: m_EffectFactor
     path: 
     classID: 114
     script: {fileID: 11500000, guid: f8b2ed11d675446c5a49da1ea296d490, type: 3}
@@ -358,7 +358,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_Location
+    attribute: m_EffectFactor
     path: 
     classID: 114
     script: {fileID: 11500000, guid: ce76b7a490bd74f34a2f2752641aea24, type: 3}
@@ -759,7 +759,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_ToneLevel
+    attribute: m_EffectFactor
     path: 
     classID: 114
     script: {fileID: 11500000, guid: f8b2ed11d675446c5a49da1ea296d490, type: 3}
@@ -829,7 +829,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_ToneLevel
+    attribute: m_EffectFactor
     path: 
     classID: 114
     script: {fileID: 11500000, guid: f8b2ed11d675446c5a49da1ea296d490, type: 3}
