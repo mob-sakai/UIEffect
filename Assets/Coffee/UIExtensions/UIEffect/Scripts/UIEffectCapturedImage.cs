@@ -366,11 +366,6 @@ namespace Coffee.UIExtensions
 			{
 				s_CommandBuffer = new CommandBuffer();
 			}
-			s_CommandBuffer.name = mat ? mat.name : "noeffect";
-			if (_rt)
-			{
-				_rt.name = s_CommandBuffer.name;
-			}
 
 			// [1] Capture from back buffer (back buffer -> copied screen).
 			int w, h;
