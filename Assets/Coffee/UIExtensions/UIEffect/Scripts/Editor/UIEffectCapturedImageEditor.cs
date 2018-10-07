@@ -42,13 +42,12 @@ namespace Coffee.UIExtensions.Editors
 			_spFilterMode = serializedObject.FindProperty("m_FilterMode");
 			_spIterations = serializedObject.FindProperty("m_BlurIterations");
 			_spKeepSizeToRootCanvas = serializedObject.FindProperty("m_FitToScreen");
-			_spTargetTexture = serializedObject.FindProperty("m_TargetTexture");
 			_spBlurMode = serializedObject.FindProperty("m_BlurMode");
 			_spCaptureOnEnable = serializedObject.FindProperty("m_CaptureOnEnable");
 			_spImmediateCapturing = serializedObject.FindProperty("m_ImmediateCapturing");
 
 
-			_customAdvancedOption = (qualityMode == QualityMode.Custom) || _spTargetTexture.objectReferenceValue;
+			_customAdvancedOption = (qualityMode == QualityMode.Custom);
 		}
 
 		/// <summary>
@@ -88,7 +87,7 @@ namespace Coffee.UIExtensions.Editors
 			quality = (QualityMode)EditorGUILayout.EnumPopup("Quality Mode", quality);
 			if (EditorGUI.EndChangeCheck())
 			{
-				_customAdvancedOption = (quality == QualityMode.Custom) || _spTargetTexture.objectReferenceValue;
+				_customAdvancedOption = (quality == QualityMode.Custom);
 				qualityMode = quality;
 			}
 
@@ -104,20 +103,8 @@ namespace Coffee.UIExtensions.Editors
 				EditorGUILayout.Space();
 				EditorGUILayout.LabelField("Result Texture Setting", EditorStyles.boldLabel);
 
-				if (!_spTargetTexture.objectReferenceValue)
-				{
-					EditorGUILayout.PropertyField(_spFilterMode);// Filter Mode.
-					DrawDesamplingRate(_spDesamplingRate);// Desampling rate.
-				}
-				using (new EditorGUILayout.HorizontalScope())
-				{
-					EditorGUILayout.PropertyField(_spTargetTexture);// Target Texture.
-					Texture t = _spTargetTexture.objectReferenceValue as Texture;
-					if (t)
-					{
-						GUILayout.Label(string.Format("{0}x{1}", t.width, t.height), EditorStyles.miniLabel);
-					}
-				}
+				EditorGUILayout.PropertyField(_spFilterMode);// Filter Mode.
+				DrawDesamplingRate(_spDesamplingRate);// Desampling rate.
 			}
 
 			serializedObject.ApplyModifiedProperties();
@@ -157,7 +144,6 @@ namespace Coffee.UIExtensions.Editors
 		SerializedProperty _spBlurMode;
 		SerializedProperty _spIterations;
 		SerializedProperty _spKeepSizeToRootCanvas;
-		SerializedProperty _spTargetTexture;
 		SerializedProperty _spCaptureOnEnable;
 		SerializedProperty _spImmediateCapturing;
 

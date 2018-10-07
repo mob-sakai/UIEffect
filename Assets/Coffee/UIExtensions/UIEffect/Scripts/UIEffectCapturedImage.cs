@@ -82,9 +82,6 @@ namespace Coffee.UIExtensions
 		[FormerlySerializedAs("m_KeepCanvasSize")]
 		[SerializeField] bool m_FitToScreen = true;
 
-		[Tooltip("Target RenderTexture to capture.")]
-		[SerializeField] RenderTexture m_TargetTexture;
-
 		[Tooltip("Capture automatically on enable.")]
 		[SerializeField] bool m_CaptureOnEnable = false;
 
@@ -171,7 +168,7 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Captured texture.
 		/// </summary>
-		public RenderTexture capturedTexture { get { return m_TargetTexture ? m_TargetTexture : _rt; } }
+		public RenderTexture capturedTexture { get { return _rt; } }
 
 		/// <summary>
 		/// Blur iterations.
@@ -198,7 +195,8 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Target RenderTexture to capture.
 		/// </summary>
-		public RenderTexture targetTexture { get { return m_TargetTexture; } set { m_TargetTexture = value; } }
+		[System.Obsolete]
+		public RenderTexture targetTexture { get { return null; } set { } }
 
 		/// <summary>
 		/// Capture automatically on enable.
@@ -329,30 +327,23 @@ namespace Coffee.UIExtensions
 				s_CommandBuffer = new CommandBuffer();
 			}
 
-			// If target texture exists, release result RT.
-			if (m_TargetTexture)
+
+			// If size of result RT has changed, release it.
+			int w, h;
+			GetDesamplingSize(m_DesamplingRate, out w, out h);
+			if (_rt && (_rt.width != w || _rt.height != h))
 			{
 				_Release(ref _rt);
 			}
-			else
-			{
-				// If size of result RT has changed, release it.
-				int w, h;
-				GetDesamplingSize(m_DesamplingRate, out w, out h);
-				if (_rt && (_rt.width != w || _rt.height != h))
-				{
-					_Release(ref _rt);
-				}
 
-				// Generate RT for result.
-				if (_rt == null)
-				{
-					_rt = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
-					_rt.filterMode = m_FilterMode;
-					_rt.useMipMap = false;
-					_rt.wrapMode = TextureWrapMode.Clamp;
-					_rt.hideFlags = HideFlags.HideAndDontSave;
-				}
+			// Generate RT for result.
+			if (_rt == null)
+			{
+				_rt = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
+				_rt.filterMode = m_FilterMode;
+				_rt.useMipMap = false;
+				_rt.wrapMode = TextureWrapMode.Clamp;
+				_rt.hideFlags = HideFlags.HideAndDontSave;
 			}
 			SetupCommandBuffer();
 		}
@@ -516,7 +507,7 @@ namespace Coffee.UIExtensions
 		/// <param name="releaseRT">If set to <c>true</c> release cached RenderTexture.</param>
 		void _Release(bool releaseRT)
 		{
-			if (releaseRT || m_TargetTexture)
+			if (releaseRT)
 			{
 				texture = null;
 				_Release(ref _rt);
