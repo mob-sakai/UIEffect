@@ -11,8 +11,6 @@ namespace Coffee.UIExtensions
 		int parameterIndex { get; set; }
 
 		ParameterTexture ptex { get; }
-
-		Material ptexMaterial { get; }
 	}
 
 	/// <summary>
@@ -53,10 +51,6 @@ namespace Coffee.UIExtensions
 		/// <param name="target">Target.</param>
 		public void Register(IParameterTexture target)
 		{
-			if (!_material && target.ptexMaterial)
-			{
-				_material = target.ptexMaterial;
-			}
 			Initialize();
 			if (target.parameterIndex <= 0 && 0 < _stack.Count)
 			{
@@ -146,7 +140,6 @@ namespace Coffee.UIExtensions
 		readonly byte[] _data;
 		readonly Stack<int> _stack;
 		static List<Action> updates;
-		static Material _material;
 
 		/// <summary>
 		/// Initialize this instance.
