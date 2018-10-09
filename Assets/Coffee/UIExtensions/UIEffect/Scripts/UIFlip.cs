@@ -8,12 +8,17 @@ namespace Coffee.UIExtensions
 
 	[RequireComponent(typeof(Graphic))]
 	[DisallowMultipleComponent]
+	[AddComponentMenu("UI/UIEffect/UIFlip",102)]
 	public class UIFlip : BaseMeshEffect
 	{
 		//################################
 		// Serialize Members.
 		//################################
+
+		[Tooltip("Flip horizontally.")]
 		[SerializeField] private bool m_Horizontal = false;
+
+		[Tooltip("Flip vertically.")]
 		[SerializeField] private bool m_Veritical = false;
 
 		//################################

@@ -1,35 +1,59 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Serialization;
 
 namespace Coffee.UIExtensions
 {
 	/// <summary>
 	/// Dissolve effect for uGUI.
 	/// </summary>
-	[ExecuteInEditMode]
+	[AddComponentMenu("UI/UIEffect/UIDissolve", 3)]
 	public class UIDissolve : UIEffectBase
 	{
 		//################################
 		// Constant or Static Members.
 		//################################
 		public const string shaderName = "UI/Hidden/UI-Effect-Dissolve";
+		static readonly ParameterTexture _ptex = new ParameterTexture(8, 128, "_ParamTex");
 
 
 		//################################
 		// Serialize Members.
 		//################################
-		[SerializeField] [Range(0, 1)] float m_Location = 0.5f;
+		[Tooltip("Current location[0-1] for dissolve effect. 0 is not dissolved, 1 is completely dissolved.")]
+		[FormerlySerializedAs("m_Location")]
+		[SerializeField] [Range(0, 1)] float m_EffectFactor = 0.5f;
+
+		[Tooltip("Edge width.")]
 		[SerializeField] [Range(0, 1)] float m_Width = 0.5f;
+
+		[Tooltip("Edge softness.")]
 		[SerializeField] [Range(0, 1)] float m_Softness = 0.5f;
+
+		[Tooltip("Edge color.")]
 		[SerializeField] [ColorUsage(false)] Color m_Color = new Color(0.0f, 0.25f, 1.0f);
+
+		[Tooltip("Edge color effect mode.")]
 		[SerializeField] ColorMode m_ColorMode = ColorMode.Add;
+
+		[Tooltip("Noise texture for dissolving (single channel texture).")]
 		[SerializeField] Texture m_NoiseTexture;
+
+		[Tooltip("The area for effect.")]
 		[SerializeField] protected EffectArea m_EffectArea;
+
+		[Tooltip("Keep effect aspect ratio.")]
 		[SerializeField] bool m_KeepAspectRatio;
-		[Header("Play Effect")]
-		[SerializeField] bool m_Play = false;
+
+		[Header("Effect Player")]
+		[SerializeField] EffectPlayer m_Player;
+
+		[Obsolete][HideInInspector]
+		[SerializeField] bool m_Play;
+		[Obsolete][HideInInspector]
 		[SerializeField][Range(0.1f, 10)] float m_Duration = 1;
+		[Obsolete][HideInInspector]
 		[SerializeField] AnimatorUpdateMode m_UpdateMode = AnimatorUpdateMode.Normal;
 
 
@@ -38,17 +62,35 @@ namespace Coffee.UIExtensions
 		//################################
 
 		/// <summary>
-		/// Current location[0-1] for dissolve effect. 0 is not dissolved, 1 is completely dissolved.
+		/// Effect factor between 0(start) and 1(end).
 		/// </summary>
+		[System.Obsolete("Use effectFactor instead (UnityUpgradable) -> effectFactor")]
 		public float location
 		{
-			get { return m_Location; }
+			get { return m_EffectFactor; }
 			set
 			{
 				value = Mathf.Clamp(value, 0, 1);
-				if (!Mathf.Approximately(m_Location, value))
+				if (!Mathf.Approximately(m_EffectFactor, value))
 				{
-					m_Location = value;
+					m_EffectFactor = value;
+					SetDirty();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Effect factor between 0(start) and 1(end).
+		/// </summary>
+		public float effectFactor
+		{
+			get { return m_EffectFactor; }
+			set
+			{ 
+				value = Mathf.Clamp(value, 0, 1);
+				if (!Mathf.Approximately(m_EffectFactor, value))
+				{
+					m_EffectFactor = value;
 					SetDirty();
 				}
 			}
@@ -161,26 +203,44 @@ namespace Coffee.UIExtensions
 		public ColorMode colorMode { get { return m_ColorMode; } }
 
 		/// <summary>
-		/// Play dissolve on enable.
+		/// Play effect on enable.
 		/// </summary>
-		public bool play { get { return m_Play; } set { m_Play = value; } }
+		[System.Obsolete("Use Show/Hide method instead")]
+		public bool play { get { return _player.play; } set { _player.play = value; } }
 
 		/// <summary>
-		/// Dissolve duration.
+		/// Play effect loop.
 		/// </summary>
-		public float duration { get { return m_Duration; } set { m_Duration = Mathf.Max(value, 0.1f); } }
+		[System.Obsolete]
+		public bool loop { get { return _player.loop; } set { _player.loop = value; } }
 
 		/// <summary>
-		/// Dissolve update mode.
+		/// The duration for playing effect.
 		/// </summary>
-		public AnimatorUpdateMode updateMode { get { return m_UpdateMode; } set { m_UpdateMode = value; } }
+		public float duration { get { return _player.duration; } set { _player.duration = Mathf.Max(value, 0.1f); } }
+
+		/// <summary>
+		/// Delay on loop effect.
+		/// </summary>
+		[System.Obsolete]
+		public float loopDelay { get { return _player.loopDelay; } set { _player.loopDelay = Mathf.Max(value, 0); } }
+
+		/// <summary>
+		/// Update mode for playing effect.
+		/// </summary>
+		public AnimatorUpdateMode updateMode { get { return _player.updateMode; } set { _player.updateMode = value; } }
+
+		/// <summary>
+		/// Gets the parameter texture.
+		/// </summary>
+		public override ParameterTexture ptex { get { return _ptex; } }
 
 		/// <summary>
 		/// Modifies the material.
 		/// </summary>
 		public override void ModifyMaterial()
 		{
-			ulong hash = (m_NoiseTexture ? (uint)m_NoiseTexture.GetInstanceID() : 0) + ((ulong)m_ColorMode << 32);
+			ulong hash = (m_NoiseTexture ? (uint)m_NoiseTexture.GetInstanceID() : 0) + ((ulong)1 << 32) + ((ulong)m_ColorMode << 36);
 			if (_materialCache != null && (_materialCache.hash != hash || !isActiveAndEnabled || !m_EffectMaterial))
 			{
 				MaterialCache.Unregister(_materialCache);
@@ -204,6 +264,7 @@ namespace Coffee.UIExtensions
 				_materialCache = MaterialCache.Register(hash, m_NoiseTexture, () =>
 					{
 						var mat = new Material(m_EffectMaterial);
+						mat.name += "_" + m_NoiseTexture.name;
 						mat.SetTexture("_NoiseTex", m_NoiseTexture);
 						return mat;
 					});
@@ -219,6 +280,8 @@ namespace Coffee.UIExtensions
 			if (!isActiveAndEnabled)
 				return;
 
+			float normalizedIndex = ptex.GetNormalizedIndex(this);
+
 			// rect.
 			var tex = noiseTexture;
 			var aspectRatio = m_KeepAspectRatio && tex ? ((float)tex.width) / tex.height : -1;
@@ -228,27 +291,40 @@ namespace Coffee.UIExtensions
 			UIVertex vertex = default(UIVertex);
 			bool effectEachCharacter = graphic is Text && m_EffectArea == EffectArea.Character;
 			float x, y;
-			for (int i = 0; i < vh.currentVertCount; i++)
+			int count = vh.currentVertCount;
+			for (int i = 0; i < count; i++)
 			{
 				vh.PopulateUIVertex(ref vertex, i);
 
 				if (effectEachCharacter)
 				{
-					x = splitedCharacterPosition[i%4].x;
-					y = splitedCharacterPosition[i%4].y;
+					x = splitedCharacterPosition[i % 4].x;
+					y = splitedCharacterPosition[i % 4].y;
 				}
 				else
 				{
 					x = Mathf.Clamp01(vertex.position.x / rect.width + 0.5f);
 					y = Mathf.Clamp01(vertex.position.y / rect.height + 0.5f);
 				}
-				vertex.uv1 = new Vector2(
-					Packer.ToFloat(x, y, location, m_Width),
-					Packer.ToFloat(m_Color.r, m_Color.g, m_Color.b, m_Softness)
+
+				vertex.uv0 = new Vector2(
+					Packer.ToFloat(vertex.uv0.x, vertex.uv0.y),
+					Packer.ToFloat(x, y, normalizedIndex)
 				);
 
 				vh.SetUIVertex(vertex, i);
 			}
+		}
+
+		protected override void SetDirty()
+		{
+			ptex.RegisterMaterial(targetGraphic.material);
+			ptex.SetData(this, 0, m_EffectFactor);	// param1.x : location
+			ptex.SetData(this, 1, m_Width);		// param1.y : width
+			ptex.SetData(this, 2, m_Softness);	// param1.z : softness
+			ptex.SetData(this, 4, m_Color.r);	// param2.x : red
+			ptex.SetData(this, 5, m_Color.g);	// param2.y : green
+			ptex.SetData(this, 6, m_Color.b);	// param2.z : blue
 		}
 
 		/// <summary>
@@ -256,10 +332,16 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public void Play()
 		{
-			_time = 0;
-			m_Play = true;
+			_player.Play();
 		}
 
+		/// <summary>
+		/// Stop effect.
+		/// </summary>
+		public void Stop()
+		{
+			_player.Stop();
+		}
 
 		//################################
 		// Protected Members.
@@ -269,14 +351,15 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		protected override void OnEnable()
 		{
-			_time = 0;
 			base.OnEnable();
+			_player.OnEnable(f => effectFactor = f);
 		}
 
 		protected override void OnDisable()
 		{
 			MaterialCache.Unregister(_materialCache);
 			_materialCache = null;
+			_player.OnDisable();
 			base.OnDisable();
 		}
 
@@ -289,31 +372,28 @@ namespace Coffee.UIExtensions
 		{
 			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_ColorMode);
 		}
+
+		#pragma warning disable 0612
+		protected override void UpgradeIfNeeded()
+		{
+			// Upgrade for v3.0.0
+			if (IsShouldUpgrade(300))
+			{
+				_player.play = false;
+				_player.duration = m_Duration;
+				_player.loop = false;
+				_player.loopDelay = 1;
+				_player.updateMode = m_UpdateMode;
+			}
+		}
+		#pragma warning restore 0612
 #endif
 
 		//################################
 		// Private Members.
 		//################################
 		MaterialCache _materialCache = null;
-		float _time = 0;
 
-		void Update()
-		{
-			if (!m_Play || !Application.isPlaying)
-			{
-				return;
-			}
-
-			_time += m_UpdateMode == AnimatorUpdateMode.UnscaledTime
-				? Time.unscaledDeltaTime
-				: Time.deltaTime;
-			location = _time / m_Duration;
-
-			if (m_Duration <= _time)
-			{
-				m_Play = false;
-				_time = 0;
-			}
-		}
+		EffectPlayer _player{ get { return m_Player ?? (m_Player = new EffectPlayer()); } }
 	}
 }

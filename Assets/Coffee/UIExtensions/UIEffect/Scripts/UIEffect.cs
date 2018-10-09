@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Serialization;
 
 #if UNITY_EDITOR
 using System.IO;
@@ -17,188 +18,174 @@ namespace Coffee.UIExtensions
 	[ExecuteInEditMode]
 	[RequireComponent(typeof(Graphic))]
 	[DisallowMultipleComponent]
+	[AddComponentMenu("UI/UIEffect/UIEffect", 1)]
 	public class UIEffect : UIEffectBase
 	{
-		/// <summary>
-		/// Additional shadow.
-		/// </summary>
-		[System.Serializable]
-		public class AdditionalShadow
-		{
-			/// <summary>
-			/// How far is the blurring shadow from the graphic.
-			/// </summary>
-			[Range(0, 1)] public float shadowBlur = 0.25f;
-
-			/// <summary>
-			/// Shadow effect mode.
-			/// </summary>
-			public ShadowStyle shadowMode = ShadowStyle.Shadow;
-
-			/// <summary>
-			/// Color for the shadow effect.
-			/// </summary>
-			public Color shadowColor = Color.black;
-
-			/// <summary>
-			/// How far is the shadow from the graphic.
-			/// </summary>
-			public Vector2 effectDistance = new Vector2(1f, -1f);
-
-			/// <summary>
-			/// Should the shadow inherit the alpha from the graphic?
-			/// </summary>
-			public bool useGraphicAlpha = true;
-		}
-
 		//################################
 		// Constant or Static Members.
 		//################################
 		public const string shaderName = "UI/Hidden/UI-Effect";
+		static readonly ParameterTexture _ptex = new ParameterTexture(4, 1024, "_ParamTex");
 
-//		/// <summary>
-//		/// Tone effect mode.
-//		/// </summary>
-//		public enum ToneMode
-//		{
-//			None = 0,
-//			Grayscale,
-//			Sepia,
-//			Nega,
-//			Pixel,
-//			Mono,
-//			Cutoff,
-//			Hue,
-//		}
-//
-//		/// <summary>
-//		/// Color effect mode.
-//		/// </summary>
-//		public enum ColorMode
-//		{
-//			None = 0,
-//			Set,
-//			Add,
-//			Sub,
-//		}
-//
-//		/// <summary>
-//		/// Shadow effect style.
-//		/// </summary>
-//		public enum ShadowStyle
-//		{
-//			None = 0,
-//			Shadow,
-//			Outline,
-//			Outline8,
-//			Shadow3,
-//		}
-//
-//		/// <summary>
-//		/// Blur effect mode.
-//		/// </summary>
-//		public enum BlurMode
-//		{
-//			None = 0,
-//			Fast,
-//			Medium,
-//			Detail,
-//		}
-//
 
 		//################################
 		// Serialize Members.
 		//################################
-		[SerializeField][Range(0, 1)] float m_ToneLevel = 1;
-		[SerializeField][Range(0, 1)] float m_Blur = 0.25f;
-		[SerializeField][Range(0, 1)] float m_ShadowBlur = 0.25f;
-		[SerializeField] ShadowStyle m_ShadowStyle;
-		[SerializeField] ToneMode m_ToneMode;
+		[FormerlySerializedAs("m_ToneLevel")]
+		[Tooltip("Effect factor between 0(no effect) and 1(complete effect).")]
+		[SerializeField][Range(0, 1)] float m_EffectFactor = 1;
+
+		[Tooltip("Color effect factor between 0(no effect) and 1(complete effect).")]
+		[SerializeField][Range(0, 1)] float m_ColorFactor = 1;
+
+		[FormerlySerializedAs("m_Blur")]
+		[Tooltip("How far is the blurring from the graphic.")]
+		[SerializeField][Range(0, 1)] float m_BlurFactor = 1;
+
+		[FormerlySerializedAs("m_ToneMode")]
+		[Tooltip("Effect mode")]
+		[SerializeField] EffectMode m_EffectMode;
+
+		[Tooltip("Color effect mode")]
 		[SerializeField] ColorMode m_ColorMode;
+
+		[Tooltip("Blur effect mode")]
 		[SerializeField] BlurMode m_BlurMode;
+
+		[Tooltip("Advanced blurring remove common artifacts in the blur effect for uGUI.")]
+		[SerializeField] bool m_AdvancedBlur = false;
+
+		[Obsolete][HideInInspector]
+		[SerializeField][Range(0, 1)] float m_ShadowBlur = 1;
+		[Obsolete][HideInInspector]
+		[SerializeField] ShadowStyle m_ShadowStyle;
+		[Obsolete][HideInInspector]
 		[SerializeField] Color m_ShadowColor = Color.black;
+		[Obsolete][HideInInspector]
 		[SerializeField] Vector2 m_EffectDistance = new Vector2(1f, -1f);
+		[Obsolete][HideInInspector]
 		[SerializeField] bool m_UseGraphicAlpha = true;
+		[Obsolete][HideInInspector]
 		[SerializeField] Color m_EffectColor = Color.white;
-		[SerializeField] List<AdditionalShadow> m_AdditionalShadows = new List<AdditionalShadow>();
+		[Obsolete][HideInInspector]
+		[SerializeField] List<UIShadow.AdditionalShadow> m_AdditionalShadows = new List<UIShadow.AdditionalShadow>();
 
-
-		[SerializeField] bool m_CustomEffect = false;
-		[SerializeField] Vector4 m_CustomFactor = new Vector4();
+		public enum BlurEx
+		{
+			None = 0,
+			Ex = 1,
+		}
 
 		//################################
 		// Public Members.
 		//################################
-		/// <summary>
-		/// Graphic affected by the UIEffect.
-		/// </summary>
-		[System.Obsolete ("Use targetGraphic instead (UnityUpgradable) -> targetGraphic")]
-		new public Graphic graphic { get { return base.graphic; } }
 
 		/// <summary>
-		/// Tone effect level between 0(no effect) and 1(complete effect).
+		/// Effect factor between 0(no effect) and 1(complete effect).
 		/// </summary>
-		public float toneLevel{ get { return m_ToneLevel; } set { m_ToneLevel = Mathf.Clamp(value, 0, 1); SetDirty(); } }
+		[System.Obsolete("Use effectFactor instead (UnityUpgradable) -> effectFactor")]
+		public float toneLevel
+		{
+			get { return m_EffectFactor; }
+			set
+			{
+				m_EffectFactor = Mathf.Clamp(value, 0, 1);
+				SetDirty();
+			}
+		}
+
+		/// <summary>
+		/// Effect factor between 0(no effect) and 1(complete effect).
+		/// </summary>
+		public float effectFactor
+		{
+			get { return m_EffectFactor; }
+			set
+			{
+				m_EffectFactor = Mathf.Clamp(value, 0, 1);
+				SetDirty();
+			}
+		}
+
+		/// <summary>
+		/// Color effect factor between 0(no effect) and 1(complete effect).
+		/// </summary>
+		public float colorFactor
+		{
+			get { return m_ColorFactor; }
+			set
+			{
+				m_ColorFactor = Mathf.Clamp(value, 0, 1);
+				SetDirty();
+			}
+		}
 
 		/// <summary>
 		/// How far is the blurring from the graphic.
 		/// </summary>
-		public float blur { get { return m_Blur; } set { m_Blur = Mathf.Clamp(value, 0, 1); SetDirty(); } }
+		[System.Obsolete("Use blurFactor instead (UnityUpgradable) -> blurFactor")]
+		public float blur
+		{
+			get { return m_BlurFactor; }
+			set
+			{
+				m_BlurFactor = Mathf.Clamp(value, 0, 1);
+				SetDirty();
+			}
+		}
 
 		/// <summary>
-		/// How far is the blurring shadow from the graphic.
+		/// How far is the blurring from the graphic.
 		/// </summary>
-		public float shadowBlur { get { return m_ShadowBlur; } set { m_ShadowBlur = Mathf.Clamp(value, 0, 1); SetDirty(); } }
+		[System.Obsolete("Use effectFactor instead (UnityUpgradable) -> effectFactor")]
+		public float blurFactor
+		{
+			get { return m_BlurFactor; }
+			set
+			{
+				m_BlurFactor = Mathf.Clamp(value, 0, 1);
+				SetDirty();
+			}
+		}
 
 		/// <summary>
-		/// Shadow effect mode.
+		/// Effect mode(readonly).
 		/// </summary>
-		public ShadowStyle shadowStyle { get { return m_ShadowStyle; } set { m_ShadowStyle = value; SetDirty(); } }
+		[System.Obsolete("Use effectMode instead (UnityUpgradable) -> effectMode")]
+		public EffectMode toneMode { get { return m_EffectMode; } }
 
 		/// <summary>
-		/// Tone effect mode.
+		/// Effect mode(readonly).
 		/// </summary>
-		public ToneMode toneMode { get { return m_ToneMode; } }
+		public EffectMode effectMode { get { return m_EffectMode; } }
 
 		/// <summary>
-		/// Color effect mode.
+		/// Color effect mode(readonly).
 		/// </summary>
 		public ColorMode colorMode { get { return m_ColorMode; } }
 
 		/// <summary>
-		/// Blur effect mode.
+		/// Blur effect mode(readonly).
 		/// </summary>
 		public BlurMode blurMode { get { return m_BlurMode; } }
 
 		/// <summary>
-		/// Color for the shadow effect.
-		/// </summary>
-		public Color shadowColor { get { return m_ShadowColor; } set { m_ShadowColor = value; SetDirty(); } }
-
-		/// <summary>
-		/// How far is the shadow from the graphic.
-		/// </summary>
-		public Vector2 effectDistance { get { return m_EffectDistance; } set { m_EffectDistance = value; SetDirty(); } }
-
-		/// <summary>
-		/// Should the shadow inherit the alpha from the graphic?
-		/// </summary>
-		public bool useGraphicAlpha { get { return m_UseGraphicAlpha; } set { m_UseGraphicAlpha = value; SetDirty(); } }
-
-		/// <summary>
 		/// Color for the color effect.
 		/// </summary>
-		public Color effectColor { get { return m_EffectColor; } set { m_EffectColor = value; SetDirty(); } }
+		public Color effectColor
+		{
+			get { return graphic.color; }
+			set
+			{
+				graphic.color = value;
+				SetDirty();
+			}
+		}
 
 		/// <summary>
-		/// Additional Shadows.
+		/// Gets the parameter texture.
 		/// </summary>
-		public List<AdditionalShadow> additionalShadows { get { return m_AdditionalShadows; } }
-
-		/// <summary>
-		/// Custom effect factor.
-		/// </summary>
-		public Vector4 customFactor { get { return m_CustomFactor; } set { m_CustomFactor = value; SetDirty(); } }
+		public override ParameterTexture ptex { get { return _ptex; } }
 
 		/// <summary>
 		/// Modifies the mesh.
@@ -210,268 +197,253 @@ namespace Coffee.UIExtensions
 				return;
 			}
 
-			UIVertex vt;
-			vh.GetUIVertexStream(tempVerts);
+			float normalizedIndex = ptex.GetNormalizedIndex(this);
 
-			//================================
-			// Effect modify original vertices.
-			//================================
+			if (m_BlurMode != BlurMode.None && m_AdvancedBlur)
 			{
-				// Pack some effect factors to 1 float.
-				Vector2 factor = new Vector2(
-					m_CustomEffect ? Packer.ToFloat(m_CustomFactor) : Packer.ToFloat(toneLevel, 0, blur, 0),
-					Packer.ToFloat(effectColor.r, effectColor.g, effectColor.b, effectColor.a)
-				);
+				vh.GetUIVertexStream(tempVerts);
+				vh.Clear();
+				var count = tempVerts.Count;
 
-				for (int i = 0; i < tempVerts.Count; i++)
+				// Bundle
+				int bundleSize = targetGraphic is Text ? 6 : count;
+				Rect posBounds = default(Rect);
+				Rect uvBounds = default(Rect);
+				Vector3 size = default(Vector3);
+				Vector3 tPos = default(Vector3);
+				Vector3 tUV = default(Vector3);
+				float expand = (float)blurMode * 6 * 2;
+
+				for (int i = 0; i < count; i += bundleSize)
 				{
-					vt = tempVerts[i];
+					// min/max for bundled-quad
+					GetBounds(tempVerts, i, bundleSize, ref posBounds, ref uvBounds, true);
 
-					// Set UIEffect prameters to vertex.
-					vt.uv1 = factor;
-					tempVerts[i] = vt;
+					// Pack uv mask.
+					Vector2 uvMask = new Vector2(Packer.ToFloat(uvBounds.xMin, uvBounds.yMin), Packer.ToFloat(uvBounds.xMax, uvBounds.yMax));
+
+					// Quad
+					for (int j = 0; j < bundleSize; j += 6)
+					{
+						Vector3 cornerPos1 = tempVerts[i + j + 1].position;
+						Vector3 cornerPos2 = tempVerts[i + j + 4].position;
+
+						// Is outer quad?
+						bool hasOuterEdge = (bundleSize == 6)
+						                    || !posBounds.Contains(cornerPos1)
+						                    || !posBounds.Contains(cornerPos2);
+						if (hasOuterEdge)
+						{
+							Vector3 cornerUv1 = tempVerts[i + j + 1].uv0;
+							Vector3 cornerUv2 = tempVerts[i + j + 4].uv0;
+
+							Vector3 centerPos = (cornerPos1 + cornerPos2) / 2;
+							Vector3 centerUV = (cornerUv1 + cornerUv2) / 2;
+							size = (cornerPos1 - cornerPos2);
+
+							size.x = 1 + expand / Mathf.Abs(size.x);
+							size.y = 1 + expand / Mathf.Abs(size.y);
+							size.z = 1 + expand / Mathf.Abs(size.z);
+
+							tPos = centerPos - Vector3.Scale(size, centerPos);
+							tUV = centerUV - Vector3.Scale(size, centerUV);
+						}
+
+						// Vertex
+						for (int k = 0; k < 6; k++)
+						{
+							UIVertex vt = tempVerts[i + j + k];
+
+							Vector3 pos = vt.position;
+							Vector2 uv0 = vt.uv0;
+
+							if (hasOuterEdge && (pos.x < posBounds.xMin || posBounds.xMax < pos.x))
+							{
+								pos.x = pos.x * size.x + tPos.x;
+								uv0.x = uv0.x * size.x + tUV.x;
+							}
+							if (hasOuterEdge && (pos.y < posBounds.yMin || posBounds.yMax < pos.y))
+							{
+								pos.y = pos.y * size.y + tPos.y;
+								uv0.y = uv0.y * size.y + tUV.y;
+							}
+
+							vt.uv0 = new Vector2(Packer.ToFloat((uv0.x + 0.5f) / 2f, (uv0.y + 0.5f) / 2f), normalizedIndex);
+							vt.position = pos;
+							vt.uv1 = uvMask;
+
+							tempVerts[i + j + k] = vt;
+						}
+					}
+				}
+
+				vh.AddUIVertexTriangleStream(tempVerts);
+				tempVerts.Clear();
+			}
+			else
+			{
+				int count = vh.currentVertCount;
+				UIVertex vt = default(UIVertex);
+				for (int i = 0; i < count; i++)
+				{
+					vh.PopulateUIVertex(ref vt, i);
+					Vector2 uv0 = vt.uv0;
+					vt.uv0 = new Vector2(
+						Packer.ToFloat((uv0.x + 0.5f) / 2f, (uv0.y + 0.5f) / 2f),
+						normalizedIndex
+					);
+					vh.SetUIVertex(vt, i);
 				}
 			}
-
-			//================================
-			// Append shadow vertices.
-			//================================
-			{
-				var inputVertCount = tempVerts.Count;
-				var start = 0;
-				var end = inputVertCount;
-
-				// Additional Shadows.
-				for (int i = additionalShadows.Count - 1; 0 <= i; i--)
-				{
-					AdditionalShadow shadow = additionalShadows[i];
-					_ApplyShadow(tempVerts, ref start, ref end, shadow.shadowMode, toneLevel, shadow.shadowBlur, shadow.effectDistance, shadow.shadowColor, shadow.useGraphicAlpha);
-				}
-
-				// Shadow.
-				_ApplyShadow(tempVerts, ref start, ref end, shadowStyle, toneLevel, shadowBlur, effectDistance, shadowColor, useGraphicAlpha);
-			}
-
-			vh.Clear();
-			vh.AddUIVertexTriangleStream(tempVerts);
-
-			tempVerts.Clear();
 		}
 
-//#if UNITY_EDITOR
-//
-//		protected override void OnValidate ()
-//		{
-//			base.OnValidate ();
-//			EditorApplication.delayCall += () => UpdateMaterial(false);
-//		}
-//
-//		public override void OnAfterDeserialize()
-//		{
-//			if (!m_CustomEffect)
-//			{
-//				EditorApplication.delayCall += () => UpdateMaterial (true);
-//			}
-//		}
-//
-//		void UpdateMaterial(bool onlyEditMode)
-//		{
-//			if(!this || onlyEditMode && Application.isPlaying)
-//			{
-//				return;
-//			}
-//
-//			var mat = (0 == toneMode) && (0 == colorMode) && (0 == blurMode)
-//				? null
-//				: GetOrGenerateMaterialVariant(Shader.Find(shaderName), toneMode, colorMode, blurMode);
-//
-//			if (m_EffectMaterial != mat || targetGraphic.material != mat)
-//			{
-//				targetGraphic.material = m_EffectMaterial = mat;
-//				EditorUtility.SetDirty(this);
-//				EditorUtility.SetDirty(targetGraphic);
-//			}
-//		}
-//		
-//
-//
-//		public static Material GetOrGenerateMaterialVariant(Shader shader, ToneMode tone, ColorMode color, BlurMode blur)
-//		{
-//			if (!shader)
-//				return null;
-//
-//			Material mat = GetMaterial(shader, tone, color, blur);
-//
-//			if (!mat)
-//			{
-//				Debug.Log("Generate material : " + GetVariantName(shader, tone, color, blur));
-//				mat = new Material(shader);
-//
-//				if (0 < tone)
-//					mat.EnableKeyword("" + tone.ToString().ToUpper());
-//				if (0 < color)
-//					mat.EnableKeyword("UI_COLOR_" + color.ToString().ToUpper());
-//				if (0 < blur)
-//					mat.EnableKeyword("UI_BLUR_" + blur.ToString().ToUpper());
-//
-//				mat.name = GetVariantName(shader, tone, color, blur);
-//				mat.hideFlags |= HideFlags.NotEditable;
-//
-//#if UIEFFECT_SEPARATE
-//				bool isMainAsset = true;
-//				string dir = Path.GetDirectoryName(GetDefaultMaterialPath (shader));
-//				string materialPath = Path.Combine(Path.Combine(dir, "Separated"), mat.name + ".mat");
-//#else
-//				bool isMainAsset = (0 == tone) && (0 == color) && (0 == blur);
-//				string materialPath = GetDefaultMaterialPath (shader);
-//#endif
-//				if (isMainAsset)
-//				{
-//					Directory.CreateDirectory(Path.GetDirectoryName(materialPath));
-//					AssetDatabase.CreateAsset(mat, materialPath);
-//					AssetDatabase.SaveAssets();
-//				}
-//				else
-//				{
-//					mat.hideFlags |= HideFlags.HideInHierarchy;
-//					AssetDatabase.AddObjectToAsset(mat, materialPath);
-//				}
-//			}
-//			return mat;
-//		}
-//
-//		public static Material GetMaterial(Shader shader, ToneMode tone, ColorMode color, BlurMode blur)
-//		{
-//			string variantName = GetVariantName(shader, tone, color, blur);
-//			return AssetDatabase.FindAssets("t:Material " + Path.GetFileName(shader.name))
-//				.Select(x => AssetDatabase.GUIDToAssetPath(x))
-//				.SelectMany(x => AssetDatabase.LoadAllAssetsAtPath(x))
-//				.OfType<Material>()
-//				.FirstOrDefault(x => x.name == variantName);
-//		}
-//
-//		public static string GetDefaultMaterialPath(Shader shader)
-//		{
-//			var name = Path.GetFileName (shader.name);
-//			return AssetDatabase.FindAssets("t:Material " + name)
-//				.Select(x => AssetDatabase.GUIDToAssetPath(x))
-//				.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == name)
-//				?? ("Assets/Coffee/UIExtensions/UIEffect/Materials/" + name + ".mat");
-//		}
-//
-//		public static string GetVariantName(Shader shader, ToneMode tone, ColorMode color, BlurMode blur)
-//		{
-//			return
-//#if UIEFFECT_SEPARATE
-//				"[Separated] " + Path.GetFileName(shader.name)
-//#else
-//				Path.GetFileName(shader.name)
-//#endif
-//				+ (0 < tone ? "-" + tone : "")
-//				+ (0 < color ? "-" + color : "")
-//				+ (0 < blur ? "-" + blur : "");
-//		}
-//#endif
+		protected override void SetDirty()
+		{
+			ptex.RegisterMaterial(m_EffectMaterial);
+			ptex.SetData(this, 0, m_EffectFactor);	// param.x : effect factor
+			ptex.SetData(this, 1, m_ColorFactor);	// param.y : color factor
+			ptex.SetData(this, 2, m_BlurFactor);	// param.z : blur factor
+		}
 
 #if UNITY_EDITOR
 		/// <summary>
 		/// Gets the material.
 		/// </summary>
 		/// <returns>The material.</returns>
-		protected override Material GetMaterial ()
+		protected override Material GetMaterial()
 		{
-			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_ToneMode, m_ColorMode, m_BlurMode);
+			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_EffectMode, m_ColorMode, m_BlurMode, m_AdvancedBlur ? BlurEx.Ex : BlurEx.None);
 		}
+
+		#pragma warning disable 0612
+		protected override void UpgradeIfNeeded()
+		{
+			// Upgrade for v3.0.0
+			if (IsShouldUpgrade(300))
+			{
+				if (m_ColorMode != ColorMode.Multiply)
+				{
+					Color col = targetGraphic.color;
+					col.r = m_EffectColor.r;
+					col.g = m_EffectColor.g;
+					col.b = m_EffectColor.b;
+					targetGraphic.color = col;
+					m_ColorFactor = m_EffectColor.a;
+				}
+
+				if (m_ShadowStyle != ShadowStyle.None || m_AdditionalShadows.Any(x => x.style != ShadowStyle.None))
+				{
+					if (m_ShadowStyle != ShadowStyle.None)
+					{
+						var shadow = gameObject.GetComponent<UIShadow>() ?? gameObject.AddComponent<UIShadow>();
+						shadow.style = m_ShadowStyle;
+						shadow.effectDistance = m_EffectDistance;
+						shadow.effectColor = m_ShadowColor;
+						shadow.useGraphicAlpha = m_UseGraphicAlpha;
+						shadow.blurFactor = m_ShadowBlur;
+					}
+
+					foreach (var s in m_AdditionalShadows)
+					{
+						if (s.style == ShadowStyle.None)
+						{
+							continue;
+						}
+
+						var shadow = gameObject.AddComponent<UIShadow>();
+						shadow.style = s.style;
+						shadow.effectDistance = s.effectDistance;
+						shadow.effectColor = s.effectColor;
+						shadow.useGraphicAlpha = s.useGraphicAlpha;
+						shadow.blurFactor = s.blur;
+					}
+
+					m_ShadowStyle = ShadowStyle.None;
+					m_AdditionalShadows = null;
+
+					if (m_EffectMode == EffectMode.None && m_ColorMode == ColorMode.Multiply && m_BlurMode == BlurMode.None)
+					{
+						DestroyImmediate(this, true);
+					}
+				}
+
+				int tone = (int)m_EffectMode;
+				const int Mono = 5;
+				const int Cutoff = 6;
+				const int Hue = 7;
+				if (tone == Hue)
+				{
+					var go = gameObject;
+					var hue = m_EffectFactor;
+					DestroyImmediate(this, true);
+					var hsv = go.GetComponent<UIHsvModifier>() ?? go.AddComponent<UIHsvModifier>();
+					hsv.hue = hue;
+					hsv.range = 1;
+				}
+
+				// Cutoff/Mono
+				if (tone == Cutoff || tone == Mono)
+				{
+					var go = gameObject;
+					var factor = m_EffectFactor;
+					var transitionMode = tone == Cutoff
+						? UITransitionEffect.EffectMode.Cutoff
+						: UITransitionEffect.EffectMode.Fade;
+					DestroyImmediate(this, true);
+					var trans = go.GetComponent<UITransitionEffect>() ?? go.AddComponent<UITransitionEffect>();
+					trans.effectFactor = factor;
+
+					var sp = new SerializedObject(trans).FindProperty("m_EffectMode");
+					sp.intValue = (int)transitionMode;
+					sp.serializedObject.ApplyModifiedProperties();
+				}
+			}
+		}
+		#pragma warning restore 0612
 #endif
 
 		//################################
 		// Private Members.
 		//################################
-		/// <summary>
-		/// Append shadow vertices.
-		/// * It is similar to Shadow component implementation.
-		/// </summary>
-		void _ApplyShadow(List<UIVertex> verts, ref int start, ref int end, ShadowStyle mode, float toneLevel, float blur, Vector2 effectDistance, Color color, bool useGraphicAlpha)
+		static void GetBounds(List<UIVertex> verts, int start, int count, ref Rect posBounds, ref Rect uvBounds, bool global)
 		{
-			if (ShadowStyle.None == mode)
-				return;
-
-			var factor = new Vector2(
-				Packer.ToFloat(toneLevel, 0, blur, 0),
-				Packer.ToFloat(color.r, color.g, color.b, 1)
-			);
-
-			// Append Shadow.
-			_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
-
-			// Append Shadow3.
-			if (ShadowStyle.Shadow3 == mode)
+			Vector2 minPos = new Vector2(float.MaxValue, float.MaxValue);
+			Vector2 maxPos = new Vector2(float.MinValue, float.MinValue);
+			Vector2 minUV = new Vector2(float.MaxValue, float.MaxValue);
+			Vector2 maxUV = new Vector2(float.MinValue, float.MinValue);
+			for (int i = start; i < start + count; i++)
 			{
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, effectDistance.x, 0, factor, color, useGraphicAlpha);
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, 0, effectDistance.y, factor, color, useGraphicAlpha);
-			}
+				UIVertex vt = verts[i];
 
-			// Append Outline.
-			else if (ShadowStyle.Outline == mode)
-			{
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, -effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, -effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
-			}
+				Vector2 uv = vt.uv0;
+				Vector3 pos = vt.position;
 
-			// Append Outline8.
-			else if (ShadowStyle.Outline8 == mode)
-			{
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, -effectDistance.x, effectDistance.y, factor, color, useGraphicAlpha);
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, -effectDistance.x, -effectDistance.y, factor, color, useGraphicAlpha);
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, -effectDistance.x, 0, factor, color, useGraphicAlpha);
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, 0, -effectDistance.y, factor, color, useGraphicAlpha);
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, effectDistance.x, 0, factor, color, useGraphicAlpha);
-				_ApplyShadowZeroAlloc(tempVerts, ref start, ref end, 0, effectDistance.y, factor, color, useGraphicAlpha);
-			}
-		}
-
-		/// <summary>
-		/// Append shadow vertices.
-		/// * It is similar to Shadow component implementation.
-		/// </summary>
-		void _ApplyShadowZeroAlloc(List<UIVertex> verts, ref int start, ref int end, float x, float y, Vector2 factor, Color color, bool useGraphicAlpha)
-		{
-			// Check list capacity.
-			var neededCapacity = verts.Count + end - start;
-			if (verts.Capacity < neededCapacity)
-				verts.Capacity = neededCapacity;
-
-			// Append shadow vertices to the front of list.
-			// * The original vertex is pushed backward.
-			UIVertex vt;
-			for (int i = start; i < end; ++i)
-			{
-				vt = verts[i];
-				verts.Add(vt);
-
-				Vector3 v = vt.position;
-				vt.position.Set(v.x + x, v.y + y, v.z);
-
-				Color vertColor = color;
-
-				if(colorMode != ColorMode.Multiply)
+				// Left-Bottom
+				if (minPos.x >= pos.x && minPos.y >= pos.y)
 				{
-					vertColor.r = vertColor.g = vertColor.b = 1;
+					minPos = pos;
+				}
+				// Right-Top
+				else if (maxPos.x <= pos.x && maxPos.y <= pos.y)
+				{
+					maxPos = pos;
 				}
 
-				vertColor.a = useGraphicAlpha ? color.a * vt.color.a / 255 : color.a;
-				vt.color = vertColor;
-
-				// Set UIEffect prameters to vertex.
-				vt.uv1 = factor;
-				verts[i] = vt;
+				// Left-Bottom
+				if (minUV.x >= uv.x && minUV.y >= uv.y)
+				{
+					minUV = uv;
+				}
+				// Right-Top
+				else if (maxUV.x <= uv.x && maxUV.y <= uv.y)
+				{
+					maxUV = uv;
+				}
 			}
 
-			// Update next shadow offset.
-			start = end;
-			end = verts.Count;
+			// Shrink coordinate for detect edge
+			posBounds.Set(minPos.x + 0.001f, minPos.y + 0.001f, maxPos.x - minPos.x - 0.002f, maxPos.y - minPos.y - 0.002f);
+			uvBounds.Set(minUV.x, minUV.y, maxUV.x - minUV.x, maxUV.y - minUV.y);
 		}
 	}
 }

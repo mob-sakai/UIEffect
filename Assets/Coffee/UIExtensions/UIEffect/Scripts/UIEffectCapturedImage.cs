@@ -10,6 +10,7 @@ namespace Coffee.UIExtensions
 	/// <summary>
 	/// UIEffectCapturedImage
 	/// </summary>
+	[AddComponentMenu("UI/UIEffect/UIEffectCapturedImage", 200)]
 	public class UIEffectCapturedImage : RawImage
 #if UNITY_EDITOR
 		, ISerializationCallbackReceiver
@@ -37,51 +38,107 @@ namespace Coffee.UIExtensions
 		//################################
 		// Serialize Members.
 		//################################
-		[SerializeField][Range(0, 1)] float m_ToneLevel = 1;
-		[SerializeField][Range(0, 1)] float m_Blur = 0;
-		[SerializeField] ToneMode m_ToneMode;
+		[Tooltip("Effect factor between 0(no effect) and 1(complete effect).")]
+		[FormerlySerializedAs("m_ToneLevel")]
+		[SerializeField][Range(0, 1)] float m_EffectFactor = 1;
+
+		[Tooltip("Color effect factor between 0(no effect) and 1(complete effect).")]
+		[SerializeField][Range(0, 1)] float m_ColorFactor = 1;
+
+		[Tooltip("How far is the blurring from the graphic.")]
+		[FormerlySerializedAs("m_Blur")]
+		[SerializeField][Range(0, 1)] float m_BlurFactor = 1;
+
+		[Tooltip("Effect mode.")]
+		[FormerlySerializedAs("m_ToneMode")]
+		[SerializeField] EffectMode m_EffectMode;
+
+		[Tooltip("Color effect mode.")]
 		[SerializeField] ColorMode m_ColorMode;
+
+		[Tooltip("Blur effect mode.")]
 		[SerializeField] BlurMode m_BlurMode;
+
+		[Tooltip("Color for the color effect.")]
 		[SerializeField] Color m_EffectColor = Color.white;
-		[SerializeField] DesamplingRate m_DesamplingRate;
-		[SerializeField] DesamplingRate m_ReductionRate;
+
+		[Tooltip("Desampling rate of the generated RenderTexture.")]
+		[SerializeField] DesamplingRate m_DesamplingRate = DesamplingRate.x1;
+
+		[Tooltip("Desampling rate of reduction buffer to apply effect.")]
+		[SerializeField] DesamplingRate m_ReductionRate = DesamplingRate.x1;
+
+		[Tooltip("FilterMode for capturing.")]
 		[SerializeField] FilterMode m_FilterMode = FilterMode.Bilinear;
+
+		[Tooltip("Effect material.")]
 		[SerializeField] Material m_EffectMaterial;
+
+		[Tooltip("Blur iterations.")]
 		[FormerlySerializedAs("m_Iterations")]
-		[SerializeField][Range(1, 8)] int m_BlurIterations = 1;
+		[SerializeField][Range(1, 8)] int m_BlurIterations = 3;
+
+		[Tooltip("Fits graphic size to screen on captured.")]
 		[FormerlySerializedAs("m_KeepCanvasSize")]
 		[SerializeField] bool m_FitToScreen = true;
-		[SerializeField] RenderTexture m_TargetTexture;
+
+		[Tooltip("Capture automatically on enable.")]
 		[SerializeField] bool m_CaptureOnEnable = false;
+
+		[Tooltip("Capture immediately.")]
+		[SerializeField] bool m_ImmediateCapturing = true;
 
 
 		//################################
 		// Public Members.
 		//################################
 		/// <summary>
-		/// Tone effect level between 0(no effect) and 1(complete effect).
+		/// Effect factor between 0(no effect) and 1(complete effect).
 		/// </summary>
-		public float toneLevel { get { return m_ToneLevel; } set { m_ToneLevel = Mathf.Clamp(value, 0, 1); } }
+		[System.Obsolete("Use effectFactor instead (UnityUpgradable) -> effectFactor")]
+		public float toneLevel { get { return m_EffectFactor; } set { m_EffectFactor = Mathf.Clamp(value, 0, 1); } }
+
+		/// <summary>
+		/// Effect factor between 0(no effect) and 1(complete effect).
+		/// </summary>
+		public float effectFactor { get { return m_EffectFactor; } set { m_EffectFactor = Mathf.Clamp(value, 0, 1); } }
+
+		/// <summary>
+		/// Color effect factor between 0(no effect) and 1(complete effect).
+		/// </summary>
+		public float colorFactor { get { return m_ColorFactor; } set { m_ColorFactor = Mathf.Clamp(value, 0, 1); } }
 
 		/// <summary>
 		/// How far is the blurring from the graphic.
 		/// </summary>
-		public float blur { get { return m_Blur; } set { m_Blur = Mathf.Clamp(value, 0, 4); } }
+		[System.Obsolete("Use blurFactor instead (UnityUpgradable) -> blurFactor")]
+		public float blur { get { return m_BlurFactor; } set { m_BlurFactor = Mathf.Clamp(value, 0, 4); } }
+
+		/// <summary>
+		/// How far is the blurring from the graphic.
+		/// </summary>
+		public float blurFactor { get { return m_BlurFactor; } set { m_BlurFactor = Mathf.Clamp(value, 0, 4); } }
 
 		/// <summary>
 		/// Tone effect mode.
 		/// </summary>
-		public ToneMode toneMode { get { return m_ToneMode; } set { m_ToneMode = value; } }
+		[System.Obsolete("Use effectMode instead (UnityUpgradable) -> effectMode")]
+		public EffectMode toneMode { get { return m_EffectMode; } }
+
+		/// <summary>
+		/// Effect mode.
+		/// </summary>
+		public EffectMode effectMode { get { return m_EffectMode; } }
 
 		/// <summary>
 		/// Color effect mode.
 		/// </summary>
-		public ColorMode colorMode { get { return m_ColorMode; } set { m_ColorMode = value; } }
+		public ColorMode colorMode { get { return m_ColorMode; } }
 
 		/// <summary>
 		/// Blur effect mode.
 		/// </summary>
-		public BlurMode blurMode { get { return m_BlurMode; } set { m_BlurMode = value; } }
+		public BlurMode blurMode { get { return m_BlurMode; } }
 
 		/// <summary>
 		/// Color for the color effect.
@@ -104,14 +161,14 @@ namespace Coffee.UIExtensions
 		public DesamplingRate reductionRate { get { return m_ReductionRate; } set { m_ReductionRate = value; } }
 
 		/// <summary>
-		/// FilterMode for capture.
+		/// FilterMode for capturing.
 		/// </summary>
 		public FilterMode filterMode { get { return m_FilterMode; } set { m_FilterMode = value; } }
 
 		/// <summary>
 		/// Captured texture.
 		/// </summary>
-		public RenderTexture capturedTexture { get { return m_TargetTexture ? m_TargetTexture : _rt; } }
+		public RenderTexture capturedTexture { get { return _rt; } }
 
 		/// <summary>
 		/// Blur iterations.
@@ -131,14 +188,25 @@ namespace Coffee.UIExtensions
 		public bool keepCanvasSize { get { return m_FitToScreen; } set { m_FitToScreen = value; } }
 
 		/// <summary>
-		/// Fits graphic size to screen.
+		/// Fits graphic size to screen on captured.
 		/// </summary>
 		public bool fitToScreen { get { return m_FitToScreen; } set { m_FitToScreen = value; } }
 
 		/// <summary>
 		/// Target RenderTexture to capture.
 		/// </summary>
-		public RenderTexture targetTexture { get { return m_TargetTexture; } set { m_TargetTexture = value; } }
+		[System.Obsolete]
+		public RenderTexture targetTexture { get { return null; } set { } }
+
+		/// <summary>
+		/// Capture automatically on enable.
+		/// </summary>
+		public bool captureOnEnable { get { return m_CaptureOnEnable; } set { m_CaptureOnEnable = value; } }
+
+		/// <summary>
+		/// Capture immediately.
+		/// </summary>
+		public bool immediateCapturing { get { return m_ImmediateCapturing; } set { m_ImmediateCapturing = value; } }
 
 		/// <summary>
 		/// This function is called when the object becomes enabled and active.
@@ -177,10 +245,23 @@ namespace Coffee.UIExtensions
 		protected override void OnPopulateMesh(VertexHelper vh)
 		{
 			// When not displaying, clear vertex.
-			if (texture == null || effectColor.a < 1 / 255f || canvasRenderer.GetAlpha() < 1 / 255f)
+			if (texture == null || color.a < 1 / 255f || canvasRenderer.GetAlpha() < 1 / 255f)
+			{
 				vh.Clear();
+			}
 			else
+			{
 				base.OnPopulateMesh(vh);
+				int count = vh.currentVertCount;
+				UIVertex vt = default(UIVertex);
+				Color c = new Color(1, 1, 1, color.a);
+				for (int i = 0; i < count; i++)
+				{
+					vh.PopulateUIVertex(ref vt, i);
+					vt.color = c;
+					vh.SetUIVertex(vt, i);
+				}
+			}
 		}
 
 		/// <summary>
@@ -223,7 +304,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public void Capture()
 		{
-            // Fit to screen.
+			// Fit to screen.
 			var rootCanvas = canvas.rootCanvas;
 			if (m_FitToScreen)
 			{
@@ -243,33 +324,26 @@ namespace Coffee.UIExtensions
 
 				s_EffectFactorId = Shader.PropertyToID("_EffectFactor");
 				s_ColorFactorId = Shader.PropertyToID("_ColorFactor");
-                s_CommandBuffer = new CommandBuffer();
+				s_CommandBuffer = new CommandBuffer();
 			}
 
-			// If target texture exists, release result RT.
-			if (m_TargetTexture)
-			{
-                _Release(ref _rt);
-			}
-			else
-			{
-				// If size of result RT has changed, release it.
-				int w, h;
-				GetDesamplingSize (m_DesamplingRate, out w, out h);
-				if (_rt && (_rt.width != w || _rt.height != h))
-				{
-					_Release (ref _rt);
-				}
 
-				// Generate RT for result.
-				if (_rt == null)
-				{
-					_rt = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
-					_rt.filterMode = m_FilterMode;
-					_rt.useMipMap = false;
-					_rt.wrapMode = TextureWrapMode.Clamp;
-					_rt.hideFlags = HideFlags.HideAndDontSave;
-				}
+			// If size of result RT has changed, release it.
+			int w, h;
+			GetDesamplingSize(m_DesamplingRate, out w, out h);
+			if (_rt && (_rt.width != w || _rt.height != h))
+			{
+				_Release(ref _rt);
+			}
+
+			// Generate RT for result.
+			if (_rt == null)
+			{
+				_rt = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
+				_rt.filterMode = m_FilterMode;
+				_rt.useMipMap = false;
+				_rt.wrapMode = TextureWrapMode.Clamp;
+				_rt.hideFlags = HideFlags.HideAndDontSave;
 			}
 			SetupCommandBuffer();
 		}
@@ -277,16 +351,11 @@ namespace Coffee.UIExtensions
 		void SetupCommandBuffer()
 		{
 			// Material for effect.
-			Material mat = effectMaterial;
+			Material mat = m_EffectMaterial;
 
-			if(s_CommandBuffer == null)
+			if (s_CommandBuffer == null)
 			{
-				s_CommandBuffer = new CommandBuffer ();
-			}
-			s_CommandBuffer.name = mat ? mat.name : "noeffect";
-			if (_rt)
-			{
-				_rt.name = s_CommandBuffer.name;
+				s_CommandBuffer = new CommandBuffer();
 			}
 
 			// [1] Capture from back buffer (back buffer -> copied screen).
@@ -300,12 +369,12 @@ namespace Coffee.UIExtensions
 #endif
 
 			// Set properties for effect.
-			s_CommandBuffer.SetGlobalVector(s_EffectFactorId, new Vector4(toneLevel, 0));
-			s_CommandBuffer.SetGlobalVector(s_ColorFactorId, new Vector4(effectColor.r, effectColor.g, effectColor.b, effectColor.a));
+			s_CommandBuffer.SetGlobalVector(s_EffectFactorId, new Vector4(m_EffectFactor, 0));
+			s_CommandBuffer.SetGlobalVector(s_ColorFactorId, new Vector4(m_EffectColor.r, m_EffectColor.g, m_EffectColor.b, m_EffectColor.a));
 
 			// [2] Apply base effect with reduction buffer (copied screen -> effect1).
-			GetDesamplingSize (m_ReductionRate, out w, out h);
-			s_CommandBuffer.GetTemporaryRT (s_EffectId1, w, h, 0, m_FilterMode);
+			GetDesamplingSize(m_ReductionRate, out w, out h);
+			s_CommandBuffer.GetTemporaryRT(s_EffectId1, w, h, 0, m_FilterMode);
 			s_CommandBuffer.Blit(s_CopyId, s_EffectId1, mat, 0);
 			s_CommandBuffer.ReleaseTemporaryRT(s_CopyId);
 
@@ -316,28 +385,24 @@ namespace Coffee.UIExtensions
 				for (int i = 0; i < m_BlurIterations; i++)
 				{
 					// [3] Apply blurring with reduction buffer (effect1 -> effect2, or effect2 -> effect1).
-					s_CommandBuffer.SetGlobalVector(s_EffectFactorId, new Vector4(blur, 0));
+					s_CommandBuffer.SetGlobalVector(s_EffectFactorId, new Vector4(m_BlurFactor, 0));
 					s_CommandBuffer.Blit(s_EffectId1, s_EffectId2, mat, 1);
-					s_CommandBuffer.SetGlobalVector(s_EffectFactorId, new Vector4(0, blur));
+					s_CommandBuffer.SetGlobalVector(s_EffectFactorId, new Vector4(0, m_BlurFactor));
 					s_CommandBuffer.Blit(s_EffectId2, s_EffectId1, mat, 1);
 				}
 				s_CommandBuffer.ReleaseTemporaryRT(s_EffectId2);
 			}
 
-            // [4] Copy to result RT.
-			s_CommandBuffer.Blit(s_EffectId1, new RenderTargetIdentifier (capturedTexture));
+			// [4] Copy to result RT.
+			s_CommandBuffer.Blit(s_EffectId1, new RenderTargetIdentifier(capturedTexture));
 			s_CommandBuffer.ReleaseTemporaryRT(s_EffectId1);
 
 #if UNITY_EDITOR
-			if(!Application.isPlaying)
+			if (!Application.isPlaying)
 			{
-				texture = null;
-				_SetDirty ();
-				Graphics.ExecuteCommandBuffer (s_CommandBuffer);
+				Graphics.ExecuteCommandBuffer(s_CommandBuffer);
 
-				_Release(false);
-				texture = capturedTexture;
-				_SetDirty ();
+				UpdateTexture();
 				return;
 			}
 			else
@@ -345,8 +410,15 @@ namespace Coffee.UIExtensions
 				Graphics.ExecuteCommandBuffer(s_CommandBuffer);
 			}
 #endif
-			// Execute command buffer.
-			canvas.rootCanvas.GetComponent<CanvasScaler> ().StartCoroutine(_CoUpdateTextureOnNextFrame ());
+			if (m_ImmediateCapturing)
+			{
+				UpdateTexture();
+			}
+			else
+			{
+				// Execute command buffer.
+				canvas.rootCanvas.GetComponent<CanvasScaler>().StartCoroutine(_CoUpdateTextureOnNextFrame());
+			}
 		}
 
 		/// <summary>
@@ -362,10 +434,10 @@ namespace Coffee.UIExtensions
 #if UNITY_EDITOR
 		protected override void Reset()
 		{
-			// Set parameters as 'Detail'.
-			m_BlurIterations = 5;
+			// Set parameters as 'Medium'.
+			m_BlurIterations = 3;
 			m_FilterMode = FilterMode.Bilinear;
-			m_DesamplingRate = DesamplingRate.None;
+			m_DesamplingRate = DesamplingRate.x1;
 			m_ReductionRate = DesamplingRate.x1;
 			base.Reset();
 		}
@@ -388,9 +460,9 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Raises the validate event.
 		/// </summary>
-		protected override void OnValidate ()
+		protected override void OnValidate()
 		{
-			base.OnValidate ();
+			base.OnValidate();
 			UnityEditor.EditorApplication.delayCall += () => UpdateMaterial(false);
 		}
 
@@ -400,12 +472,12 @@ namespace Coffee.UIExtensions
 		/// <param name="ignoreInPlayMode">If set to <c>true</c> ignore in play mode.</param>
 		protected void UpdateMaterial(bool ignoreInPlayMode)
 		{
-			if(!this || ignoreInPlayMode && Application.isPlaying)
+			if (!this || ignoreInPlayMode && Application.isPlaying)
 			{
 				return;
 			}
 
-			var mat =  MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_ToneMode, m_ColorMode, m_BlurMode);
+			var mat = MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_EffectMode, m_ColorMode, m_BlurMode);
 			if (m_EffectMaterial != mat)
 			{
 				material = null;
@@ -427,7 +499,7 @@ namespace Coffee.UIExtensions
 		static int s_EffectId2;
 		static int s_EffectFactorId;
 		static int s_ColorFactorId;
-        static CommandBuffer s_CommandBuffer;
+		static CommandBuffer s_CommandBuffer;
 
 		/// <summary>
 		/// Release genarated objects.
@@ -435,7 +507,7 @@ namespace Coffee.UIExtensions
 		/// <param name="releaseRT">If set to <c>true</c> release cached RenderTexture.</param>
 		void _Release(bool releaseRT)
 		{
-			if (releaseRT || m_TargetTexture)
+			if (releaseRT)
 			{
 				texture = null;
 				_Release(ref _rt);
@@ -443,11 +515,11 @@ namespace Coffee.UIExtensions
 
 			if (s_CommandBuffer != null)
 			{
-                s_CommandBuffer.Clear();
+				s_CommandBuffer.Clear();
 
-				if(releaseRT)
+				if (releaseRT)
 				{
-					s_CommandBuffer.Release ();
+					s_CommandBuffer.Release();
 					s_CommandBuffer = null;
 				}
 			}
@@ -457,7 +529,7 @@ namespace Coffee.UIExtensions
 		void _SetDirty()
 		{
 #if UNITY_EDITOR
-			if(!Application.isPlaying)
+			if (!Application.isPlaying)
 			{
 				UnityEditor.EditorUtility.SetDirty(this);
 			}
@@ -470,7 +542,7 @@ namespace Coffee.UIExtensions
 			{
 				obj.Release();
 #if UNITY_EDITOR
-				if(!Application.isPlaying)
+				if (!Application.isPlaying)
 					DestroyImmediate(obj);
 				else
 #endif
@@ -482,10 +554,14 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Set texture on next frame.
 		/// </summary>
-		IEnumerator _CoUpdateTextureOnNextFrame ()
+		IEnumerator _CoUpdateTextureOnNextFrame()
 		{
-			yield return new WaitForEndOfFrame ();
+			yield return new WaitForEndOfFrame();
+			UpdateTexture();
+		}
 
+		void UpdateTexture()
+		{
 #if !UNITY_EDITOR
 			// Execute command buffer.
 			Graphics.ExecuteCommandBuffer (s_CommandBuffer);

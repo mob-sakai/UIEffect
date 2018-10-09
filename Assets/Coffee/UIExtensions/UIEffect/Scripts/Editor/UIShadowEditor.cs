@@ -2,7 +2,7 @@
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIExtensions.Editors
 {
 	/// <summary>
 	/// UIShadow editor.
@@ -11,77 +11,20 @@ namespace Coffee.UIExtensions
 	[CanEditMultipleObjects]
 	public class UIShadowEditor : Editor
 	{
-		ReorderableList roAdditionalShadows;
-		SerializedProperty spAdditionalShadows;
 		UIEffect uiEffect;
 
 		void OnEnable()
 		{
 			uiEffect = (target as UIShadow).GetComponent<UIEffect>();
-			spAdditionalShadows = serializedObject.FindProperty("m_AdditionalShadows");
-
-			roAdditionalShadows = new ReorderableList(serializedObject, spAdditionalShadows, true, true, true, true);
-			roAdditionalShadows.drawElementCallback = DrawElementCallback;
-			roAdditionalShadows.drawHeaderCallback = (rect) => EditorGUI.LabelField(rect, "Additional Shadows");
-			roAdditionalShadows.onAddCallback = OnAddCallback;
-			roAdditionalShadows.elementHeightCallback = ElementHeightCallback;
 
 		}
 
-		void OnAddCallback(ReorderableList ro)
-		{
-			spAdditionalShadows.InsertArrayElementAtIndex(ro.count);
-			var element = spAdditionalShadows.GetArrayElementAtIndex(ro.count - 1);
-			element.FindPropertyRelative("style").intValue = (int)ShadowStyle.Shadow;
-			element.FindPropertyRelative("effectColor").colorValue = Color.black;
-			element.FindPropertyRelative("effectDistance").vector2Value = new Vector2(1f, -1f);
-			element.FindPropertyRelative("useGraphicAlpha").boolValue = true;
-			element.FindPropertyRelative("blur").floatValue = 0.25f;
-		}
-
-		float ElementHeightCallback(int index)
-		{
-			var element = spAdditionalShadows.GetArrayElementAtIndex(index);
-			if (element.FindPropertyRelative("style").intValue == (int)ShadowStyle.None)
-				return 16;
-			
-			return (uiEffect && uiEffect.blurMode != BlurMode.None ? 84 : 64) + (EditorGUIUtility.wideMode ? 0 : 18);
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		void DrawElementCallback(Rect rect, int index, bool isActive, bool isFocused)
-		{
-			var sp = roAdditionalShadows.serializedProperty.GetArrayElementAtIndex(index);
-
-			Rect r = new Rect(rect);
-			r.height = EditorGUIUtility.singleLineHeight;
-			var spMode = sp.FindPropertyRelative("style");
-			EditorGUI.PropertyField(r, spMode);
-			if (spMode.intValue == (int)ShadowStyle.None)
-				return;
-
-			r.y += r.height;
-			EditorGUI.PropertyField(r, sp.FindPropertyRelative("effectColor"));
-			r.y += r.height;
-			EditorGUI.PropertyField(r, sp.FindPropertyRelative("effectDistance"));
-			r.y += EditorGUIUtility.wideMode ? r.height : r.height * 2;
-			EditorGUI.PropertyField(r, sp.FindPropertyRelative("useGraphicAlpha"));
-
-			if (uiEffect && uiEffect.blurMode != BlurMode.None)
-			{
-				r.y += r.height;
-				EditorGUI.PropertyField(r, sp.FindPropertyRelative("blur"));
-			}
-		}
 
 		/// <summary>
 		/// Implement this function to make a custom inspector.
 		/// </summary>
 		public override void OnInspectorGUI()
 		{
-
 			serializedObject.Update();
 
 			//================
@@ -100,15 +43,10 @@ namespace Coffee.UIExtensions
 
 				if (uiEffect && uiEffect.blurMode != BlurMode.None)
 				{
-					EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Blur"));
+					EditorGUILayout.PropertyField(serializedObject.FindProperty("m_BlurFactor"));
 				}
 				EditorGUI.indentLevel--;
 			}
-
-			//================
-			// Additional shadow setting.
-			//================
-			roAdditionalShadows.DoLayoutList();
 
 			serializedObject.ApplyModifiedProperties();
 		}

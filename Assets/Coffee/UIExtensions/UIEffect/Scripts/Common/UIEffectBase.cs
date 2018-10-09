@@ -1,21 +1,37 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
+using System.IO;
 
 namespace Coffee.UIExtensions
 {
 	/// <summary>
 	/// Abstract effect base for UI.
 	/// </summary>
-	[ExecuteInEditMode]
 	[RequireComponent(typeof(Graphic))]
 	[DisallowMultipleComponent]
-	public abstract class UIEffectBase : BaseMeshEffect
+	public abstract class UIEffectBase : BaseMeshEffect, IParameterTexture
+#if UNITY_EDITOR
+	, ISerializationCallbackReceiver
+#endif
 	{
 		protected static readonly Vector2[] splitedCharacterPosition = { Vector2.up, Vector2.one, Vector2.right, Vector2.zero };
 		protected static readonly List<UIVertex> tempVerts = new List<UIVertex>();
 
+		[HideInInspector]
+		[SerializeField] int m_Version;
 		[SerializeField] protected Material m_EffectMaterial;
+
+		/// <summary>
+		/// Gets or sets the parameter index.
+		/// </summary>
+		public int parameterIndex { get; set; }
+
+		/// <summary>
+		/// Gets the parameter texture.
+		/// </summary>
+		public virtual ParameterTexture ptex { get { return null; } }
 
 		/// <summary>
 		/// Gets target graphic for effect.
@@ -30,13 +46,14 @@ namespace Coffee.UIExtensions
 #if UNITY_EDITOR
 		protected override void Reset()
 		{
+			m_Version = 300;
 			OnValidate();
 		}
 
 		/// <summary>
 		/// Raises the validate event.
 		/// </summary>
-		protected override void OnValidate ()
+		protected override void OnValidate()
 		{
 			var mat = GetMaterial();
 			if (m_EffectMaterial != mat)
@@ -44,8 +61,44 @@ namespace Coffee.UIExtensions
 				m_EffectMaterial = mat;
 				UnityEditor.EditorUtility.SetDirty(this);
 			}
+
 			ModifyMaterial();
+			targetGraphic.SetVerticesDirty();
 			SetDirty();
+		}
+
+		public void OnBeforeSerialize()
+		{
+		}
+
+		public void OnAfterDeserialize()
+		{
+			UnityEditor.EditorApplication.delayCall += UpgradeIfNeeded;
+		}
+
+		protected bool IsShouldUpgrade(int expectedVersion)
+		{
+			if (m_Version < expectedVersion)
+			{
+				Debug.LogFormat(gameObject, "<b>{0}({1})</b> has been upgraded: <i>version {2} -> {3}</i>", name, GetType().Name, m_Version, expectedVersion);
+				m_Version = expectedVersion;
+
+				//UnityEditor.EditorApplication.delayCall += () =>
+				{
+					UnityEditor.EditorUtility.SetDirty(this);
+					if (!Application.isPlaying && gameObject && gameObject.scene.IsValid())
+					{
+						UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(gameObject.scene);
+					}
+				}
+				;
+				return true;
+			}
+			return false;
+		}
+
+		protected virtual void UpgradeIfNeeded()
+		{
 		}
 
 		/// <summary>
@@ -71,8 +124,13 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		protected override void OnEnable()
 		{
+			if (ptex != null)
+			{
+				ptex.Register(this);
+			}
 			ModifyMaterial();
-			base.OnEnable();
+			targetGraphic.SetVerticesDirty();
+			SetDirty();
 		}
 
 		/// <summary>
@@ -81,18 +139,24 @@ namespace Coffee.UIExtensions
 		protected override void OnDisable()
 		{
 			ModifyMaterial();
-			base.OnDisable();
+			targetGraphic.SetVerticesDirty();
+			if (ptex != null)
+			{
+				ptex.Unregister(this);
+			}
 		}
 
 		/// <summary>
 		/// Mark the UIEffect as dirty.
 		/// </summary>
-		protected void SetDirty()
+		protected virtual void SetDirty()
 		{
-			if (targetGraphic)
-			{
-				targetGraphic.SetVerticesDirty();
-			}
+			targetGraphic.SetVerticesDirty();
+		}
+
+		protected override void OnDidApplyAnimationProperties()
+		{
+			SetDirty();
 		}
 	}
 }

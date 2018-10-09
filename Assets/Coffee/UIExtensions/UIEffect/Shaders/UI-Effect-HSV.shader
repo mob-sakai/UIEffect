@@ -13,6 +13,8 @@
 		_ColorMask ("Color Mask", Float) = 15
 
 		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
+
+		_ParamTex ("Parameter Texture", 2D) = "white" {}
 	}
 
 	SubShader
@@ -56,15 +58,14 @@
 			sampler2D _MainTex;
 			fixed4 _TextureSampleAdd;
 			float4 _ClipRect;
-
+			sampler2D _ParamTex;
+			
 			struct appdata_t
 			{
 				float4 vertex	: POSITION;
 				float4 color	: COLOR;
 				float2 texcoord	: TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
-
-				float2 uv1		: TEXCOORD1;
 			};
 
 			struct v2f
@@ -74,9 +75,8 @@
 				float2 texcoord	: TEXCOORD0;
 				float4 wpos		: TEXCOORD1;
 				UNITY_VERTEX_OUTPUT_STEREO
-				
-				half4 range		: TEXCOORD2;
-				half3 hsv		: TEXCOORD3;
+
+				half param : TEXCOORD2;
 			};
 
 
@@ -91,9 +91,8 @@
 				OUT.texcoord = IN.texcoord;
 				OUT.color = IN.color;
 
-				OUT.range = UnpackToVec4(IN.uv1.x);
-				OUT.hsv = UnpackToVec3(IN.uv1.y) - 0.5f;
-				OUT.hsv.yz *= 2;
+				OUT.texcoord = UnpackToVec2(IN.texcoord.x);
+				OUT.param = IN.texcoord.y;
 				
 				return OUT;
 			}
@@ -117,6 +116,12 @@
 
 			fixed4 frag(v2f IN) : COLOR
 			{
+				fixed4 param1 = tex2D(_ParamTex, float2(0.25, IN.param));
+				fixed4 param2 = tex2D(_ParamTex, float2(0.75, IN.param));
+                fixed3 targetHsv = param1.rgb;
+                fixed3 targetRange = param1.w;
+                fixed3 hsvShift = param2.xyz - 0.5;
+
 				half4 color = tex2D(_MainTex, IN.texcoord);// + _TextureSampleAdd) * IN.color;
 
 				color.a *= UnityGet2DClipping(IN.wpos.xy, _ClipRect);
@@ -126,11 +131,11 @@
 				#endif
 
 				half3 hsv = rgb2hsv(color.rgb);
-				half3 range = abs(hsv - IN.range.xyz);
+				half3 range = abs(hsv - targetHsv);
 				half diff = max(max(min(1-range.x, range.x), min(1-range.y, range.y)/10), min(1-range.z, range.z)/10);
 
-				fixed masked = step(diff, IN.range.w);
-				color.rgb = hsv2rgb(hsv + IN.hsv.xyz * masked);
+				fixed masked = step(diff, targetRange);
+				color.rgb = hsv2rgb(hsv + hsvShift * masked);
 
 				return (color + _TextureSampleAdd) * IN.color;
 			}

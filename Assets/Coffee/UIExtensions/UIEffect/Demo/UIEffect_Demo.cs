@@ -40,5 +40,10 @@ namespace Coffee.UIExtensions
 			anim.GetComponentInChildren<UIEffectCapturedImage>().Capture();
 			anim.SetTrigger("Capture");
 		}
+
+		public void SetCanvasOverlay(bool isOverlay)
+		{
+			GetComponent<Canvas> ().renderMode = isOverlay ? RenderMode.ScreenSpaceOverlay : RenderMode.ScreenSpaceCamera;
+		}
 	}
 }

@@ -16,55 +16,91 @@ namespace Coffee.UIExtensions
 	/// <summary>
 	/// UIEffect.
 	/// </summary>
-	[ExecuteInEditMode]
-	[DisallowMultipleComponent]
+	[AddComponentMenu("UI/UIEffect/UIShiny", 2)]
 	public class UIShiny : UIEffectBase
 	{
 		//################################
 		// Constant or Static Members.
 		//################################
 		public const string shaderName = "UI/Hidden/UI-Effect-Shiny";
+		static readonly ParameterTexture _ptex = new ParameterTexture(8, 128, "_ParamTex");
 
 
 		//################################
 		// Serialize Members.
 		//################################
-		[SerializeField] [Range(0, 1)] float m_Location = 0;
+		[Tooltip("Location for shiny effect.")]
+		[FormerlySerializedAs("m_Location")]
+		[SerializeField] [Range(0, 1)] float m_EffectFactor = 0;
+
+		[Tooltip("Width for shiny effect.")]
 		[SerializeField] [Range(0, 1)] float m_Width = 0.25f;
+
+		[Tooltip("Rotation for shiny effect.")]
 		[SerializeField] [Range(-180, 180)] float m_Rotation;
+
+		[Tooltip("Softness for shiny effect.")]
 		[SerializeField][Range(0.01f, 1)] float m_Softness = 1f;
+
+		[Tooltip("Brightness for shiny effect.")]
 		[FormerlySerializedAs("m_Alpha")]
 		[SerializeField][Range(0, 1)] float m_Brightness = 1f;
-		[SerializeField][Range(0, 1)] float m_Highlight = 1;
+
+		[Tooltip("Gloss factor for shiny effect.")]
+		[FormerlySerializedAs("m_Highlight")]
+		[SerializeField][Range(0, 1)] float m_Gloss = 1;
+
+		[Tooltip("The area for effect.")]
 		[SerializeField] protected EffectArea m_EffectArea;
-		[Header("Play Effect")]
+
+		[SerializeField] EffectPlayer m_Player;
+
+		[Obsolete][HideInInspector]
 		[SerializeField] bool m_Play = false;
+		[Obsolete][HideInInspector]
 		[SerializeField] bool m_Loop = false;
+		[Obsolete][HideInInspector]
 		[SerializeField][Range(0.1f, 10)] float m_Duration = 1;
+		[Obsolete][HideInInspector]
 		[SerializeField][Range(0, 10)] float m_LoopDelay = 1;
+		[Obsolete][HideInInspector]
 		[SerializeField] AnimatorUpdateMode m_UpdateMode = AnimatorUpdateMode.Normal;
 
 
 		//################################
 		// Public Members.
 		//################################
-//		/// <summary>
-//		/// Graphic affected by the UIEffect.
-//		/// </summary>
-//		new public Graphic graphic { get { return base.graphic; } }
 
 		/// <summary>
-		/// Location for shiny effect.
+		/// Effect factor between 0(start) and 1(end).
 		/// </summary>
+		[System.Obsolete("Use effectFactor instead (UnityUpgradable) -> effectFactor")]
 		public float location
 		{
-			get { return m_Location; }
+			get { return m_EffectFactor; }
 			set
 			{ 
 				value = Mathf.Clamp(value, 0, 1);
-				if (!Mathf.Approximately(m_Location, value))
+				if (!Mathf.Approximately(m_EffectFactor, value))
 				{
-					m_Location = value;
+					m_EffectFactor = value;
+					SetDirty();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Effect factor between 0(start) and 1(end).
+		/// </summary>
+		public float effectFactor
+		{
+			get { return m_EffectFactor; }
+			set
+			{ 
+				value = Mathf.Clamp(value, 0, 1);
+				if (!Mathf.Approximately(m_EffectFactor, value))
+				{
+					m_EffectFactor = value;
 					SetDirty();
 				}
 			}
@@ -105,7 +141,7 @@ namespace Coffee.UIExtensions
 		}
 
 		/// <summary>
-		/// Alpha for shiny effect.
+		/// Brightness for shiny effect.
 		/// </summary>
 		[System.Obsolete("Use brightness instead (UnityUpgradable) -> brightness")]
 		public float alpha
@@ -140,17 +176,35 @@ namespace Coffee.UIExtensions
 		}
 
 		/// <summary>
-		/// Highlight factor for shiny effect.
+		/// Gloss factor for shiny effect.
 		/// </summary>
+		[System.Obsolete("Use gloss instead (UnityUpgradable) -> gloss")]
 		public float highlight
 		{
-			get { return m_Highlight; }
+			get { return m_Gloss; }
 			set
 			{
 				value = Mathf.Clamp(value, 0, 1);
-				if (!Mathf.Approximately(m_Highlight, value))
+				if (!Mathf.Approximately(m_Gloss, value))
 				{
-					m_Highlight = value;
+					m_Gloss = value;
+					SetDirty();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gloss factor for shiny effect.
+		/// </summary>
+		public float gloss
+		{
+			get { return m_Gloss; }
+			set
+			{
+				value = Mathf.Clamp(value, 0, 1);
+				if (!Mathf.Approximately(m_Gloss, value))
+				{
+					m_Gloss = value;
 					SetDirty();
 				}
 			}
@@ -191,47 +245,51 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Play shinning on enable.
 		/// </summary>
-		public bool play { get { return m_Play; } set { m_Play = value; } }
+		public bool play { get { return _player.play; } set { _player.play = value; } }
 
 		/// <summary>
 		/// Play shinning loop.
 		/// </summary>
-		public bool loop { get { return m_Loop; } set { m_Loop = value; } }
+		public bool loop { get { return _player.loop; } set { _player.loop = value; } }
 
 		/// <summary>
 		/// Shinning duration.
 		/// </summary>
-		public float duration { get { return m_Duration; } set { m_Duration = Mathf.Max(value, 0.1f); } }
+		public float duration { get { return _player.duration; } set { _player.duration = Mathf.Max(value, 0.1f); } }
 
 		/// <summary>
 		/// Delay on loop.
 		/// </summary>
-		public float loopDelay { get { return m_LoopDelay; } set { m_LoopDelay = Mathf.Max(value, 0); } }
+		public float loopDelay { get { return _player.loopDelay; } set { _player.loopDelay = Mathf.Max(value, 0); } }
 
 		/// <summary>
 		/// Shinning update mode.
 		/// </summary>
-		public AnimatorUpdateMode updateMode { get { return m_UpdateMode; } set { m_UpdateMode = value; } }
+		public AnimatorUpdateMode updateMode { get { return _player.updateMode; } set { _player.updateMode = value; } }
+
+		/// <summary>
+		/// Gets the parameter texture.
+		/// </summary>
+		public override ParameterTexture ptex { get { return _ptex; } }
 
 		/// <summary>
 		/// This function is called when the object becomes enabled and active.
 		/// </summary>
 		protected override void OnEnable()
 		{
-			_time = 0;
-//			graphic.material = effectMaterial;
 			base.OnEnable();
+			_player.OnEnable(f => effectFactor = f);
 		}
 
+		/// <summary>
+		/// This function is called when the behaviour becomes disabled () or inactive.
+		/// </summary>
+		protected override void OnDisable()
+		{
+			base.OnDisable();
+			_player.OnDisable();
+		}
 
-//		/// <summary>
-//		/// This function is called when the behaviour becomes disabled () or inactive.
-//		/// </summary>
-//		protected override void OnDisable()
-//		{
-//			graphic.material = null;
-//			base.OnDisable();
-//		}
 
 #if UNITY_EDITOR
 		protected override Material GetMaterial()
@@ -239,38 +297,21 @@ namespace Coffee.UIExtensions
 			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName));
 		}
 
-//		public void OnBeforeSerialize()
-//		{
-//		}
-//
-//		public void OnAfterDeserialize()
-//		{
-//			var obj = this;
-//			EditorApplication.delayCall += () =>
-//			{
-//				if (Application.isPlaying || !obj)
-//					return;
-//
-//				var mat = GetMaterial(shaderName);
-//				if (m_EffectMaterial == mat && graphic.material == mat)
-//					return;
-//
-//				graphic.material = m_EffectMaterial = mat;
-//				EditorUtility.SetDirty(this);
-//				EditorUtility.SetDirty(graphic);
-//				EditorApplication.delayCall += AssetDatabase.SaveAssets;
-//			};
-//		}
-//
-//		public static Material GetMaterial(string shaderName)
-//		{
-//			string name = Path.GetFileName(shaderName);
-//			return AssetDatabase.FindAssets("t:Material " + name)
-//				.Select(x => AssetDatabase.GUIDToAssetPath(x))
-//				.SelectMany(x => AssetDatabase.LoadAllAssetsAtPath(x))
-//				.OfType<Material>()
-//				.FirstOrDefault(x => x.name == name);
-//		}
+		#pragma warning disable 0612
+		protected override void UpgradeIfNeeded()
+		{
+			// Upgrade for v3.0.0
+			if (IsShouldUpgrade(300))
+			{
+				_player.play = m_Play;
+				_player.duration = m_Duration;
+				_player.loop = m_Loop;
+				_player.loopDelay = m_LoopDelay;
+				_player.updateMode = m_UpdateMode;
+			}
+		}
+		#pragma warning restore 0612
+
 #endif
 
 		/// <summary>
@@ -281,11 +322,13 @@ namespace Coffee.UIExtensions
 			if (!isActiveAndEnabled)
 				return;
 
+			float normalizedIndex = ptex.GetNormalizedIndex(this);
+
 			// rect.
 			Rect rect = m_EffectArea.GetEffectArea(vh, graphic);
 
 			// rotation.
-			float rad = rotation * Mathf.Deg2Rad;
+			float rad = m_Rotation * Mathf.Deg2Rad;
 			Vector2 dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
 			dir.x *= rect.height / rect.width;
 			dir = dir.normalized;
@@ -300,13 +343,10 @@ namespace Coffee.UIExtensions
 			{
 				vh.PopulateUIVertex(ref vertex, i);
 
-				// Normalize vertex position by local matrix.
-				nomalizedPos = localMatrix * vertex.position;
 
 				// Normalize vertex position by local matrix.
 				if (effectEachCharacter)
 				{
-					// Each characters.
 					nomalizedPos = localMatrix * splitedCharacterPosition[i % 4];
 				}
 				else
@@ -314,9 +354,9 @@ namespace Coffee.UIExtensions
 					nomalizedPos = localMatrix * vertex.position;
 				}
 
-				vertex.uv1 = new Vector2(
-					Packer.ToFloat(Mathf.Clamp01(nomalizedPos.y), softness, width, brightness),
-					Packer.ToFloat(location, highlight)
+				vertex.uv0 = new Vector2(
+					Packer.ToFloat(vertex.uv0.x, vertex.uv0.y),
+					Packer.ToFloat(nomalizedPos.y, normalizedIndex)
 				);
 
 				vh.SetUIVertex(vertex, i);
@@ -328,42 +368,38 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public void Play()
 		{
-			_time = 0;
-			m_Play = true;
+			_player.Play();
 		}
 
+		/// <summary>
+		/// Stop effect.
+		/// </summary>
+		public void Stop()
+		{
+			_player.Stop();
+		}
+
+		protected override void SetDirty()
+		{
+			ptex.RegisterMaterial(targetGraphic.material);
+			ptex.SetData(this, 0, m_EffectFactor);	// param1.x : location
+			ptex.SetData(this, 1, m_Width);		// param1.y : width
+			ptex.SetData(this, 2, m_Softness);	// param1.z : softness
+			ptex.SetData(this, 3, m_Brightness);// param1.w : blightness
+			ptex.SetData(this, 4, m_Gloss);		// param2.x : gloss
+
+			if (!Mathf.Approximately(_lastRotation, m_Rotation) && targetGraphic)
+			{
+				_lastRotation = m_Rotation;
+				targetGraphic.SetVerticesDirty();
+			}
+		}
 
 		//################################
 		// Private Members.
 		//################################
-		float _time = 0;
+		float _lastRotation;
 
-		void Update()
-		{
-			if (!m_Play || !Application.isPlaying)
-			{
-				return;
-			}
-
-			_time += m_UpdateMode == AnimatorUpdateMode.UnscaledTime
-					? Time.unscaledDeltaTime
-					: Time.deltaTime;
-			location = _time / m_Duration;
-
-			if (m_Duration <= _time)
-			{
-				m_Play = m_Loop;
-				_time = m_Loop ? -m_LoopDelay : 0;
-			}
-		}
-
-//		/// <summary>
-//		/// Mark the UIEffect as dirty.
-//		/// </summary>
-//		void _SetDirty()
-//		{
-//			if (graphic)
-//				graphic.SetVerticesDirty();
-//		}
+		EffectPlayer _player{ get { return m_Player ?? (m_Player = new EffectPlayer()); } }
 	}
 }

@@ -3,7 +3,7 @@ using UnityEditor.UI;
 using UnityEngine;
 using DesamplingRate = Coffee.UIExtensions.UIEffectCapturedImage.DesamplingRate;
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIExtensions.Editors
 {
 	/// <summary>
 	/// UIEffectCapturedImage editor.
@@ -42,12 +42,12 @@ namespace Coffee.UIExtensions
 			_spFilterMode = serializedObject.FindProperty("m_FilterMode");
 			_spIterations = serializedObject.FindProperty("m_BlurIterations");
 			_spKeepSizeToRootCanvas = serializedObject.FindProperty("m_FitToScreen");
-			_spTargetTexture = serializedObject.FindProperty("m_TargetTexture");
 			_spBlurMode = serializedObject.FindProperty("m_BlurMode");
 			_spCaptureOnEnable = serializedObject.FindProperty("m_CaptureOnEnable");
+			_spImmediateCapturing = serializedObject.FindProperty("m_ImmediateCapturing");
 
 
-			_customAdvancedOption = (qualityMode == QualityMode.Custom) || _spTargetTexture.objectReferenceValue;
+			_customAdvancedOption = (qualityMode == QualityMode.Custom);
 		}
 
 		/// <summary>
@@ -70,7 +70,7 @@ namespace Coffee.UIExtensions
 			//================
 			GUILayout.Space(10);
 			EditorGUILayout.LabelField("Capture Effect", EditorStyles.boldLabel);
-			UIEffectEditor.DrawEffectProperties(UIEffectCapturedImage.shaderName, serializedObject);
+			UIEffectEditor.DrawEffectProperties(serializedObject);
 
 			//================
 			// Advanced option.
@@ -80,20 +80,21 @@ namespace Coffee.UIExtensions
 
 			EditorGUILayout.PropertyField(_spCaptureOnEnable);// CaptureOnEnable.
 			EditorGUILayout.PropertyField(_spKeepSizeToRootCanvas);// Keep Graphic Size To RootCanvas.
+			EditorGUILayout.PropertyField(_spImmediateCapturing);// Capture immediately.
 
 			EditorGUI.BeginChangeCheck();
 			QualityMode quality = qualityMode;
 			quality = (QualityMode)EditorGUILayout.EnumPopup("Quality Mode", quality);
-			if(EditorGUI.EndChangeCheck())
+			if (EditorGUI.EndChangeCheck())
 			{
-				_customAdvancedOption = (quality == QualityMode.Custom) || _spTargetTexture.objectReferenceValue;
+				_customAdvancedOption = (quality == QualityMode.Custom);
 				qualityMode = quality;
 			}
 
 			// When qualityMode is `Custom`, show advanced option.
 			if (_customAdvancedOption)
 			{
-				if(_spBlurMode.intValue != 0)
+				if (_spBlurMode.intValue != 0)
 				{
 					EditorGUILayout.PropertyField(_spIterations);// Iterations.
 				}
@@ -102,20 +103,8 @@ namespace Coffee.UIExtensions
 				EditorGUILayout.Space();
 				EditorGUILayout.LabelField("Result Texture Setting", EditorStyles.boldLabel);
 
-				if(!_spTargetTexture.objectReferenceValue)
-				{
-					EditorGUILayout.PropertyField(_spFilterMode);// Filter Mode.
-					DrawDesamplingRate(_spDesamplingRate);// Desampling rate.
-				}
-				using (new EditorGUILayout.HorizontalScope())
-				{
-					EditorGUILayout.PropertyField(_spTargetTexture);// Target Texture.
-					Texture t = _spTargetTexture.objectReferenceValue as Texture;
-					if (t)
-					{
-						GUILayout.Label(string.Format("{0}x{1}", t.width, t.height), EditorStyles.miniLabel);
-					}
-				}
+				EditorGUILayout.PropertyField(_spFilterMode);// Filter Mode.
+				DrawDesamplingRate(_spDesamplingRate);// Desampling rate.
 			}
 
 			serializedObject.ApplyModifiedProperties();
@@ -138,23 +127,6 @@ namespace Coffee.UIExtensions
 				}
 				EditorGUI.EndDisabledGroup();
 			}
-
-			// Warning message for overlay rendering.
-			if(graphic && graphic.canvas)
-			{
-				var canvas = graphic.canvas.rootCanvas;
-				if( canvas && canvas.renderMode == RenderMode.WorldSpace)
-				{
-					using (new GUILayout.HorizontalScope())
-					{
-						EditorGUILayout.HelpBox("'WorldSpace - Camera' render modes is not supported. Change render mode of root canvas.", MessageType.Warning);
-						if (GUILayout.Button("Canvas"))
-						{
-							Selection.activeGameObject = canvas.gameObject;
-						}
-					}
-				}
-			}
 		}
 
 		//################################
@@ -172,8 +144,8 @@ namespace Coffee.UIExtensions
 		SerializedProperty _spBlurMode;
 		SerializedProperty _spIterations;
 		SerializedProperty _spKeepSizeToRootCanvas;
-		SerializedProperty _spTargetTexture;
 		SerializedProperty _spCaptureOnEnable;
+		SerializedProperty _spImmediateCapturing;
 
 		QualityMode qualityMode
 		{
@@ -183,9 +155,9 @@ namespace Coffee.UIExtensions
 					return QualityMode.Custom;
 
 				int qualityValue = (_spDesamplingRate.intValue << 0)
-					+ (_spReductionRate.intValue << 4)
-					+ (_spFilterMode.intValue << 8)
-					+ (_spIterations.intValue << 10);
+				                   + (_spReductionRate.intValue << 4)
+				                   + (_spFilterMode.intValue << 8)
+				                   + (_spIterations.intValue << 10);
 
 				return System.Enum.IsDefined(typeof(QualityMode), qualityValue) ? (QualityMode)qualityValue : QualityMode.Custom;
 			}
