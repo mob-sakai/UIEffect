@@ -62,7 +62,11 @@ namespace Coffee.UIExtensions.Editors
 
 				EditorGUI.BeginChangeCheck ();
 				EditorGUI.showMixedValue = spColor.hasMultipleDifferentValues;
+#if UNITY_2018_1_OR_NEWER
+				spColor.colorValue = EditorGUILayout.ColorField (contentEffectColor, spColor.colorValue, true, false, false);
+#else
 				spColor.colorValue = EditorGUILayout.ColorField (contentEffectColor, spColor.colorValue, true, false, false, null);
+#endif
 				if (EditorGUI.EndChangeCheck ()) {
 					spColor.serializedObject.ApplyModifiedProperties ();
 				}
