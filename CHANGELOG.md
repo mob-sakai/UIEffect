@@ -1,5 +1,13 @@
 # Changelog
 
+## [v3.0.1](https://github.com/mob-sakai/UIEffect/tree/v3.0.1) (2018-11-07)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v3.0.0...v3.0.1)
+
+**Fixed bugs:**
+
+- Compile error in 2018.3 [\#139](https://github.com/mob-sakai/UIEffect/issues/139)
+
 ## [v3.0.0](https://github.com/mob-sakai/UIEffect/tree/v3.0.0) (2018-10-10)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.8.3...v3.0.0)
