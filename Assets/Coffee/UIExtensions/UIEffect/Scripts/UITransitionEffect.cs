@@ -39,7 +39,7 @@ namespace Coffee.UIExtensions
 		[SerializeField] Texture m_TransitionTexture;
 
 		[Tooltip("The area for effect.")]
-		[SerializeField] EffectArea m_EffectArea;
+		[SerializeField] EffectArea m_EffectArea = EffectArea.RectTransform;
 
 		[Tooltip("Keep effect aspect ratio.")]
 		[SerializeField] bool m_KeepAspectRatio;
@@ -178,6 +178,11 @@ namespace Coffee.UIExtensions
 		/// Duration for showing/hiding.
 		/// </summary>
 		public float duration { get { return _player.duration; } set { _player.duration = Mathf.Max(value, 0.1f); } }
+
+		/// <summary>
+		/// Disable graphic's raycast target on hidden.
+		/// </summary>
+		public bool passRayOnHidden { get { return m_PassRayOnHidden; } set { m_PassRayOnHidden = value; } }
 
 		/// <summary>
 		/// Update mode for showing/hiding.

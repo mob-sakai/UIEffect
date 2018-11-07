@@ -50,8 +50,6 @@ namespace Coffee.UIExtensions
 		[SerializeField] EffectPlayer m_Player;
 
 		[Obsolete][HideInInspector]
-		[SerializeField] bool m_Play;
-		[Obsolete][HideInInspector]
 		[SerializeField][Range(0.1f, 10)] float m_Duration = 1;
 		[Obsolete][HideInInspector]
 		[SerializeField] AnimatorUpdateMode m_UpdateMode = AnimatorUpdateMode.Normal;

@@ -127,8 +127,6 @@ namespace Coffee.UIExtensions
 		public ParameterTexture ptex{ get; private set; }
 
 		int _graphicVertexCount;
-		int _start;
-		int _end;
 		static readonly List<UIShadow> tmpShadows = new List<UIShadow>();
 
 		protected override void OnEnable()
