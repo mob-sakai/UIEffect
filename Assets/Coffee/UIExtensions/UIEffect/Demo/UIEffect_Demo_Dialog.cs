@@ -7,7 +7,7 @@ namespace Coffee.UIExtensions
 {
 	public class UIEffect_Demo_Dialog : MonoBehaviour
 	{
-		[SerializeField] Animator m_Animator;
+		[SerializeField] Animator m_Animator = null;
 
 		public void Open()
 		{

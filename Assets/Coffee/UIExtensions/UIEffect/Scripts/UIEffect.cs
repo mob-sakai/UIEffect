@@ -44,13 +44,13 @@ namespace Coffee.UIExtensions
 
 		[FormerlySerializedAs("m_ToneMode")]
 		[Tooltip("Effect mode")]
-		[SerializeField] EffectMode m_EffectMode;
+		[SerializeField] EffectMode m_EffectMode = EffectMode.None;
 
 		[Tooltip("Color effect mode")]
-		[SerializeField] ColorMode m_ColorMode;
+		[SerializeField] ColorMode m_ColorMode = ColorMode.Multiply;
 
 		[Tooltip("Blur effect mode")]
-		[SerializeField] BlurMode m_BlurMode;
+		[SerializeField] BlurMode m_BlurMode = BlurMode.None;
 
 		[Tooltip("Advanced blurring remove common artifacts in the blur effect for uGUI.")]
 		[SerializeField] bool m_AdvancedBlur = false;

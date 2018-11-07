@@ -51,13 +51,13 @@ namespace Coffee.UIExtensions
 
 		[Tooltip("Effect mode.")]
 		[FormerlySerializedAs("m_ToneMode")]
-		[SerializeField] EffectMode m_EffectMode;
+		[SerializeField] EffectMode m_EffectMode = EffectMode.None;
 
 		[Tooltip("Color effect mode.")]
-		[SerializeField] ColorMode m_ColorMode;
+		[SerializeField] ColorMode m_ColorMode = ColorMode.Multiply;
 
 		[Tooltip("Blur effect mode.")]
-		[SerializeField] BlurMode m_BlurMode;
+		[SerializeField] BlurMode m_BlurMode = BlurMode.DetailBlur;
 
 		[Tooltip("Color for the color effect.")]
 		[SerializeField] Color m_EffectColor = Color.white;

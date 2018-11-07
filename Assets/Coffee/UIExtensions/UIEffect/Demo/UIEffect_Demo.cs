@@ -7,7 +7,7 @@ namespace Coffee.UIExtensions
 {
 	public class UIEffect_Demo : MonoBehaviour
 	{
-		[SerializeField] RectMask2D mask;
+		[SerializeField] RectMask2D mask = null;
 
 		// Use this for initialization
 		void Start()

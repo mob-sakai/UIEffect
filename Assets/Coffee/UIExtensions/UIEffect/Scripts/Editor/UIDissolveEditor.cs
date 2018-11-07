@@ -109,7 +109,6 @@ namespace Coffee.UIExtensions.Editors
 		SerializedProperty _spNoiseTexture;
 		SerializedProperty _spEffectArea;
 		SerializedProperty _spKeepAspectRatio;
-		SerializedProperty _spPlay;
 		SerializedProperty _spDuration;
 		SerializedProperty _spUpdateMode;
 	}
