@@ -339,11 +339,11 @@ namespace Coffee.UIExtensions
 			// Generate RT for result.
 			if (_rt == null)
 			{
-				_rt = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
+				_rt = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
 				_rt.filterMode = m_FilterMode;
 				_rt.useMipMap = false;
 				_rt.wrapMode = TextureWrapMode.Clamp;
-				_rt.hideFlags = HideFlags.HideAndDontSave;
+				_rtId = new RenderTargetIdentifier(_rt);
 			}
 			SetupCommandBuffer();
 		}
@@ -394,7 +394,7 @@ namespace Coffee.UIExtensions
 			}
 
 			// [4] Copy to result RT.
-			s_CommandBuffer.Blit(s_EffectId1, new RenderTargetIdentifier(capturedTexture));
+			s_CommandBuffer.Blit(s_EffectId1, _rtId);
 			s_CommandBuffer.ReleaseTemporaryRT(s_EffectId1);
 
 #if UNITY_EDITOR
@@ -493,6 +493,7 @@ namespace Coffee.UIExtensions
 		// Private Members.
 		//################################
 		RenderTexture _rt;
+		RenderTargetIdentifier _rtId;
 
 		static int s_CopyId;
 		static int s_EffectId1;
@@ -540,13 +541,7 @@ namespace Coffee.UIExtensions
 		{
 			if (obj)
 			{
-				obj.Release();
-#if UNITY_EDITOR
-				if (!Application.isPlaying)
-					DestroyImmediate(obj);
-				else
-#endif
-					Destroy(obj);
+				RenderTexture.ReleaseTemporary (obj);
 				obj = null;
 			}
 		}

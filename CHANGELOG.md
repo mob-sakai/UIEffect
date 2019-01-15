@@ -1,5 +1,13 @@
 # Changelog
 
+## [v3.0.2](https://github.com/mob-sakai/UIEffect/tree/v3.0.2) (2019-01-15)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v3.0.1...v3.0.2)
+
+**Fixed bugs:**
+
+- UIEffect & UIHsvModifier & UITransitionEffect Strange action [\#144](https://github.com/mob-sakai/UIEffect/issues/144)
+
 ## [v3.0.1](https://github.com/mob-sakai/UIEffect/tree/v3.0.1) (2018-11-07)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v3.0.0...v3.0.1)
@@ -8,7 +16,7 @@
 
 - Compile error in 2018.3 [\#139](https://github.com/mob-sakai/UIEffect/issues/139)
 
-## [v3.0.0](https://github.com/mob-sakai/UIEffect/tree/v3.0.0) (2018-10-10)
+## [v3.0.0](https://github.com/mob-sakai/UIEffect/tree/v3.0.0) (2018-10-09)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.8.3...v3.0.0)
 
@@ -29,25 +37,30 @@
 
 **Breaking changes:**
 
+- UIEffectCapturedImage: Remove 'TargetTexture' feature [\#136](https://github.com/mob-sakai/UIEffect/issues/136)
 - Remove 'additional shadow' in UIShadow component [\#110](https://github.com/mob-sakai/UIEffect/issues/110)
 - Remove 'custom effect' feature in UIEffect component [\#98](https://github.com/mob-sakai/UIEffect/issues/98)
 - Remove 'shadow effect' feature in UIEffect component [\#97](https://github.com/mob-sakai/UIEffect/issues/97)
 - Remove 'hue effect' in UIEffect component [\#91](https://github.com/mob-sakai/UIEffect/issues/91)
 - Remove 'cutoff' and 'mono' effect in UIEffect component [\#78](https://github.com/mob-sakai/UIEffect/issues/78)
-- UIEffectCapturedImage: Remove 'TargetTexture' feature [\#136](https://github.com/mob-sakai/UIEffect/issues/136)
+- New architecture: Shared texture for effect parameter [\#63](https://github.com/mob-sakai/UIEffect/issues/63)
 - Change: Change `ToneMode` to `EffectMode` [\#61](https://github.com/mob-sakai/UIEffect/issues/61)
-- UIShiny: change parameter name `highlight` to `gloss` [\#93](https://github.com/mob-sakai/UIEffect/issues/93)
+- Separate shadow effect to other component [\#52](https://github.com/mob-sakai/UIEffect/issues/52)
+- Use the graphic color as effect color, to reduce parameters [\#50](https://github.com/mob-sakai/UIEffect/issues/50)
 
 **Implemented enhancements:**
 
-- New architecture: Shared texture for effect parameter [\#63](https://github.com/mob-sakai/UIEffect/issues/63)
-- Improve blurring for atlas [\#95](https://github.com/mob-sakai/UIEffect/issues/95)
-- Use Canvas.willRenderCanvases event instead of Update method [\#87](https://github.com/mob-sakai/UIEffect/issues/87)
 - UITransitionEffect: "Pass ray on hidden" option [\#135](https://github.com/mob-sakai/UIEffect/issues/135)
 - Add component menu in editor [\#133](https://github.com/mob-sakai/UIEffect/issues/133)
 - UITransitionEffect: Add Show/Hide method [\#132](https://github.com/mob-sakai/UIEffect/issues/132)
 - UIEffectCapturedImage: Immediate capturing [\#130](https://github.com/mob-sakai/UIEffect/issues/130)
+- Improve blurring for atlas [\#95](https://github.com/mob-sakai/UIEffect/issues/95)
+- Use Canvas.willRenderCanvases event instead of Update method [\#87](https://github.com/mob-sakai/UIEffect/issues/87)
+
+**Closed issues:**
+
 - Add tooltip [\#92](https://github.com/mob-sakai/UIEffect/issues/92)
+- UIShiny: change parameter name `highlight` to `gloss` [\#93](https://github.com/mob-sakai/UIEffect/issues/93)
 
 ## [v2.8.3](https://github.com/mob-sakai/UIEffect/tree/v2.8.3) (2018-09-29)
 
@@ -263,10 +276,6 @@ New components has been available!
 ![v2.3.0](https://user-images.githubusercontent.com/12690315/40706142-cb98d2d0-6427-11e8-96fc-5cc5fd9c553a.gif)
 
 
-**Breaking changes:**
-
-- Use the graphic color as effect color, to reduce parameters [\#50](https://github.com/mob-sakai/UIEffect/issues/50)
-
 **Implemented enhancements:**
 
 - Feature: Flip horizontal/vertical [\#47](https://github.com/mob-sakai/UIEffect/issues/47)
@@ -294,10 +303,6 @@ New components has been available!
 ## [v2.1.0](https://github.com/mob-sakai/UIEffect/tree/v2.1.0) (2018-04-04)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v2.0.0...v2.1.0)
-
-**Breaking changes:**
-
-- Separate shadow effect to other component [\#52](https://github.com/mob-sakai/UIEffect/issues/52)
 
 **Implemented enhancements:**
 

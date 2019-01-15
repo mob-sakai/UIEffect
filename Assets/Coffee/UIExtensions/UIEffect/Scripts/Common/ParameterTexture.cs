@@ -172,6 +172,7 @@ namespace Coffee.UIExtensions
 				_texture.wrapMode = TextureWrapMode.Clamp;
 
 				updates.Add(UpdateParameterTexture);
+				_needUpload = true;
 			}
 		}
 
