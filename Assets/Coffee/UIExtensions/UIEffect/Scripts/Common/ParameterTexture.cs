@@ -167,7 +167,8 @@ namespace Coffee.UIExtensions
 
 			if (!_texture)
 			{
-				_texture = new Texture2D(_channels / 4, _instanceLimit, TextureFormat.RGBA32, false, false);
+				bool isLinear = QualitySettings.activeColorSpace == ColorSpace.Linear;
+				_texture = new Texture2D(_channels / 4, _instanceLimit, TextureFormat.RGBA32, false, isLinear);
 				_texture.filterMode = FilterMode.Point;
 				_texture.wrapMode = TextureWrapMode.Clamp;
 
