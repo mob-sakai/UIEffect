@@ -72,7 +72,7 @@ namespace Coffee.UIExtensions
 		[SerializeField] FilterMode m_FilterMode = FilterMode.Bilinear;
 
 		[Tooltip("Effect material.")]
-		[SerializeField] Material m_EffectMaterial;
+		[SerializeField] Material m_EffectMaterial = null;
 
 		[Tooltip("Blur iterations.")]
 		[FormerlySerializedAs("m_Iterations")]

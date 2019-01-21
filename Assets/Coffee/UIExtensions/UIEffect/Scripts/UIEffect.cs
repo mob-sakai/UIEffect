@@ -55,16 +55,20 @@ namespace Coffee.UIExtensions
 		[Tooltip("Advanced blurring remove common artifacts in the blur effect for uGUI.")]
 		[SerializeField] bool m_AdvancedBlur = false;
 
+#if UNITY_EDITOR
 		[Obsolete][HideInInspector]
 		[SerializeField][Range(0, 1)] float m_ShadowBlur = 1;
+#endif
 		[Obsolete][HideInInspector]
 		[SerializeField] ShadowStyle m_ShadowStyle;
 		[Obsolete][HideInInspector]
 		[SerializeField] Color m_ShadowColor = Color.black;
 		[Obsolete][HideInInspector]
 		[SerializeField] Vector2 m_EffectDistance = new Vector2(1f, -1f);
+#if UNITY_EDITOR
 		[Obsolete][HideInInspector]
 		[SerializeField] bool m_UseGraphicAlpha = true;
+#endif
 		[Obsolete][HideInInspector]
 		[SerializeField] Color m_EffectColor = Color.white;
 		[Obsolete][HideInInspector]
