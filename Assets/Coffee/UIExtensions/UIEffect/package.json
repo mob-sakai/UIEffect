@@ -2,7 +2,7 @@
   "name": "com.coffee.uieffect",
 	"displayName": "UIEffect",
 	"description": " UIEffect is an effect component for uGUI element in Unity.\nLet's decorate your UI with effects!",
-  "version": "3.0.2",
+  "version": "3.0.3",
 	"unity": "5.5",
   "license": "MIT",
   "repository": {
