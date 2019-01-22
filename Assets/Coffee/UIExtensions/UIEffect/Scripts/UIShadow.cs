@@ -17,7 +17,7 @@ namespace Coffee.UIExtensions
 	/// </summary>
 	[RequireComponent(typeof(Graphic))]
 	[AddComponentMenu("UI/UIEffect/UIShadow", 100)]
-	public class UIShadow : Shadow, IParameterTexture
+	public class UIShadow : BaseMeshEffect, IParameterTexture
 #if UNITY_EDITOR
 	, ISerializationCallbackReceiver
 #endif
@@ -74,6 +74,73 @@ namespace Coffee.UIExtensions
 		[SerializeField] List<AdditionalShadow> m_AdditionalShadows = new List<AdditionalShadow>();
 		#pragma warning restore 0414
 
+
+		[SerializeField]
+		private Color m_EffectColor = new Color (0f, 0f, 0f, 0.5f);
+
+		[SerializeField]
+		private Vector2 m_EffectDistance = new Vector2 (1f, -1f);
+
+		[SerializeField]
+		private bool m_UseGraphicAlpha = true;
+
+		private const float kMaxEffectDistance = 600f;
+
+#if UNITY_EDITOR
+		protected override void OnValidate ()
+		{
+			effectDistance = m_EffectDistance;
+			base.OnValidate ();
+		}
+
+#endif
+
+		public Color effectColor
+		{
+			get { return m_EffectColor; }
+			set
+			{
+				m_EffectColor = value;
+				if (graphic != null)
+					graphic.SetVerticesDirty ();
+			}
+		}
+
+		public Vector2 effectDistance
+		{
+			get { return m_EffectDistance; }
+			set
+			{
+				if (value.x > kMaxEffectDistance)
+					value.x = kMaxEffectDistance;
+				if (value.x < -kMaxEffectDistance)
+					value.x = -kMaxEffectDistance;
+
+				if (value.y > kMaxEffectDistance)
+					value.y = kMaxEffectDistance;
+				if (value.y < -kMaxEffectDistance)
+					value.y = -kMaxEffectDistance;
+
+				if (m_EffectDistance == value)
+					return;
+
+				m_EffectDistance = value;
+
+				if (graphic != null)
+					graphic.SetVerticesDirty ();
+			}
+		}
+
+		public bool useGraphicAlpha
+		{
+			get { return m_UseGraphicAlpha; }
+			set
+			{
+				m_UseGraphicAlpha = value;
+				if (graphic != null)
+					graphic.SetVerticesDirty ();
+			}
+		}
 
 		//################################
 		// Public Members.

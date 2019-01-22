@@ -136,6 +136,10 @@ namespace Coffee.UIExtensions
 #if UNITY_EDITOR
 		protected override Material GetMaterial()
 		{
+			if (isTMPro)
+			{
+				return null;
+			}
 			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName));
 		}
 #endif
@@ -168,7 +172,11 @@ namespace Coffee.UIExtensions
 			float h, s, v;
 			Color.RGBToHSV(m_TargetColor, out h, out s, out v);
 
-			ptex.RegisterMaterial(targetGraphic.material);
+			foreach (var m in materials)
+			{
+				ptex.RegisterMaterial (m);
+			}
+
 			ptex.SetData(this, 0, h);	// param1.x : target hue
 			ptex.SetData(this, 1, s);	// param1.y : target saturation
 			ptex.SetData(this, 2, v);	// param1.z : target value

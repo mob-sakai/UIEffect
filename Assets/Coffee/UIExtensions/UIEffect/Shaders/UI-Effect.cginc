@@ -1,6 +1,10 @@
 #ifndef UI_EFFECT_INCLUDED
 #define UI_EFFECT_INCLUDED
 
+
+sampler2D _NoiseTex;
+sampler2D _ParamTex;
+
 #if GRAYSCALE | SEPIA | NEGA | PIXEL | MONO | CUTOFF | HUE
 #define UI_TONE
 #endif
@@ -191,9 +195,9 @@ fixed4 ApplyToneEffect(fixed4 color, fixed factor)
 }
 
 // Apply color effect.
-half4 ApplyColorEffect(half4 color, half4 factor)
+fixed4 ApplyColorEffect(half4 color, half4 factor)
 {
-	#ifdef FILL
+	#if FILL
 	color.rgb = lerp(color.rgb, factor.rgb, factor.a);
 
 	#elif ADD
@@ -212,5 +216,95 @@ half4 ApplyColorEffect(half4 color, half4 factor)
 
 	return color;
 }
+
+// Apply transition effect.
+fixed4 ApplyTransitionEffect(half4 color, half3 transParam)
+{
+	fixed4 param = tex2D(_ParamTex, float2(0.25, transParam.z));
+	float alpha = tex2D(_NoiseTex, transParam.xy).a;
+	
+	#if REVERSE
+    fixed effectFactor = 1 - param.x;
+	#else
+    fixed effectFactor = param.x;
+	#endif
+	
+	#if FADE
+	color.a *= saturate(alpha + (1 - effectFactor * 2));
+	#elif CUTOFF
+	color.a *= step(0.001, color.a * alpha - effectFactor);
+	#elif DISSOLVE
+    fixed width = param.y/4;
+    fixed softness = param.z;
+	fixed3 dissolveColor = tex2D(_ParamTex, float2(0.75, transParam.z)).rgb;
+	float factor = alpha - effectFactor * ( 1 + width ) + width;
+	fixed edgeLerp = step(factor, color.a) * saturate((width - factor)*16/ softness);
+	color = ApplyColorEffect(color, fixed4(dissolveColor, edgeLerp));
+	color.a *= saturate((factor)*32/ softness);
+	#endif
+
+	return color;
+}
+
+
+// Apply shiny effect.
+half4 ApplyShinyEffect(half4 color, half2 shinyParam)
+{
+	fixed nomalizedPos = shinyParam.x;
+	fixed4 param1 = tex2D(_ParamTex, float2(0.25, shinyParam.y));
+	fixed4 param2 = tex2D(_ParamTex, float2(0.75, shinyParam.y));
+	half location = param1.x * 2 - 0.5;
+	fixed width = param1.y;
+	fixed soft = param1.z;
+	fixed brightness = param1.w;
+	fixed gloss = param2.x;
+	half normalized = 1 - saturate(abs((nomalizedPos - location) / width));
+	half shinePower = smoothstep(0, soft*2, normalized);
+	half3 reflectColor = lerp(1, color.rgb * 10, gloss);
+
+	color.rgb += color.a * (shinePower / 2) * brightness * reflectColor;
+
+
+	return color;
+}
+
+half3 RgbToHsv(half3 c) {
+	half4 K = half4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+	half4 p = lerp(half4(c.bg, K.wz), half4(c.gb, K.xy), step(c.b, c.g));
+	half4 q = lerp(half4(p.xyw, c.r), half4(c.r, p.yzx), step(p.x, c.r));
+
+	half d = q.x - min(q.w, q.y);
+	half e = 1.0e-10;
+	return half3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+}
+
+half3 HsvToRgb(half3 c) {
+	c = half3(c.x, clamp(c.yz, 0.0, 1.0));
+	half4 K = half4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+	half3 p = abs(frac(c.xxx + K.xyz) * 6.0 - K.www);
+	return c.z * lerp(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+
+
+// Apply Hsv effect.
+half4 ApplyHsvEffect(half4 color, half param)
+{
+	fixed4 param1 = tex2D(_ParamTex, float2(0.25, param));
+	fixed4 param2 = tex2D(_ParamTex, float2(0.75, param));
+    fixed3 targetHsv = param1.rgb;
+    return fixed4(HsvToRgb(targetHsv), 1);
+
+    fixed3 targetRange = param1.w;
+    fixed3 hsvShift = param2.xyz - 0.5;
+	half3 hsv = RgbToHsv(color.rgb);
+	half3 range = abs(hsv - targetHsv);
+	half diff = max(max(min(1-range.x, range.x), min(1-range.y, range.y)/10), min(1-range.z, range.z)/10);
+
+	fixed masked = step(diff, targetRange);
+	color.rgb = HsvToRgb(hsv + hsvShift * masked);
+
+	return color;
+}
+
 
 #endif // UI_EFFECT_INCLUDED

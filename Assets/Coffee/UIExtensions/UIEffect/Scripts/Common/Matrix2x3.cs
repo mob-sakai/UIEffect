@@ -5,7 +5,7 @@ namespace Coffee.UIExtensions
 	/// <summary>
 	/// Matrix2x3.
 	/// </summary>
-	struct Matrix2x3
+	public struct Matrix2x3
 	{
 		public float m00, m01, m02, m10, m11, m12;
 

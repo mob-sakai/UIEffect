@@ -6,9 +6,9 @@ using UnityEngine.UI;
 namespace Coffee.UIExtensions
 {
 
-	[RequireComponent(typeof(Graphic))]
+	//[RequireComponent(typeof(Graphic))]
 	[DisallowMultipleComponent]
-	[AddComponentMenu("UI/UIEffect/UIFlip",102)]
+	[AddComponentMenu("UI/MeshEffectForTextMeshPro/UIFlip", 102)]
 	public class UIFlip : BaseMeshEffect
 	{
 		//################################
@@ -28,13 +28,13 @@ namespace Coffee.UIExtensions
 		/// Gets or sets a value indicating whether this <see cref="Coffee.UIExtensions.UIFlip"/> should be flipped horizontally.
 		/// </summary>
 		/// <value><c>true</c> if be flipped horizontally; otherwise, <c>false</c>.</value>
-		public bool horizontal { get { return this.m_Horizontal; } set { this.m_Horizontal = value; } }
+		public bool horizontal { get { return this.m_Horizontal; } set { this.m_Horizontal = value; SetVerticesDirty (); } }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Coffee.UIExtensions.UIFlip"/> should be flipped vertically.
 		/// </summary>
 		/// <value><c>true</c> if be flipped horizontally; otherwise, <c>false</c>.</value>
-		public bool vertical { get { return this.m_Veritical; } set { this.m_Veritical = value; } }
+		public bool vertical { get { return this.m_Veritical; } set { this.m_Veritical = value; SetVerticesDirty (); } }
 
 		/// <summary>
 		/// Call used to modify mesh.
@@ -53,8 +53,6 @@ namespace Coffee.UIExtensions
 				vt.position = new Vector3(
 					m_Horizontal ? -pos.x : pos.x,
 					m_Veritical ? -pos.y : pos.y
-//					m_Horizontal ? (pos.x + (center.x - pos.x) * 2) : pos.x,
-//					m_Veritical ? (pos.y + (center.y - pos.y) * 2) : pos.y
 				);
 				vh.SetUIVertex(vt, i);
 			}
