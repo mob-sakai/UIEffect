@@ -254,7 +254,7 @@ namespace Coffee.UIExtensions
 				base.OnPopulateMesh(vh);
 				int count = vh.currentVertCount;
 				UIVertex vt = default(UIVertex);
-				Color c = new Color(1, 1, 1, color.a);
+				Color c = color;
 				for (int i = 0; i < count; i++)
 				{
 					vh.PopulateUIVertex(ref vt, i);
@@ -541,6 +541,7 @@ namespace Coffee.UIExtensions
 		{
 			if (obj)
 			{
+				obj.Release();
 				RenderTexture.ReleaseTemporary (obj);
 				obj = null;
 			}
