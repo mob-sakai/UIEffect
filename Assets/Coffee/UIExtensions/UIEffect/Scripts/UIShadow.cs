@@ -69,8 +69,10 @@ namespace Coffee.UIExtensions
 		[Tooltip("Shadow effect style.")]
 		[SerializeField] ShadowStyle m_Style = ShadowStyle.Shadow;
 
+		#pragma warning disable 0414
 		[HideInInspector][System.Obsolete]
 		[SerializeField] List<AdditionalShadow> m_AdditionalShadows = new List<AdditionalShadow>();
+		#pragma warning restore 0414
 
 
 		//################################

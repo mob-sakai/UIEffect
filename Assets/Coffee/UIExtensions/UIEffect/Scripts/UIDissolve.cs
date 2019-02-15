@@ -49,12 +49,13 @@ namespace Coffee.UIExtensions
 		[Header("Effect Player")]
 		[SerializeField] EffectPlayer m_Player;
 
-#if UNITY_EDITOR
+		#pragma warning disable 0414
 		[Obsolete][HideInInspector]
 		[SerializeField][Range(0.1f, 10)] float m_Duration = 1;
 		[Obsolete][HideInInspector]
 		[SerializeField] AnimatorUpdateMode m_UpdateMode = AnimatorUpdateMode.Normal;
-#endif
+		#pragma warning restore 0414
+
 
 		//################################
 		// Public Members.
