@@ -1,5 +1,18 @@
 # Changelog
 
+## [v3.0.4](https://github.com/mob-sakai/UIEffect/tree/v3.0.4) (2019-02-15)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v3.0.3...v3.0.4)
+
+**Implemented enhancements:**
+
+- add initial play animation delay option to UIShiny [\#147](https://github.com/mob-sakai/UIEffect/pull/147) ([antpaw](https://github.com/antpaw))
+
+**Fixed bugs:**
+
+- UIEffectCapturedImage.effectColor does not work as expected [\#148](https://github.com/mob-sakai/UIEffect/issues/148)
+- fix warnings [\#146](https://github.com/mob-sakai/UIEffect/pull/146) ([antpaw](https://github.com/antpaw))
+
 ## [v3.0.3](https://github.com/mob-sakai/UIEffect/tree/v3.0.3) (2019-01-21)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v3.0.2...v3.0.3)
