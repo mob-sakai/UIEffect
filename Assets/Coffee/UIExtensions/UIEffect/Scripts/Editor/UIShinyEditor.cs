@@ -31,6 +31,7 @@ namespace Coffee.UIExtensions.Editors
 			var player = serializedObject.FindProperty("m_Player");
 			_spPlay = player.FindPropertyRelative("play");
 			_spDuration = player.FindPropertyRelative("duration");
+			_spInitialPlayDelay = player.FindPropertyRelative("initialPlayDelay");
 			_spLoop = player.FindPropertyRelative("loop");
 			_spLoopDelay = player.FindPropertyRelative("loopDelay");
 			_spUpdateMode = player.FindPropertyRelative("updateMode");
@@ -75,6 +76,10 @@ namespace Coffee.UIExtensions.Editors
 			GUILayout.Space(10);
 			EditorGUILayout.LabelField("Effect Player", EditorStyles.boldLabel);
 			EditorGUILayout.PropertyField(_spPlay);
+			if (_spPlay.boolValue)
+			{
+				EditorGUILayout.PropertyField(_spInitialPlayDelay);
+			}
 			EditorGUILayout.PropertyField(_spDuration);
 			EditorGUILayout.PropertyField(_spLoop);
 			EditorGUILayout.PropertyField(_spLoopDelay);
@@ -115,6 +120,7 @@ namespace Coffee.UIExtensions.Editors
 		SerializedProperty _spLoop;
 		SerializedProperty _spLoopDelay;
 		SerializedProperty _spDuration;
+		SerializedProperty _spInitialPlayDelay;
 		SerializedProperty _spUpdateMode;
 	}
 }

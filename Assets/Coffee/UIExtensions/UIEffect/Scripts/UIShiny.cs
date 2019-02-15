@@ -55,6 +55,7 @@ namespace Coffee.UIExtensions
 
 		[SerializeField] EffectPlayer m_Player;
 
+		#pragma warning disable 0414
 		[Obsolete][HideInInspector]
 		[SerializeField] bool m_Play = false;
 		[Obsolete][HideInInspector]
@@ -65,6 +66,7 @@ namespace Coffee.UIExtensions
 		[SerializeField][Range(0, 10)] float m_LoopDelay = 1;
 		[Obsolete][HideInInspector]
 		[SerializeField] AnimatorUpdateMode m_UpdateMode = AnimatorUpdateMode.Normal;
+		#pragma warning restore 0414
 
 
 		//################################

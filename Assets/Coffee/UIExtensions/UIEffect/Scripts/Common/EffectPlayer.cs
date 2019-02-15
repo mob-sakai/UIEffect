@@ -20,6 +20,13 @@ namespace Coffee.UIExtensions
 		public bool play = false;
 
 		/// <summary>
+		/// Gets or sets the delay before looping.
+		/// </summary>
+		[Tooltip("Initial play delay.")]
+		[Range(0f, 10f)]
+		public float initialPlayDelay = 0;
+
+		/// <summary>
 		/// Gets or sets a value indicating whether can loop.
 		/// </summary>
 		[Tooltip("Loop.")]
@@ -67,7 +74,14 @@ namespace Coffee.UIExtensions
 			}
 			s_UpdateActions.Add(OnWillRenderCanvases);
 
-			_time = 0;
+			if (play)
+			{
+				_time = -initialPlayDelay;
+			}
+			else
+			{
+				_time = 0;
+			}
 			_callback = callback;
 		}
 

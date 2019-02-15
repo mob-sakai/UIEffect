@@ -20,7 +20,7 @@ namespace Coffee.UIExtensions.Editors
 		/// <summary>
 		/// Draw effect properties.
 		/// </summary>
-		public static void DrawEffectProperties(SerializedObject serializedObject)
+		public static void DrawEffectProperties(SerializedObject serializedObject, string colorProperty = "m_Color")
 		{
 			//================
 			// Effect material.
@@ -55,7 +55,7 @@ namespace Coffee.UIExtensions.Editors
 			{
 				EditorGUI.indentLevel++;
 
-				SerializedProperty spColor = serializedObject.FindProperty("m_Color");
+				SerializedProperty spColor = serializedObject.FindProperty(colorProperty);
 				if (spColor == null && serializedObject.targetObject is UIEffect) {
 					spColor = new SerializedObject (serializedObject.targetObjects.Select(x=>(x as UIEffect).targetGraphic).ToArray()).FindProperty("m_Color");
 				}

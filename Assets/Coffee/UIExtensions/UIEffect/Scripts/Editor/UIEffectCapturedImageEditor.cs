@@ -70,7 +70,7 @@ namespace Coffee.UIExtensions.Editors
 			//================
 			GUILayout.Space(10);
 			EditorGUILayout.LabelField("Capture Effect", EditorStyles.boldLabel);
-			UIEffectEditor.DrawEffectProperties(serializedObject);
+			UIEffectEditor.DrawEffectProperties(serializedObject, "m_EffectColor");
 
 			//================
 			// Advanced option.

@@ -55,6 +55,7 @@ namespace Coffee.UIExtensions
 		[Tooltip("Advanced blurring remove common artifacts in the blur effect for uGUI.")]
 		[SerializeField] bool m_AdvancedBlur = false;
 
+		#pragma warning disable 0414
 		[Obsolete][HideInInspector]
 		[SerializeField][Range(0, 1)] float m_ShadowBlur = 1;
 		[Obsolete][HideInInspector]
@@ -69,6 +70,7 @@ namespace Coffee.UIExtensions
 		[SerializeField] Color m_EffectColor = Color.white;
 		[Obsolete][HideInInspector]
 		[SerializeField] List<UIShadow.AdditionalShadow> m_AdditionalShadows = new List<UIShadow.AdditionalShadow>();
+		#pragma warning restore 0414
 
 		public enum BlurEx
 		{
