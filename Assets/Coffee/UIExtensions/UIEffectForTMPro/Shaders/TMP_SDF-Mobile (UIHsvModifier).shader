@@ -3,7 +3,7 @@
 // - No Glow Option
 // - Softness is applied on both side of the outline
 
-Shader "TextMeshPro/Mobile/Distance Field (UIHsv)" {
+Shader "TextMeshPro/Mobile/Distance Field (UIHsvModifier)" {
 
 Properties {
 	_FaceColor			("Face Color", Color) = (1,1,1,1)
@@ -101,7 +101,6 @@ SubShader {
 			fixed4	color			: COLOR;
 			float2	texcoord0		: TEXCOORD0;
 			float2	texcoord1		: TEXCOORD1;
-			float2	texcoord2		: TEXCOORD2;
 		};
 
 		struct pixel_t {
@@ -115,7 +114,7 @@ SubShader {
 			float4	texcoord1		: TEXCOORD3;			// Texture UV, alpha, reserved
 			half2	underlayParam	: TEXCOORD4;			// Scale(x), Bias(y)
 		#endif
-			half2	shinyParam	: TEXCOORD5;
+			half2	eParam	: TEXCOORD5;
 		};
 
 
@@ -225,7 +224,7 @@ SubShader {
 		#endif
 
 		// Hsv
-		c = ApplyHsvEffect(c, input.shinyParam);
+		c = ApplyHsvEffect(c, input.eParam);
 
 		#if UNITY_UI_ALPHACLIP
 			clip(c.a - 0.001);

@@ -1,4 +1,4 @@
-Shader "TextMeshPro/Distance Field (UIHsv)" {
+Shader "TextMeshPro/Distance Field (UIEffect)" {
 
 Properties {
 	_FaceTex			("Face Texture", 2D) = "white" {}
@@ -80,8 +80,6 @@ Properties {
 	_StencilReadMask	("Stencil Read Mask", Float) = 255
 
 	_ColorMask			("Color Mask", Float) = 15
-	
-	_NoiseTex("Noise Texture (A)", 2D) = "white" {}
 }
 
 SubShader {
@@ -114,7 +112,7 @@ SubShader {
 		CGPROGRAM
 		#pragma target 3.0
 		#pragma vertex VertShader
-		#pragma fragment PixShader
+		#pragma fragment frag
 		#pragma shader_feature __ BEVEL_ON
 		#pragma shader_feature __ UNDERLAY_ON UNDERLAY_INNER
 		#pragma shader_feature __ GLOW_ON
@@ -122,7 +120,12 @@ SubShader {
 		#pragma multi_compile __ UNITY_UI_CLIP_RECT
 		#pragma multi_compile __ UNITY_UI_ALPHACLIP
 
-
+		#pragma shader_feature __ GRAYSCALE SEPIA NEGA PIXEL 
+		#pragma shader_feature __ ADD SUBTRACT FILL
+		#pragma shader_feature __ FASTBLUR MEDIUMBLUR DETAILBLUR
+		#pragma shader_feature __ EX
+		
+		float4 _MainTex_TexelSize;
 		#include "UnityCG.cginc"
 		#include "UnityUI.cginc"
 		#include "Assets/TextMesh Pro/Resources/Shaders/TMPro_Properties.cginc"
@@ -136,7 +139,9 @@ SubShader {
 			fixed4	color			: COLOR;
 			float2	texcoord0		: TEXCOORD0;
 			float2	texcoord1		: TEXCOORD1;
-			float2	texcoord2		: TEXCOORD2;
+		#if EX
+			float2	uvMask			: TEXCOORD2;
+		#endif
 		};
 
 
@@ -152,14 +157,17 @@ SubShader {
 			float4	texcoord2		: TEXCOORD4;		// u,v, scale, bias
 			fixed4	underlayColor	: COLOR1;
 		#endif
-			float4 textures			: TEXCOORD5;
-			half2	eParam	: TEXCOORD6;
+			float4	textures		: TEXCOORD5;
+			half	eParam			: TEXCOORD6;
+		#if EX
+			half4	uvMask			: TEXCOORD7;
+		#endif
 		};
 
 		// Used by Unity internally to handle Texture Tiling and Offset.
 		float4 _FaceTex_ST;
 		float4 _OutlineTex_ST;
-
+		
 		pixel_t VertShader(vertex_t input)
 		{
 			float bold = step(input.texcoord1.y, 0);
@@ -211,8 +219,8 @@ SubShader {
 			float2 faceUV = TRANSFORM_TEX(textureUV, _FaceTex);
 			float2 outlineUV = TRANSFORM_TEX(textureUV, _OutlineTex);
 
-			half2 param = UnpackToVec2(input.texcoord0.y);
-			input.texcoord0 = UnpackToVec2(input.texcoord0.x);
+			half param = input.texcoord0.y;
+			input.texcoord0 = UnpackToVec2(input.texcoord0.x) * 2 - 0.5;
 			pixel_t output = {
 				vPosition,
 				input.color,
@@ -226,19 +234,23 @@ SubShader {
 			#endif
 				float4(faceUV, outlineUV),
 				param,
+			#if EX
+				half4(UnpackToVec2(input.uvMask.x), UnpackToVec2(input.uvMask.y)),
+			#endif
 			};
 
 			return output;
 		}
 
 
-		fixed4 PixShader(pixel_t input) : SV_Target
+		fixed4 PixShader(pixel_t input)// : SV_Target
 		{
+		
 			float c = tex2D(_MainTex, input.atlas).a;
 		
-		#ifndef UNDERLAY_ON
-			clip(c - input.param.x);
-		#endif
+//		#ifndef UNDERLAY_ON
+//			clip(c - input.param.x);
+//		#endif
 
 			float	scale	= input.param.y;
 			float	bias	= input.param.z;
@@ -251,6 +263,8 @@ SubShader {
 			half4 faceColor = _FaceColor;
 			half4 outlineColor = _OutlineColor;
 
+//			faceColor.rgb *= input.color.rgb;
+			
 			faceColor *= tex2D(_FaceTex, input.textures.xy + float2(_FaceUVSpeedX, _FaceUVSpeedY) * _Time.y);
 			outlineColor *= tex2D(_OutlineTex, input.textures.zw + float2(_OutlineUVSpeedX, _OutlineUVSpeedY) * _Time.y);
 
@@ -296,10 +310,6 @@ SubShader {
 			faceColor *= m.x * m.y;
 		#endif
 
-		// Hsv
-		faceColor = ApplyHsvEffect(faceColor, input.eParam);
-		faceColor.rgb *= input.color.rgb;
-		
 		#if UNITY_UI_ALPHACLIP
 			clip(faceColor.a - 0.001);
 		#endif
@@ -307,10 +317,11 @@ SubShader {
   		return faceColor * input.color.a;
 		}
 
+		#include "UI-Effect-TMPro.cginc"
 		ENDCG
 	}
 }
 
-Fallback "TextMeshPro/Mobile/Distance Field (UIHsv)"
-CustomEditor "TMPro.EditorUtilities.TMP_SDFShaderGUI"
+Fallback "TextMeshPro/Mobile/Distance Field (UIEffect)"
+CustomEditor "Coffee.UIEffect.Editors.TMP_SDFShaderGUI"
 }

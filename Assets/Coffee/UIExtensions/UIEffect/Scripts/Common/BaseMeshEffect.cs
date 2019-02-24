@@ -25,16 +25,22 @@ namespace Coffee.UIExtensions
 		// Constant or Static Members.
 		//################################
 #if COM_UNITY_TEXTMESHPRO
-		static readonly List<Vector2> s_Uv0 = new List<Vector2> ();
-		static readonly List<Vector2> s_Uv1 = new List<Vector2> ();
-		static readonly List<Vector3> s_Vertices = new List<Vector3> ();
-		static readonly List<int> s_Indices = new List<int> ();
-		static readonly List<Vector3> s_Normals = new List<Vector3> ();
-		static readonly List<Vector4> s_Tangents = new List<Vector4> ();
-		static readonly List<Color32> s_Colors = new List<Color32> ();
+		static readonly List<Vector2> s_Uv0 = new List<Vector2> (4096);
+		static readonly List<Vector2> s_Uv1 = new List<Vector2> (4096);
+		#if UNITY_2017_1_OR_NEWER
+		static readonly List<Vector2> s_Uv2 = new List<Vector2> (4096);
+		static readonly List<Vector2> s_Uv3 = new List<Vector2> (4096);
+		#endif
+		static readonly List<Vector3> s_Vertices = new List<Vector3> (4096);
+		static readonly List<int> s_Indices = new List<int> (4096);
+		static readonly List<Vector3> s_Normals = new List<Vector3> (4096);
+		static readonly List<Vector4> s_Tangents = new List<Vector4> (4096);
+		static readonly List<Color32> s_Colors = new List<Color32> (4096);
 		static readonly VertexHelper s_VertexHelper = new VertexHelper ();
-		static readonly List<TMP_SubMeshUI> s_SubMeshUIs = new List<TMP_SubMeshUI> ();
-		static readonly List<Mesh> s_Meshes = new List<Mesh> ();
+		static readonly List<TMP_SubMeshUI> s_SubMeshUIs = new List<TMP_SubMeshUI> (4096);
+		static readonly List<Mesh> s_Meshes = new List<Mesh> (4096);
+		static readonly List<UIVertex> s_UIVertices = new List<UIVertex> (4096);
+		static readonly List<BaseMeshEffect> s_TmpEffects = new List<BaseMeshEffect>(4);
 #endif
 		static readonly Material [] s_EmptyMaterials = new Material [0];
 
@@ -442,6 +448,18 @@ namespace Coffee.UIExtensions
 				return;
 			}
 
+			GetComponents<BaseMeshEffect>(s_TmpEffects);
+			for (int i = 0; i < s_TmpEffects.Count; i++)
+			{
+				if (s_TmpEffects[i].enabled)
+				{
+					if (s_TmpEffects[i] == this)
+						break;
+					else
+						return;
+				}
+			}
+
 			// Collect the meshes.
 			s_Meshes.Clear ();
 			foreach (var info in textInfo.meshInfo)
@@ -450,27 +468,33 @@ namespace Coffee.UIExtensions
 			}
 
 			// Modify the meshes.
-			if (isLegacyMeshModifier)
+			foreach (var e in s_TmpEffects)
 			{
-				// Legacy mode: Modify the meshes directly.
-				foreach (var m in s_Meshes)
+				if (!e.enabled)
+					continue;
+				
+				if (e.isLegacyMeshModifier)
 				{
-					if (m)
+					// Legacy mode: Modify the meshes directly.
+					foreach (var m in s_Meshes)
 					{
-						ModifyMesh (m);
+						if (m)
+						{
+							e.ModifyMesh(m);
+						}
 					}
 				}
-			}
-			else
-			{
-				// Convert meshes to VertexHelpers and modify them.
-				foreach (var m in s_Meshes)
+				else
 				{
-					if(m)
+					// Convert meshes to VertexHelpers and modify them.
+					foreach (var m in s_Meshes)
 					{
-						FillVertexHelper (s_VertexHelper, m);
-						ModifyMesh (s_VertexHelper);
-						s_VertexHelper.FillMesh (m);
+						if (m)
+						{
+							FillVertexHelper(s_VertexHelper, m);
+							e.ModifyMesh(s_VertexHelper);
+							s_VertexHelper.FillMesh(m);
+						}
 					}
 				}
 			}
@@ -503,15 +527,33 @@ namespace Coffee.UIExtensions
 			mesh.GetTangents (s_Tangents);
 			mesh.GetIndices (s_Indices, 0);
 
+		#if UNITY_2017_1_OR_NEWER
+			mesh.GetUVs (2, s_Uv2);
+			mesh.GetUVs (3, s_Uv3);
+			bool useUv2 = 0 < s_Uv2.Count;
+			bool useUv3 = 0 < s_Uv3.Count;
+		#endif
+			
+			s_UIVertices.Clear();
+			UIVertex v = default(UIVertex);
 			for (int i = 0; i < s_Vertices.Count; i++)
 			{
-				s_VertexHelper.AddVert (s_Vertices [i], s_Colors [i], s_Uv0 [i], s_Uv1 [i], s_Normals [i], s_Tangents [i]);
-			}
+				v.position = s_Vertices[i];
+				v.color = s_Colors[i];
+				v.uv0 = s_Uv0[i];
+				v.uv1 = s_Uv1[i];
+		#if UNITY_2017_1_OR_NEWER
+				if (useUv2 && i < s_Uv2.Count)
+					v.uv2 = s_Uv2[i];
+				if (useUv3 && i < s_Uv3.Count)
+					v.uv3 = s_Uv3[i];
+		#endif
+				v.normal = s_Normals[i];
+				v.tangent = s_Tangents[i];
 
-			for (int i = 0; i < s_Indices.Count; i += 3)
-			{
-				vh.AddTriangle (s_Indices [i], s_Indices [i + 1], s_Indices [i + 2]);
+				s_UIVertices.Add(v);
 			}
+			s_VertexHelper.AddUIVertexStream(s_UIVertices, s_Indices);
 		}
 #endif
 	}

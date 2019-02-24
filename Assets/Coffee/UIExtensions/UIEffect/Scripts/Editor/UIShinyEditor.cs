@@ -72,22 +72,14 @@ namespace Coffee.UIExtensions.Editors
 			//================
 			// Advanced option.
 			//================
-			GUILayout.Space(10);
-			EditorGUILayout.LabelField("Advanced Option", EditorStyles.boldLabel);
-
 			EditorGUILayout.PropertyField(_spEffectArea);
 
 			//================
-			// Effect runner.
+			// Effect player.
 			//================
-			GUILayout.Space(10);
-			EditorGUILayout.LabelField("Effect Player", EditorStyles.boldLabel);
 			EditorGUILayout.PropertyField(_spPlay);
-			if (_spPlay.boolValue)
-			{
-				EditorGUILayout.PropertyField(_spInitialPlayDelay);
-			}
 			EditorGUILayout.PropertyField(_spDuration);
+			EditorGUILayout.PropertyField(_spInitialPlayDelay);
 			EditorGUILayout.PropertyField(_spLoop);
 			EditorGUILayout.PropertyField(_spLoopDelay);
 			EditorGUILayout.PropertyField(_spUpdateMode);

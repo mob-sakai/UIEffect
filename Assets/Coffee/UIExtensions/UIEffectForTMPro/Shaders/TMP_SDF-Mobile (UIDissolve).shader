@@ -103,7 +103,6 @@ SubShader {
 			fixed4	color			: COLOR;
 			float2	texcoord0		: TEXCOORD0;
 			float2	texcoord1		: TEXCOORD1;
-			float2	texcoord2		: TEXCOORD2;
 		};
 
 		struct pixel_t {
@@ -117,7 +116,7 @@ SubShader {
 			float4	texcoord1		: TEXCOORD3;			// Texture UV, alpha, reserved
 			half2	underlayParam	: TEXCOORD4;			// Scale(x), Bias(y)
 		#endif
-			half3	dissolveParam	: TEXCOORD5;
+			half3	eParam	: TEXCOORD5;
 		};
 
 
@@ -227,7 +226,7 @@ SubShader {
 		#endif
 		
 		// Dissolve
-		c = ApplyTransitionEffect(c, input.dissolveParam);
+		c = ApplyTransitionEffect(c, input.eParam);
 		c.rgb *= c.a;
 		
 		#if UNITY_UI_ALPHACLIP

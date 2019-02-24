@@ -292,7 +292,6 @@ half4 ApplyHsvEffect(half4 color, half param)
 	fixed4 param1 = tex2D(_ParamTex, float2(0.25, param));
 	fixed4 param2 = tex2D(_ParamTex, float2(0.75, param));
     fixed3 targetHsv = param1.rgb;
-    return fixed4(HsvToRgb(targetHsv), 1);
 
     fixed3 targetRange = param1.w;
     fixed3 hsvShift = param2.xyz - 0.5;

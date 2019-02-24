@@ -65,7 +65,6 @@
 				float4 vertex   : POSITION;
 				float4 color    : COLOR;
 				float2 texcoord : TEXCOORD0;
-                float2  texcoord2       : TEXCOORD2;
 			};
 
 			struct v2f
@@ -74,7 +73,7 @@
 				fixed4 color    : COLOR;
 				half2 texcoord  : TEXCOORD0;
 				float4 worldPosition : TEXCOORD1;
-                half2   shinyParam   : TEXCOORD2;
+                half2   eParam   : TEXCOORD2;
 			};
 			
 			fixed4 _Color;
@@ -95,7 +94,7 @@
 				
 				OUT.color = IN.color * _Color;
                 
-                OUT.shinyParam = UnpackToVec2(IN.texcoord.y);
+                OUT.eParam = UnpackToVec2(IN.texcoord.y);
 
 				return OUT;
 			}
@@ -115,7 +114,7 @@
 				#endif
                 
 				// Shiny
-				color = ApplyShinyEffect(color, IN.shinyParam);
+				color = ApplyShinyEffect(color, IN.eParam);
 
 				return color;
 			}

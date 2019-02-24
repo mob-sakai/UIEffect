@@ -67,7 +67,6 @@
 				float4 vertex   : POSITION;
 				float4 color    : COLOR;
 				float2 texcoord : TEXCOORD0;
-                float2  texcoord2       : TEXCOORD2;
 			};
 
 			struct v2f
@@ -76,7 +75,7 @@
 				fixed4 color    : COLOR;
 				half2 texcoord  : TEXCOORD0;
 				float4 worldPosition : TEXCOORD1;
-                half3   dissolveParam   : TEXCOORD2;
+                half3   eParam   : TEXCOORD2;
 			};
 			
 			fixed4 _Color;
@@ -97,7 +96,7 @@
 				
 				OUT.color = IN.color * _Color;
                 
-                OUT.dissolveParam = UnpackToVec3(IN.texcoord.y);
+                OUT.eParam = UnpackToVec3(IN.texcoord.y);
 
 				return OUT;
 			}
@@ -117,7 +116,7 @@
 				#endif
                 
 				// Dissolve
-				color = ApplyTransitionEffect(color, IN.dissolveParam);
+				color = ApplyTransitionEffect(color, IN.eParam);
                 
 				return color;
 			}

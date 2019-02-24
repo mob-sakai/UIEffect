@@ -34,7 +34,11 @@ namespace Coffee.UIExtensions.Editors
 			_spDissolveColor = serializedObject.FindProperty("m_DissolveColor");
 			_spTransitionTexture = serializedObject.FindProperty("m_TransitionTexture");
 			var player = serializedObject.FindProperty("m_Player");
+			_spPlay = player.FindPropertyRelative("play");
 			_spDuration = player.FindPropertyRelative("duration");
+			_spInitialPlayDelay = player.FindPropertyRelative("initialPlayDelay");
+			_spLoop = player.FindPropertyRelative("loop");
+			_spLoopDelay = player.FindPropertyRelative("loopDelay");
 			_spUpdateMode = player.FindPropertyRelative("updateMode");
 			_spPassRayOnHidden = serializedObject.FindProperty("m_PassRayOnHidden");
 
@@ -110,9 +114,6 @@ namespace Coffee.UIExtensions.Editors
 			//================
 			// Advanced option.
 			//================
-			GUILayout.Space(10);
-			EditorGUILayout.LabelField("Advanced Option", EditorStyles.boldLabel);
-
 			EditorGUILayout.PropertyField(_spEffectArea);
 			using (new EditorGUI.DisabledGroupScope(isAnyTMPro))
 				EditorGUILayout.PropertyField(_spTransitionTexture);
@@ -120,11 +121,13 @@ namespace Coffee.UIExtensions.Editors
 			EditorGUILayout.PropertyField(_spPassRayOnHidden);
 
 			//================
-			// Effect runner.
+			// Effect player.
 			//================
-			GUILayout.Space(10);
-			EditorGUILayout.LabelField("Effect Player", EditorStyles.boldLabel);
+			EditorGUILayout.PropertyField(_spPlay);
 			EditorGUILayout.PropertyField(_spDuration);
+			EditorGUILayout.PropertyField(_spInitialPlayDelay);
+			EditorGUILayout.PropertyField(_spLoop);
+			EditorGUILayout.PropertyField(_spLoopDelay);
 			EditorGUILayout.PropertyField(_spUpdateMode);
 
 			// Debug.
@@ -172,7 +175,11 @@ namespace Coffee.UIExtensions.Editors
 		SerializedProperty _spDissolveSoftness;
 		SerializedProperty _spDissolveColor;
 		SerializedProperty _spTransitionTexture;
+		SerializedProperty _spPlay;
+		SerializedProperty _spLoop;
+		SerializedProperty _spLoopDelay;
 		SerializedProperty _spDuration;
+		SerializedProperty _spInitialPlayDelay;
 		SerializedProperty _spUpdateMode;
 		SerializedProperty _spPassRayOnHidden;
 

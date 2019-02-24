@@ -3,7 +3,7 @@
 // - No Glow Option
 // - Softness is applied on both side of the outline
 
-Shader "TextMeshPro/Mobile/Distance Field (UIShiny)" {
+Shader "TextMeshPro/Mobile/Distance Field (UIEffect)" {
 
 Properties {
 	_FaceColor			("Face Color", Color) = (1,1,1,1)
@@ -82,17 +82,23 @@ SubShader {
 	Pass {
 		CGPROGRAM
 		#pragma vertex VertShader
-		#pragma fragment PixShader
+		#pragma fragment frag
 		#pragma shader_feature __ OUTLINE_ON
 		#pragma shader_feature __ UNDERLAY_ON UNDERLAY_INNER
 
 		#pragma multi_compile __ UNITY_UI_CLIP_RECT
 		#pragma multi_compile __ UNITY_UI_ALPHACLIP
 
+		#pragma shader_feature __ GRAYSCALE SEPIA NEGA PIXEL 
+		#pragma shader_feature __ ADD SUBTRACT FILL
+		#pragma shader_feature __ FASTBLUR MEDIUMBLUR DETAILBLUR
+		#pragma shader_feature __ EX
+		
 		#include "UnityCG.cginc"
 		#include "UnityUI.cginc"
 		#include "Assets/TextMesh Pro/Resources/Shaders/TMPro_Properties.cginc"
 		
+		#define MOBILE 1
 		#include "Assets/Coffee/UIExtensions/UIEffect/Shaders/UI-Effect.cginc"
 
 		struct vertex_t {
@@ -101,6 +107,9 @@ SubShader {
 			fixed4	color			: COLOR;
 			float2	texcoord0		: TEXCOORD0;
 			float2	texcoord1		: TEXCOORD1;
+		#if EX
+			float2	uvMask			: TEXCOORD2;
+		#endif
 		};
 
 		struct pixel_t {
@@ -114,7 +123,11 @@ SubShader {
 			float4	texcoord1		: TEXCOORD3;			// Texture UV, alpha, reserved
 			half2	underlayParam	: TEXCOORD4;			// Scale(x), Bias(y)
 		#endif
-			half2	eParam	: TEXCOORD5;
+			fixed4	color			: COLOR2;
+			half	eParam	: TEXCOORD5;
+		#if EX
+			half4	uvMask			: TEXCOORD6;
+		#endif
 		};
 
 
@@ -171,8 +184,8 @@ SubShader {
 			float2 maskUV = (vert.xy - clampedRect.xy) / (clampedRect.zw - clampedRect.xy);
 
 			// Structure for pixel shader
-			half2 param = UnpackToVec2(input.texcoord0.y);
-			input.texcoord0 = UnpackToVec2(input.texcoord0.x);
+			half param = input.texcoord0.y;
+			input.texcoord0 = UnpackToVec2(input.texcoord0.x) * 2 - 0.5;
 			pixel_t output = {
 				vPosition,
 				faceColor,
@@ -184,7 +197,11 @@ SubShader {
 				float4(input.texcoord0 + layerOffset, input.color.a, 0),
 				half2(layerScale, layerBias),
 			#endif
+				input.color,
 				param,
+			#if EX
+				half4(UnpackToVec2(input.uvMask.x), UnpackToVec2(input.uvMask.y)),
+			#endif
 			};
 
 			return output;
@@ -223,18 +240,17 @@ SubShader {
 			c *= input.texcoord1.z;
 		#endif
 
-		// Shiny
-		c = ApplyShinyEffect(c, input.eParam);
-
 		#if UNITY_UI_ALPHACLIP
 			clip(c.a - 0.001);
 		#endif
 		
 			return c;
 		}
+
+		#include "UI-Effect-TMPro.cginc"
 		ENDCG
 	}
 }
 
-CustomEditor "TMPro.EditorUtilities.TMP_SDFShaderGUI"
+CustomEditor "Coffee.UIEffect.Editors.TMP_SDFShaderGUI"
 }

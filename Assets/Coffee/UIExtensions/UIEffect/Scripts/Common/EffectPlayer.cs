@@ -16,6 +16,7 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Gets or sets a value indicating whether is playing.
 		/// </summary>
+		[Header("Effect Player")]
 		[Tooltip("Playing.")]
 		public bool play = false;
 
@@ -27,17 +28,17 @@ namespace Coffee.UIExtensions
 		public float initialPlayDelay = 0;
 
 		/// <summary>
-		/// Gets or sets a value indicating whether can loop.
-		/// </summary>
-		[Tooltip("Loop.")]
-		public bool loop = false;
-
-		/// <summary>
 		/// Gets or sets the duration.
 		/// </summary>
 		[Tooltip("Duration.")]
 		[Range(0.01f,10f)]
 		public float duration = 1;
+
+		/// <summary>
+		/// Gets or sets a value indicating whether can loop.
+		/// </summary>
+		[Tooltip("Loop.")]
+		public bool loop = false;
 
 		/// <summary>
 		/// Gets or sets the delay before looping.

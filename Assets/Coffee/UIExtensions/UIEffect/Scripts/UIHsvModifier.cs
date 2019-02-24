@@ -44,6 +44,7 @@ namespace Coffee.UIExtensions
 		//################################
 		// Public Members.
 		//################################
+
 		/// <summary>
 		/// Target color to affect hsv shift.
 		/// </summary>

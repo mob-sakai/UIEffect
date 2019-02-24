@@ -1,4 +1,4 @@
-﻿Shader "TextMeshPro/Sprite (UITransition)"
+﻿Shader "TextMeshPro/Sprite (UIHsvModifier)"
 {
 	Properties
 	{
@@ -58,9 +58,7 @@
 			#pragma multi_compile __ UNITY_UI_CLIP_RECT
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
             
-			#define ADD 1
             #include "Assets/Coffee/UIExtensions/UIEffect/Shaders/UI-Effect.cginc"
-			#pragma shader_feature __ FADE CUTOFF DISSOLVE
 			
 			struct appdata_t
 			{
@@ -75,7 +73,7 @@
 				fixed4 color    : COLOR;
 				half2 texcoord  : TEXCOORD0;
 				float4 worldPosition : TEXCOORD1;
-                half3   eParam   : TEXCOORD2;
+                half eParam     : TEXCOORD2;
 			};
 			
 			fixed4 _Color;
@@ -96,7 +94,7 @@
 				
 				OUT.color = IN.color * _Color;
                 
-                OUT.eParam = UnpackToVec3(IN.texcoord.y);
+                OUT.eParam = IN.texcoord.y;
 
 				return OUT;
 			}
@@ -105,7 +103,7 @@
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
-				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
+				half4 color = tex2D(_MainTex, IN.texcoord);// + _TextureSampleAdd) * IN.color;
 				
 				#if UNITY_UI_CLIP_RECT
 					color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
@@ -115,10 +113,9 @@
 					clip (color.a - 0.001);
 				#endif
                 
-				// Transition
-				color = ApplyTransitionEffect(color, IN.eParam);
-				color.rgb *= color.a;
-                
+				// Hsv
+				color = (ApplyHsvEffect(color, IN.eParam)+ _TextureSampleAdd) * IN.color;
+
 				return color;
 			}
 		ENDCG

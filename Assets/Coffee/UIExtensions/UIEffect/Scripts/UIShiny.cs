@@ -50,6 +50,7 @@ namespace Coffee.UIExtensions
 		[FormerlySerializedAs("m_Highlight")]
 		[SerializeField][Range(0, 1)] float m_Gloss = 1;
 
+		[Header("Advanced Option")]
 		[Tooltip("The area for effect.")]
 		[SerializeField] protected EffectArea m_EffectArea;
 
@@ -72,12 +73,6 @@ namespace Coffee.UIExtensions
 		//################################
 		// Public Members.
 		//################################
-#if UNITY_5_6_OR_NEWER
-		/// <summary>
-		/// Additional canvas shader channels to use this component.
-		/// </summary>
-		public override AdditionalCanvasShaderChannels requiredChannels { get { return isTMPro ? AdditionalCanvasShaderChannels.TexCoord1 | AdditionalCanvasShaderChannels.TexCoord2 : AdditionalCanvasShaderChannels.TexCoord1; } }
-#endif
 
 		/// <summary>
 		/// Effect factor between 0(start) and 1(end).
@@ -363,22 +358,6 @@ namespace Coffee.UIExtensions
 					Packer.ToFloat (vertex.uv0.x, vertex.uv0.y),
 					Packer.ToFloat (nomalizedPos.y, normalizedIndex)
 				);
-
-//				if (!isTMPro)
-//				{
-//					vertex.uv0 = new Vector2 (
-//						Packer.ToFloat (vertex.uv0.x, vertex.uv0.y),
-//						Packer.ToFloat (nomalizedPos.y, normalizedIndex)
-//					);
-//				}
-//#if UNITY_5_6_OR_NEWER
-//				else
-//				{
-//					vertex.uv2 = new Vector2 (
-//						Packer.ToFloat (nomalizedPos.y, normalizedIndex), 0
-//					);
-//				}
-//#endif
 
 				vh.SetUIVertex(vertex, i);
 			}

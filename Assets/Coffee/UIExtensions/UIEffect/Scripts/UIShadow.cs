@@ -86,15 +86,6 @@ namespace Coffee.UIExtensions
 
 		private const float kMaxEffectDistance = 600f;
 
-#if UNITY_EDITOR
-		protected override void OnValidate ()
-		{
-			effectDistance = m_EffectDistance;
-			base.OnValidate ();
-		}
-
-#endif
-
 		public Color effectColor
 		{
 			get { return m_EffectColor; }
@@ -208,6 +199,13 @@ namespace Coffee.UIExtensions
 				ptex = _uiEffect.ptex;
 				ptex.Register(this);
 			}
+
+			#if COM_UNITY_TEXTMESHPRO
+			if (isTMPro)
+			{
+				textMeshPro.onCullStateChanged.AddListener (OnCullStateChanged);
+			}
+			#endif
 		}
 
 		protected override void OnDisable()
@@ -221,6 +219,37 @@ namespace Coffee.UIExtensions
 			}
 		}
 
+
+		#if UNITY_EDITOR
+		protected override void OnValidate ()
+		{
+			effectDistance = m_EffectDistance;
+			base.OnValidate ();
+		}
+		#endif
+
+		#if COM_UNITY_TEXTMESHPRO
+		protected void OnCullStateChanged (bool state)
+		{
+			SetVerticesDirty ();
+		}
+
+		Vector2 res;
+		protected override void LateUpdate ()
+		{
+			if (res.x != Screen.width || res.y != Screen.height)
+			{
+				res.x = Screen.width;
+				res.y = Screen.height;
+				SetVerticesDirty ();
+			}
+			if (textMeshPro && transform.hasChanged)
+			{
+				transform.hasChanged = false;
+			}
+			base.LateUpdate ();
+		}
+		#endif
 
 		/// <summary>
 		/// Modifies the mesh.
@@ -282,7 +311,7 @@ namespace Coffee.UIExtensions
 		//################################
 		// Private Members.
 		//################################
-		static readonly List<UIVertex> s_Verts = new List<UIVertex>();
+		static readonly List<UIVertex> s_Verts = new List<UIVertex>(4096);
 
 		/// <summary>
 		/// Append shadow vertices.
@@ -334,7 +363,7 @@ namespace Coffee.UIExtensions
 			int count = end - start;
 			var neededCapacity = verts.Count + count;
 			if (verts.Capacity < neededCapacity)
-				verts.Capacity = neededCapacity;
+				verts.Capacity *= 2;
 
 			float normalizedIndex = ptex != null && _uiEffect && _uiEffect.isActiveAndEnabled
 				? ptex.GetNormalizedIndex(this)

@@ -40,6 +40,7 @@ namespace Coffee.UIExtensions
 		[Tooltip("Noise texture for dissolving (single channel texture).")]
 		[SerializeField] Texture m_NoiseTexture;
 
+		[Header("Advanced Option")]
 		[Tooltip("The area for effect.")]
 		[SerializeField] protected EffectArea m_EffectArea;
 
@@ -60,12 +61,6 @@ namespace Coffee.UIExtensions
 		//################################
 		// Public Members.
 		//################################
-#if UNITY_5_6_OR_NEWER
-		/// <summary>
-		/// Additional canvas shader channels to use this component.
-		/// </summary>
-		public override AdditionalCanvasShaderChannels requiredChannels { get { return isTMPro ? AdditionalCanvasShaderChannels.TexCoord1 | AdditionalCanvasShaderChannels.TexCoord2 : AdditionalCanvasShaderChannels.TexCoord1; } }
-#endif
 
 		/// <summary>
 		/// Effect factor between 0(start) and 1(end).

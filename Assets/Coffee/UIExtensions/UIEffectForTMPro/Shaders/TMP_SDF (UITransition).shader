@@ -138,7 +138,6 @@ SubShader {
 			fixed4	color			: COLOR;
 			float2	texcoord0		: TEXCOORD0;
 			float2	texcoord1		: TEXCOORD1;
-			float2	texcoord2		: TEXCOORD2;
 		};
 
 
@@ -155,7 +154,7 @@ SubShader {
 			fixed4	underlayColor	: COLOR1;
 		#endif
 			float4 textures			: TEXCOORD5;
-			half3	transitionParam	: TEXCOORD6;
+			half3	eParam	: TEXCOORD6;
 		};
 
 		// Used by Unity internally to handle Texture Tiling and Offset.
@@ -301,7 +300,7 @@ SubShader {
 		#endif
 		
 		// Transition
-		faceColor = ApplyTransitionEffect(faceColor, input.transitionParam);
+		faceColor = ApplyTransitionEffect(faceColor, input.eParam);
 		faceColor.rgb *= faceColor.a;
 		
 		#if UNITY_UI_ALPHACLIP

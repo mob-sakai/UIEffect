@@ -37,7 +37,11 @@ namespace Coffee.UIExtensions.Editors
 			_spNoiseTexture = serializedObject.FindProperty("m_NoiseTexture");
 			_spKeepAspectRatio = serializedObject.FindProperty("m_KeepAspectRatio");
 			var player = serializedObject.FindProperty("m_Player");
+			_spPlay = player.FindPropertyRelative("play");
 			_spDuration = player.FindPropertyRelative("duration");
+			_spInitialPlayDelay = player.FindPropertyRelative("initialPlayDelay");
+			_spLoop = player.FindPropertyRelative("loop");
+			_spLoopDelay = player.FindPropertyRelative("loopDelay");
 			_spUpdateMode = player.FindPropertyRelative("updateMode");
 
 			s_NoiseTexId = Shader.PropertyToID ("_NoiseTex");
@@ -102,18 +106,17 @@ namespace Coffee.UIExtensions.Editors
 			//================
 			// Advanced option.
 			//================
-			GUILayout.Space(10);
-			EditorGUILayout.LabelField("Advanced Option", EditorStyles.boldLabel);
-
 			EditorGUILayout.PropertyField(_spEffectArea);
 			EditorGUILayout.PropertyField(_spKeepAspectRatio);
 
 			//================
-			// Effect runner.
+			// Effect player.
 			//================
-			GUILayout.Space(10);
-			EditorGUILayout.LabelField("Effect Player", EditorStyles.boldLabel);
+			EditorGUILayout.PropertyField(_spPlay);
 			EditorGUILayout.PropertyField(_spDuration);
+			EditorGUILayout.PropertyField(_spInitialPlayDelay);
+			EditorGUILayout.PropertyField(_spLoop);
+			EditorGUILayout.PropertyField(_spLoopDelay);
 			EditorGUILayout.PropertyField(_spUpdateMode);
 
 			// Debug.
@@ -161,7 +164,11 @@ namespace Coffee.UIExtensions.Editors
 		SerializedProperty _spNoiseTexture;
 		SerializedProperty _spEffectArea;
 		SerializedProperty _spKeepAspectRatio;
+		SerializedProperty _spPlay;
+		SerializedProperty _spLoop;
+		SerializedProperty _spLoopDelay;
 		SerializedProperty _spDuration;
+		SerializedProperty _spInitialPlayDelay;
 		SerializedProperty _spUpdateMode;
 
 		Shader _shader;

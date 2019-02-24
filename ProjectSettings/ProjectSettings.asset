@@ -387,7 +387,8 @@ PlayerSettings:
   webGLUseEmbeddedResources: 0
   webGLUseWasm: 0
   webGLCompressionFormat: 1
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    1: COM_UNITY_TEXTMESHPRO;UNITY_EDITOR
   platformArchitecture:
     iOS: 2
   scriptingBackend:

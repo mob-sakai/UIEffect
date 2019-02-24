@@ -1,4 +1,4 @@
-Shader "TextMeshPro/Distance Field (UIShiny)" {
+Shader "TextMeshPro/Distance Field (UIHsvModifier)" {
 
 Properties {
 	_FaceTex			("Face Texture", 2D) = "white" {}
@@ -152,7 +152,7 @@ SubShader {
 			fixed4	underlayColor	: COLOR1;
 		#endif
 			float4 textures			: TEXCOORD5;
-			half2	eParam	: TEXCOORD6;
+			half	eParam			: TEXCOORD6;
 		};
 
 		// Used by Unity internally to handle Texture Tiling and Offset.
@@ -210,7 +210,7 @@ SubShader {
 			float2 faceUV = TRANSFORM_TEX(textureUV, _FaceTex);
 			float2 outlineUV = TRANSFORM_TEX(textureUV, _OutlineTex);
 
-			half2 param = UnpackToVec2(input.texcoord0.y);
+			half param = input.texcoord0.y;
 			input.texcoord0 = UnpackToVec2(input.texcoord0.x);
 			pixel_t output = {
 				vPosition,
@@ -250,8 +250,6 @@ SubShader {
 			half4 faceColor = _FaceColor;
 			half4 outlineColor = _OutlineColor;
 
-			faceColor.rgb *= input.color.rgb;
-			
 			faceColor *= tex2D(_FaceTex, input.textures.xy + float2(_FaceUVSpeedX, _FaceUVSpeedY) * _Time.y);
 			outlineColor *= tex2D(_OutlineTex, input.textures.zw + float2(_OutlineUVSpeedX, _OutlineUVSpeedY) * _Time.y);
 
@@ -297,8 +295,9 @@ SubShader {
 			faceColor *= m.x * m.y;
 		#endif
 
-		// Shiny
-		faceColor = ApplyShinyEffect(faceColor, input.eParam);
+		// Hsv
+		faceColor = ApplyHsvEffect(faceColor, input.eParam);
+		faceColor.rgb *= input.color.rgb;
 		
 		#if UNITY_UI_ALPHACLIP
 			clip(faceColor.a - 0.001);
@@ -311,6 +310,6 @@ SubShader {
 	}
 }
 
-Fallback "TextMeshPro/Mobile/Distance Field (UIShiny)"
+Fallback "TextMeshPro/Mobile/Distance Field (UIHsv)"
 CustomEditor "TMPro.EditorUtilities.TMP_SDFShaderGUI"
 }
