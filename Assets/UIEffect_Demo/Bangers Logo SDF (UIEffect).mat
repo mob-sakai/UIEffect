@@ -8,7 +8,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: Bangers Logo SDF (UIEffect)
   m_Shader: {fileID: 4800000, guid: fdc3d2db3815548ae9eea37e1be79f36, type: 3}
-  m_ShaderKeywords: DETAILBLUR FILL GLOW_ON
+  m_ShaderKeywords: DETAILBLUR FILL GLOW_ON GRAYSCALE
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
