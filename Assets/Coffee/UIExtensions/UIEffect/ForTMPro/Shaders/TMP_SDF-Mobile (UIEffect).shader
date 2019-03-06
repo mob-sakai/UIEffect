@@ -156,17 +156,17 @@ SubShader {
 			float bias = (0.5 - weight) * scale - 0.5;
 			float outline = _OutlineWidth * _ScaleRatioA * 0.5 * scale;
 
-			float opacity = input.color.a;
-		#if (UNDERLAY_ON | UNDERLAY_INNER)
-				opacity = 1.0;
-		#endif
+		//	float opacity = input.color.a;
+		//#if (UNDERLAY_ON | UNDERLAY_INNER)
+		//		opacity = 1.0;
+		//#endif
 
-			fixed4 faceColor = fixed4(input.color.rgb, opacity) * _FaceColor;
-			faceColor.rgb *= faceColor.a;
+			fixed4 faceColor = input.color * _FaceColor;
+			//faceColor.rgb *= faceColor.a;
 
 			fixed4 outlineColor = _OutlineColor;
-			outlineColor.a *= opacity;
-			outlineColor.rgb *= outlineColor.a;
+			//outlineColor.a *= opacity;
+			//outlineColor.rgb *= outlineColor.a;
 			outlineColor = lerp(faceColor, outlineColor, sqrt(min(1.0, (outline * 2))));
 
 		#if (UNDERLAY_ON | UNDERLAY_INNER)
@@ -244,7 +244,7 @@ SubShader {
 			clip(c.a - 0.001);
 		#endif
 		
-			return c;
+			return c * input.color.a;
 		}
 
 		#include "UI-Effect-TMPro.cginc"

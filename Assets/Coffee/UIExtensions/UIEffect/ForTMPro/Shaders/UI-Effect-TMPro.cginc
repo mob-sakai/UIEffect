@@ -3,8 +3,10 @@
 
 #if MOBILE
 #define UV(x) x.texcoord0
+#define UV2(x) x.texcoord1
 #else
 #define UV(x) x.atlas
+#define UV2(x) x.texcoord2
 #endif
 
 fixed4 Tex2DBlurring (pixel_t IN, half2 blur, half4 mask)
@@ -35,7 +37,10 @@ fixed4 Tex2DBlurring (pixel_t IN, half2 blur, half4 mask)
 	float sum = 0;
 	float2 shift = 0;
 	half alpha = IN.color.a;
-	half2 texcood = UV(IN);
+    half2 texcood = UV(IN);
+    #if UNDERLAY_ON
+	half2 texcood2 = UV2(IN);
+    #endif
 	for(int x = 0; x < KERNEL_SIZE; x++)
 	{
 		shift.x = blur.x * (float(x) - KERNEL_SIZE/2);
@@ -47,6 +52,10 @@ fixed4 Tex2DBlurring (pixel_t IN, half2 blur, half4 mask)
 			sum += weight;
 			UV(IN).xy = uv;
 			IN.color.a = weight;
+            
+            #if UNDERLAY_ON
+            UV2(IN).xy = texcood2 + shift;
+            #endif
 
 			#if EX
 			fixed masked = min(mask.x <= uv.x, uv.x <= mask.z) * min(mask.y <= uv.y, uv.y <= mask.w);
