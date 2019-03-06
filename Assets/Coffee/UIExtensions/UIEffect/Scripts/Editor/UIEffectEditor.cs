@@ -228,23 +228,6 @@ namespace Coffee.UIExtensions.Editors
 			ShowMaterialEditors (c.materials, 1, c.materials.Length - 1);
 
 			serializedObject.ApplyModifiedProperties();
-
-#if UNITY_5_6_OR_NEWER
-			var graphic = (target as UIEffectBase).targetGraphic;
-			if(graphic)
-			{
-				var canvas = graphic.canvas;
-				if( canvas && 0 == (canvas.additionalShaderChannels & AdditionalCanvasShaderChannels.TexCoord1))
-				{
-					using (new GUILayout.HorizontalScope())
-					{
-						EditorGUILayout.HelpBox("[Unity5.6+] Enable TexCoord1 of Canvas.additionalShaderChannels to use UIEffect.", MessageType.Warning);
-						if (GUILayout.Button("Fix"))
-							canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord1;
-					}
-				}
-			}
-#endif
 		}
 
 		/// <summary>

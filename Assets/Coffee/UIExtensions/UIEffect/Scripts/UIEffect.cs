@@ -81,6 +81,21 @@ namespace Coffee.UIExtensions
 		//################################
 		// Public Members.
 		//################################
+#if UNITY_2017_1_OR_NEWER
+		public override AdditionalCanvasShaderChannels requiredChannels
+		{
+			get
+			{
+				if (advancedBlur)
+				{
+					return isTMPro
+						? AdditionalCanvasShaderChannels.TexCoord1 | AdditionalCanvasShaderChannels.TexCoord2
+						: AdditionalCanvasShaderChannels.TexCoord1;
+				}
+				return AdditionalCanvasShaderChannels.None;
+			}
+		}
+#endif
 
 		/// <summary>
 		/// Effect factor between 0(no effect) and 1(complete effect).

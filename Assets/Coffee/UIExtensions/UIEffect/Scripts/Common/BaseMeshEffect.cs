@@ -74,7 +74,7 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Additional canvas shader channels to use this component.
 		/// </summary>
-		public virtual AdditionalCanvasShaderChannels requiredChannels { get { return AdditionalCanvasShaderChannels.TexCoord1; } }
+		public virtual AdditionalCanvasShaderChannels requiredChannels { get { return AdditionalCanvasShaderChannels.None; } }
 #endif
 
 		/// <summary>
