@@ -2,6 +2,8 @@
 using UnityEditorInternal;
 using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
+using UnityEngine.UI;
 
 namespace Coffee.UIExtensions.Editors
 {
@@ -10,16 +12,20 @@ namespace Coffee.UIExtensions.Editors
 	/// </summary>
 	[CustomEditor(typeof(UIDissolve))]
 	[CanEditMultipleObjects]
-	public class UIDissolveEditor : Editor
+	public class UIDissolveEditor : BaseMeshEffectEditor
 	{
+		static int s_NoiseTexId;
+
 		//################################
 		// Public/Protected Members.
 		//################################
 		/// <summary>
 		/// This function is called when the object becomes enabled and active.
 		/// </summary>
-		protected void OnEnable()
+		protected override void OnEnable()
 		{
+			base.OnEnable ();
+
 			_spMaterial = serializedObject.FindProperty("m_EffectMaterial");
 			_spEffectFactor = serializedObject.FindProperty("m_EffectFactor");
 			_spEffectArea = serializedObject.FindProperty("m_EffectArea");
@@ -30,17 +36,50 @@ namespace Coffee.UIExtensions.Editors
 			_spColorMode = serializedObject.FindProperty("m_ColorMode");
 			_spNoiseTexture = serializedObject.FindProperty("m_NoiseTexture");
 			_spKeepAspectRatio = serializedObject.FindProperty("m_KeepAspectRatio");
+			_spReverseAnimation = serializedObject.FindProperty("m_ReverseAnimation");
 			var player = serializedObject.FindProperty("m_Player");
+			_spPlay = player.FindPropertyRelative("play");
 			_spDuration = player.FindPropertyRelative("duration");
+			_spInitialPlayDelay = player.FindPropertyRelative("initialPlayDelay");
+			_spLoop = player.FindPropertyRelative("loop");
+			_spLoopDelay = player.FindPropertyRelative("loopDelay");
 			_spUpdateMode = player.FindPropertyRelative("updateMode");
-		}
 
+			s_NoiseTexId = Shader.PropertyToID ("_NoiseTex");
+
+			_shader = Shader.Find ("TextMeshPro/Distance Field (UIDissolve)");
+			_mobileShader = Shader.Find ("TextMeshPro/Mobile/Distance Field (UIDissolve)");
+			_spriteShader = Shader.Find ("TextMeshPro/Sprite (UIDissolve)");
+		}
 
 		/// <summary>
 		/// Implement this function to make a custom inspector.
 		/// </summary>
 		public override void OnInspectorGUI()
 		{
+			foreach (var d in targets.Cast<UIDissolve> ())
+			{
+				var mat = d.material;
+				if (d.isTMPro && mat && mat.HasProperty(s_NoiseTexId))
+				{
+					ColorMode colorMode =
+								mat.IsKeywordEnabled ("ADD") ? ColorMode.Add
+										: mat.IsKeywordEnabled ("SUBTRACT") ? ColorMode.Subtract
+										: mat.IsKeywordEnabled ("FILL") ? ColorMode.Fill
+										: ColorMode.Multiply;
+
+					Texture noiseTexture = mat.GetTexture(s_NoiseTexId);
+
+					if (d.colorMode != colorMode || d.noiseTexture != noiseTexture)
+					{
+						var so = new SerializedObject (d);
+						so.FindProperty ("m_ColorMode").intValue = (int)colorMode;
+						so.FindProperty ("m_NoiseTexture").objectReferenceValue = noiseTexture;
+						so.ApplyModifiedProperties ();
+					}
+				}
+			}
+
 			serializedObject.Update();
 
 			//================
@@ -57,25 +96,30 @@ namespace Coffee.UIExtensions.Editors
 			EditorGUILayout.PropertyField(_spWidth);
 			EditorGUILayout.PropertyField(_spSoftness);
 			EditorGUILayout.PropertyField(_spColor);
-			EditorGUILayout.PropertyField(_spColorMode);
-			EditorGUILayout.PropertyField(_spNoiseTexture);
+
+			bool isAnyTMPro = targets.Cast<UIDissolve>().Any(x => x.isTMPro);
+			using (new EditorGUI.DisabledGroupScope (isAnyTMPro))
+			{
+				EditorGUILayout.PropertyField (_spColorMode);
+				EditorGUILayout.PropertyField (_spNoiseTexture);
+			}
 
 			//================
 			// Advanced option.
 			//================
-			GUILayout.Space(10);
-			EditorGUILayout.LabelField("Advanced Option", EditorStyles.boldLabel);
-
 			EditorGUILayout.PropertyField(_spEffectArea);
 			EditorGUILayout.PropertyField(_spKeepAspectRatio);
 
 			//================
-			// Effect runner.
+			// Effect player.
 			//================
-			GUILayout.Space(10);
-			EditorGUILayout.LabelField("Effect Player", EditorStyles.boldLabel);
+			EditorGUILayout.PropertyField(_spPlay);
 			EditorGUILayout.PropertyField(_spDuration);
+			EditorGUILayout.PropertyField(_spInitialPlayDelay);
+			EditorGUILayout.PropertyField(_spLoop);
+			EditorGUILayout.PropertyField(_spLoopDelay);
 			EditorGUILayout.PropertyField(_spUpdateMode);
+			EditorGUILayout.PropertyField(_spReverseAnimation);
 
 			// Debug.
 			using (new EditorGUI.DisabledGroupScope(!Application.isPlaying))
@@ -94,7 +138,20 @@ namespace Coffee.UIExtensions.Editors
 				}
 			}
 
+			var c = target as UIDissolve;
+			c.ShowTMProWarning (_shader, _mobileShader, _spriteShader, mat => {
+				if(mat.shader == _spriteShader)
+				{
+					mat.shaderKeywords = c.material.shaderKeywords;
+					mat.SetTexture ("_NoiseTex", c.material.GetTexture ("_NoiseTex"));
+				}
+			});
+			ShowCanvasChannelsWarning ();
+
+			ShowMaterialEditors (c.materials, 1, c.materials.Length - 1);
+
 			serializedObject.ApplyModifiedProperties();
+
 		}
 
 		//################################
@@ -109,7 +166,16 @@ namespace Coffee.UIExtensions.Editors
 		SerializedProperty _spNoiseTexture;
 		SerializedProperty _spEffectArea;
 		SerializedProperty _spKeepAspectRatio;
+		SerializedProperty _spReverseAnimation;
+		SerializedProperty _spPlay;
+		SerializedProperty _spLoop;
+		SerializedProperty _spLoopDelay;
 		SerializedProperty _spDuration;
+		SerializedProperty _spInitialPlayDelay;
 		SerializedProperty _spUpdateMode;
+
+		Shader _shader;
+		Shader _mobileShader;
+		Shader _spriteShader;
 	}
 }

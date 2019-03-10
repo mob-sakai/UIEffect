@@ -80,6 +80,28 @@ AnimationClip is supported as a matter of course!
 7. Enjoy!
 
 
+#### Usage with TextMeshPro
+
+1. Add a symbol `TMP_PRESENT` to scripting define symbols.  
+![](https://user-images.githubusercontent.com/12690315/54080742-14583500-433a-11e9-815b-8ed600697569.png)
+2. If the material does not support the effect component, the following warning will be displayed.
+When you press the Fix button, new material is automatically generated and set.  
+![](https://user-images.githubusercontent.com/12690315/49728471-377d3500-fcb6-11e8-849b-d664aeb9da75.png)
+3. If you want to use material variants, select `Create Material Preset` from the context menu to duplicate the material.  
+![](https://user-images.githubusercontent.com/12690315/53881014-dfa45f00-4055-11e9-833f-7409adebc542.png)
+4. Effect mode, color mode, blur mode and etc. can not be changed from the component editor.
+Change them from the material editor.  
+![](https://user-images.githubusercontent.com/12690315/53782892-bea71580-3f52-11e9-9d43-e7cb6761f52c.png)
+5. If you want to enable "Advanced Blur", enable `TexCoord2` channel of canvas.  
+![](https://user-images.githubusercontent.com/12690315/46567584-3525f400-c970-11e8-9839-5c9e810b0b80.png)
+
+
+#### Usage without TextMeshPro
+
+1. When you uninstalled TextMeshPro from the project, remove a symbol `TMP_PRESENT` to scripting define symbols.  
+![](https://user-images.githubusercontent.com/12690315/54080761-cabc1a00-433a-11e9-97ab-431cf1cfe602.png)
+
+
 ##### Requirement
 
 * Unity 5.5+ *(included Unity 2018.x)*

@@ -1,5 +1,25 @@
 # Changelog
 
+## [v3.1.0](https://github.com/mob-sakai/UIEffect/tree/v3.1.0) (2019-03-10)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v3.0.4...v3.1.0)
+
+## Support TextMeshPro!
+
+* All components are supported
+* Advanced blur is supported for Unity 2017.1+
+
+![](https://user-images.githubusercontent.com/12690315/53533025-8495d800-3b3c-11e9-9e94-320f3ec7ad74.png)
+
+For details to use, see [Usage with TextMeshPro](https://github.com/mob-sakai/UIEffect#usage-with-textmeshpro)
+
+**NOTE: Unity 5.x will not be supported in the near future**
+
+**Implemented enhancements:**
+
+- Support TextMeshPro [\#137](https://github.com/mob-sakai/UIEffect/issues/137)
+- add reverse animation option to UIDissolve [\#153](https://github.com/mob-sakai/UIEffect/pull/153) ([antpaw](https://github.com/antpaw))
+
 ## [v3.0.4](https://github.com/mob-sakai/UIEffect/tree/v3.0.4) (2019-02-15)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v3.0.3...v3.0.4)

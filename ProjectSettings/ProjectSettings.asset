@@ -387,7 +387,8 @@ PlayerSettings:
   webGLUseEmbeddedResources: 0
   webGLUseWasm: 0
   webGLCompressionFormat: 1
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    1: TMP_PRESENT
   platformArchitecture:
     iOS: 2
   scriptingBackend:

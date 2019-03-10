@@ -40,6 +40,7 @@ namespace Coffee.UIExtensions
 		[Tooltip("Noise texture for dissolving (single channel texture).")]
 		[SerializeField] Texture m_NoiseTexture;
 
+		[Header("Advanced Option")]
 		[Tooltip("The area for effect.")]
 		[SerializeField] protected EffectArea m_EffectArea;
 
@@ -48,6 +49,9 @@ namespace Coffee.UIExtensions
 
 		[Header("Effect Player")]
 		[SerializeField] EffectPlayer m_Player;
+
+		[HideInInspector]
+		[SerializeField] bool m_ReverseAnimation = false;
 
 		#pragma warning disable 0414
 		[Obsolete][HideInInspector]
@@ -151,7 +155,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public Texture noiseTexture
 		{
-			get { return m_NoiseTexture ?? graphic.material.GetTexture("_NoiseTex"); }
+			get { return m_NoiseTexture ?? material.GetTexture("_NoiseTex"); }
 			set
 			{
 				if (m_NoiseTexture != value)
@@ -176,7 +180,7 @@ namespace Coffee.UIExtensions
 				if (m_EffectArea != value)
 				{
 					m_EffectArea = value;
-					SetDirty();
+					SetVerticesDirty();
 				}
 			}
 		}
@@ -192,7 +196,7 @@ namespace Coffee.UIExtensions
 				if (m_KeepAspectRatio != value)
 				{
 					m_KeepAspectRatio = value;
-					SetDirty();
+					SetVerticesDirty ();
 				}
 			}
 		}
@@ -205,7 +209,7 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Play effect on enable.
 		/// </summary>
-		[System.Obsolete("Use Show/Hide method instead")]
+		[System.Obsolete("Use Play/Stop method instead")]
 		public bool play { get { return _player.play; } set { _player.play = value; } }
 
 		/// <summary>
@@ -240,6 +244,11 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public override void ModifyMaterial()
 		{
+			if (isTMPro)
+			{
+				return;
+			}
+
 			ulong hash = (m_NoiseTexture ? (uint)m_NoiseTexture.GetInstanceID() : 0) + ((ulong)1 << 32) + ((ulong)m_ColorMode << 36);
 			if (_materialCache != null && (_materialCache.hash != hash || !isActiveAndEnabled || !m_EffectMaterial))
 			{
@@ -249,15 +258,15 @@ namespace Coffee.UIExtensions
 
 			if (!isActiveAndEnabled || !m_EffectMaterial)
 			{
-				graphic.material = null;
+				material = null;
 			}
 			else if (!m_NoiseTexture)
 			{
-				graphic.material = m_EffectMaterial;
+				material = m_EffectMaterial;
 			}
 			else if (_materialCache != null && _materialCache.hash == hash)
 			{
-				graphic.material = _materialCache.material;
+				material = _materialCache.material;
 			}
 			else
 			{
@@ -268,7 +277,7 @@ namespace Coffee.UIExtensions
 						mat.SetTexture("_NoiseTex", m_NoiseTexture);
 						return mat;
 					});
-				graphic.material = _materialCache.material;
+				material = _materialCache.material;
 			}
 		}
 
@@ -280,37 +289,43 @@ namespace Coffee.UIExtensions
 			if (!isActiveAndEnabled)
 				return;
 
+			bool isText = isTMPro || graphic is Text;
 			float normalizedIndex = ptex.GetNormalizedIndex(this);
 
 			// rect.
 			var tex = noiseTexture;
 			var aspectRatio = m_KeepAspectRatio && tex ? ((float)tex.width) / tex.height : -1;
-			Rect rect = m_EffectArea.GetEffectArea(vh, graphic, aspectRatio);
+			Rect rect = m_EffectArea.GetEffectArea(vh, rectTransform.rect, aspectRatio);
 
 			// Calculate vertex position.
 			UIVertex vertex = default(UIVertex);
-			bool effectEachCharacter = graphic is Text && m_EffectArea == EffectArea.Character;
 			float x, y;
 			int count = vh.currentVertCount;
 			for (int i = 0; i < count; i++)
 			{
 				vh.PopulateUIVertex(ref vertex, i);
-
-				if (effectEachCharacter)
-				{
-					x = splitedCharacterPosition[i % 4].x;
-					y = splitedCharacterPosition[i % 4].y;
-				}
-				else
-				{
-					x = Mathf.Clamp01(vertex.position.x / rect.width + 0.5f);
-					y = Mathf.Clamp01(vertex.position.y / rect.height + 0.5f);
-				}
+				m_EffectArea.GetPositionFactor (i, rect, vertex.position, isText, isTMPro, out x, out y);
 
 				vertex.uv0 = new Vector2(
 					Packer.ToFloat(vertex.uv0.x, vertex.uv0.y),
 					Packer.ToFloat(x, y, normalizedIndex)
 				);
+//				if(!isTMPro)
+//				{
+//					vertex.uv0 = new Vector2(
+//						Packer.ToFloat(vertex.uv0.x, vertex.uv0.y),
+//						Packer.ToFloat(x, y, normalizedIndex)
+//					);
+//				}
+//				#if UNITY_5_6_OR_NEWER
+//				else
+//				{
+//					vertex.uv2 = new Vector2 (
+//						Packer.ToFloat (x, y, normalizedIndex),
+//						0
+//					);
+//				}
+//				#endif
 
 				vh.SetUIVertex(vertex, i);
 			}
@@ -318,7 +333,10 @@ namespace Coffee.UIExtensions
 
 		protected override void SetDirty()
 		{
-			ptex.RegisterMaterial(targetGraphic.material);
+			foreach(var m in materials)
+			{
+				ptex.RegisterMaterial (m);
+			}
 			ptex.SetData(this, 0, m_EffectFactor);	// param1.x : location
 			ptex.SetData(this, 1, m_Width);		// param1.y : width
 			ptex.SetData(this, 2, m_Softness);	// param1.z : softness
@@ -352,15 +370,28 @@ namespace Coffee.UIExtensions
 		protected override void OnEnable()
 		{
 			base.OnEnable();
-			_player.OnEnable(f => effectFactor = f);
+			if (m_ReverseAnimation)
+			{
+				_player.OnEnable((f) =>
+				{
+					effectFactor = 1f - f;
+				});
+			}
+			else
+			{
+				_player.OnEnable((f) =>
+				{
+					effectFactor = f;
+				});
+			}
 		}
 
 		protected override void OnDisable()
 		{
+			base.OnDisable ();
 			MaterialCache.Unregister(_materialCache);
 			_materialCache = null;
 			_player.OnDisable();
-			base.OnDisable();
 		}
 
 #if UNITY_EDITOR
@@ -370,6 +401,11 @@ namespace Coffee.UIExtensions
 		/// <returns>The material.</returns>
 		protected override Material GetMaterial()
 		{
+			if (isTMPro)
+			{
+				return null;
+			}
+
 			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_ColorMode);
 		}
 

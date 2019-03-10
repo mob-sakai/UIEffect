@@ -10,7 +10,7 @@ namespace Coffee.UIExtensions.Editors
 	/// </summary>
 	[CustomEditor(typeof(UIShiny))]
 	[CanEditMultipleObjects]
-	public class UIShinyEditor : Editor
+	public class UIShinyEditor : BaseMeshEffectEditor
 	{
 		//################################
 		// Public/Protected Members.
@@ -18,8 +18,10 @@ namespace Coffee.UIExtensions.Editors
 		/// <summary>
 		/// This function is called when the object becomes enabled and active.
 		/// </summary>
-		protected void OnEnable()
+		protected override void OnEnable()
 		{
+			base.OnEnable ();
+
 			_spMaterial = serializedObject.FindProperty("m_EffectMaterial");
 			_spEffectFactor = serializedObject.FindProperty("m_EffectFactor");
 			_spEffectArea = serializedObject.FindProperty("m_EffectArea");
@@ -35,6 +37,11 @@ namespace Coffee.UIExtensions.Editors
 			_spLoop = player.FindPropertyRelative("loop");
 			_spLoopDelay = player.FindPropertyRelative("loopDelay");
 			_spUpdateMode = player.FindPropertyRelative("updateMode");
+
+
+			_shader = Shader.Find ("TextMeshPro/Distance Field (UIShiny)");
+			_mobileShader = Shader.Find ("TextMeshPro/Mobile/Distance Field (UIShiny)");
+			_spriteShader = Shader.Find ("TextMeshPro/Sprite (UIShiny)");
 		}
 
 
@@ -65,22 +72,14 @@ namespace Coffee.UIExtensions.Editors
 			//================
 			// Advanced option.
 			//================
-			GUILayout.Space(10);
-			EditorGUILayout.LabelField("Advanced Option", EditorStyles.boldLabel);
-
 			EditorGUILayout.PropertyField(_spEffectArea);
 
 			//================
-			// Effect runner.
+			// Effect player.
 			//================
-			GUILayout.Space(10);
-			EditorGUILayout.LabelField("Effect Player", EditorStyles.boldLabel);
 			EditorGUILayout.PropertyField(_spPlay);
-			if (_spPlay.boolValue)
-			{
-				EditorGUILayout.PropertyField(_spInitialPlayDelay);
-			}
 			EditorGUILayout.PropertyField(_spDuration);
+			EditorGUILayout.PropertyField(_spInitialPlayDelay);
 			EditorGUILayout.PropertyField(_spLoop);
 			EditorGUILayout.PropertyField(_spLoopDelay);
 			EditorGUILayout.PropertyField(_spUpdateMode);
@@ -102,6 +101,12 @@ namespace Coffee.UIExtensions.Editors
 				}
 			}
 
+			var c = target as UIShiny;
+			c.ShowTMProWarning (_shader, _mobileShader, _spriteShader, mat => {});
+			ShowCanvasChannelsWarning ();
+
+			ShowMaterialEditors (c.materials, 1, c.materials.Length - 1);
+
 			serializedObject.ApplyModifiedProperties();
 		}
 
@@ -122,5 +127,9 @@ namespace Coffee.UIExtensions.Editors
 		SerializedProperty _spDuration;
 		SerializedProperty _spInitialPlayDelay;
 		SerializedProperty _spUpdateMode;
+
+		Shader _shader;
+		Shader _mobileShader;
+		Shader _spriteShader;
 	}
 }

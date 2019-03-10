@@ -10,30 +10,20 @@ namespace Coffee.UIExtensions.Editors
 	/// </summary>
 	[CustomEditor(typeof(UITransitionEffect))]
 	[CanEditMultipleObjects]
-	public class UITransitionEffectEditor : Editor
+	public class UITransitionEffectEditor : BaseMeshEffectEditor
 	{
-		SerializedProperty _spMaterial;
-		SerializedProperty _spEffectMode;
-		SerializedProperty _spEffectFactor;
-		SerializedProperty _spEffectArea;
-		SerializedProperty _spKeepAspectRatio;
-		SerializedProperty _spDissolveWidth;
-		SerializedProperty _spDissolveSoftness;
-		SerializedProperty _spDissolveColor;
-		SerializedProperty _spTransitionTexture;
-		SerializedProperty _spDuration;
-		SerializedProperty _spUpdateMode;
-		SerializedProperty _spPassRayOnHidden;
-		
-		
+		static int s_NoiseTexId;
+
 		//################################
 		// Public/Protected Members.
 		//################################
 		/// <summary>
 		/// This function is called when the object becomes enabled and active.
 		/// </summary>
-		protected void OnEnable()
+		protected override void OnEnable()
 		{
+			base.OnEnable();
+
 			_spMaterial = serializedObject.FindProperty("m_EffectMaterial");
 			_spEffectMode = serializedObject.FindProperty("m_EffectMode");
 			_spEffectFactor = serializedObject.FindProperty("m_EffectFactor");
@@ -44,9 +34,19 @@ namespace Coffee.UIExtensions.Editors
 			_spDissolveColor = serializedObject.FindProperty("m_DissolveColor");
 			_spTransitionTexture = serializedObject.FindProperty("m_TransitionTexture");
 			var player = serializedObject.FindProperty("m_Player");
+			_spPlay = player.FindPropertyRelative("play");
 			_spDuration = player.FindPropertyRelative("duration");
+			_spInitialPlayDelay = player.FindPropertyRelative("initialPlayDelay");
+			_spLoop = player.FindPropertyRelative("loop");
+			_spLoopDelay = player.FindPropertyRelative("loopDelay");
 			_spUpdateMode = player.FindPropertyRelative("updateMode");
 			_spPassRayOnHidden = serializedObject.FindProperty("m_PassRayOnHidden");
+
+			s_NoiseTexId = Shader.PropertyToID("_NoiseTex");
+
+			_shader = Shader.Find("TextMeshPro/Distance Field (UITransition)");
+			_mobileShader = Shader.Find("TextMeshPro/Mobile/Distance Field (UITransition)");
+			_spriteShader = Shader.Find("TextMeshPro/Sprite (UITransition)");
 		}
 
 
@@ -55,6 +55,36 @@ namespace Coffee.UIExtensions.Editors
 		/// </summary>
 		public override void OnInspectorGUI()
 		{
+			foreach (var d in targets.Cast<UITransitionEffect> ())
+			{
+				var mat = d.material;
+				if (d.isTMPro && mat && mat.HasProperty (s_NoiseTexId))
+				{
+					Texture noiseTexture = mat.GetTexture (s_NoiseTexId);
+					UITransitionEffect.EffectMode mode =
+						mat.IsKeywordEnabled ("CUTOFF") ? UITransitionEffect.EffectMode.Cutoff
+						: mat.IsKeywordEnabled ("FADE") ? UITransitionEffect.EffectMode.Fade
+						: mat.IsKeywordEnabled ("DISSOLVE") ? UITransitionEffect.EffectMode.Dissolve
+						: (UITransitionEffect.EffectMode)0;
+
+					if (mode == (UITransitionEffect.EffectMode)0)
+					{
+						mode = UITransitionEffect.EffectMode.Cutoff;
+						mat.EnableKeyword ("CUTOFF");
+					}
+
+					bool hasChanged = d.transitionTexture != noiseTexture || d.effectMode != mode;
+
+					if (hasChanged)
+					{
+						var so = new SerializedObject (d);
+						so.FindProperty ("m_TransitionTexture").objectReferenceValue = noiseTexture;
+						so.FindProperty ("m_EffectMode").intValue = (int)mode;
+						so.ApplyModifiedProperties ();
+					}
+				}
+			}
+
 			serializedObject.Update();
 
 			//================
@@ -67,7 +97,9 @@ namespace Coffee.UIExtensions.Editors
 			//================
 			// Effect setting.
 			//================
-			EditorGUILayout.PropertyField(_spEffectMode);
+			bool isAnyTMPro = targets.Cast<UITransitionEffect>().Any(x => x.isTMPro);
+			using (new EditorGUI.DisabledGroupScope(isAnyTMPro))
+				EditorGUILayout.PropertyField(_spEffectMode);
 
 			EditorGUI.indentLevel++;
 			EditorGUILayout.PropertyField(_spEffectFactor);
@@ -82,20 +114,20 @@ namespace Coffee.UIExtensions.Editors
 			//================
 			// Advanced option.
 			//================
-			GUILayout.Space(10);
-			EditorGUILayout.LabelField("Advanced Option", EditorStyles.boldLabel);
-
 			EditorGUILayout.PropertyField(_spEffectArea);
-			EditorGUILayout.PropertyField(_spTransitionTexture);
+			using (new EditorGUI.DisabledGroupScope(isAnyTMPro))
+				EditorGUILayout.PropertyField(_spTransitionTexture);
 			EditorGUILayout.PropertyField(_spKeepAspectRatio);
 			EditorGUILayout.PropertyField(_spPassRayOnHidden);
 
 			//================
-			// Effect runner.
+			// Effect player.
 			//================
-			GUILayout.Space(10);
-			EditorGUILayout.LabelField("Effect Player", EditorStyles.boldLabel);
+			EditorGUILayout.PropertyField(_spPlay);
 			EditorGUILayout.PropertyField(_spDuration);
+			EditorGUILayout.PropertyField(_spInitialPlayDelay);
+			EditorGUILayout.PropertyField(_spLoop);
+			EditorGUILayout.PropertyField(_spLoopDelay);
 			EditorGUILayout.PropertyField(_spUpdateMode);
 
 			// Debug.
@@ -115,7 +147,44 @@ namespace Coffee.UIExtensions.Editors
 				}
 			}
 
+			var current = target as UITransitionEffect;
+			current.ShowTMProWarning(_shader, _mobileShader, _spriteShader, mat =>
+				{
+					if (mat.shader == _spriteShader)
+					{
+						mat.shaderKeywords = current.material.shaderKeywords;
+						mat.SetTexture(s_NoiseTexId, current.material.GetTexture(s_NoiseTexId));
+					}
+				});
+			ShowCanvasChannelsWarning();
+
+			ShowMaterialEditors(current.materials, 1, current.materials.Length - 1);
+
 			serializedObject.ApplyModifiedProperties();
 		}
+
+		//################################
+		// Private Members.
+		//################################
+		SerializedProperty _spMaterial;
+		SerializedProperty _spEffectMode;
+		SerializedProperty _spEffectFactor;
+		SerializedProperty _spEffectArea;
+		SerializedProperty _spKeepAspectRatio;
+		SerializedProperty _spDissolveWidth;
+		SerializedProperty _spDissolveSoftness;
+		SerializedProperty _spDissolveColor;
+		SerializedProperty _spTransitionTexture;
+		SerializedProperty _spPlay;
+		SerializedProperty _spLoop;
+		SerializedProperty _spLoopDelay;
+		SerializedProperty _spDuration;
+		SerializedProperty _spInitialPlayDelay;
+		SerializedProperty _spUpdateMode;
+		SerializedProperty _spPassRayOnHidden;
+
+		Shader _shader;
+		Shader _mobileShader;
+		Shader _spriteShader;
 	}
 }

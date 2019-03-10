@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Serialization;
 
 namespace Coffee.UIExtensions
 {
@@ -38,6 +39,7 @@ namespace Coffee.UIExtensions
 		[Tooltip("Transition texture (single channel texture).")]
 		[SerializeField] Texture m_TransitionTexture;
 
+		[Header("Advanced Option")]
 		[Tooltip("The area for effect.")]
 		[SerializeField] EffectArea m_EffectArea = EffectArea.RectTransform;
 
@@ -62,6 +64,7 @@ namespace Coffee.UIExtensions
 		//################################
 		// Public Members.
 		//################################
+
 		/// <summary>
 		/// Effect factor between 0(no effect) and 1(complete effect).
 		/// </summary>
@@ -212,6 +215,11 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public override void ModifyMaterial()
 		{
+			if (isTMPro)
+			{
+				return;
+			}
+
 			ulong hash = (m_TransitionTexture ? (uint)m_TransitionTexture.GetInstanceID() : 0) + ((ulong)2 << 32) + ((ulong)m_EffectMode << 36);
 			if (_materialCache != null && (_materialCache.hash != hash || !isActiveAndEnabled || !m_EffectMaterial))
 			{
@@ -221,15 +229,15 @@ namespace Coffee.UIExtensions
 
 			if (!isActiveAndEnabled || !m_EffectMaterial)
 			{
-				graphic.material = null;
+				material = null;
 			}
 			else if (!m_TransitionTexture)
 			{
-				graphic.material = m_EffectMaterial;
+				material = m_EffectMaterial;
 			}
 			else if (_materialCache != null && _materialCache.hash == hash)
 			{
-				graphic.material = _materialCache.material;
+				material = _materialCache.material;
 			}
 			else
 			{
@@ -237,10 +245,10 @@ namespace Coffee.UIExtensions
 					{
 						var mat = new Material(m_EffectMaterial);
 						mat.name += "_" + m_TransitionTexture.name;
-						mat.SetTexture("_TransitionTexture", m_TransitionTexture);
+						mat.SetTexture("_NoiseTex", m_TransitionTexture);
 						return mat;
 					});
-				graphic.material = _materialCache.material;
+				material = _materialCache.material;
 			}
 		}
 
@@ -254,35 +262,26 @@ namespace Coffee.UIExtensions
 				return;
 			}
 
+			bool isText = isTMPro || graphic is Text;
+			float normalizedIndex = ptex.GetNormalizedIndex (this);
+
 			// rect.
 			var tex = transitionTexture;
 			var aspectRatio = m_KeepAspectRatio && tex ? ((float)tex.width) / tex.height : -1;
-			Rect rect = m_EffectArea.GetEffectArea(vh, graphic, aspectRatio);
+			Rect rect = m_EffectArea.GetEffectArea (vh, rectTransform.rect, aspectRatio);
 
 			// Set prameters to vertex.
-			float normalizedIndex = ptex.GetNormalizedIndex(this);
 			UIVertex vertex = default(UIVertex);
-			bool effectEachCharacter = graphic is Text && m_EffectArea == EffectArea.Character;
 			float x, y;
 			int count = vh.currentVertCount;
 			for (int i = 0; i < count; i++)
 			{
 				vh.PopulateUIVertex(ref vertex, i);
+				m_EffectArea.GetPositionFactor (i, rect, vertex.position, isText, isTMPro, out x, out y);
 
-				if (effectEachCharacter)
-				{
-					x = splitedCharacterPosition[i % 4].x;
-					y = splitedCharacterPosition[i % 4].y;
-				}
-				else
-				{
-					x = Mathf.Clamp01(vertex.position.x / rect.width + 0.5f);
-					y = Mathf.Clamp01(vertex.position.y / rect.height + 0.5f);
-				}
-
-				vertex.uv0 = new Vector2(
-					Packer.ToFloat(vertex.uv0.x, vertex.uv0.y),
-					Packer.ToFloat(x, y, normalizedIndex)
+				vertex.uv0 = new Vector2 (
+					Packer.ToFloat (vertex.uv0.x, vertex.uv0.y),
+					Packer.ToFloat (x, y, normalizedIndex)
 				);
 				vh.SetUIVertex(vertex, i);
 			}
@@ -307,15 +306,18 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		protected override void OnDisable()
 		{
+			base.OnDisable ();
 			MaterialCache.Unregister(_materialCache);
 			_materialCache = null;
-			base.OnDisable();
 			_player.OnDisable();
 		}
 
 		protected override void SetDirty()
 		{
-			ptex.RegisterMaterial(targetGraphic.material);
+			foreach (var m in materials)
+			{
+				ptex.RegisterMaterial (m);
+			}
 			ptex.SetData(this, 0, m_EffectFactor);	// param1.x : effect factor
 			if (m_EffectMode == EffectMode.Dissolve)
 			{
@@ -329,7 +331,7 @@ namespace Coffee.UIExtensions
 			// Disable graphic's raycastTarget on hidden.
 			if (m_PassRayOnHidden)
 			{
-				graphic.raycastTarget = 0 < m_EffectFactor;
+				targetGraphic.raycastTarget = 0 < m_EffectFactor;
 			}
 		}
 
