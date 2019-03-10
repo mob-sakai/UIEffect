@@ -50,6 +50,9 @@ namespace Coffee.UIExtensions
 		[Header("Effect Player")]
 		[SerializeField] EffectPlayer m_Player;
 
+		[HideInInspector]
+		[SerializeField] bool m_ReverseAnimation = false;
+
 		#pragma warning disable 0414
 		[Obsolete][HideInInspector]
 		[SerializeField][Range(0.1f, 10)] float m_Duration = 1;
@@ -367,7 +370,20 @@ namespace Coffee.UIExtensions
 		protected override void OnEnable()
 		{
 			base.OnEnable();
-			_player.OnEnable(f => effectFactor = f);
+			if (m_ReverseAnimation)
+			{
+				_player.OnEnable((f) =>
+				{
+					effectFactor = 1f - f;
+				});
+			}
+			else
+			{
+				_player.OnEnable((f) =>
+				{
+					effectFactor = f;
+				});
+			}
 		}
 
 		protected override void OnDisable()
