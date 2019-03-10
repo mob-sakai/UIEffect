@@ -1,4 +1,4 @@
-﻿#if COM_UNITY_TEXTMESHPRO
+﻿#if TMP_PRESENT
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

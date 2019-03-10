@@ -388,7 +388,7 @@ PlayerSettings:
   webGLUseWasm: 0
   webGLCompressionFormat: 1
   scriptingDefineSymbols:
-    1: COM_UNITY_TEXTMESHPRO;UNITY_EDITOR
+    1: TMP_PRESENT
   platformArchitecture:
     iOS: 2
   scriptingBackend:

@@ -2,7 +2,7 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-#if COM_UNITY_TEXTMESHPRO
+#if TMP_PRESENT
 using System.Collections.Generic;
 using TMPro;
 #if UNITY_EDITOR
@@ -24,7 +24,7 @@ namespace Coffee.UIExtensions
 		//################################
 		// Constant or Static Members.
 		//################################
-#if COM_UNITY_TEXTMESHPRO
+#if TMP_PRESENT
 		static readonly List<Vector2> s_Uv0 = new List<Vector2> (4096);
 		static readonly List<Vector2> s_Uv1 = new List<Vector2> (4096);
 		#if UNITY_2017_1_OR_NEWER
@@ -58,7 +58,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public CanvasRenderer canvasRenderer { get { Initialize (); return _canvasRenderer; } }
 
-#if COM_UNITY_TEXTMESHPRO
+#if TMP_PRESENT
 		/// <summary>
 		/// The TMP_Text attached to this GameObject.
 		/// </summary>
@@ -84,7 +84,7 @@ namespace Coffee.UIExtensions
 		{
 			get
 			{
-#if COM_UNITY_TEXTMESHPRO
+#if TMP_PRESENT
 				return textMeshPro != null;
 #else
 				return false;
@@ -100,7 +100,7 @@ namespace Coffee.UIExtensions
 			get
 			{
 
-#if COM_UNITY_TEXTMESHPRO
+#if TMP_PRESENT
 				if (textMeshPro)
 				{
 					return textMeshPro.fontSharedMaterial;
@@ -118,7 +118,7 @@ namespace Coffee.UIExtensions
 			}
 			set
 			{
-#if COM_UNITY_TEXTMESHPRO
+#if TMP_PRESENT
 				if (textMeshPro)
 				{
 					textMeshPro.fontSharedMaterial = value;
@@ -137,7 +137,7 @@ namespace Coffee.UIExtensions
 			get
 			{
 
-#if COM_UNITY_TEXTMESHPRO
+#if TMP_PRESENT
 				if (textMeshPro)
 				{
 					return textMeshPro.fontSharedMaterials ?? s_EmptyMaterials;
@@ -177,7 +177,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public virtual void SetVerticesDirty ()
 		{
-#if COM_UNITY_TEXTMESHPRO
+#if TMP_PRESENT
 			if (textMeshPro)
 			{
 				foreach (var info in textMeshPro.textInfo.meshInfo)
@@ -219,7 +219,7 @@ namespace Coffee.UIExtensions
 
 		public void ShowTMProWarning (Shader shader, Shader mobileShader, Shader spriteShader, System.Action<Material> onCreatedMaterial)
 		{
-#if UNITY_EDITOR && COM_UNITY_TEXTMESHPRO
+#if UNITY_EDITOR && TMP_PRESENT
 			if(!textMeshPro || !textMeshPro.fontSharedMaterial)
 			{
 				return;
@@ -327,7 +327,7 @@ namespace Coffee.UIExtensions
 				_graphic = _graphic ?? GetComponent<Graphic> ();
 				_canvasRenderer = _canvasRenderer ?? GetComponent<CanvasRenderer> ();
 				_rectTransform = _rectTransform ?? GetComponent<RectTransform> ();
-#if COM_UNITY_TEXTMESHPRO
+#if TMP_PRESENT
 				_textMeshPro = _textMeshPro ?? GetComponent<TMP_Text> ();
 #endif
 			}
@@ -340,14 +340,14 @@ namespace Coffee.UIExtensions
 		{
 			_initialized = false;
 			SetVerticesDirty ();
-#if COM_UNITY_TEXTMESHPRO
+#if TMP_PRESENT
 			if (textMeshPro)
 			{
 				TMPro_EventManager.TEXT_CHANGED_EVENT.Add (OnTextChanged);
 			}
 #endif
 
-#if UNITY_EDITOR && COM_UNITY_TEXTMESHPRO
+#if UNITY_EDITOR && TMP_PRESENT
 			if (graphic && textMeshPro)
 			{
 				GraphicRebuildTracker.TrackGraphic (graphic);
@@ -372,12 +372,12 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		protected override void OnDisable ()
 		{
-#if COM_UNITY_TEXTMESHPRO
+#if TMP_PRESENT
 			TMPro_EventManager.TEXT_CHANGED_EVENT.Remove (OnTextChanged);
 #endif
 			SetVerticesDirty ();
 
-#if UNITY_EDITOR && COM_UNITY_TEXTMESHPRO
+#if UNITY_EDITOR && TMP_PRESENT
 			if (graphic && textMeshPro)
 			{
 				GraphicRebuildTracker.UnTrackGraphic (graphic);
@@ -391,7 +391,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		protected virtual void LateUpdate ()
 		{
-#if COM_UNITY_TEXTMESHPRO
+#if TMP_PRESENT
 			if (textMeshPro)
 			{
 				if (textMeshPro.havePropertiesChanged || _isTextMeshProActive != textMeshPro.isActiveAndEnabled)
@@ -431,7 +431,7 @@ namespace Coffee.UIExtensions
 		Graphic _graphic;
 		Material [] _materials = new Material [1];
 
-#if COM_UNITY_TEXTMESHPRO
+#if TMP_PRESENT
 		bool _isTextMeshProActive;
 		TMP_Text _textMeshPro;
 

@@ -200,7 +200,7 @@ namespace Coffee.UIExtensions
 				ptex.Register(this);
 			}
 
-			#if COM_UNITY_TEXTMESHPRO
+			#if TMP_PRESENT
 			if (isTMPro)
 			{
 				textMeshPro.onCullStateChanged.AddListener (OnCullStateChanged);
@@ -228,7 +228,7 @@ namespace Coffee.UIExtensions
 		}
 		#endif
 
-		#if COM_UNITY_TEXTMESHPRO
+		#if TMP_PRESENT
 		protected void OnCullStateChanged (bool state)
 		{
 			SetVerticesDirty ();
