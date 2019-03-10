@@ -81,6 +81,21 @@ namespace Coffee.UIExtensions
 		//################################
 		// Public Members.
 		//################################
+#if UNITY_2017_1_OR_NEWER
+		public override AdditionalCanvasShaderChannels requiredChannels
+		{
+			get
+			{
+				if (advancedBlur)
+				{
+					return isTMPro
+						? AdditionalCanvasShaderChannels.TexCoord1 | AdditionalCanvasShaderChannels.TexCoord2
+						: AdditionalCanvasShaderChannels.TexCoord1;
+				}
+				return AdditionalCanvasShaderChannels.None;
+			}
+		}
+#endif
 
 		/// <summary>
 		/// Effect factor between 0(no effect) and 1(complete effect).
@@ -190,6 +205,11 @@ namespace Coffee.UIExtensions
 		public override ParameterTexture ptex { get { return _ptex; } }
 
 		/// <summary>
+		/// Advanced blurring remove common artifacts in the blur effect for uGUI.
+		/// </summary>
+		public bool advancedBlur { get { return isTMPro ? (material && material.IsKeywordEnabled("EX")) : m_AdvancedBlur; } }
+
+		/// <summary>
 		/// Modifies the mesh.
 		/// </summary>
 		public override void ModifyMesh(VertexHelper vh)
@@ -201,14 +221,14 @@ namespace Coffee.UIExtensions
 
 			float normalizedIndex = ptex.GetNormalizedIndex(this);
 
-			if (m_BlurMode != BlurMode.None && m_AdvancedBlur)
+			if (m_BlurMode != BlurMode.None && advancedBlur)
 			{
 				vh.GetUIVertexStream(tempVerts);
 				vh.Clear();
 				var count = tempVerts.Count;
 
 				// Bundle
-				int bundleSize = targetGraphic is Text ? 6 : count;
+				int bundleSize = (targetGraphic is Text || isTMPro) ? 6 : count;
 				Rect posBounds = default(Rect);
 				Rect uvBounds = default(Rect);
 				Vector3 size = default(Vector3);
@@ -272,7 +292,17 @@ namespace Coffee.UIExtensions
 
 							vt.uv0 = new Vector2(Packer.ToFloat((uv0.x + 0.5f) / 2f, (uv0.y + 0.5f) / 2f), normalizedIndex);
 							vt.position = pos;
-							vt.uv1 = uvMask;
+
+							if (isTMPro)
+							{
+								#if UNITY_2017_1_OR_NEWER
+								vt.uv2 = uvMask;
+								#endif
+							}
+							else
+							{
+								vt.uv1 = uvMask;
+							}
 
 							tempVerts[i + j + k] = vt;
 						}
@@ -301,7 +331,10 @@ namespace Coffee.UIExtensions
 
 		protected override void SetDirty()
 		{
-			ptex.RegisterMaterial(m_EffectMaterial);
+			foreach (var m in materials)
+			{
+				ptex.RegisterMaterial (m);
+			}
 			ptex.SetData(this, 0, m_EffectFactor);	// param.x : effect factor
 			ptex.SetData(this, 1, m_ColorFactor);	// param.y : color factor
 			ptex.SetData(this, 2, m_BlurFactor);	// param.z : blur factor
@@ -314,6 +347,10 @@ namespace Coffee.UIExtensions
 		/// <returns>The material.</returns>
 		protected override Material GetMaterial()
 		{
+			if (isTMPro)
+			{
+				return null;
+			}
 			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_EffectMode, m_ColorMode, m_BlurMode, m_AdvancedBlur ? BlurEx.Ex : BlurEx.None);
 		}
 

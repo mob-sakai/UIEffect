@@ -50,6 +50,7 @@ namespace Coffee.UIExtensions
 		[FormerlySerializedAs("m_Highlight")]
 		[SerializeField][Range(0, 1)] float m_Gloss = 1;
 
+		[Header("Advanced Option")]
 		[Tooltip("The area for effect.")]
 		[SerializeField] protected EffectArea m_EffectArea;
 
@@ -222,8 +223,8 @@ namespace Coffee.UIExtensions
 			{
 				if (!Mathf.Approximately(m_Rotation, value))
 				{
-					m_Rotation = value;
-					SetDirty();
+					m_Rotation = _lastRotation = value;
+					SetVerticesDirty ();
 				}
 			}
 		}
@@ -239,7 +240,7 @@ namespace Coffee.UIExtensions
 				if (m_EffectArea != value)
 				{
 					m_EffectArea = value;
-					SetDirty();
+					SetVerticesDirty ();
 				}
 			}
 		}
@@ -247,11 +248,13 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Play shinning on enable.
 		/// </summary>
+		[System.Obsolete ("Use Play/Stop method instead")]
 		public bool play { get { return _player.play; } set { _player.play = value; } }
 
 		/// <summary>
 		/// Play shinning loop.
 		/// </summary>
+		[System.Obsolete]
 		public bool loop { get { return _player.loop; } set { _player.loop = value; } }
 
 		/// <summary>
@@ -262,6 +265,7 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Delay on loop.
 		/// </summary>
+		[System.Obsolete]
 		public float loopDelay { get { return _player.loopDelay; } set { _player.loopDelay = Mathf.Max(value, 0); } }
 
 		/// <summary>
@@ -296,6 +300,11 @@ namespace Coffee.UIExtensions
 #if UNITY_EDITOR
 		protected override Material GetMaterial()
 		{
+			if (isTMPro)
+			{
+				return null;
+			}
+
 			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName));
 		}
 
@@ -324,10 +333,11 @@ namespace Coffee.UIExtensions
 			if (!isActiveAndEnabled)
 				return;
 
+			bool isText = isTMPro || graphic is Text;
 			float normalizedIndex = ptex.GetNormalizedIndex(this);
 
 			// rect.
-			Rect rect = m_EffectArea.GetEffectArea(vh, graphic);
+			Rect rect = m_EffectArea.GetEffectArea (vh, rectTransform.rect);
 
 			// rotation.
 			float rad = m_Rotation * Mathf.Deg2Rad;
@@ -336,29 +346,17 @@ namespace Coffee.UIExtensions
 			dir = dir.normalized;
 
 			// Calculate vertex position.
-			bool effectEachCharacter = graphic is Text && m_EffectArea == EffectArea.Character;
-
 			UIVertex vertex = default(UIVertex);
 			Vector2 nomalizedPos;
 			Matrix2x3 localMatrix = new Matrix2x3(rect, dir.x, dir.y);	// Get local matrix.
 			for (int i = 0; i < vh.currentVertCount; i++)
 			{
 				vh.PopulateUIVertex(ref vertex, i);
+				m_EffectArea.GetNormalizedFactor (i, localMatrix, vertex.position, isText, out nomalizedPos);
 
-
-				// Normalize vertex position by local matrix.
-				if (effectEachCharacter)
-				{
-					nomalizedPos = localMatrix * splitedCharacterPosition[i % 4];
-				}
-				else
-				{
-					nomalizedPos = localMatrix * vertex.position;
-				}
-
-				vertex.uv0 = new Vector2(
-					Packer.ToFloat(vertex.uv0.x, vertex.uv0.y),
-					Packer.ToFloat(nomalizedPos.y, normalizedIndex)
+				vertex.uv0 = new Vector2 (
+					Packer.ToFloat (vertex.uv0.x, vertex.uv0.y),
+					Packer.ToFloat (nomalizedPos.y, normalizedIndex)
 				);
 
 				vh.SetUIVertex(vertex, i);
@@ -383,7 +381,10 @@ namespace Coffee.UIExtensions
 
 		protected override void SetDirty()
 		{
-			ptex.RegisterMaterial(targetGraphic.material);
+			foreach (var m in materials)
+			{
+				ptex.RegisterMaterial (m);
+			}
 			ptex.SetData(this, 0, m_EffectFactor);	// param1.x : location
 			ptex.SetData(this, 1, m_Width);		// param1.y : width
 			ptex.SetData(this, 2, m_Softness);	// param1.z : softness
@@ -393,7 +394,7 @@ namespace Coffee.UIExtensions
 			if (!Mathf.Approximately(_lastRotation, m_Rotation) && targetGraphic)
 			{
 				_lastRotation = m_Rotation;
-				targetGraphic.SetVerticesDirty();
+				SetVerticesDirty();
 			}
 		}
 

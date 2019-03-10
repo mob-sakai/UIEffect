@@ -57,6 +57,7 @@ Shader "UI/Hidden/UI-Effect-Dissolve"
 			#pragma fragment frag
 			#pragma target 2.0
 			
+			#define DISSOLVE 1
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
 			#pragma shader_feature __ ADD SUBTRACT FILL
 
@@ -87,8 +88,6 @@ Shader "UI/Hidden/UI-Effect-Dissolve"
 			fixed4 _TextureSampleAdd;
 			float4 _ClipRect;
 			sampler2D _MainTex;
-			sampler2D _NoiseTex;
-			sampler2D _ParamTex;
 			
 			v2f vert(appdata_t IN)
 			{
@@ -110,27 +109,16 @@ Shader "UI/Hidden/UI-Effect-Dissolve"
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
-				fixed4 param1 = tex2D(_ParamTex, float2(0.25, IN.param.z));
-                fixed location = param1.x;
-                fixed width = param1.y/4;
-                fixed softness = param1.z;
-				fixed3 dissolveColor = tex2D(_ParamTex, float2(0.75, IN.param.z)).rgb;
-				float cutout = tex2D(_NoiseTex, IN.param.xy).a;
-
 				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
-
 				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
-
-				float factor = cutout - location * ( 1 + width ) + width;
+				
+				// Dissolve
+				color = ApplyTransitionEffect(color, IN.param) * IN.color;
 
 				#ifdef UNITY_UI_ALPHACLIP
-				clip (min(color.a - 0.01, factor));
+				clip (color.a - 0.001);
 				#endif
-
-				fixed edgeLerp = step(factor, color.a) * saturate((width - factor)*16/ softness);
-				color = ApplyColorEffect(color, fixed4(dissolveColor, edgeLerp));
-				color.a *= saturate((factor)*32/ softness);
-
+				
 				return color;
 			}
 		ENDCG

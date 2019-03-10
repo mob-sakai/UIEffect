@@ -7,7 +7,7 @@ namespace Coffee.UIExtensions
 	/// UIGradient.
 	/// </summary>
 	[DisallowMultipleComponent]
-	[AddComponentMenu("UI/UIEffect/UIGradient",101)]
+	[AddComponentMenu("UI/MeshEffectForTextMeshPro/UIGradient", 101)]
 	public class UIGradient : BaseMeshEffect
 	{
 		//################################
@@ -90,7 +90,7 @@ namespace Coffee.UIExtensions
 				if (m_Direction != value)
 				{
 					m_Direction = value;
-					graphic.SetVerticesDirty();
+					SetVerticesDirty();
 				}
 			}
 		}
@@ -106,7 +106,7 @@ namespace Coffee.UIExtensions
 				if (m_Color1 != value)
 				{
 					m_Color1 = value;
-					graphic.SetVerticesDirty();
+					SetVerticesDirty();
 				}
 			}
 		}
@@ -122,7 +122,7 @@ namespace Coffee.UIExtensions
 				if (m_Color2 != value)
 				{
 					m_Color2 = value;
-					graphic.SetVerticesDirty();
+					SetVerticesDirty();
 				}
 			}
 		}
@@ -138,7 +138,7 @@ namespace Coffee.UIExtensions
 				if (m_Color3 != value)
 				{
 					m_Color3 = value;
-					graphic.SetVerticesDirty();
+					SetVerticesDirty();
 				}
 			}
 		}
@@ -154,7 +154,7 @@ namespace Coffee.UIExtensions
 				if (m_Color4 != value)
 				{
 					m_Color4 = value;
-					graphic.SetVerticesDirty();
+					SetVerticesDirty();
 				}
 			}
 		}
@@ -175,7 +175,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Rotation, value))
 				{
 					m_Rotation = value;
-					graphic.SetVerticesDirty();
+					SetVerticesDirty();
 				}
 			}
 		}
@@ -191,7 +191,7 @@ namespace Coffee.UIExtensions
 				if (m_Offset1 != value)
 				{
 					m_Offset1 = value;
-					graphic.SetVerticesDirty();
+					SetVerticesDirty();
 				}
 			}
 		}
@@ -208,7 +208,7 @@ namespace Coffee.UIExtensions
 				{
 					m_Offset1 = value.y;
 					m_Offset2 = value.x;
-					graphic.SetVerticesDirty();
+					SetVerticesDirty();
 				}
 			}
 		}
@@ -224,7 +224,7 @@ namespace Coffee.UIExtensions
 				if (m_GradientStyle != value)
 				{
 					m_GradientStyle = value;
-					graphic.SetVerticesDirty();
+					SetVerticesDirty();
 				}
 			}
 		}
@@ -240,7 +240,7 @@ namespace Coffee.UIExtensions
 				if (m_ColorSpace != value)
 				{
 					m_ColorSpace = value;
-					graphic.SetVerticesDirty();
+					SetVerticesDirty();
 				}
 			}
 		}
@@ -256,7 +256,7 @@ namespace Coffee.UIExtensions
 				if (m_IgnoreAspectRatio != value)
 				{
 					m_IgnoreAspectRatio = value;
-					graphic.SetVerticesDirty();
+					SetVerticesDirty();
 				}
 			}
 		}
@@ -273,7 +273,7 @@ namespace Coffee.UIExtensions
 			// Gradient space.
 			Rect rect = default(Rect);
 			UIVertex vertex = default(UIVertex);
-			if (!(graphic is Text) || m_GradientStyle == GradientStyle.Rect)
+			if (m_GradientStyle == GradientStyle.Rect)
 			{
 				// RectTransform.
 				rect = graphic.rectTransform.rect;

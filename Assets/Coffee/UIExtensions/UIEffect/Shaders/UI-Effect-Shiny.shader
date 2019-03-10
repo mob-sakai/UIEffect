@@ -84,7 +84,6 @@ Shader "UI/Hidden/UI-Effect-Shiny"
 			float4 _ClipRect;
 			sampler2D _MainTex;
 			float4 _MainTex_TexelSize;
-			sampler2D _ParamTex;
 
 			v2f vert(appdata_t IN)
 			{
@@ -104,30 +103,15 @@ Shader "UI/Hidden/UI-Effect-Shiny"
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
-				fixed nomalizedPos = IN.param.x;
-			
-				fixed4 param1 = tex2D(_ParamTex, float2(0.25, IN.param.y));
-				fixed4 param2 = tex2D(_ParamTex, float2(0.75, IN.param.y));
-                half location = param1.x * 2 - 0.5;
-                fixed width = param1.y;
-                fixed softness = param1.z;
-				fixed brightness = param1.w;
-				fixed gloss = param2.x;
-
-				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd);
-				fixed4 originAlpha = color.a;
-				color *= IN.color;
+				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
 				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
 
+				color = ApplyShinyEffect(color, IN.param);
+				
 				#ifdef UNITY_UI_ALPHACLIP
 				clip (color.a - 0.001);
 				#endif
-
-				half normalized = 1 - saturate(abs((nomalizedPos - location) / width));
-				half shinePower = smoothstep(0, softness*2, normalized);
-				half3 reflectColor = lerp(1, color.rgb * 10, gloss);
-
-				color.rgb += originAlpha * (shinePower / 2) * brightness * reflectColor;
+				
 				return color;
 			}
 		ENDCG

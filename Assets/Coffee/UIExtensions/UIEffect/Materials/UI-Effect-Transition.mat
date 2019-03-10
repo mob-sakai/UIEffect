@@ -116,6 +116,12 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
+        name: _NoiseTex
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
         name: _ParamTex
       second:
         m_Texture: {fileID: 0}
@@ -417,6 +423,12 @@ Material:
     m_TexEnvs:
     - first:
         name: _MainTex
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _NoiseTex
       second:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}

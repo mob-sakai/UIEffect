@@ -1,15 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Linq;
-using System.IO;
 
 namespace Coffee.UIExtensions
 {
 	/// <summary>
 	/// Abstract effect base for UI.
 	/// </summary>
-	[RequireComponent(typeof(Graphic))]
 	[DisallowMultipleComponent]
 	public abstract class UIEffectBase : BaseMeshEffect, IParameterTexture
 #if UNITY_EDITOR
@@ -55,6 +52,8 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		protected override void OnValidate()
 		{
+			base.OnValidate ();
+
 			var mat = GetMaterial();
 			if (m_EffectMaterial != mat)
 			{
@@ -63,8 +62,8 @@ namespace Coffee.UIExtensions
 			}
 
 			ModifyMaterial();
-			targetGraphic.SetVerticesDirty();
-			SetDirty();
+			SetVerticesDirty ();
+			SetDirty ();
 		}
 
 		public void OnBeforeSerialize()
@@ -124,12 +123,14 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		protected override void OnEnable()
 		{
+			base.OnEnable ();
+
 			if (ptex != null)
 			{
 				ptex.Register(this);
 			}
 			ModifyMaterial();
-			targetGraphic.SetVerticesDirty();
+			SetVerticesDirty();
 			SetDirty();
 		}
 
@@ -138,8 +139,10 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		protected override void OnDisable()
 		{
-			ModifyMaterial();
-			targetGraphic.SetVerticesDirty();
+			base.OnDisable ();
+
+			ModifyMaterial ();
+			SetVerticesDirty();
 			if (ptex != null)
 			{
 				ptex.Unregister(this);
@@ -151,7 +154,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		protected virtual void SetDirty()
 		{
-			targetGraphic.SetVerticesDirty();
+			SetVerticesDirty();
 		}
 
 		protected override void OnDidApplyAnimationProperties()
