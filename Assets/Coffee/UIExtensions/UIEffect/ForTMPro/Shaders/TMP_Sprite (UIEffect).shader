@@ -63,60 +63,10 @@
 			#pragma shader_feature __ FASTBLUR MEDIUMBLUR DETAILBLUR
 			#pragma shader_feature __ EX
             
+			#define UI_EFFECT 1
             #include "Assets/Coffee/UIExtensions/UIEffect/Shaders/UI-Effect.cginc"
-			
-			struct appdata_t
-			{
-				float4 vertex   : POSITION;
-				float4 color    : COLOR;
-				float2 texcoord : TEXCOORD0;
-			#if EX
-				float2	uvMask	: TEXCOORD2;
-			#endif
-			};
+			#include "UI-Effect-TMPro-Sprite.cginc"
 
-			struct v2f
-			{
-				float4 vertex   : SV_POSITION;
-				fixed4 color    : COLOR;
-				half2 texcoord  : TEXCOORD0;
-				float4 worldPosition : TEXCOORD1;
-                half   eParam	: TEXCOORD2;
-			#if EX
-				half4	uvMask	: TEXCOORD3;
-			#endif
-			};
-			
-			fixed4 _Color;
-			fixed4 _TextureSampleAdd;
-			float4 _ClipRect;
-
-			v2f vert(appdata_t IN)
-			{
-				v2f OUT;
-				OUT.worldPosition = IN.vertex;
-				OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
-
-				OUT.texcoord = UnpackToVec2(IN.texcoord.x) * 2 - 0.5;;
-				
-				#ifdef UNITY_HALF_TEXEL_OFFSET
-				OUT.vertex.xy += (_ScreenParams.zw-1.0)*float2(-1,1);
-				#endif
-				
-				OUT.color = IN.color * _Color;
-                
-                OUT.eParam = IN.texcoord.y;
-
-				#if EX
-				OUT.uvMask = half4(UnpackToVec2(IN.uvMask.x), UnpackToVec2(IN.uvMask.y));
-				#endif
-
-				return OUT;
-			}
-
-			sampler2D _MainTex;
-			float4 _MainTex_TexelSize;
-			
 			fixed4 frag(v2f IN) : SV_Target
 			{
 				fixed4 param = tex2D(_ParamTex, float2(0.5, IN.eParam));
