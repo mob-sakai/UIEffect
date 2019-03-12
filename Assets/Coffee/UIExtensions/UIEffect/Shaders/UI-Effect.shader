@@ -67,67 +67,70 @@ Shader "UI/Hidden/UI-Effect"
 
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
+
+			#define UI_EFFECT 1
 			#include "UI-Effect.cginc"
+			#include "UI-Effect-Sprite.cginc"
 
-			struct appdata_t
-			{
-				float4 vertex   : POSITION;
-				float4 color    : COLOR;
-				float2 texcoord : TEXCOORD0;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-
-				#if defined(EX)
-				float2 uvMask : TEXCOORD1;
-				#endif
-			};
-
-			struct v2f
-			{
-				float4 vertex   : SV_POSITION;
-				fixed4 color    : COLOR;
-				float2 texcoord  : TEXCOORD0;
-				float4 worldPosition : TEXCOORD1;
-				UNITY_VERTEX_OUTPUT_STEREO
-
-				half param : TEXCOORD2;
-
-				#if defined(EX)
-				half4 uvMask : TEXCOORD3;
-				#endif
-			};
-			
-			fixed4 _Color;
-			fixed4 _TextureSampleAdd;
-			float4 _ClipRect;
-			sampler2D _MainTex;
-			float4 _MainTex_TexelSize;
-			
-			v2f vert(appdata_t IN)
-			{
-				v2f OUT;
-				UNITY_SETUP_INSTANCE_ID(IN);
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
-				OUT.worldPosition = IN.vertex;
-				OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
-
-				OUT.color = IN.color * _Color;
-
-				OUT.texcoord = UnpackToVec2(IN.texcoord.x) * 2 - 0.5;
-
-				OUT.param = IN.texcoord.y;
-
-				#if defined(EX)
-				OUT.uvMask.xy = UnpackToVec2(IN.uvMask.x);
-				OUT.uvMask.zw = UnpackToVec2(IN.uvMask.y);
-				#endif
-				
-				return OUT;
-			}
+//			struct appdata_t
+//			{
+//				float4 vertex   : POSITION;
+//				float4 color    : COLOR;
+//				float2 texcoord : TEXCOORD0;
+//				UNITY_VERTEX_INPUT_INSTANCE_ID
+//
+//				#if defined(EX)
+//				float2 uvMask : TEXCOORD1;
+//				#endif
+//			};
+//
+//			struct v2f
+//			{
+//				float4 vertex   : SV_POSITION;
+//				fixed4 color    : COLOR;
+//				float2 texcoord  : TEXCOORD0;
+//				float4 worldPosition : TEXCOORD1;
+//				UNITY_VERTEX_OUTPUT_STEREO
+//
+//				half param : TEXCOORD2;
+//
+//				#if defined(EX)
+//				half4 uvMask : TEXCOORD3;
+//				#endif
+//			};
+//			
+//			fixed4 _Color;
+//			fixed4 _TextureSampleAdd;
+//			float4 _ClipRect;
+//			sampler2D _MainTex;
+//			float4 _MainTex_TexelSize;
+//			
+//			v2f vert(appdata_t IN)
+//			{
+//				v2f OUT;
+//				UNITY_SETUP_INSTANCE_ID(IN);
+//				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
+//				OUT.worldPosition = IN.vertex;
+//				OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
+//
+//				OUT.color = IN.color * _Color;
+//
+//				OUT.texcoord = UnpackToVec2(IN.texcoord.x) * 2 - 0.5;
+//
+//				OUT.param = IN.texcoord.y;
+//
+//				#if defined(EX)
+//				OUT.uvMask.xy = UnpackToVec2(IN.uvMask.x);
+//				OUT.uvMask.zw = UnpackToVec2(IN.uvMask.y);
+//				#endif
+//				
+//				return OUT;
+//			}
 
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
-				fixed4 param = tex2D(_ParamTex, float2(0.5, IN.param));
+				fixed4 param = tex2D(_ParamTex, float2(0.5, IN.eParam));
                 fixed effectFactor = param.x;
                 fixed colorFactor = param.y;
                 fixed blurFactor = param.z;

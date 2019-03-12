@@ -3,6 +3,7 @@
 	Properties
 	{
 		[PerRendererData] _MainTex ("Main Texture", 2D) = "white" {}
+		_Color ("Tint", Color) = (1,1,1,1)
 		
 		_StencilComp ("Stencil Comparison", Float) = 8
 		_Stencil ("Stencil ID", Float) = 0
@@ -53,48 +54,51 @@
 
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
+
+			#define UI_HSV_MODIFIER 1
 			#include "UI-Effect.cginc"
+			#include "UI-Effect-Sprite.cginc"
 
-			sampler2D _MainTex;
-			fixed4 _TextureSampleAdd;
-			float4 _ClipRect;
-			
-			struct appdata_t
-			{
-				float4 vertex	: POSITION;
-				float4 color	: COLOR;
-				float2 texcoord	: TEXCOORD0;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			struct v2f
-			{
-				float4 vertex	: SV_POSITION;
-				fixed4 color	: COLOR;
-				float2 texcoord	: TEXCOORD0;
-				float4 wpos		: TEXCOORD1;
-				UNITY_VERTEX_OUTPUT_STEREO
-
-				half param : TEXCOORD2;
-			};
-
-
-			v2f vert(appdata_t IN)
-			{
-				v2f OUT;
-				UNITY_SETUP_INSTANCE_ID(IN);
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
-				OUT.wpos = IN.vertex;
-
-				OUT.vertex = UnityObjectToClipPos(IN.vertex);
-				OUT.texcoord = IN.texcoord;
-				OUT.color = IN.color;
-
-				OUT.texcoord = UnpackToVec2(IN.texcoord.x);
-				OUT.param = IN.texcoord.y;
-				
-				return OUT;
-			}
+//			sampler2D _MainTex;
+//			fixed4 _TextureSampleAdd;
+//			float4 _ClipRect;
+//			
+//			struct appdata_t
+//			{
+//				float4 vertex	: POSITION;
+//				float4 color	: COLOR;
+//				float2 texcoord	: TEXCOORD0;
+//				UNITY_VERTEX_INPUT_INSTANCE_ID
+//			};
+//
+//			struct v2f
+//			{
+//				float4 vertex	: SV_POSITION;
+//				fixed4 color	: COLOR;
+//				float2 texcoord	: TEXCOORD0;
+//				float4 wpos		: TEXCOORD1;
+//				UNITY_VERTEX_OUTPUT_STEREO
+//
+//				half param : TEXCOORD2;
+//			};
+//
+//
+//			v2f vert(appdata_t IN)
+//			{
+//				v2f OUT;
+//				UNITY_SETUP_INSTANCE_ID(IN);
+//				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
+//				OUT.wpos = IN.vertex;
+//
+//				OUT.vertex = UnityObjectToClipPos(IN.vertex);
+//				OUT.texcoord = IN.texcoord;
+//				OUT.color = IN.color;
+//
+//				OUT.texcoord = UnpackToVec2(IN.texcoord.x);
+//				OUT.param = IN.texcoord.y;
+//				
+//				return OUT;
+//			}
 
 //			half3 rgb2hsv(half3 c) {
 //			  half4 K = half4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -122,13 +126,13 @@
 //                fixed3 hsvShift = param2.xyz - 0.5;
 
 				half4 color = tex2D(_MainTex, IN.texcoord);// + _TextureSampleAdd) * IN.color;
-				color.a *= UnityGet2DClipping(IN.wpos.xy, _ClipRect);
+				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
 
 				#ifdef UNITY_UI_ALPHACLIP
 				clip (color.a - 0.001);
 				#endif
 
-				color = ApplyHsvEffect(color, IN.param);
+				color = ApplyHsvEffect(color, IN.eParam);
 
 //				half3 hsv = rgb2hsv(color.rgb);
 //				half3 range = abs(hsv - targetHsv);

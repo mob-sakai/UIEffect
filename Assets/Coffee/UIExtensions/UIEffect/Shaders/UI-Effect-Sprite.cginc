@@ -1,5 +1,5 @@
-#ifndef UI_EFFECT_TMPRO_SPRITE_INCLUDED
-#define UI_EFFECT_TMPRO_SPRITE_INCLUDED
+#ifndef UI_EFFECT_SPRITE_INCLUDED
+#define UI_EFFECT_SPRITE_INCLUDED
 
 fixed4 _Color;
 fixed4 _TextureSampleAdd;
@@ -12,9 +12,12 @@ struct appdata_t
 	float4 vertex   : POSITION;
 	float4 color    : COLOR;
 	float2 texcoord : TEXCOORD0;
-#if EX
+#if EX && TMP_SPRITE
 	float2	uvMask	: TEXCOORD2;
+#elif EX
+	float2	uvMask	: TEXCOORD1;
 #endif
+	UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
 struct v2f
@@ -33,31 +36,14 @@ struct v2f
 #if EX
 	half4	uvMask	: TEXCOORD3;
 #endif
+	UNITY_VERTEX_OUTPUT_STEREO
 };
-
-
-//			v2f vert(appdata_t IN)
-//			{
-//				v2f OUT;
-//				OUT.worldPosition = IN.vertex;
-//				OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
-//
-//				OUT.texcoord = UnpackToVec2(IN.texcoord.x);
-//				
-//				#ifdef UNITY_HALF_TEXEL_OFFSET
-//				OUT.vertex.xy += (_ScreenParams.zw-1.0)*float2(-1,1);
-//				#endif
-//				
-//				OUT.color = IN.color * _Color;
-//                
-//                OUT.eParam = UnpackToVec3(IN.texcoord.y);
-//
-//				return OUT;
-//			}
 
 v2f vert(appdata_t IN)
 {
 	v2f OUT;
+	UNITY_SETUP_INSTANCE_ID(IN);
+	UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
 	OUT.worldPosition = IN.vertex;
 	OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
 
@@ -70,7 +56,7 @@ v2f vert(appdata_t IN)
 	#ifdef UNITY_HALF_TEXEL_OFFSET
 	OUT.vertex.xy += (_ScreenParams.zw-1.0)*float2(-1,1);
 	#endif
-	
+
 	OUT.color = IN.color * _Color;
 
 	#if UI_DISSOLVE || UI_TRANSITION
@@ -88,6 +74,4 @@ v2f vert(appdata_t IN)
 	return OUT;
 }
 
-
-
-#endif // UI_EFFECT_TMPRO_SPRITE_INCLUDED
+#endif // UI_EFFECT_SPRITE_INCLUDED

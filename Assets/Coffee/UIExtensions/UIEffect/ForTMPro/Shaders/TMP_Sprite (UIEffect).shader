@@ -63,9 +63,10 @@
 			#pragma shader_feature __ FASTBLUR MEDIUMBLUR DETAILBLUR
 			#pragma shader_feature __ EX
             
+			#define TMP_SPRITE 1
 			#define UI_EFFECT 1
             #include "Assets/Coffee/UIExtensions/UIEffect/Shaders/UI-Effect.cginc"
-			#include "UI-Effect-TMPro-Sprite.cginc"
+            #include "Assets/Coffee/UIExtensions/UIEffect/Shaders/UI-Effect-Sprite.cginc"
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
