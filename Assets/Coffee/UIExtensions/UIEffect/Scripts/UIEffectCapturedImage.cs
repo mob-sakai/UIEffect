@@ -85,9 +85,6 @@ namespace Coffee.UIExtensions
 		[Tooltip("Capture automatically on enable.")]
 		[SerializeField] bool m_CaptureOnEnable = false;
 
-		[Tooltip("Capture immediately.")]
-		[SerializeField] bool m_ImmediateCapturing = true;
-
 
 		//################################
 		// Public Members.
@@ -202,11 +199,6 @@ namespace Coffee.UIExtensions
 		/// Capture automatically on enable.
 		/// </summary>
 		public bool captureOnEnable { get { return m_CaptureOnEnable; } set { m_CaptureOnEnable = value; } }
-
-		/// <summary>
-		/// Capture immediately.
-		/// </summary>
-		public bool immediateCapturing { get { return m_ImmediateCapturing; } set { m_ImmediateCapturing = value; } }
 
 		/// <summary>
 		/// This function is called when the object becomes enabled and active.
@@ -405,20 +397,9 @@ namespace Coffee.UIExtensions
 				UpdateTexture();
 				return;
 			}
-			else
-			{
-				Graphics.ExecuteCommandBuffer(s_CommandBuffer);
-			}
 #endif
-			if (m_ImmediateCapturing)
-			{
-				UpdateTexture();
-			}
-			else
-			{
-				// Execute command buffer.
-				canvas.rootCanvas.GetComponent<CanvasScaler>().StartCoroutine(_CoUpdateTextureOnNextFrame());
-			}
+			// Execute command buffer.
+			canvas.rootCanvas.GetComponent<CanvasScaler> ().StartCoroutine (_CoUpdateTextureOnNextFrame ());
 		}
 
 		/// <summary>
