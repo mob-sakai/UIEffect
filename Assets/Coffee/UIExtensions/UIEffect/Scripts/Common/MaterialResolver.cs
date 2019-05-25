@@ -21,10 +21,17 @@ namespace Coffee.UIExtensions
 				return null;
 			}
 
+			Material mat = null;
+			string variantName = GetVariantName(shader, append);
+			if (s_MaterialMap.TryGetValue(variantName, out mat) && mat)
+			{
+				return mat;
+			}
+
 			string[] keywords = append.Where(x => 0 < (int)x)
 				.Select(x => x.ToString().ToUpper())
 				.ToArray();
-			Material mat = GetMaterial(shader, append);
+			mat = GetMaterial(shader, append);
 			if (mat)
 			{
 				if (!mat.shaderKeywords.OrderBy(x => x).SequenceEqual(keywords.OrderBy(x => x)))
@@ -39,7 +46,6 @@ namespace Coffee.UIExtensions
 				return mat;
 			}
 
-			string variantName = GetVariantName(shader, append);
 			if (s_MaterialMap.TryGetValue(variantName, out mat) && mat)
 			{
 				return mat;
