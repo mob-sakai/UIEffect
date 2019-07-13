@@ -36,7 +36,7 @@ namespace Coffee.UIExtensions.Editors
 			_spColorMode = serializedObject.FindProperty("m_ColorMode");
 			_spNoiseTexture = serializedObject.FindProperty("m_NoiseTexture");
 			_spKeepAspectRatio = serializedObject.FindProperty("m_KeepAspectRatio");
-			_spReverseAnimation = serializedObject.FindProperty("m_ReverseAnimation");
+			_spReverse = serializedObject.FindProperty("m_Reverse");
 			var player = serializedObject.FindProperty("m_Player");
 			_spPlay = player.FindPropertyRelative("play");
 			_spDuration = player.FindPropertyRelative("duration");
@@ -119,7 +119,7 @@ namespace Coffee.UIExtensions.Editors
 			EditorGUILayout.PropertyField(_spLoop);
 			EditorGUILayout.PropertyField(_spLoopDelay);
 			EditorGUILayout.PropertyField(_spUpdateMode);
-			EditorGUILayout.PropertyField(_spReverseAnimation);
+			EditorGUILayout.PropertyField(_spReverse);
 
 			// Debug.
 			using (new EditorGUI.DisabledGroupScope(!Application.isPlaying))
@@ -166,7 +166,7 @@ namespace Coffee.UIExtensions.Editors
 		SerializedProperty _spNoiseTexture;
 		SerializedProperty _spEffectArea;
 		SerializedProperty _spKeepAspectRatio;
-		SerializedProperty _spReverseAnimation;
+		SerializedProperty _spReverse;
 		SerializedProperty _spPlay;
 		SerializedProperty _spLoop;
 		SerializedProperty _spLoopDelay;
