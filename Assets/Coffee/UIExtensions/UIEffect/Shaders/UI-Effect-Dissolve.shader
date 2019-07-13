@@ -74,7 +74,7 @@ Shader "UI/Hidden/UI-Effect-Dissolve"
 				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
 				
 				// Dissolve
-				color = ApplyTransitionEffect(color, IN.eParam) * IN.color;
+				color = ApplyTransitionEffect(color, IN.eParam);
 
 				#ifdef UNITY_UI_ALPHACLIP
 				clip (color.a - 0.001);
