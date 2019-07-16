@@ -6,4 +6,4 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Coffee/UIExtensions/UIEffect/Demo/UIEffect_Demo.unity
+    path: Assets/UIEffect_Demo/UIEffect_Demo.unity
