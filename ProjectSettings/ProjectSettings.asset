@@ -99,6 +99,8 @@ PlayerSettings:
   uiUse16BitDepthBuffer: 0
   ignoreAlphaClear: 0
   xboxOneResolution: 0
+  xboxOneSResolution: 0
+  xboxOneXResolution: 3
   xboxOneMonoLoggingLevel: 0
   xboxOneLoggingLevel: 1
   videoMemoryForVertexBuffers: 0

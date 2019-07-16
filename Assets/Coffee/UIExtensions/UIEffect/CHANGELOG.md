@@ -1,5 +1,25 @@
 # Changelog
 
+## [v3.2.0](https://github.com/mob-sakai/UIEffect/tree/v3.2.0) (2019-07-17)
+
+[Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v3.1.0...v3.2.0)
+
+**Breaking changes:**
+
+- UICapturedImage: Immediate capturing option is removed as it does not work on many platforms [\#161](https://github.com/mob-sakai/UIEffect/issues/161)
+
+**Implemented enhancements:**
+
+- Add demo for Unity 2018+ and TMPro 1.2+ [\#166](https://github.com/mob-sakai/UIEffect/issues/166)
+
+**Fixed bugs:**
+
+- UIDissolve's "Reverse Play" option works only in OnEnable [\#183](https://github.com/mob-sakai/UIEffect/issues/183)
+- CanvasGroup.alpha does not affect [\#180](https://github.com/mob-sakai/UIEffect/issues/180)
+- UIShiny effect remain on screen after calling Stop\(\) [\#165](https://github.com/mob-sakai/UIEffect/issues/165)
+- Material caching is not working properly [\#163](https://github.com/mob-sakai/UIEffect/issues/163)
+- Add a null check to TMPro sprite asset material checking [\#176](https://github.com/mob-sakai/UIEffect/pull/176) ([Oskiii](https://github.com/Oskiii))
+
 ## [v3.1.0](https://github.com/mob-sakai/UIEffect/tree/v3.1.0) (2019-03-10)
 
 [Full Changelog](https://github.com/mob-sakai/UIEffect/compare/v3.0.4...v3.1.0)
