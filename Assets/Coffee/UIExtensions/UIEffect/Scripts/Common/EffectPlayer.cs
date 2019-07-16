@@ -98,9 +98,12 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Start playing.
 		/// </summary>
-		public void Play(Action<float> callback = null)
+		public void Play(bool reset, Action<float> callback = null)
 		{
-			_time = 0;
+			if (reset)
+			{
+				_time = 0;
+			}
 			play = true;
 			if (callback != null)
 			{
@@ -111,8 +114,16 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Stop playing.
 		/// </summary>
-		public void Stop()
+		public void Stop(bool reset)
 		{
+			if (reset)
+			{
+				_time = 0;
+				if (_callback != null)
+				{
+					_callback(_time);
+				}
+			}
 			play = false;
 		}
 

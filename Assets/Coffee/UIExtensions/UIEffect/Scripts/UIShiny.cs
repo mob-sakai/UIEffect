@@ -366,17 +366,17 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Play effect.
 		/// </summary>
-		public void Play()
+		public void Play(bool reset = true)
 		{
-			_player.Play();
+			_player.Play(reset);
 		}
 
 		/// <summary>
 		/// Stop effect.
 		/// </summary>
-		public void Stop()
+		public void Stop(bool reset = true)
 		{
-			_player.Stop();
+			_player.Stop(reset);
 		}
 
 		protected override void SetDirty()
