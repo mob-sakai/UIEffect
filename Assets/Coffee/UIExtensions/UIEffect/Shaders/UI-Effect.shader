@@ -60,10 +60,10 @@ Shader "UI/Hidden/UI-Effect"
 			
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
 
-			#pragma shader_feature __ GRAYSCALE SEPIA NEGA PIXEL 
-			#pragma shader_feature __ ADD SUBTRACT FILL
-			#pragma shader_feature __ FASTBLUR MEDIUMBLUR DETAILBLUR
-			#pragma shader_feature __ EX
+			#pragma multi_compile __ GRAYSCALE SEPIA NEGA PIXEL 
+			#pragma multi_compile __ ADD SUBTRACT FILL
+			#pragma multi_compile __ FASTBLUR MEDIUMBLUR DETAILBLUR
+			#pragma multi_compile __ EX
 
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"

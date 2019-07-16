@@ -60,7 +60,7 @@ Shader "UI/Hidden/UI-Effect-Transition"
 			#define ADD 1
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
 
-			#pragma shader_feature __ FADE CUTOFF DISSOLVE
+			#pragma multi_compile __ FADE CUTOFF DISSOLVE
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
 

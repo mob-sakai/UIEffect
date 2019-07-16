@@ -59,7 +59,7 @@ Shader "UI/Hidden/UI-Effect-Dissolve"
 			
 			#define DISSOLVE 1
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
-			#pragma shader_feature __ ADD SUBTRACT FILL
+			#pragma multi_compile __ ADD SUBTRACT FILL
 
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"

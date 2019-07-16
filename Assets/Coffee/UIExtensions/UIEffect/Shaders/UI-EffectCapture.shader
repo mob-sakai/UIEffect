@@ -21,8 +21,8 @@ Shader "UI/Hidden/UI-EffectCapture"
 			#pragma fragment frag
 			#pragma target 2.0
 
-			#pragma shader_feature __ GRAYSCALE SEPIA NEGA PIXEL
-			#pragma shader_feature __ ADD SUBTRACT FILL
+			#pragma multi_compile __ GRAYSCALE SEPIA NEGA PIXEL
+			#pragma multi_compile __ ADD SUBTRACT FILL
 			
 			#include "UnityCG.cginc"
 			#include "UI-Effect.cginc"
@@ -79,7 +79,7 @@ Shader "UI/Hidden/UI-EffectCapture"
 			#pragma fragment frag_blur
 			#pragma target 2.0
 
-			#pragma shader_feature __ FASTBLUR MEDIUMBLUR DETAILBLUR
+			#pragma multi_compile __ FASTBLUR MEDIUMBLUR DETAILBLUR
 			
 			#include "UnityCG.cginc"
 			#include "UI-Effect.cginc"
