@@ -195,19 +195,19 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Show transition.
 		/// </summary>
-		public void Show()
+		public void Show(bool reset = true)
 		{
 			_player.loop = false;
-			_player.Play(f => effectFactor = f);
+			_player.Play(reset, f => effectFactor = f);
 		}
 
 		/// <summary>
 		/// Hide transition.
 		/// </summary>
-		public void Hide()
+		public void Hide(bool reset = true)
 		{
 			_player.loop = false;
-			_player.Play(f => effectFactor = 1 - f);
+			_player.Play(reset, f => effectFactor = 1 - f);
 		}
 
 		/// <summary>

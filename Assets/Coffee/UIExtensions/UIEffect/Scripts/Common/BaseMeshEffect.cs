@@ -242,6 +242,11 @@ namespace Coffee.UIExtensions
 
 			// Is the sprite asset for dissolve?
 			TMP_SpriteAsset spriteAsset = textMeshPro.spriteAsset ?? TMP_Settings.GetSpriteAsset ();
+			// Sprite asset might not exist at all
+			if(spriteAsset == null) {
+				return;
+			}
+
 			m = spriteAsset.material;
 			if (m && m.shader != spriteShader && textMeshPro.richText && textMeshPro.text.Contains("<sprite="))
 			{

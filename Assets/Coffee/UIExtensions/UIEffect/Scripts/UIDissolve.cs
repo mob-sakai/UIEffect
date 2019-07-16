@@ -50,8 +50,9 @@ namespace Coffee.UIExtensions
 		[Header("Effect Player")]
 		[SerializeField] EffectPlayer m_Player;
 
-		[HideInInspector]
-		[SerializeField] bool m_ReverseAnimation = false;
+		[Tooltip("Reverse the dissolve effect.")]
+		[FormerlySerializedAs("m_ReverseAnimation")]
+		[SerializeField] bool m_Reverse = false;
 
 		#pragma warning disable 0414
 		[Obsolete][HideInInspector]
@@ -235,6 +236,11 @@ namespace Coffee.UIExtensions
 		public AnimatorUpdateMode updateMode { get { return _player.updateMode; } set { _player.updateMode = value; } }
 
 		/// <summary>
+		/// Reverse the dissolve effect.
+		/// </summary>
+		public bool reverse { get { return m_Reverse; } set { m_Reverse = value; } }
+
+		/// <summary>
 		/// Gets the parameter texture.
 		/// </summary>
 		public override ParameterTexture ptex { get { return _ptex; } }
@@ -348,17 +354,17 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Play effect.
 		/// </summary>
-		public void Play()
+		public void Play(bool reset = true)
 		{
-			_player.Play();
+			_player.Play(reset);
 		}
 
 		/// <summary>
 		/// Stop effect.
 		/// </summary>
-		public void Stop()
+		public void Stop(bool reset = true)
 		{
-			_player.Stop();
+			_player.Stop(reset);
 		}
 
 		//################################
@@ -370,20 +376,11 @@ namespace Coffee.UIExtensions
 		protected override void OnEnable()
 		{
 			base.OnEnable();
-			if (m_ReverseAnimation)
+
+			_player.OnEnable((f) =>
 			{
-				_player.OnEnable((f) =>
-				{
-					effectFactor = 1f - f;
-				});
-			}
-			else
-			{
-				_player.OnEnable((f) =>
-				{
-					effectFactor = f;
-				});
-			}
+				effectFactor = m_Reverse ? 1f - f : f;
+			});
 		}
 
 		protected override void OnDisable()
