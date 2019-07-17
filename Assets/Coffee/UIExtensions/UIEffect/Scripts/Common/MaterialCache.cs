@@ -4,6 +4,92 @@ using UnityEngine;
 
 namespace Coffee.UIExtensions
 {
+	public class MaterialEntity : System.IEquatable<ulong>, System.IEquatable<MaterialEntity>
+	{
+		public readonly ulong id;
+		public readonly Material material;
+		
+		public MaterialEntity(ulong id, Material material) {
+			this.id = id;
+			this.material = material;
+		}
+
+		public void Clear()
+		{
+			if(material)
+			{
+#if UNITY_EDITOR
+				if (!Application.isPlaying)
+					Object.DestroyImmediate(material, false);
+				else
+#endif
+				Object.Destroy(material);
+			}
+		}
+
+        public bool Equals(ulong other)
+        {
+			return this.id == other;
+        }
+
+        public bool Equals(MaterialEntity other)
+        {
+			return this.id == other.id;
+        }
+    }
+	public class MaterialRepository
+	{
+
+#if UNITY_EDITOR
+		[UnityEditor.InitializeOnLoadMethod]
+		static void ClearCache()
+		{
+			foreach (var cache in materialMap.Values)
+			{
+				cache.Clear();
+			}
+			materialMap.Clear();
+		}
+#endif
+		static MaterialEntity none = new MaterialEntity(0,null);
+
+		static Dictionary<ulong,MaterialEntity> materialMap = new Dictionary<ulong,MaterialEntity>();
+		static Dictionary<ulong,int> referenceMap = new Dictionary<ulong,int>();
+
+		public static MaterialEntity Register(string shaderId, ulong hash, System.Action<Material> onCreateMaterial)
+		{
+			MaterialEntity entity;
+			if(!materialMap.TryGetValue(hash, out entity))
+			{
+				Shader shader = Shader.Find(shaderId);
+				entity = new MaterialEntity(hash, new Material(shader));
+
+				onCreateMaterial(entity.material);
+				materialMap.Add(hash, entity);
+				referenceMap.Add(hash, 0);
+			}
+
+			referenceMap[hash]++;
+			return entity;
+		}
+
+		public static MaterialEntity Unregister(MaterialEntity cache)
+		{
+			if (!none.Equals(cache) )
+			{
+				ulong id = cache.id;
+				int count = --referenceMap[id];
+				if (count <= 0)
+				{
+					cache.Clear();
+					referenceMap.Remove(id);
+					materialMap.Remove(id);
+				}
+			}
+			return none;
+		}
+	}
+
 	public class MaterialCache
 	{
 		public ulong hash { get; private set; }
