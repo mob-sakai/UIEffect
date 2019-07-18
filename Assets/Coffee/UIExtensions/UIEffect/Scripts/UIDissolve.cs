@@ -245,46 +245,42 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public override ParameterTexture ptex { get { return _ptex; } }
 
+		protected ulong GetMaterialHash()
+		{
+			return (m_NoiseTexture ? (uint)m_NoiseTexture.GetInstanceID() : 0)
+				+ ((ulong)1 << 32)
+				+ ((ulong)(isTMPro ? 1 : 0) << 36)
+				+ ((ulong)m_ColorMode << 37);
+		}
+
+		protected string shaderNameX { get { return isTMPro ? "" : "UI/Hidden/UI-Effect-Dissolve"; } }
+
 		/// <summary>
 		/// Modifies the material.
 		/// </summary>
 		public override void ModifyMaterial()
 		{
-			if (isTMPro)
+			ulong hash = isActiveAndEnabled ? GetMaterialHash() : 0;
+			if(_materialEntity.id == hash)
 			{
+				material = _materialEntity.material;
 				return;
 			}
 
-			ulong hash = (m_NoiseTexture ? (uint)m_NoiseTexture.GetInstanceID() : 0) + ((ulong)1 << 32) + ((ulong)m_ColorMode << 36);
-			if (_materialCache != null && (_materialCache.hash != hash || !isActiveAndEnabled || !m_EffectMaterial))
-			{
-				MaterialCache.Unregister(_materialCache);
-				_materialCache = null;
-			}
+			MaterialRepository.Unregister(_materialEntity);
+			_materialEntity = MaterialRepository.Register(shaderNameX, hash, m =>{
+				m.SetVariant(m_ColorMode);
+				if(m_NoiseTexture)
+				{
+					m.material.SetTexture("_NoiseTex", m_NoiseTexture);
+				}
+			});
 
-			if (!isActiveAndEnabled || !m_EffectMaterial)
+			if(isTMPro)
 			{
-				material = null;
+
 			}
-			else if (!m_NoiseTexture)
-			{
-				material = m_EffectMaterial;
-			}
-			else if (_materialCache != null && _materialCache.hash == hash)
-			{
-				material = _materialCache.material;
-			}
-			else
-			{
-				_materialCache = MaterialCache.Register(hash, m_NoiseTexture, () =>
-					{
-						var mat = new Material(m_EffectMaterial);
-						mat.name += "_" + m_NoiseTexture.name;
-						mat.SetTexture("_NoiseTex", m_NoiseTexture);
-						return mat;
-					});
-				material = _materialCache.material;
-			}
+			material = _materialEntity.material;
 		}
 
 		/// <summary>
@@ -316,22 +312,6 @@ namespace Coffee.UIExtensions
 					Packer.ToFloat(vertex.uv0.x, vertex.uv0.y),
 					Packer.ToFloat(x, y, normalizedIndex)
 				);
-//				if(!isTMPro)
-//				{
-//					vertex.uv0 = new Vector2(
-//						Packer.ToFloat(vertex.uv0.x, vertex.uv0.y),
-//						Packer.ToFloat(x, y, normalizedIndex)
-//					);
-//				}
-//				#if UNITY_5_6_OR_NEWER
-//				else
-//				{
-//					vertex.uv2 = new Vector2 (
-//						Packer.ToFloat (x, y, normalizedIndex),
-//						0
-//					);
-//				}
-//				#endif
 
 				vh.SetUIVertex(vertex, i);
 			}
@@ -386,8 +366,7 @@ namespace Coffee.UIExtensions
 		protected override void OnDisable()
 		{
 			base.OnDisable ();
-			MaterialCache.Unregister(_materialCache);
-			_materialCache = null;
+			_materialEntity = MaterialRepository.Unregister(_materialEntity);
 			_player.OnDisable();
 		}
 
@@ -398,12 +377,7 @@ namespace Coffee.UIExtensions
 		/// <returns>The material.</returns>
 		protected override Material GetMaterial()
 		{
-			if (isTMPro)
-			{
-				return null;
-			}
-
-			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_ColorMode);
+			return _materialEntity.material;
 		}
 
 		#pragma warning disable 0612
@@ -419,14 +393,14 @@ namespace Coffee.UIExtensions
 				_player.updateMode = m_UpdateMode;
 			}
 		}
-		#pragma warning restore 0612
+
+#pragma warning restore 0612
 #endif
 
-		//################################
-		// Private Members.
-		//################################
-		MaterialCache _materialCache = null;
-
+        //################################
+        // Private Members.
+        //################################
+        MaterialEntity _materialEntity = MaterialEntity.none;
 		EffectPlayer _player{ get { return m_Player ?? (m_Player = new EffectPlayer()); } }
 	}
 }
