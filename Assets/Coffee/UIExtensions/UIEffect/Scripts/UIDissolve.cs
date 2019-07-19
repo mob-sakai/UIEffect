@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.UI;
 using UnityEngine.Serialization;
 
@@ -253,23 +254,61 @@ namespace Coffee.UIExtensions
 				+ ((ulong)m_ColorMode << 37);
 		}
 
-		protected string shaderNameX { get { return isTMPro ? "" : "UI/Hidden/UI-Effect-Dissolve"; } }
+		protected Hash128 GetMaterialHashX()
+		{
+			if(!isActiveAndEnabled)
+				return new Hash128();
+
+#if TMP_PRESENT
+			if (isTMPro)
+			{
+				var t = textMeshPro;
+
+				return new Hash128(
+					(uint)(1 + ((int)m_ColorMode << 5)),
+					(m_NoiseTexture ? (uint)m_NoiseTexture.GetInstanceID() : 0),
+					1,
+					(uint)t.font.materialHashCode
+				);
+			}
+			else
+#endif
+			return new Hash128(
+				(uint)(1 + ((int)m_ColorMode << 5)),
+				(m_NoiseTexture ? (uint)m_NoiseTexture.GetInstanceID() : 0),
+				0,
+				0
+			);
+		}
+
+		protected string shaderNameX { get { return isTMPro ? "TextMeshPro/Distance Field (UIDissolve)" : "UI/Hidden/UI-Effect-Dissolve"; } }
 
 		/// <summary>
 		/// Modifies the material.
 		/// </summary>
+		[ContextMenu("ModifyMaterial")]
 		public override void ModifyMaterial()
 		{
-			ulong hash = isActiveAndEnabled ? GetMaterialHash() : 0;
+			Hash128 hash = GetMaterialHashX();
+			// Debug.LogFormat(this, "ModifyMaterial {0}", hash);
 			if(_materialEntity.id == hash)
 			{
-				material = _materialEntity.material;
+				//material = _materialEntity.material;
 				return;
 			}
 
 			MaterialRepository.Unregister(_materialEntity);
-			_materialEntity = MaterialRepository.Register(shaderNameX, hash, m =>{
+			_materialEntity = MaterialRepository.Register(textMeshPro.font.material, hash, m =>{
+				Debug.LogFormat(this, "Register {0}, {1}", hash, shaderNameX, targetGraphic.material);
+				m.material.shader = Shader.Find(shaderNameX);
+				m.material.name = "hogehoge";
+				m.material.hideFlags = HideFlags.HideAndDontSave;
+				// Debug.LogFormat(this, "Register {0} -> {1}", textMeshPro.font.material, m.material);
+				// m.material.CopyPropertiesFromMaterial(textMeshPro.font.material);
+				// m.SetVariant(m_ColorMode);
 				m.SetVariant(m_ColorMode);
+
+
 				if(m_NoiseTexture)
 				{
 					m.material.SetTexture("_NoiseTex", m_NoiseTexture);
@@ -278,9 +317,17 @@ namespace Coffee.UIExtensions
 
 			if(isTMPro)
 			{
+				material = hash == new Hash128()
+					? textMeshPro.font.material
+					: _materialEntity.material;
 
 			}
-			material = _materialEntity.material;
+			else
+			{
+				material = _materialEntity.material;
+
+			}
+			
 		}
 
 		/// <summary>

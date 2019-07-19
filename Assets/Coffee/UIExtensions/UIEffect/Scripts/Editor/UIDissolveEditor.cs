@@ -57,28 +57,6 @@ namespace Coffee.UIExtensions.Editors
 		/// </summary>
 		public override void OnInspectorGUI()
 		{
-			foreach (var d in targets.Cast<UIDissolve> ())
-			{
-				var mat = d.material;
-				if (d.isTMPro && mat && mat.HasProperty(s_NoiseTexId))
-				{
-					ColorMode colorMode =
-								mat.IsKeywordEnabled ("ADD") ? ColorMode.Add
-										: mat.IsKeywordEnabled ("SUBTRACT") ? ColorMode.Subtract
-										: mat.IsKeywordEnabled ("FILL") ? ColorMode.Fill
-										: ColorMode.Multiply;
-
-					Texture noiseTexture = mat.GetTexture(s_NoiseTexId);
-
-					if (d.colorMode != colorMode || d.noiseTexture != noiseTexture)
-					{
-						var so = new SerializedObject (d);
-						so.FindProperty ("m_ColorMode").intValue = (int)colorMode;
-						so.FindProperty ("m_NoiseTexture").objectReferenceValue = noiseTexture;
-						so.ApplyModifiedProperties ();
-					}
-				}
-			}
 
 			serializedObject.Update();
 
@@ -98,7 +76,6 @@ namespace Coffee.UIExtensions.Editors
 			EditorGUILayout.PropertyField(_spColor);
 
 			bool isAnyTMPro = targets.Cast<UIDissolve>().Any(x => x.isTMPro);
-			using (new EditorGUI.DisabledGroupScope (isAnyTMPro))
 			{
 				EditorGUILayout.PropertyField (_spColorMode);
 				EditorGUILayout.PropertyField (_spNoiseTexture);

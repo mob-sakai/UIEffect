@@ -121,7 +121,7 @@ namespace Coffee.UIExtensions
 #if TMP_PRESENT
 				if (textMeshPro)
 				{
-					textMeshPro.fontSharedMaterial = value;
+					textMeshPro.fontMaterial = value;
 				}
 				else
 #endif

@@ -8,13 +8,13 @@ namespace Coffee.UIExtensions
 {
 	public class MaterialEntity
 	{
-		public static readonly MaterialEntity none = new MaterialEntity(0,null);
+		public static readonly MaterialEntity none = new MaterialEntity(new Hash128() ,null);
 		static readonly StringBuilder s_StringBuilder = new StringBuilder();
 
-		public readonly ulong id;
+		public readonly Hash128 id;
 		public readonly Material material;
 		
-		public MaterialEntity(ulong id, Material material) {
+		public MaterialEntity(Hash128 id, Material material) {
 			this.id = id;
 			this.material = material;
 		}
@@ -37,6 +37,7 @@ namespace Coffee.UIExtensions
 			// Set shader keywords as variants
 			var keywords = variants.Where(x => 0 < (int)x)
 				.Select(x => x.ToString().ToUpper())
+				.Concat(material.shaderKeywords)
 				.ToArray();
 			material.shaderKeywords = keywords;
 
@@ -64,6 +65,7 @@ namespace Coffee.UIExtensions
 
 #if UNITY_EDITOR
 		[UnityEditor.InitializeOnLoadMethod]
+		[UnityEditor.MenuItem("Test/Clear")]
 		static void ClearCache()
 		{
 			foreach (var cache in materialMap.Values)
@@ -73,12 +75,13 @@ namespace Coffee.UIExtensions
 			materialMap.Clear();
 		}
 #endif
-		static MaterialEntity none = new MaterialEntity(0,null);
 
-		static Dictionary<ulong,MaterialEntity> materialMap = new Dictionary<ulong,MaterialEntity>();
-		static Dictionary<ulong,int> referenceMap = new Dictionary<ulong,int>();
+		static MaterialEntity none = new MaterialEntity(new Hash128(),null);
 
-		public static MaterialEntity Register(string shaderId, ulong hash, System.Action<MaterialEntity> onCreateMaterial)
+		static Dictionary<Hash128,MaterialEntity> materialMap = new Dictionary<Hash128,MaterialEntity>();
+		static Dictionary<Hash128,int> referenceMap = new Dictionary<Hash128,int>();
+
+		public static MaterialEntity Register(string shaderName, Hash128 hash, System.Action<MaterialEntity> onCreateMaterial)
 		{
 			if (none.id == hash)
 				return none;
@@ -86,9 +89,8 @@ namespace Coffee.UIExtensions
 			MaterialEntity entity;
 			if(!materialMap.TryGetValue(hash, out entity))
 			{
-				Shader shader = Shader.Find(shaderId);
-				entity = new MaterialEntity(hash, new Material(shader));
-
+				entity = new MaterialEntity(hash, new Material(Shader.Find(shaderName)));
+				// entity.material.CopyPropertiesFromMaterial(material);
 				onCreateMaterial(entity);
 				materialMap.Add(hash, entity);
 				referenceMap.Add(hash, 0);
@@ -98,12 +100,33 @@ namespace Coffee.UIExtensions
 			return entity;
 		}
 
+
+		public static MaterialEntity Register(Material material, Hash128 hash, System.Action<MaterialEntity> onCreateMaterial)
+		{
+			if (none.id == hash)
+				return none;
+
+			MaterialEntity entity;
+			if(!materialMap.TryGetValue(hash, out entity))
+			{
+				entity = new MaterialEntity(hash, new Material(material));
+				// entity.material.CopyPropertiesFromMaterial(material);
+				onCreateMaterial(entity);
+				materialMap.Add(hash, entity);
+				referenceMap.Add(hash, 0);
+			}
+
+			referenceMap[hash]++;
+			return entity;
+		}
+
+
 		public static MaterialEntity Unregister(MaterialEntity cache)
 		{
 			if (none.id == cache.id)
 				return none;
 			
-			ulong id = cache.id;
+			Hash128 id = cache.id;
 			int count = --referenceMap[id];
 			if (count <= 0)
 			{

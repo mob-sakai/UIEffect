@@ -115,9 +115,9 @@ SubShader {
 		#pragma target 3.0
 		#pragma vertex VertShader
 		#pragma fragment frag
-		#pragma shader_feature __ BEVEL_ON
-		#pragma shader_feature __ UNDERLAY_ON UNDERLAY_INNER
-		#pragma shader_feature __ GLOW_ON
+		#pragma multi_compile __ BEVEL_ON
+		#pragma multi_compile __ UNDERLAY_ON UNDERLAY_INNER
+		#pragma multi_compile __ GLOW_ON
 
 		#pragma multi_compile __ UNITY_UI_CLIP_RECT
 		#pragma multi_compile __ UNITY_UI_ALPHACLIP
@@ -132,11 +132,12 @@ SubShader {
 		#define DISSOLVE 1
 		#include "Assets/Coffee/UIExtensions/UIEffect/Shaders/UI-Effect.cginc"
 		#include "UI-Effect-TMPro.cginc"
-		#pragma shader_feature __ ADD SUBTRACT FILL
+		#pragma multi_compile __ ADD SUBTRACT FILL
 
 		fixed4 frag(pixel_t IN) : SV_Target
 		{
 			half4 color = PixShader(IN);
+			color.rgb *= IN.color.rgb;
 
 			// Dissolve
 			color = ApplyTransitionEffect(color, IN.eParam);
@@ -153,5 +154,6 @@ SubShader {
 }
 
 Fallback "TextMeshPro/Mobile/Distance Field (UIDissolve)"
-CustomEditor "Coffee.UIEffect.Editors.TMP_SDFShaderGUI"
+// CustomEditor "Coffee.UIEffect.Editors.TMP_SDFShaderGUI"
+// CustomEditor "TMPro.EditorUtilities.TMP_SDFShaderGUI"
 }
