@@ -296,6 +296,12 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public void Capture()
 		{
+			// Capture only once in a frame.
+			if (m_IsCapturing)
+			{
+				return;
+			}
+			m_IsCapturing = true;
 			// Fit to screen.
 			var rootCanvas = canvas.rootCanvas;
 			if (m_FitToScreen)
@@ -481,6 +487,7 @@ namespace Coffee.UIExtensions
 		static int s_EffectId2;
 		static int s_EffectFactorId;
 		static int s_ColorFactorId;
+		static bool m_IsCapturing = false;
 		static CommandBuffer s_CommandBuffer;
 
 		/// <summary>
@@ -546,6 +553,8 @@ namespace Coffee.UIExtensions
 			_Release(false);
 			texture = capturedTexture;
 			_SetDirty();
+			// Capture completed.
+			m_IsCapturing = false;
 		}
 
 	}
