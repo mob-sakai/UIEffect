@@ -80,7 +80,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_EffectFactor, value))
 				{
 					m_EffectFactor = value;
-					SetDirty();
+					SetEffectDirty();
 				}
 			}
 		}
@@ -97,7 +97,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_EffectFactor, value))
 				{
 					m_EffectFactor = value;
-					SetDirty();
+					SetEffectDirty();
 				}
 			}
 		}
@@ -114,7 +114,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Width, value))
 				{
 					m_Width = value;
-					SetDirty();
+					SetEffectDirty();
 				}
 			}
 		}
@@ -131,7 +131,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Softness, value))
 				{
 					m_Softness = value;
-					SetDirty();
+					SetEffectDirty();
 				}
 			}
 		}
@@ -147,7 +147,7 @@ namespace Coffee.UIExtensions
 				if (m_Color != value)
 				{
 					m_Color = value;
-					SetDirty();
+					SetEffectDirty();
 				}
 			}
 		}
@@ -364,7 +364,7 @@ namespace Coffee.UIExtensions
 			}
 		}
 
-		protected override void SetDirty()
+		protected override void SetEffectDirty()
 		{
 			foreach(var m in materials)
 			{

@@ -77,7 +77,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_EffectFactor, value))
 				{
 					m_EffectFactor = value;
-					SetDirty();
+					SetEffectDirty ();
 				}
 			}
 		}
@@ -139,7 +139,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_DissolveWidth, value))
 				{
 					m_DissolveWidth = value;
-					SetDirty();
+					SetEffectDirty ();
 				}
 			}
 		}
@@ -156,7 +156,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_DissolveSoftness, value))
 				{
 					m_DissolveSoftness = value;
-					SetDirty();
+					SetEffectDirty ();
 				}
 			}
 		}
@@ -172,7 +172,7 @@ namespace Coffee.UIExtensions
 				if (m_DissolveColor != value)
 				{
 					m_DissolveColor = value;
-					SetDirty();
+					SetEffectDirty ();
 				}
 			}
 		}
@@ -312,7 +312,7 @@ namespace Coffee.UIExtensions
 			_player.OnDisable();
 		}
 
-		protected override void SetDirty()
+		protected override void SetEffectDirty ()
 		{
 			foreach (var m in materials)
 			{

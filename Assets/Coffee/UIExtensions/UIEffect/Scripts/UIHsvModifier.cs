@@ -56,7 +56,7 @@ namespace Coffee.UIExtensions
 				if (m_TargetColor != value)
 				{
 					m_TargetColor = value;
-					SetDirty();
+					SetEffectDirty ();
 				}
 			}
 		}
@@ -73,7 +73,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Range, value))
 				{
 					m_Range = value;
-					SetDirty();
+					SetEffectDirty ();
 				}
 			}
 		}
@@ -90,7 +90,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Saturation, value))
 				{
 					m_Saturation = value;
-					SetDirty();
+					SetEffectDirty ();
 				}
 			}
 		}
@@ -107,7 +107,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Value, value))
 				{
 					m_Value = value;
-					SetDirty();
+					SetEffectDirty ();
 				}
 			}
 		}
@@ -124,7 +124,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Hue, value))
 				{
 					m_Hue = value;
-					SetDirty();
+					SetEffectDirty ();
 				}
 			}
 		}
@@ -168,7 +168,7 @@ namespace Coffee.UIExtensions
 			}
 		}
 
-		protected override void SetDirty()
+		protected override void SetEffectDirty ()
 		{
 			float h, s, v;
 			Color.RGBToHSV(m_TargetColor, out h, out s, out v);

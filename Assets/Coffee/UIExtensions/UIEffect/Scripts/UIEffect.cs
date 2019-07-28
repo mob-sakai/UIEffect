@@ -107,7 +107,7 @@ namespace Coffee.UIExtensions
 			set
 			{
 				m_EffectFactor = Mathf.Clamp(value, 0, 1);
-				SetDirty();
+				SetEffectDirty ();
 			}
 		}
 
@@ -120,7 +120,7 @@ namespace Coffee.UIExtensions
 			set
 			{
 				m_EffectFactor = Mathf.Clamp(value, 0, 1);
-				SetDirty();
+				SetEffectDirty ();
 			}
 		}
 
@@ -133,7 +133,7 @@ namespace Coffee.UIExtensions
 			set
 			{
 				m_ColorFactor = Mathf.Clamp(value, 0, 1);
-				SetDirty();
+				SetEffectDirty ();
 			}
 		}
 
@@ -147,7 +147,7 @@ namespace Coffee.UIExtensions
 			set
 			{
 				m_BlurFactor = Mathf.Clamp(value, 0, 1);
-				SetDirty();
+				SetEffectDirty ();
 			}
 		}
 
@@ -161,7 +161,7 @@ namespace Coffee.UIExtensions
 			set
 			{
 				m_BlurFactor = Mathf.Clamp(value, 0, 1);
-				SetDirty();
+				SetEffectDirty ();
 			}
 		}
 
@@ -195,7 +195,7 @@ namespace Coffee.UIExtensions
 			set
 			{
 				graphic.color = value;
-				SetDirty();
+				SetEffectDirty ();
 			}
 		}
 
@@ -329,7 +329,7 @@ namespace Coffee.UIExtensions
 			}
 		}
 
-		protected override void SetDirty()
+		protected override void SetEffectDirty ()
 		{
 			foreach (var m in materials)
 			{

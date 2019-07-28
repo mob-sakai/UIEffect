@@ -63,7 +63,7 @@ namespace Coffee.UIExtensions
 
 			ModifyMaterial();
 			SetVerticesDirty ();
-			SetDirty ();
+			SetEffectDirty ();
 		}
 
 		public void OnBeforeSerialize()
@@ -131,7 +131,7 @@ namespace Coffee.UIExtensions
 			}
 			ModifyMaterial();
 			SetVerticesDirty();
-			SetDirty();
+			SetEffectDirty();
 		}
 
 		/// <summary>
@@ -152,14 +152,14 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Mark the UIEffect as dirty.
 		/// </summary>
-		protected virtual void SetDirty()
+		protected virtual void SetEffectDirty()
 		{
 			SetVerticesDirty();
 		}
 
 		protected override void OnDidApplyAnimationProperties()
 		{
-			SetDirty();
+			SetEffectDirty();
 		}
 	}
 }
