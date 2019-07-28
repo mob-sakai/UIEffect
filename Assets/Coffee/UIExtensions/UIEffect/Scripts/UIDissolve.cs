@@ -3,6 +3,9 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
 using UnityEngine.Serialization;
+using System.Text;
+using System.Linq;
+using System.IO;
 
 namespace Coffee.UIExtensions
 {
@@ -10,12 +13,11 @@ namespace Coffee.UIExtensions
 	/// Dissolve effect for uGUI.
 	/// </summary>
 	[AddComponentMenu("UI/UIEffect/UIDissolve", 3)]
-	public class UIDissolve : UIEffectBase
+	public class UIDissolve : UIEffectBase, IMaterialModifier
 	{
 		//################################
 		// Constant or Static Members.
 		//################################
-		public const string shaderName = "UI/Hidden/UI-Effect-Dissolve";
 		static readonly ParameterTexture _ptex = new ParameterTexture(8, 128, "_ParamTex");
 
 
@@ -165,7 +167,7 @@ namespace Coffee.UIExtensions
 					m_NoiseTexture = value;
 					if (graphic)
 					{
-						ModifyMaterial();
+						graphic.SetMaterialDirty();
 					}
 				}
 			}
@@ -206,7 +208,21 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Color effect mode.
 		/// </summary>
-		public ColorMode colorMode { get { return m_ColorMode; } }
+		public ColorMode colorMode
+		{
+			get { return m_ColorMode; }
+			set
+			{
+				if (m_ColorMode != value)
+				{
+					m_ColorMode = value;
+					if (graphic)
+					{
+						graphic.SetMaterialDirty();
+					}
+				}
+			}
+		}
 
 		/// <summary>
 		/// Play effect on enable.
@@ -246,42 +262,73 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public override ParameterTexture ptex { get { return _ptex; } }
 
-		protected ulong GetMaterialHash()
+		public override Hash128 GetMaterialHash(Material material)
 		{
-			return (m_NoiseTexture ? (uint)m_NoiseTexture.GetInstanceID() : 0)
-				+ ((ulong)1 << 32)
-				+ ((ulong)(isTMPro ? 1 : 0) << 36)
-				+ ((ulong)m_ColorMode << 37);
-		}
-
-		protected Hash128 GetMaterialHashX()
-		{
-			if(!isActiveAndEnabled)
+			if(!isActiveAndEnabled || !material || !material.shader)
 				return new Hash128();
 
-#if TMP_PRESENT
-			if (isTMPro)
-			{
-				var t = textMeshPro;
+			uint materialId = (uint)material.GetInstanceID();
+			uint shaderId = 0 + (uint)(isTMPro ? isTMProMobile (material) ? 2 : 1 : 0);
 
-				return new Hash128(
-					(uint)(1 + ((int)m_ColorMode << 5)),
-					(m_NoiseTexture ? (uint)m_NoiseTexture.GetInstanceID() : 0),
-					1,
-					(uint)t.font.materialHashCode
-				);
+			string materialShaderName = material.shader.name;
+			if (materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
+			{
+				shaderId = 0 + 2;
+			}
+			else if (materialShaderName.Equals ("TextMeshPro/Sprite", StringComparison.Ordinal))
+			{
+				shaderId = 0 + 0;
+			}
+			else if (materialShaderName.StartsWith ("TextMeshPro/", StringComparison.Ordinal))
+			{
+				shaderId = 0 + 1;
 			}
 			else
-#endif
+			{
+				shaderId = 0 + 0;
+			}
+
+
+			uint shaderVariantId = (uint)((int)m_ColorMode << 5);
+			uint resourceId = m_NoiseTexture ? (uint)m_NoiseTexture.GetInstanceID() : 0;
 			return new Hash128(
-				(uint)(1 + ((int)m_ColorMode << 5)),
-				(m_NoiseTexture ? (uint)m_NoiseTexture.GetInstanceID() : 0),
-				0,
-				0
-			);
+					materialId,
+					shaderId + shaderVariantId,
+					resourceId,
+					0
+				);
 		}
 
-		protected string shaderNameX { get { return isTMPro ? "TextMeshPro/Distance Field (UIDissolve)" : "UI/Hidden/UI-Effect-Dissolve"; } }
+		public override void ModifyMaterial(Material material)
+		{
+			Debug.LogFormat(this, $"ModifyMaterial {material}");
+
+			string materialShaderName = material.shader.name;
+			if(materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("TextMeshPro/Mobile/Distance Field (UIDissolve)");
+			}
+			else if (materialShaderName.Equals ("TextMeshPro/Sprite", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("UI/Hidden/UI-Effect-Dissolve");
+			}
+			else if (materialShaderName.StartsWith ("TextMeshPro/", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("TextMeshPro/Distance Field (UIDissolve)");
+			}
+			else
+			{
+				material.shader = Shader.Find ("UI/Hidden/UI-Effect-Dissolve");
+			}
+			
+			SetShaderVariants(material, m_ColorMode);
+
+			if(m_NoiseTexture)
+			{
+				material.SetTexture("_NoiseTex", m_NoiseTexture);
+			}
+			ptex.RegisterMaterial (material);
+		}
 
 		/// <summary>
 		/// Modifies the material.
@@ -289,45 +336,6 @@ namespace Coffee.UIExtensions
 		[ContextMenu("ModifyMaterial")]
 		public override void ModifyMaterial()
 		{
-			Hash128 hash = GetMaterialHashX();
-			// Debug.LogFormat(this, "ModifyMaterial {0}", hash);
-			if(_materialEntity.id == hash)
-			{
-				//material = _materialEntity.material;
-				return;
-			}
-
-			MaterialRepository.Unregister(_materialEntity);
-			_materialEntity = MaterialRepository.Register(textMeshPro.font.material, hash, m =>{
-				Debug.LogFormat(this, "Register {0}, {1}", hash, shaderNameX, targetGraphic.material);
-				m.material.shader = Shader.Find(shaderNameX);
-				m.material.name = "hogehoge";
-				m.material.hideFlags = HideFlags.HideAndDontSave;
-				// Debug.LogFormat(this, "Register {0} -> {1}", textMeshPro.font.material, m.material);
-				// m.material.CopyPropertiesFromMaterial(textMeshPro.font.material);
-				// m.SetVariant(m_ColorMode);
-				m.SetVariant(m_ColorMode);
-
-
-				if(m_NoiseTexture)
-				{
-					m.material.SetTexture("_NoiseTex", m_NoiseTexture);
-				}
-			});
-
-			if(isTMPro)
-			{
-				material = hash == new Hash128()
-					? textMeshPro.font.material
-					: _materialEntity.material;
-
-			}
-			else
-			{
-				material = _materialEntity.material;
-
-			}
-			
 		}
 
 		/// <summary>
@@ -366,10 +374,6 @@ namespace Coffee.UIExtensions
 
 		protected override void SetEffectDirty()
 		{
-			foreach(var m in materials)
-			{
-				ptex.RegisterMaterial (m);
-			}
 			ptex.SetData(this, 0, m_EffectFactor);	// param1.x : location
 			ptex.SetData(this, 1, m_Width);		// param1.y : width
 			ptex.SetData(this, 2, m_Softness);	// param1.z : softness
@@ -403,17 +407,12 @@ namespace Coffee.UIExtensions
 		protected override void OnEnable()
 		{
 			base.OnEnable();
-
-			_player.OnEnable((f) =>
-			{
-				effectFactor = m_Reverse ? 1f - f : f;
-			});
+			_player.OnEnable((f) =>effectFactor = m_Reverse ? 1f - f : f);
 		}
 
 		protected override void OnDisable()
 		{
 			base.OnDisable ();
-			_materialEntity = MaterialRepository.Unregister(_materialEntity);
 			_player.OnDisable();
 		}
 
@@ -424,7 +423,7 @@ namespace Coffee.UIExtensions
 		/// <returns>The material.</returns>
 		protected override Material GetMaterial()
 		{
-			return _materialEntity.material;
+			return null;
 		}
 
 		#pragma warning disable 0612
@@ -447,7 +446,6 @@ namespace Coffee.UIExtensions
         //################################
         // Private Members.
         //################################
-        MaterialEntity _materialEntity = MaterialEntity.none;
 		EffectPlayer _player{ get { return m_Player ?? (m_Player = new EffectPlayer()); } }
 	}
 }

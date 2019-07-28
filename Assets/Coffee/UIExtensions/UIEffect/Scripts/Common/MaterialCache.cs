@@ -6,230 +6,169 @@ using System.Text;
 
 namespace Coffee.UIExtensions
 {
-	public class MaterialEntity
-	{
-		public static readonly MaterialEntity none = new MaterialEntity(new Hash128() ,null);
-		static readonly StringBuilder s_StringBuilder = new StringBuilder();
+    public class MaterialRepository
+    {
+        class MaterialEntry
+        {
+            public Material material;
+            public int referenceCount;
 
-		public readonly Hash128 id;
-		public readonly Material material;
-		
-		public MaterialEntity(Hash128 id, Material material) {
-			this.id = id;
-			this.material = material;
-		}
+            public void Release()
+            {
+                if (material)
+                {
+                    UnityEngine.Object.DestroyImmediate(material, false);
+                }
+                material = null;
+            }
+        }
 
-		public void Clear()
-		{
-			if(material)
-			{
 #if UNITY_EDITOR
-				if (!Application.isPlaying)
-					UnityEngine.Object.DestroyImmediate(material, false);
-				else
+        [UnityEditor.InitializeOnLoadMethod]
+        static void ClearCache()
+        {
+            foreach (var entry in materialMap.Values)
+            {
+                entry.Release();
+            }
+            materialMap.Clear();
+        }
 #endif
-				UnityEngine.Object.Destroy(material);
-			}
-		}
 
-		public void SetVariant(params object[] variants)
-		{
-			// Set shader keywords as variants
-			var keywords = variants.Where(x => 0 < (int)x)
-				.Select(x => x.ToString().ToUpper())
-				.Concat(material.shaderKeywords)
-				.ToArray();
-			material.shaderKeywords = keywords;
+        static Dictionary<Hash128, MaterialEntry> materialMap = new Dictionary<Hash128, MaterialEntry>();
 
-			// Add variant name
-			s_StringBuilder.Length = 0;
-			foreach(var keyword in keywords)
-			{
-				s_StringBuilder.Append("-");
-				s_StringBuilder.Append(keyword);
-			}
-			material.name += s_StringBuilder.ToString();
-		}
+        public static Material Register(Material material, Hash128 hash, System.Action<Material> onModifyMaterial)
+        {
+			if(!hash.isValid)
+				return null;
 
-		public void SetTexture(int propertyId, Texture texture)
-		{
-			if(texture)
-				material.SetTexture(propertyId, texture);
-		}
+            MaterialEntry entry;
+            if (!materialMap.TryGetValue(hash, out entry))
+            {
+                entry = new MaterialEntry()
+                {
+                    material = new Material(material)
+                    {
+                        // hideFlags = HideFlags.HideAndDontSave,
+                    },
+                };
+
+                onModifyMaterial(entry.material);
+                materialMap.Add(hash, entry);
+                Debug.LogFormat($"Register {hash} {entry.material}");
+            }
+
+            entry.referenceCount++;
+            return entry.material;
+        }
+
+        public static void Unregister(Hash128 hash)
+        {
+            MaterialEntry entry;
+            if (hash.isValid && materialMap.TryGetValue(hash, out entry))
+            {
+                if (--entry.referenceCount <= 0)
+                {
+                    entry.Release();
+                    materialMap.Remove(hash);
+                    Debug.LogFormat($"Unregister {hash}");
+                }
+            }
+        }
     }
 
 
 
-	public class MaterialRepository
-	{
+
+
+
+
+    public class MaterialCache
+    {
+        public ulong hash { get; private set; }
+
+        public int referenceCount { get; private set; }
+
+        public Texture texture { get; private set; }
+
+        public Material material { get; private set; }
 
 #if UNITY_EDITOR
-		[UnityEditor.InitializeOnLoadMethod]
-		[UnityEditor.MenuItem("Test/Clear")]
-		static void ClearCache()
-		{
-			foreach (var cache in materialMap.Values)
-			{
-				cache.Clear();
-			}
-			materialMap.Clear();
-		}
+        [UnityEditor.InitializeOnLoadMethod]
+        static void ClearCache()
+        {
+            foreach (var cache in materialCaches)
+            {
+                cache.material = null;
+            }
+            materialCaches.Clear();
+        }
 #endif
 
-		static MaterialEntity none = new MaterialEntity(new Hash128(),null);
+        public static List<MaterialCache> materialCaches = new List<MaterialCache>();
 
-		static Dictionary<Hash128,MaterialEntity> materialMap = new Dictionary<Hash128,MaterialEntity>();
-		static Dictionary<Hash128,int> referenceMap = new Dictionary<Hash128,int>();
+        public static MaterialCache Register(ulong hash, Texture texture, System.Func<Material> onCreateMaterial)
+        {
+            var cache = materialCaches.FirstOrDefault(x => x.hash == hash);
+            if (cache != null && cache.material)
+            {
+                if (cache.material)
+                {
+                    cache.referenceCount++;
+                }
+                else
+                {
 
-		public static MaterialEntity Register(string shaderName, Hash128 hash, System.Action<MaterialEntity> onCreateMaterial)
-		{
-			if (none.id == hash)
-				return none;
+                    materialCaches.Remove(cache);
+                    cache = null;
+                }
+            }
+            if (cache == null)
+            {
+                cache = new MaterialCache()
+                {
+                    hash = hash,
+                    material = onCreateMaterial(),
+                    referenceCount = 1,
+                };
+                materialCaches.Add(cache);
+            }
+            return cache;
+        }
 
-			MaterialEntity entity;
-			if(!materialMap.TryGetValue(hash, out entity))
-			{
-				entity = new MaterialEntity(hash, new Material(Shader.Find(shaderName)));
-				// entity.material.CopyPropertiesFromMaterial(material);
-				onCreateMaterial(entity);
-				materialMap.Add(hash, entity);
-				referenceMap.Add(hash, 0);
-			}
+        public static MaterialCache Register(ulong hash, System.Func<Material> onCreateMaterial)
+        {
+            var cache = materialCaches.FirstOrDefault(x => x.hash == hash);
+            if (cache != null)
+            {
+                cache.referenceCount++;
+            }
+            if (cache == null)
+            {
+                cache = new MaterialCache()
+                {
+                    hash = hash,
+                    material = onCreateMaterial(),
+                    referenceCount = 1,
+                };
+                materialCaches.Add(cache);
+            }
+            return cache;
+        }
 
-			referenceMap[hash]++;
-			return entity;
-		}
+        public static void Unregister(MaterialCache cache)
+        {
+            if (cache == null)
+            {
+                return;
+            }
 
-
-		public static MaterialEntity Register(Material material, Hash128 hash, System.Action<MaterialEntity> onCreateMaterial)
-		{
-			if (none.id == hash)
-				return none;
-
-			MaterialEntity entity;
-			if(!materialMap.TryGetValue(hash, out entity))
-			{
-				entity = new MaterialEntity(hash, new Material(material));
-				// entity.material.CopyPropertiesFromMaterial(material);
-				onCreateMaterial(entity);
-				materialMap.Add(hash, entity);
-				referenceMap.Add(hash, 0);
-			}
-
-			referenceMap[hash]++;
-			return entity;
-		}
-
-
-		public static MaterialEntity Unregister(MaterialEntity cache)
-		{
-			if (none.id == cache.id)
-				return none;
-			
-			Hash128 id = cache.id;
-			int count = --referenceMap[id];
-			if (count <= 0)
-			{
-				cache.Clear();
-				referenceMap.Remove(id);
-				materialMap.Remove(id);
-			}
-			return none;
-		}
-	}
-
-
-
-
-
-
-
-	public class MaterialCache
-	{
-		public ulong hash { get; private set; }
-
-		public int referenceCount { get; private set; }
-
-		public Texture texture { get; private set; }
-
-		public Material material { get; private set; }
-
-#if UNITY_EDITOR
-		[UnityEditor.InitializeOnLoadMethod]
-		static void ClearCache()
-		{
-			foreach (var cache in materialCaches)
-			{
-				cache.material = null;
-			}
-			materialCaches.Clear();
-		}
-#endif
-
-		public static List<MaterialCache> materialCaches = new List<MaterialCache>();
-
-		public static MaterialCache Register(ulong hash, Texture texture, System.Func<Material> onCreateMaterial)
-		{
-			var cache = materialCaches.FirstOrDefault(x => x.hash == hash);
-			if (cache != null && cache.material)
-			{
-				if (cache.material)
-				{
-					cache.referenceCount++;
-				}
-				else
-				{
-					
-					materialCaches.Remove(cache);
-					cache = null;
-				}
-			}
-			if (cache == null)
-			{
-				cache = new MaterialCache()
-				{
-					hash = hash,
-					material = onCreateMaterial(),
-					referenceCount = 1,
-				};
-				materialCaches.Add(cache);
-			}
-			return cache;
-		}
-
-		public static MaterialCache Register(ulong hash, System.Func<Material> onCreateMaterial)
-		{
-			var cache = materialCaches.FirstOrDefault(x => x.hash == hash);
-			if (cache != null)
-			{
-				cache.referenceCount++;
-			}
-			if (cache == null)
-			{
-				cache = new MaterialCache()
-				{
-					hash = hash,
-					material = onCreateMaterial(),
-					referenceCount = 1,
-				};
-				materialCaches.Add(cache);
-			}
-			return cache;
-		}
-
-		public static void Unregister(MaterialCache cache)
-		{
-			if (cache == null)
-			{
-				return;
-			}
-
-			cache.referenceCount--;
-			if (cache.referenceCount <= 0)
-			{
-				MaterialCache.materialCaches.Remove(cache);
-				cache.material = null;
-			}
-		}
-	}
+            cache.referenceCount--;
+            if (cache.referenceCount <= 0)
+            {
+                MaterialCache.materialCaches.Remove(cache);
+                cache.material = null;
+            }
+        }
+    }
 }

@@ -14,6 +14,32 @@ namespace Coffee.UIExtensions.Editors
 	[CanEditMultipleObjects]
 	public class UIDissolveEditor : BaseMeshEffectEditor
 	{
+		class ChangeMaterialScope : EditorGUI.ChangeCheckScope
+		{
+			Object [] targets;
+			public ChangeMaterialScope (Object [] targets)
+			{
+				this.targets = targets;
+			}
+
+			protected override void CloseScope ()
+			{
+				if (changed)
+				{
+					var graphics = targets.OfType<UIEffectBase> ()
+						.Select (x => x.targetGraphic)
+						.Where (x => x);
+
+					foreach (var g in graphics)
+					{
+						g.SetMaterialDirty ();
+					}
+				}
+
+				base.CloseScope ();
+			}
+		}
+
 		static int s_NoiseTexId;
 
 		//################################
@@ -61,13 +87,6 @@ namespace Coffee.UIExtensions.Editors
 			serializedObject.Update();
 
 			//================
-			// Effect material.
-			//================
-			EditorGUI.BeginDisabledGroup(true);
-			EditorGUILayout.PropertyField(_spMaterial);
-			EditorGUI.EndDisabledGroup();
-
-			//================
 			// Effect setting.
 			//================
 			EditorGUILayout.PropertyField(_spEffectFactor);
@@ -75,7 +94,7 @@ namespace Coffee.UIExtensions.Editors
 			EditorGUILayout.PropertyField(_spSoftness);
 			EditorGUILayout.PropertyField(_spColor);
 
-			bool isAnyTMPro = targets.Cast<UIDissolve>().Any(x => x.isTMPro);
+			using (new ChangeMaterialScope (targets))
 			{
 				EditorGUILayout.PropertyField (_spColorMode);
 				EditorGUILayout.PropertyField (_spNoiseTexture);
@@ -115,17 +134,7 @@ namespace Coffee.UIExtensions.Editors
 				}
 			}
 
-			var c = target as UIDissolve;
-			c.ShowTMProWarning (_shader, _mobileShader, _spriteShader, mat => {
-				if(mat.shader == _spriteShader)
-				{
-					mat.shaderKeywords = c.material.shaderKeywords;
-					mat.SetTexture ("_NoiseTex", c.material.GetTexture ("_NoiseTex"));
-				}
-			});
 			ShowCanvasChannelsWarning ();
-
-			ShowMaterialEditors (c.materials, 1, c.materials.Length - 1);
 
 			serializedObject.ApplyModifiedProperties();
 

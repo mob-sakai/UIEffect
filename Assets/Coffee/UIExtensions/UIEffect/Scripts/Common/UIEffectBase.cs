@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,13 +12,14 @@ namespace Coffee.UIExtensions
 	/// Abstract effect base for UI.
 	/// </summary>
 	[DisallowMultipleComponent]
-	public abstract class UIEffectBase : BaseMeshEffect, IParameterTexture
+	public abstract class UIEffectBase : BaseMeshEffect, IParameterTexture, IMaterialModifier
 #if UNITY_EDITOR
 	, ISerializationCallbackReceiver
 #endif
 	{
 		protected static readonly Vector2[] splitedCharacterPosition = { Vector2.up, Vector2.one, Vector2.right, Vector2.zero };
 		protected static readonly List<UIVertex> tempVerts = new List<UIVertex>();
+		protected static readonly StringBuilder stringBuilder = new StringBuilder();
 
 		[HideInInspector]
 		[SerializeField] int m_Version;
@@ -39,6 +44,64 @@ namespace Coffee.UIExtensions
 		/// Gets material for effect.
 		/// </summary>
 		public Material effectMaterial { get { return m_EffectMaterial; } }
+
+		public virtual Hash128 GetMaterialHash(Material material)
+		{
+			return new Hash128();
+		}
+
+        public virtual Material GetModifiedMaterial(Material baseMaterial)
+        {
+			if(!isActiveAndEnabled)
+			{
+				return baseMaterial;
+			}
+
+			var oldHash = _effectMaterialHash;
+			_effectMaterialHash = GetMaterialHash(baseMaterial);
+			var modifiedMaterial = baseMaterial;
+			if(_effectMaterialHash.isValid)
+			{
+				modifiedMaterial = MaterialRepository.Register(baseMaterial, _effectMaterialHash, ModifyMaterial);
+			}
+			MaterialRepository.Unregister(oldHash);
+
+			return modifiedMaterial;
+        }
+
+		protected bool isTMProMobile (Material material)
+		{
+			return material && material.shader && material.shader.name.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal);
+		}
+
+		public virtual void ModifyMaterial(Material material)
+		{
+			Debug.Log("ModifyMaterial PTEX!!! " + ptex);
+			if(isActiveAndEnabled && ptex != null)
+				ptex.RegisterMaterial (material);
+		}
+
+		protected void SetShaderVariants(Material material, params object[] variants)
+		{
+			// Set shader keywords as variants
+			var keywords = variants.Where(x => 0 < (int)x)
+				.Select(x => x.ToString().ToUpper())
+				.Concat(material.shaderKeywords)
+				.ToArray();
+			material.shaderKeywords = keywords;
+
+			// Add variant name
+			stringBuilder.Length = 0;
+			stringBuilder.Append(Path.GetFileName(material.shader.name) );
+			foreach(var keyword in keywords)
+			{
+				stringBuilder.Append("-");
+				stringBuilder.Append(keyword);
+			}
+			material.name += stringBuilder.ToString();
+		}
+
+		Hash128 _effectMaterialHash;
 
 #if UNITY_EDITOR
 		protected override void Reset()
@@ -130,7 +193,9 @@ namespace Coffee.UIExtensions
 				ptex.Register(this);
 			}
 			ModifyMaterial();
-			SetVerticesDirty();
+			
+			graphic.SetMaterialDirty();
+			graphic.SetVerticesDirty();
 			SetEffectDirty();
 		}
 
@@ -141,12 +206,15 @@ namespace Coffee.UIExtensions
 		{
 			base.OnDisable ();
 
-			ModifyMaterial ();
-			SetVerticesDirty();
+			graphic.SetMaterialDirty();
+			graphic.SetVerticesDirty();
 			if (ptex != null)
 			{
 				ptex.Unregister(this);
 			}
+
+			MaterialRepository.Unregister(_effectMaterialHash);
+			_effectMaterialHash = new Hash128();
 		}
 
 		/// <summary>
