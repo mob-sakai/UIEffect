@@ -1,4 +1,4 @@
-#ifndef UI_EFFECT_TMPRO_INCLUDED
+﻿#ifndef UI_EFFECT_TMPRO_INCLUDED
 #define UI_EFFECT_TMPRO_INCLUDED
 
 // Used by Unity internally to handle Texture Tiling and Offset.
@@ -324,7 +324,8 @@ fixed4 PixShader(pixel_t input)// : SV_Target
 	half4 faceColor = _FaceColor;
 	half4 outlineColor = _OutlineColor;
 
-//			faceColor.rgb *= input.color.rgb;
+    //faceColor.rgb *= input.color.rgb;
+	faceColor *= input.color;
 	
 	faceColor *= tex2D(_FaceTex, input.textures.xy + float2(_FaceUVSpeedX, _FaceUVSpeedY) * _Time.y);
 	outlineColor *= tex2D(_OutlineTex, input.textures.zw + float2(_OutlineUVSpeedX, _OutlineUVSpeedY) * _Time.y);

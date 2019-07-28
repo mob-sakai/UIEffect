@@ -118,5 +118,5 @@ SubShader {
 	}
 }
 
-CustomEditor "Coffee.UIEffect.Editors.TMP_SDFShaderGUI"
+CustomEditor "TMPro.EditorUtilities.TMP_SDFShaderGUI"
 }
