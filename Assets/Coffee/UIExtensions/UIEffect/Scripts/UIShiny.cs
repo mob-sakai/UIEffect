@@ -22,7 +22,7 @@ namespace Coffee.UIExtensions
 		//################################
 		// Constant or Static Members.
 		//################################
-		public const string shaderName = "UI/Hidden/UI-Effect-Shiny";
+		//public const string shaderName = "UI/Hidden/UI-Effect-Shiny";
 		static readonly ParameterTexture _ptex = new ParameterTexture(8, 128, "_ParamTex");
 
 
@@ -297,15 +297,43 @@ namespace Coffee.UIExtensions
 		}
 
 
+		public override Hash128 GetMaterialHash (Material material)
+		{
+			if (!isActiveAndEnabled || !material || !material.shader)
+				return new Hash128 ();
+
+			uint materialId = (uint)material.GetInstanceID ();
+			uint shaderId = (1 << 2) + (uint)(isTMPro ? isTMProMobile (material) ? 2 : 1 : 0);
+			return new Hash128 (
+					materialId,
+					shaderId,
+					0,
+					0
+				);
+		}
+
+		public override void ModifyMaterial (Material material)
+		{
+			Debug.LogFormat (this, $"ModifyMaterial {material}");
+			var shaderName = isTMPro
+					? isTMProMobile (material)
+						? "TextMeshPro/Mobile/Distance Field (UIShiny)"
+						: "TextMeshPro/Distance Field (UIShiny)"
+					: "UI/Hidden/UI-Effect-Shiny";
+			material.shader = Shader.Find (shaderName);
+			//SetShaderVariants (material, m_ColorMode);
+
+			//if (m_NoiseTexture)
+			//{
+			//	material.SetTexture ("_NoiseTex", m_NoiseTexture);
+			//}
+			ptex.RegisterMaterial (material);
+		}
+
 #if UNITY_EDITOR
 		protected override Material GetMaterial()
 		{
-			if (isTMPro)
-			{
-				return null;
-			}
-
-			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName));
+			return null;
 		}
 
 		#pragma warning disable 0612
