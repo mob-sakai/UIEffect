@@ -27,8 +27,8 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		protected void OnEnable ()
 		{
-			GetComponent<Graphic> ().SetMaterialDirty ();
-			GetComponent<Graphic> ().SetVerticesDirty ();
+			//GetComponent<Graphic> ().SetMaterialDirty ();
+			//GetComponent<Graphic> ().SetVerticesDirty ();
 		}
 
 		/// <summary>
@@ -39,8 +39,8 @@ namespace Coffee.UIExtensions
 			MaterialRepository.Unregister (_effectMaterialHash);
 			_effectMaterialHash = new Hash128 ();
 
-			GetComponent<Graphic> ().SetMaterialDirty ();
-			GetComponent<Graphic> ().SetVerticesDirty ();
+			//GetComponent<Graphic> ().SetMaterialDirty ();
+			//GetComponent<Graphic> ().SetVerticesDirty ();
 		}
 
 		protected Hash128 GetMaterialHash (Material material)
@@ -55,7 +55,7 @@ namespace Coffee.UIExtensions
 				return baseMaterial;
 			}
 
-			var modifier = transform.parent.GetComponent<UIDissolve> ();
+			var modifier = transform.parent.GetComponent<UIEffectBase> ();
 
 
 			var oldHash = _effectMaterialHash;
@@ -102,7 +102,7 @@ namespace Coffee.UIExtensions
 				return;
 			}
 
-			var modifier = transform.parent.GetComponent<UIDissolve> ();
+			var modifier = transform.parent.GetComponent<UIEffectBase> ();
 			modifier.ModifyMesh (verts);
 		}
 	}
