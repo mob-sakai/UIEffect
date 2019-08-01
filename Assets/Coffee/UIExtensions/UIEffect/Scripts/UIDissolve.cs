@@ -268,28 +268,28 @@ namespace Coffee.UIExtensions
 				return new Hash128();
 
 			uint materialId = (uint)material.GetInstanceID();
-			uint shaderId = 0 + (uint)(isTMPro ? isTMProMobile (material) ? 2 : 1 : 0);
+			uint shaderId = 0 << 3;
 
 			string materialShaderName = material.shader.name;
 			if (materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
 			{
-				shaderId = 0 + 2;
+				shaderId += 2;
 			}
 			else if (materialShaderName.Equals ("TextMeshPro/Sprite", StringComparison.Ordinal))
 			{
-				shaderId = 0 + 0;
+				shaderId += 0;
 			}
 			else if (materialShaderName.StartsWith ("TextMeshPro/", StringComparison.Ordinal))
 			{
-				shaderId = 0 + 1;
+				shaderId += 1;
 			}
 			else
 			{
-				shaderId = 0 + 0;
+				shaderId += 0;
 			}
 
 
-			uint shaderVariantId = (uint)((int)m_ColorMode << 5);
+			uint shaderVariantId = (uint)((int)m_ColorMode << 6);
 			uint resourceId = m_NoiseTexture ? (uint)m_NoiseTexture.GetInstanceID() : 0;
 			return new Hash128(
 					materialId,
