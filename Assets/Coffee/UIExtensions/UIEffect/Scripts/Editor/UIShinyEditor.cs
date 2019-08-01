@@ -22,7 +22,6 @@ namespace Coffee.UIExtensions.Editors
 		{
 			base.OnEnable ();
 
-			_spMaterial = serializedObject.FindProperty("m_EffectMaterial");
 			_spEffectFactor = serializedObject.FindProperty("m_EffectFactor");
 			_spEffectArea = serializedObject.FindProperty("m_EffectArea");
 			_spWidth = serializedObject.FindProperty("m_Width");
@@ -37,11 +36,6 @@ namespace Coffee.UIExtensions.Editors
 			_spLoop = player.FindPropertyRelative("loop");
 			_spLoopDelay = player.FindPropertyRelative("loopDelay");
 			_spUpdateMode = player.FindPropertyRelative("updateMode");
-
-
-			_shader = Shader.Find ("TextMeshPro/Distance Field (UIShiny)");
-			_mobileShader = Shader.Find ("TextMeshPro/Mobile/Distance Field (UIShiny)");
-			_spriteShader = Shader.Find ("TextMeshPro/Sprite (UIShiny)");
 		}
 
 
@@ -51,13 +45,6 @@ namespace Coffee.UIExtensions.Editors
 		public override void OnInspectorGUI()
 		{
 			serializedObject.Update();
-
-			//================
-			// Effect material.
-			//================
-			EditorGUI.BeginDisabledGroup(true);
-			EditorGUILayout.PropertyField(_spMaterial);
-			EditorGUI.EndDisabledGroup();
 
 			//================
 			// Effect setting.
@@ -101,11 +88,7 @@ namespace Coffee.UIExtensions.Editors
 				}
 			}
 
-			var c = target as UIShiny;
-			c.ShowTMProWarning (_shader, _mobileShader, _spriteShader, mat => {});
 			ShowCanvasChannelsWarning ();
-
-			ShowMaterialEditors (c.materials, 1, c.materials.Length - 1);
 
 			serializedObject.ApplyModifiedProperties();
 		}
@@ -113,7 +96,6 @@ namespace Coffee.UIExtensions.Editors
 		//################################
 		// Private Members.
 		//################################
-		SerializedProperty _spMaterial;
 		SerializedProperty _spEffectFactor;
 		SerializedProperty _spWidth;
 		SerializedProperty _spRotation;
@@ -127,9 +109,5 @@ namespace Coffee.UIExtensions.Editors
 		SerializedProperty _spDuration;
 		SerializedProperty _spInitialPlayDelay;
 		SerializedProperty _spUpdateMode;
-
-		Shader _shader;
-		Shader _mobileShader;
-		Shader _spriteShader;
 	}
 }
