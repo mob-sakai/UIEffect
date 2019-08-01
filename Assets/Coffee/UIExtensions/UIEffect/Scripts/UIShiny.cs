@@ -303,7 +303,26 @@ namespace Coffee.UIExtensions
 				return new Hash128 ();
 
 			uint materialId = (uint)material.GetInstanceID ();
-			uint shaderId = (1 << 2) + (uint)(isTMPro ? isTMProMobile (material) ? 2 : 1 : 0);
+			uint shaderId = 1 << 3;
+
+			string materialShaderName = material.shader.name;
+			if (materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
+			{
+				shaderId += 2;
+			}
+			else if (materialShaderName.Equals ("TextMeshPro/Sprite", StringComparison.Ordinal))
+			{
+				shaderId += 0;
+			}
+			else if (materialShaderName.StartsWith ("TextMeshPro/", StringComparison.Ordinal))
+			{
+				shaderId += 1;
+			}
+			else
+			{
+				shaderId += 0;
+			}
+
 			return new Hash128 (
 					materialId,
 					shaderId,
@@ -314,19 +333,24 @@ namespace Coffee.UIExtensions
 
 		public override void ModifyMaterial (Material material)
 		{
-			Debug.LogFormat (this, $"ModifyMaterial {material}");
-			var shaderName = isTMPro
-					? isTMProMobile (material)
-						? "TextMeshPro/Mobile/Distance Field (UIShiny)"
-						: "TextMeshPro/Distance Field (UIShiny)"
-					: "UI/Hidden/UI-Effect-Shiny";
-			material.shader = Shader.Find (shaderName);
-			//SetShaderVariants (material, m_ColorMode);
+			string materialShaderName = material.shader.name;
+			if (materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("TextMeshPro/Mobile/Distance Field (UIShiny)");
+			}
+			else if (materialShaderName.Equals ("TextMeshPro/Sprite", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("UI/Hidden/UI-Effect-Shiny");
+			}
+			else if (materialShaderName.StartsWith ("TextMeshPro/", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("TextMeshPro/Distance Field (UIShiny)");
+			}
+			else
+			{
+				material.shader = Shader.Find ("UI/Hidden/UI-Effect-Shiny");
+			}
 
-			//if (m_NoiseTexture)
-			//{
-			//	material.SetTexture ("_NoiseTex", m_NoiseTexture);
-			//}
 			ptex.RegisterMaterial (material);
 		}
 
@@ -409,10 +433,6 @@ namespace Coffee.UIExtensions
 
 		protected override void SetEffectDirty()
 		{
-			foreach (var m in materials)
-			{
-				ptex.RegisterMaterial (m);
-			}
 			ptex.SetData(this, 0, m_EffectFactor);	// param1.x : location
 			ptex.SetData(this, 1, m_Width);		// param1.y : width
 			ptex.SetData(this, 2, m_Softness);	// param1.z : softness
