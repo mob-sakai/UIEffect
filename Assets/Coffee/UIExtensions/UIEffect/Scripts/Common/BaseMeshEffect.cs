@@ -444,7 +444,7 @@ namespace Coffee.UIExtensions
 		/// Called when any TextMeshPro generated the mesh.
 		/// </summary>
 		/// <param name="obj">TextMeshPro object.</param>
-		void OnTextChanged (Object obj)
+		protected virtual void OnTextChanged (Object obj)
 		{
 			// Skip if the object is different from the current object or the text is empty.
 			var textInfo = textMeshPro.textInfo;

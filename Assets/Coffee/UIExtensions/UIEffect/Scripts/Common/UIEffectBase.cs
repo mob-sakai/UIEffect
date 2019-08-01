@@ -197,6 +197,13 @@ namespace Coffee.UIExtensions
 			graphic.SetMaterialDirty();
 			graphic.SetVerticesDirty();
 			SetEffectDirty();
+
+
+			foreach (var mr in GetComponentsInChildren<UIEffectMaterialResolver> ())
+			{
+				mr.GetComponent<Graphic> ().SetMaterialDirty ();
+				mr.GetComponent<Graphic> ().SetVerticesDirty ();
+			}
 		}
 
 		/// <summary>
@@ -215,6 +222,12 @@ namespace Coffee.UIExtensions
 
 			MaterialRepository.Unregister(_effectMaterialHash);
 			_effectMaterialHash = new Hash128();
+
+			foreach (var mr in GetComponentsInChildren<UIEffectMaterialResolver> ())
+			{
+				mr.GetComponent<Graphic> ().SetMaterialDirty ();
+				mr.GetComponent<Graphic> ().SetVerticesDirty ();
+			}
 		}
 
 		/// <summary>
@@ -228,6 +241,28 @@ namespace Coffee.UIExtensions
 		protected override void OnDidApplyAnimationProperties()
 		{
 			SetEffectDirty();
+		}
+
+		protected override void OnTextChanged (UnityEngine.Object obj)
+		{
+			base.OnTextChanged (obj);
+
+
+			foreach (var sm in GetComponentsInChildren<TMPro.TMP_SubMeshUI> ())
+			{
+				if(!sm.GetComponent<UIEffectMaterialResolver>())
+				{
+					var mr = sm.gameObject.AddComponent<UIEffectMaterialResolver> ();
+
+					targetGraphic.SetAllDirty ();
+					//targetGraphic.SetVerticesDirty ();
+
+					//mr.GetComponent<Graphic> ().SetMaterialDirty ();
+					//mr.GetComponent<Graphic> ().SetVerticesDirty ();
+
+
+				}
+			}
 		}
 	}
 }
