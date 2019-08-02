@@ -1,4 +1,4 @@
-// Simplified SDF shader:
+﻿// Simplified SDF shader:
 // - No Shading Option (bevel / bump / env map)
 // - No Glow Option
 // - Softness is applied on both side of the outline
@@ -105,11 +105,12 @@ SubShader {
 
 		fixed4 frag(pixel_t IN) : SV_Target
 		{
-			fixed4 param = tex2D(_ParamTex, float2(0.5, IN.eParam));
+			fixed4 param = tex2D(_ParamTex, float2(0.25, IN.eParam));
 		    fixed effectFactor = param.x;
 		    fixed colorFactor = param.y;
 		    fixed blurFactor = param.z;
-
+            fixed3 effectColor = tex2D(_ParamTex, float2(0.75, IN.eParam)).rgb;
+            
 			#if PIXEL
 			half2 pixelSize = max(2, (1-effectFactor*0.95) * float2(_TextureWidth, _TextureHeight));
 			UV(IN).xy = round(UV(IN).xy * pixelSize) / pixelSize;
@@ -127,7 +128,7 @@ SubShader {
 			color = ApplyToneEffect(color, effectFactor);
 			#endif
 
-			color = ApplyColorEffect(color, fixed4(IN.color.rgb, colorFactor));
+			color = ApplyColorEffect(color, fixed4(effectColor.rgb, colorFactor));
 			color.rgb *= color.a;
 			
 			return color * IN.color.a;
@@ -136,5 +137,5 @@ SubShader {
 	}
 }
 
-CustomEditor "Coffee.UIEffect.Editors.TMP_SDFShaderGUI"
+CustomEditor "TMPro.EditorUtilities.TMP_SDFShaderGUI"
 }

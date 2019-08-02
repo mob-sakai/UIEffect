@@ -1,4 +1,4 @@
-Shader "UI/Hidden/UI-Effect"
+﻿Shader "UI/Hidden/UI-Effect"
 {
 	Properties
 	{
@@ -74,22 +74,23 @@ Shader "UI/Hidden/UI-Effect"
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
-				fixed4 param = tex2D(_ParamTex, float2(0.5, IN.eParam));
+				fixed4 param = tex2D(_ParamTex, float2(0.25, IN.eParam));
                 fixed effectFactor = param.x;
                 fixed colorFactor = param.y;
                 fixed blurFactor = param.z;
-
+                fixed3 effectColor = tex2D(_ParamTex, float2(0.75, IN.eParam)).rgb;
+                
 				#if PIXEL
 				half2 pixelSize = max(2, (1-effectFactor*0.95) * _MainTex_TexelSize.zw);
 				IN.texcoord = round(IN.texcoord * pixelSize) / pixelSize;
 				#endif
 
 				#if defined(UI_BLUR) && EX
-				half4 color = (Tex2DBlurring(_MainTex, IN.texcoord, blurFactor * _MainTex_TexelSize.xy * 2, IN.uvMask) + _TextureSampleAdd);
+				half4 color = (Tex2DBlurring(_MainTex, IN.texcoord, blurFactor * _MainTex_TexelSize.xy * 2, IN.uvMask) + _TextureSampleAdd) * IN.color;
 				#elif defined(UI_BLUR)
-				half4 color = (Tex2DBlurring(_MainTex, IN.texcoord, blurFactor * _MainTex_TexelSize.xy * 2) + _TextureSampleAdd);
+				half4 color = (Tex2DBlurring(_MainTex, IN.texcoord, blurFactor * _MainTex_TexelSize.xy * 2) + _TextureSampleAdd) * IN.color;
 				#else
-				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd);
+				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
 				#endif
 
 				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
@@ -102,7 +103,7 @@ Shader "UI/Hidden/UI-Effect"
 				color = ApplyToneEffect(color, effectFactor);
 				#endif
 
-				color = ApplyColorEffect(color, fixed4(IN.color.rgb, colorFactor));
+				color = ApplyColorEffect(color, fixed4(effectColor, colorFactor));
 				color.a *= IN.color.a;
 
 				return color;

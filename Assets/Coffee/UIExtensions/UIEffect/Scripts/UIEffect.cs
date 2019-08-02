@@ -19,13 +19,13 @@ namespace Coffee.UIExtensions
 	[RequireComponent(typeof(Graphic))]
 	[DisallowMultipleComponent]
 	[AddComponentMenu("UI/UIEffect/UIEffect", 1)]
-	public class UIEffect : UIEffectBase
+	public class UIEffect : UIEffectBase, IMaterialModifier
 	{
 		//################################
 		// Constant or Static Members.
 		//################################
 		public const string shaderName = "UI/Hidden/UI-Effect";
-		static readonly ParameterTexture _ptex = new ParameterTexture(4, 1024, "_ParamTex");
+		static readonly ParameterTexture _ptex = new ParameterTexture(8, 1024, "_ParamTex");
 
 
 		//################################
@@ -49,7 +49,11 @@ namespace Coffee.UIExtensions
 		[Tooltip("Color effect mode")]
 		[SerializeField] ColorMode m_ColorMode = ColorMode.Multiply;
 
-		[Tooltip("Blur effect mode")]
+		[Tooltip ("Color for effect")]
+		[ColorUsage(false)]
+		[SerializeField] Color m_EffectColor = Color.white;
+
+		[Tooltip ("Blur effect mode")]
 		[SerializeField] BlurMode m_BlurMode = BlurMode.None;
 
 		[Tooltip("Advanced blurring remove common artifacts in the blur effect for uGUI.")]
@@ -66,8 +70,6 @@ namespace Coffee.UIExtensions
 		[SerializeField] Vector2 m_EffectDistance = new Vector2(1f, -1f);
 		[Obsolete][HideInInspector]
 		[SerializeField] bool m_UseGraphicAlpha = true;
-		[Obsolete][HideInInspector]
-		[SerializeField] Color m_EffectColor = Color.white;
 		[Obsolete][HideInInspector]
 		[SerializeField] List<UIShadow.AdditionalShadow> m_AdditionalShadows = new List<UIShadow.AdditionalShadow>();
 		#pragma warning restore 0414
@@ -174,28 +176,73 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Effect mode(readonly).
 		/// </summary>
-		public EffectMode effectMode { get { return m_EffectMode; } }
+		public EffectMode effectMode
+		{
+			get { return m_EffectMode; }
+			set
+			{
+				if (m_EffectMode != value)
+				{
+					m_EffectMode = value;
+					if (graphic)
+					{
+						graphic.SetMaterialDirty ();
+					}
+				}
+			}
+		}
 
 		/// <summary>
-		/// Color effect mode(readonly).
+		/// Color effect mode.
 		/// </summary>
-		public ColorMode colorMode { get { return m_ColorMode; } }
+		public ColorMode colorMode
+		{
+			get { return m_ColorMode; }
+			set
+			{
+				if (m_ColorMode != value)
+				{
+					m_ColorMode = value;
+					if (graphic)
+					{
+						graphic.SetMaterialDirty ();
+					}
+				}
+			}
+		}
 
 		/// <summary>
 		/// Blur effect mode(readonly).
 		/// </summary>
-		public BlurMode blurMode { get { return m_BlurMode; } }
+		public BlurMode blurMode
+		{
+			get { return m_BlurMode; }
+			set
+			{
+				if (m_BlurMode != value)
+				{
+					m_BlurMode = value;
+					if (graphic)
+					{
+						graphic.SetMaterialDirty ();
+					}
+				}
+			}
+		}
 
 		/// <summary>
 		/// Color for the color effect.
 		/// </summary>
 		public Color effectColor
 		{
-			get { return graphic.color; }
+			get { return m_EffectColor; }
 			set
 			{
-				graphic.color = value;
-				SetEffectDirty ();
+				if (m_EffectColor != value)
+				{
+					m_EffectColor = value;
+					SetEffectDirty ();
+				}
 			}
 		}
 
@@ -207,7 +254,83 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Advanced blurring remove common artifacts in the blur effect for uGUI.
 		/// </summary>
-		public bool advancedBlur { get { return isTMPro ? (material && material.IsKeywordEnabled("EX")) : m_AdvancedBlur; } }
+		public bool advancedBlur
+		{
+			get { return m_AdvancedBlur; }
+			set
+			{
+				if (m_AdvancedBlur != value)
+				{
+					m_AdvancedBlur = value;
+					if (graphic)
+					{
+						graphic.SetMaterialDirty ();
+					}
+				}
+			}
+		}
+
+		public override Hash128 GetMaterialHash (Material material)
+		{
+			if (!isActiveAndEnabled || !material || !material.shader)
+				return new Hash128 ();
+
+			uint materialId = (uint)material.GetInstanceID ();
+			uint shaderId = 2 << 3;
+
+			string materialShaderName = material.shader.name;
+			if (materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
+			{
+				shaderId += 2;
+			}
+			else if (materialShaderName.Equals ("TextMeshPro/Sprite", StringComparison.Ordinal))
+			{
+				shaderId += 0;
+			}
+			else if (materialShaderName.StartsWith ("TextMeshPro/", StringComparison.Ordinal))
+			{
+				shaderId += 1;
+			}
+			else
+			{
+				shaderId += 0;
+			}
+
+
+			uint shaderVariantId = (uint)(((int)m_EffectMode << 6) + ((int)m_ColorMode << 9) + ((int)m_BlurMode << 11) + ((m_AdvancedBlur ? 1 : 0) << 13));
+			return new Hash128 (
+					materialId,
+					shaderId + shaderVariantId,
+					0,
+					0
+				);
+		}
+
+		public override void ModifyMaterial (Material material)
+		{
+
+			string materialShaderName = material.shader.name;
+			if (materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("TextMeshPro/Mobile/Distance Field (UIEffect)");
+			}
+			else if (materialShaderName.Equals ("TextMeshPro/Sprite", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("UI/Hidden/UI-Effect");
+			}
+			else if (materialShaderName.StartsWith ("TextMeshPro/", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("TextMeshPro/Distance Field (UIEffect)");
+			}
+			else
+			{
+				material.shader = Shader.Find ("UI/Hidden/UI-Effect");
+			}
+
+			SetShaderVariants (material, m_EffectMode, m_ColorMode, m_BlurMode, m_AdvancedBlur ? BlurEx.Ex : BlurEx.None);
+
+			ptex.RegisterMaterial (material);
+		}
 
 		/// <summary>
 		/// Modifies the mesh.
@@ -331,13 +454,12 @@ namespace Coffee.UIExtensions
 
 		protected override void SetEffectDirty ()
 		{
-			foreach (var m in materials)
-			{
-				ptex.RegisterMaterial (m);
-			}
 			ptex.SetData(this, 0, m_EffectFactor);	// param.x : effect factor
 			ptex.SetData(this, 1, m_ColorFactor);	// param.y : color factor
-			ptex.SetData(this, 2, m_BlurFactor);	// param.z : blur factor
+			ptex.SetData(this, 2, m_BlurFactor);    // param.z : blur factor
+			ptex.SetData (this, 4, m_EffectColor.r);  // param2.x : red
+			ptex.SetData (this, 5, m_EffectColor.g);  // param2.y : green
+			ptex.SetData (this, 6, m_EffectColor.b);  // param2.z : blue
 		}
 
 #if UNITY_EDITOR
@@ -347,11 +469,7 @@ namespace Coffee.UIExtensions
 		/// <returns>The material.</returns>
 		protected override Material GetMaterial()
 		{
-			if (isTMPro)
-			{
-				return null;
-			}
-			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_EffectMode, m_ColorMode, m_BlurMode, m_AdvancedBlur ? BlurEx.Ex : BlurEx.None);
+			return null;
 		}
 
 		#pragma warning disable 0612
