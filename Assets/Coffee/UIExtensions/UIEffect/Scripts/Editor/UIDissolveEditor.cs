@@ -14,32 +14,6 @@ namespace Coffee.UIExtensions.Editors
 	[CanEditMultipleObjects]
 	public class UIDissolveEditor : BaseMeshEffectEditor
 	{
-		class ChangeMaterialScope : EditorGUI.ChangeCheckScope
-		{
-			Object [] targets;
-			public ChangeMaterialScope (Object [] targets)
-			{
-				this.targets = targets;
-			}
-
-			protected override void CloseScope ()
-			{
-				if (changed)
-				{
-					var graphics = targets.OfType<UIEffectBase> ()
-						.Select (x => x.targetGraphic)
-						.Where (x => x);
-
-					foreach (var g in graphics)
-					{
-						g.SetMaterialDirty ();
-					}
-				}
-
-				base.CloseScope ();
-			}
-		}
-
 		static int s_NoiseTexId;
 
 		//################################
@@ -94,7 +68,7 @@ namespace Coffee.UIExtensions.Editors
 			EditorGUILayout.PropertyField(_spSoftness);
 			EditorGUILayout.PropertyField(_spColor);
 
-			using (new ChangeMaterialScope (targets))
+			using (new MaterialDirtyScope (targets))
 			{
 				EditorGUILayout.PropertyField (_spColorMode);
 				EditorGUILayout.PropertyField (_spNoiseTexture);
