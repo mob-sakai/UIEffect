@@ -22,16 +22,11 @@ namespace Coffee.UIExtensions.Editors
 		{
 			base.OnEnable ();
 
-			_spMaterial = serializedObject.FindProperty("m_EffectMaterial");
 			_spTargetColor = serializedObject.FindProperty("m_TargetColor");
 			_spRange = serializedObject.FindProperty("m_Range");
 			_spHue = serializedObject.FindProperty("m_Hue");
 			_spSaturation = serializedObject.FindProperty("m_Saturation");
 			_spValue = serializedObject.FindProperty("m_Value");
-
-			_shader = Shader.Find ("TextMeshPro/Distance Field (UIHsvModifier)");
-			_mobileShader = Shader.Find ("TextMeshPro/Mobile/Distance Field (UIHsvModifier)");
-			_spriteShader = Shader.Find ("TextMeshPro/Sprite (UIHsvModifier)");
 		}
 
 
@@ -43,13 +38,6 @@ namespace Coffee.UIExtensions.Editors
 			serializedObject.Update();
 
 			//================
-			// Effect material.
-			//================
-			EditorGUI.BeginDisabledGroup(true);
-			EditorGUILayout.PropertyField(_spMaterial);
-			EditorGUI.EndDisabledGroup();
-
-			//================
 			// Effect setting.
 			//================
 			EditorGUILayout.PropertyField(_spTargetColor);
@@ -58,11 +46,7 @@ namespace Coffee.UIExtensions.Editors
 			EditorGUILayout.PropertyField(_spSaturation);
 			EditorGUILayout.PropertyField(_spValue);
 
-			var c = target as UIHsvModifier;
-			c.ShowTMProWarning (_shader, _mobileShader, _spriteShader, mat => {});
 			ShowCanvasChannelsWarning ();
-
-			ShowMaterialEditors (c.materials, 1, c.materials.Length - 1);
 
 			serializedObject.ApplyModifiedProperties();
 		}
@@ -70,15 +54,10 @@ namespace Coffee.UIExtensions.Editors
 		//################################
 		// Private Members.
 		//################################
-		SerializedProperty _spMaterial;
 		SerializedProperty _spTargetColor;
 		SerializedProperty _spRange;
 		SerializedProperty _spHue;
 		SerializedProperty _spSaturation;
 		SerializedProperty _spValue;
-
-		Shader _shader;
-		Shader _mobileShader;
-		Shader _spriteShader;
 	}
 }

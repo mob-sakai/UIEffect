@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
@@ -134,14 +135,67 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public override ParameterTexture ptex { get { return _ptex; } }
 
+		public override Hash128 GetMaterialHash (Material material)
+		{
+			if (!isActiveAndEnabled || !material || !material.shader)
+				return new Hash128 ();
+
+			uint materialId = (uint)material.GetInstanceID ();
+			uint shaderId = 6 << 3;
+
+			string materialShaderName = material.shader.name;
+			if (materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
+			{
+				shaderId += 2;
+			}
+			else if (materialShaderName.Equals ("TextMeshPro/Sprite", StringComparison.Ordinal))
+			{
+				shaderId += 0;
+			}
+			else if (materialShaderName.StartsWith ("TextMeshPro/", StringComparison.Ordinal))
+			{
+				shaderId += 1;
+			}
+			else
+			{
+				shaderId += 0;
+			}
+
+			return new Hash128 (
+					materialId,
+					shaderId,
+					0,
+					0
+				);
+		}
+
+		public override void ModifyMaterial (Material material)
+		{
+			string materialShaderName = material.shader.name;
+			if (materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("TextMeshPro/Mobile/Distance Field (UIHsvModifier)");
+			}
+			else if (materialShaderName.Equals ("TextMeshPro/Sprite", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("UI/Hidden/UI-Effect-HSV");
+			}
+			else if (materialShaderName.StartsWith ("TextMeshPro/", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("TextMeshPro/Distance Field (UIHsvModifier)");
+			}
+			else
+			{
+				material.shader = Shader.Find ("UI/Hidden/UI-Effect-HSV");
+			}
+
+			ptex.RegisterMaterial (material);
+		}
+
 #if UNITY_EDITOR
 		protected override Material GetMaterial()
 		{
-			if (isTMPro)
-			{
-				return null;
-			}
-			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName));
+			return null;
 		}
 #endif
 
@@ -172,11 +226,6 @@ namespace Coffee.UIExtensions
 		{
 			float h, s, v;
 			Color.RGBToHSV(m_TargetColor, out h, out s, out v);
-
-			foreach (var m in materials)
-			{
-				ptex.RegisterMaterial (m);
-			}
 
 			ptex.SetData(this, 0, h);	// param1.x : target hue
 			ptex.SetData(this, 1, s);	// param1.y : target saturation
