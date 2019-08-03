@@ -7,58 +7,6 @@ namespace Coffee.UIExtensions.Editors
 {
 	public class BaseMeshEffectEditor : Editor
 	{
-		List<MaterialEditor> _materialEditors = new List<MaterialEditor> ();
-
-		protected virtual void OnEnable ()
-		{
-			ClearMaterialEditors ();
-		}
-
-		protected virtual void OnDisable ()
-		{
-			ClearMaterialEditors ();
-		}
-
-		void ClearMaterialEditors ()
-		{
-			foreach (var e in _materialEditors)
-			{
-				if (e)
-				{
-					DestroyImmediate (e);
-				}
-			}
-			_materialEditors.Clear ();
-		}
-
-		protected void ShowMaterialEditors (Material [] materials, int startIndex, int count)
-		{
-			for (int i = 0; i < count; i++)
-			{
-				if (_materialEditors.Count == i)
-				{
-					_materialEditors.Add (null);
-				}
-
-				var mat = materials [startIndex + i];
-				var editor = _materialEditors [i];
-				if (editor && editor.target != mat)
-				{
-					DestroyImmediate (editor);
-					editor = null;
-				}
-
-				if (!editor)
-				{
-					editor = _materialEditors [i] = Editor.CreateEditor (mat) as MaterialEditor;
-				}
-
-				editor.DrawHeader ();
-				editor.OnInspectorGUI ();
-			}
-		}
-
-
 		protected void ShowCanvasChannelsWarning ()
 		{
 			BaseMeshEffect effect = target as BaseMeshEffect;
