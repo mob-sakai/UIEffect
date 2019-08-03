@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Serialization;
+using System;
 
 namespace Coffee.UIExtensions
 {
@@ -34,7 +35,7 @@ namespace Coffee.UIExtensions
 		[SerializeField] EffectMode m_EffectMode = EffectMode.Cutoff;
 
 		[Tooltip("Effect factor between 0(hidden) and 1(shown).")]
-		[SerializeField][Range(0, 1)] float m_EffectFactor = 1;
+		[SerializeField][Range(0, 1)] float m_EffectFactor = 0.5f;
 
 		[Tooltip("Transition texture (single channel texture).")]
 		[SerializeField] Texture m_TransitionTexture;
@@ -210,46 +211,80 @@ namespace Coffee.UIExtensions
 			_player.Play(reset, f => effectFactor = 1 - f);
 		}
 
+
+		public override Hash128 GetMaterialHash (Material material)
+		{
+			if (!isActiveAndEnabled || !material || !material.shader)
+				return new Hash128 ();
+
+			uint materialId = (uint)material.GetInstanceID ();
+			uint shaderId = 5 << 3;
+
+			string materialShaderName = material.shader.name;
+			if (materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
+			{
+				shaderId += 2;
+			}
+			else if (materialShaderName.Equals ("TextMeshPro/Sprite", StringComparison.Ordinal))
+			{
+				shaderId += 0;
+			}
+			else if (materialShaderName.StartsWith ("TextMeshPro/", StringComparison.Ordinal))
+			{
+				shaderId += 1;
+			}
+			else
+			{
+				shaderId += 0;
+			}
+
+
+			uint shaderVariantId = (uint)((int)m_EffectMode << 6);
+			uint resourceId = m_TransitionTexture ? (uint)m_TransitionTexture.GetInstanceID () : 0;
+			return new Hash128 (
+					materialId,
+					shaderId + shaderVariantId,
+					resourceId,
+					0
+				);
+		}
+
+		public override void ModifyMaterial (Material material)
+		{
+			Debug.LogFormat (this, $"ModifyMaterial {material}");
+
+			string materialShaderName = material.shader.name;
+			if (materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("TextMeshPro/Mobile/Distance Field (UITransition)");
+			}
+			else if (materialShaderName.Equals ("TextMeshPro/Sprite", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("UI/Hidden/UI-Effect-Transition");
+			}
+			else if (materialShaderName.StartsWith ("TextMeshPro/", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("TextMeshPro/Distance Field (UITransition)");
+			}
+			else
+			{
+				material.shader = Shader.Find ("UI/Hidden/UI-Effect-Transition");
+			}
+
+			SetShaderVariants (material, m_EffectMode);
+
+			if (m_TransitionTexture)
+			{
+				material.SetTexture ("_NoiseTex", m_TransitionTexture);
+			}
+			ptex.RegisterMaterial (material);
+		}
+
 		/// <summary>
 		/// Modifies the material.
 		/// </summary>
 		public override void ModifyMaterial()
 		{
-			if (isTMPro)
-			{
-				return;
-			}
-
-			ulong hash = (m_TransitionTexture ? (uint)m_TransitionTexture.GetInstanceID() : 0) + ((ulong)2 << 32) + ((ulong)m_EffectMode << 36);
-			if (_materialCache != null && (_materialCache.hash != hash || !isActiveAndEnabled || !m_EffectMaterial))
-			{
-				MaterialCache.Unregister(_materialCache);
-				_materialCache = null;
-			}
-
-			if (!isActiveAndEnabled || !m_EffectMaterial)
-			{
-				material = null;
-			}
-			else if (!m_TransitionTexture)
-			{
-				material = m_EffectMaterial;
-			}
-			else if (_materialCache != null && _materialCache.hash == hash)
-			{
-				material = _materialCache.material;
-			}
-			else
-			{
-				_materialCache = MaterialCache.Register(hash, m_TransitionTexture, () =>
-					{
-						var mat = new Material(m_EffectMaterial);
-						mat.name += "_" + m_TransitionTexture.name;
-						mat.SetTexture("_NoiseTex", m_TransitionTexture);
-						return mat;
-					});
-				material = _materialCache.material;
-			}
 		}
 
 		/// <summary>
@@ -314,10 +349,6 @@ namespace Coffee.UIExtensions
 
 		protected override void SetEffectDirty ()
 		{
-			foreach (var m in materials)
-			{
-				ptex.RegisterMaterial (m);
-			}
 			ptex.SetData(this, 0, m_EffectFactor);	// param1.x : effect factor
 			if (m_EffectMode == EffectMode.Dissolve)
 			{
