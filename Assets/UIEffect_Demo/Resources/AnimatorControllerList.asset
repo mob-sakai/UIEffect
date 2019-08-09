@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50ecc30e2b6ff2445a654cf5bc75e162, type: 3}
+  m_Name: AnimatorControllerList
+  m_EditorClassIdentifier: 
+  AnimatorControllers:
+  - Id: Tilt
+    Controller: {fileID: 9100000, guid: d500571750b79574ab086f174b5d5791, type: 2}
+    MultipleClips: 1
+  - Id: Blip
+    Controller: {fileID: 9100000, guid: 7e749134ffd17c5408714005c8d8f51a, type: 2}
+    MultipleClips: 0

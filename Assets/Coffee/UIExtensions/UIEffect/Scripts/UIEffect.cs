@@ -70,9 +70,9 @@ namespace Coffee.UIExtensions
 		[SerializeField] Color m_EffectColor = Color.white;
 		[Obsolete][HideInInspector]
 		[SerializeField] List<UIShadow.AdditionalShadow> m_AdditionalShadows = new List<UIShadow.AdditionalShadow>();
-		#pragma warning restore 0414
+        #pragma warning restore 0414
 
-		public enum BlurEx
+        public enum BlurEx
 		{
 			None = 0,
 			Ex = 1,
@@ -209,10 +209,10 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public bool advancedBlur { get { return isTMPro ? (material && material.IsKeywordEnabled("EX")) : m_AdvancedBlur; } }
 
-		/// <summary>
-		/// Modifies the mesh.
-		/// </summary>
-		public override void ModifyMesh(VertexHelper vh)
+        /// <summary>
+        /// Modifies the mesh.
+        /// </summary>
+        public override void ModifyMesh(VertexHelper vh)
 		{
 			if (!isActiveAndEnabled)
 			{
@@ -484,5 +484,136 @@ namespace Coffee.UIExtensions
 			posBounds.Set(minPos.x + 0.001f, minPos.y + 0.001f, maxPos.x - minPos.x - 0.002f, maxPos.y - minPos.y - 0.002f);
 			uvBounds.Set(minUV.x, minUV.y, maxUV.x - minUV.x, maxUV.y - minUV.y);
 		}
+
+        int aId = -1;
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                aId++;
+                if (aId % 3 == 0)
+                {
+                    Animate("Blip");
+                }
+                else
+                {
+                    Animate("Tilt");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Animate the sprite by providing a animationId
+        /// </summary>
+        /// <param name="animationId">This Id comes from the AnimatorControllerList ScriptableObject
+        /// that can be in any folder called "Resources" (the default location is 
+        /// Assets/UIEffect_Demo/Resources/AnimatorControllerList)</param>
+        /// <returns>Whether the animation played successfully</returns>
+        public bool Animate(string animationId)
+        {
+            if (GetComponent<Animator>() == null)
+            {
+                Animator anim = gameObject.AddComponent<Animator>();
+            }
+
+            Animator animator = GetComponent<Animator>();
+            
+            AnimatorControllerList controllerList = GetAnimatorControllerList();
+
+            if (controllerList == null)
+            {
+                return false;
+            }
+
+            // Set animator component's controller to found controller
+            ControllerItem controllerItem = controllerList.GetAnimatorController(animationId);
+            animator.runtimeAnimatorController = controllerItem.Controller;
+
+            if (animator.runtimeAnimatorController == null)
+            {
+                Debug.LogWarning("The AnimatorControllerList was not supplied with a Runtime controller", this);
+                return false;
+            }
+
+            // Play clip info, either plays starting sequence if it's in idle, or stops if it's already started
+            PlayAnimation(animationId, animator, controllerItem.MultipleClips);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Finds the AnimatorControllerList with same name as class in any "Resources" folder
+        /// </summary>
+        /// <returns>The found AnimatorControllerList</returns>
+        private AnimatorControllerList GetAnimatorControllerList()
+        {
+            // Get Resources path and load controller list from that
+            string resourcePath = "AnimatorControllerList";
+            AnimatorControllerList controllerList = Resources.Load<AnimatorControllerList>(resourcePath);
+
+            if (controllerList == null)
+            {
+                Debug.LogWarning("The ScriptableObject \"AnimatorControllerList\" is not in a \"Resources\" folder", this);
+                return null;
+            }
+
+            return controllerList;
+        }
+
+        /// <summary>
+        /// Plays an animation depending on the animator's state
+        /// </summary>
+        /// <param name="animationId">The type of animation to play</param>
+        /// <param name="animator">The animator to do the animation</param>
+        /// <param name="multipleClips">Does animation have two clips</param>
+        private void PlayAnimation(string animationId, Animator animator, bool multipleClips)
+        {
+            AnimatorClipInfo[] clipInfo = animator.GetCurrentAnimatorClipInfo(0);
+            AnimatorClipInfo[] nextClipInfo = animator.GetNextAnimatorClipInfo(0);
+            string inClipName = animationId + "In";
+            string outClipName = animationId + "Out";
+            string singleClipName = animationId;
+
+            if (!multipleClips)
+            {
+                if (clipInfo[0].clip.name != singleClipName)
+                {
+                    if (nextClipInfo.Length == 0 || nextClipInfo[0].clip.name != singleClipName)
+                    {
+                        animator.SetTrigger("Start");
+                    }
+                    else
+                    {
+                        animator.SetTrigger("Stop");
+                        animator.SetTrigger("Start");
+                    }
+                }
+            }
+            else
+            {
+                if (clipInfo[0].clip.name == inClipName)
+                {
+                    if (nextClipInfo.Length == 0 || nextClipInfo[0].clip.name != outClipName)
+                    {
+                        animator.SetTrigger("Stop");
+                    }
+                    else
+                    {
+                        animator.SetTrigger("Start");
+                    }
+                }
+                else
+                {
+                    if (nextClipInfo.Length == 0 || nextClipInfo[0].clip.name != inClipName)
+                    {
+                        animator.SetTrigger("Start");
+                    }
+                    else
+                    {
+                        animator.SetTrigger("Stop");
+                    }
+                }
+            }
+        }
 	}
 }
