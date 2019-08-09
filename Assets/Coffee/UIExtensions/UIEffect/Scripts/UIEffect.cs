@@ -485,23 +485,6 @@ namespace Coffee.UIExtensions
 			uvBounds.Set(minUV.x, minUV.y, maxUV.x - minUV.x, maxUV.y - minUV.y);
 		}
 
-        int aId = -1;
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                aId++;
-                if (aId % 3 == 0)
-                {
-                    Animate("Blip");
-                }
-                else
-                {
-                    Animate("Tilt");
-                }
-            }
-        }
-
         /// <summary>
         /// Animate the sprite by providing a animationId
         /// </summary>
@@ -513,7 +496,7 @@ namespace Coffee.UIExtensions
         {
             if (GetComponent<Animator>() == null)
             {
-                Animator anim = gameObject.AddComponent<Animator>();
+                gameObject.AddComponent<Animator>();
             }
 
             Animator animator = GetComponent<Animator>();
@@ -544,7 +527,7 @@ namespace Coffee.UIExtensions
         /// <summary>
         /// Finds the AnimatorControllerList with same name as class in any "Resources" folder
         /// </summary>
-        /// <returns>The found AnimatorControllerList</returns>
+        /// <returns>The found AnimatorControllerList (can be null)</returns>
         private AnimatorControllerList GetAnimatorControllerList()
         {
             // Get Resources path and load controller list from that
