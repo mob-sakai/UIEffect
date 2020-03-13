@@ -18,7 +18,11 @@ namespace Coffee.UIExtensions
 	/// Base class for effects that modify the generated Mesh.
 	/// It works well not only for standard Graphic components (Image, RawImage, Text, etc.) but also for TextMeshPro and TextMeshProUGUI.
 	/// </summary>
+#if UNITY_2018_3_OR_NEWER
+	[ExecuteAlways]
+#else
 	[ExecuteInEditMode]
+#endif
 	public abstract class BaseMeshEffect : UIBehaviour, IMeshModifier
 	{
 		//################################
