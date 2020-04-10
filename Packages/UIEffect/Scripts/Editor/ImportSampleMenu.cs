@@ -56,7 +56,7 @@ namespace Coffee.UIExtensions
             else
                 throw new DirectoryNotFoundException(src);
 
-            AssetDatabase.ImportAsset(dst, ImportAssetOptions.ImportRecursive);
+            AssetDatabase.Refresh(ImportAssetOptions.ImportRecursive);
         }
 
         private static string GetPreviousSamplePath(string displayName, string sampleName)
