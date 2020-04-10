@@ -259,8 +259,8 @@ half4 ApplyShinyEffect(half4 color, half2 shinyParam)
 	fixed brightness = param1.w;
 	fixed gloss = param2.x;
 	half normalized = 1 - saturate(abs((nomalizedPos - location) / width));
-	half shinePower = smoothstep(0, soft*2, normalized);
-	half3 reflectColor = lerp(1, color.rgb * 10, gloss);
+	half shinePower = smoothstep(0, soft, normalized);
+	half3 reflectColor = lerp(1, color.rgb * 7, gloss);
 
 	color.rgb += color.a * (shinePower / 2) * brightness * reflectColor;
 
