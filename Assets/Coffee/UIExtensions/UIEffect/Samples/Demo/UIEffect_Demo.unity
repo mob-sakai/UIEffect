@@ -1723,7 +1723,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 112, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &64317403
 Animator:
@@ -5561,7 +5561,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 112, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &174393583
 Animator:
@@ -9858,7 +9858,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 112.00001, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &322542923
 Animator:
@@ -10019,7 +10019,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 112, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &324158645
 Animator:
@@ -11383,7 +11383,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 112.00001, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &356423216
 Animator:
@@ -15180,7 +15180,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 112.00001, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &467476411
 Animator:
@@ -15214,10 +15214,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectFactor: 0.52
-  m_Width: 0.17
+  m_Width: 0.12
   m_Rotation: 135
   m_Softness: 1
-  m_Brightness: 1
+  m_Brightness: 0.57
   m_Gloss: 1
   m_EffectArea: 0
   m_Player:
@@ -17815,7 +17815,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 112, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &536193731
 Animator:
@@ -27981,7 +27981,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 1
   m_SortingLayerID: 0
   m_SortingOrder: 10
   m_TargetDisplay: 0
@@ -29002,8 +29002,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BlurFactor: 1
   m_Style: 3
-  m_EffectColor: {r: 0, g: 0.66896534, b: 1, a: 0.5019608}
-  m_EffectDistance: {x: 6, y: -6}
+  m_EffectColor: {r: 0, g: 1, b: 0.08719444, a: 0.50980395}
+  m_EffectDistance: {x: 4, y: 4}
   m_UseGraphicAlpha: 0
 --- !u!114 &913664183
 MonoBehaviour:
@@ -29018,10 +29018,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectFactor: 1
-  m_ColorFactor: 1
+  m_ColorFactor: 0
   m_BlurFactor: 0
   m_EffectMode: 0
-  m_ColorMode: 0
+  m_ColorMode: 1
   m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 0
@@ -29495,7 +29495,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 112.00001, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &921902407
 Animator:
@@ -31208,8 +31208,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 50857159}
   m_HandleRect: {fileID: 50857158}
   m_Direction: 2
-  m_Value: 0.99999994
-  m_Size: 0.070848785
+  m_Value: 1
+  m_Size: 0.09822756
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -32109,7 +32109,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 112, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &970441791
 Animator:
@@ -38013,7 +38013,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 112, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &1123579949
 Animator:
@@ -42733,7 +42733,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 112, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &1274348207
 Animator:
@@ -52569,7 +52569,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 112, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &1577050581
 Animator:
@@ -55860,7 +55860,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 112.00001, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &1705817436
 Animator:
@@ -60036,7 +60036,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 112, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &1814068975
 Animator:
@@ -61776,7 +61776,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 112, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &1842158193
 Animator:
@@ -64296,7 +64296,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 112.00001, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &1956615354
 Animator:
@@ -70780,7 +70780,7 @@ MonoBehaviour:
     m_LineSpacing: 0.76
   m_Text: 'Color
 
-    Set'
+    Fill'
 --- !u!222 &2147462309
 CanvasRenderer:
   m_ObjectHideFlags: 0
