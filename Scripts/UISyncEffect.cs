@@ -71,11 +71,13 @@ namespace Coffee.UIExtensions
             targetEffect.ModifyMesh(vh, graphic);
         }
 
+#if UNITY_EDITOR
         protected override void OnValidate()
         {
             SetVerticesDirty();
             SetMaterialDirty();
             SetEffectParamsDirty();
         }
+#endif
     }
 }

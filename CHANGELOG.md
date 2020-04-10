@@ -1,3 +1,11 @@
+# [4.0.0-preview.2](https://github.com/mob-sakai/UIEffect/compare/v4.0.0-preview.1...v4.0.0-preview.2) (2020-04-10)
+
+
+### Bug Fixes
+
+* compilation fails on build ([f34ae2c](https://github.com/mob-sakai/UIEffect/commit/f34ae2ce0f834eeb47927f2c0f8d6384adfe79da))
+* fix project settings ([8685165](https://github.com/mob-sakai/UIEffect/commit/8685165f41ec0a97c6647689a5596a2d014d563a)), closes [#198](https://github.com/mob-sakai/UIEffect/issues/198) [#195](https://github.com/mob-sakai/UIEffect/issues/195) [#189](https://github.com/mob-sakai/UIEffect/issues/189) [#173](https://github.com/mob-sakai/UIEffect/issues/173) [#104](https://github.com/mob-sakai/UIEffect/issues/104) [#158](https://github.com/mob-sakai/UIEffect/issues/158) [#143](https://github.com/mob-sakai/UIEffect/issues/143)
+
 # [4.0.0-preview.1](https://github.com/mob-sakai/UIEffect/compare/v3.2.0...v4.0.0-preview.1) (2020-04-10)
 
 
@@ -26,7 +34,12 @@
 * UIEffectCapturedImage will be supported by another package.
 * TextMeshPro support has been removed from this package. It will be supported by another package.
 
-# Changelog
+
+
+
+<br><br><br><br>
+
+# Changelog before version 4.0.0
 
 ## [v3.2.0](https://github.com/mob-sakai/UIEffect/tree/v3.2.0) (2019-07-17)
 
