@@ -1,18 +1,54 @@
 {
-  "name": "com.coffee.uieffect",
-	"displayName": "UIEffect",
-	"description": " UIEffect is an effect component for uGUI element in Unity.\nLet's decorate your UI with effects!",
-  "version": "3.2.0",
-	"unity": "5.5",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mob-sakai/UIEffect.git"
+  "name": "release-upm",
+  "description": "To release upm package, execute `npm run release` on bash.",
+  "version": "1.0.0",
+  "devDependencies": {
+    "git-snapshot": "^2.2.0",
+    "@semantic-release/changelog": "^5.0.0",
+    "@semantic-release/git": "^9.0.0",
+    "@semantic-release/exec": "^5.0.0",
+    "semantic-release": "^17.0.2"
   },
-  "src": "Assets/Coffee/UIExtensions/UIEffect",
-	"author": "mob-sakai <sakai861104@gmail.com> (https://github.com/mob-sakai)",
-  "editorOnly": false,
-  "upmSupport": false,
-	"dependencies": {
-	}
+  "scripts": {
+    "release": "npm ci && cd `find Packages/*/.releaserc -exec dirname {} +` && npx semantic-release",
+    "release:debug": "npm run release -- --dry-run --no-ci --debug"
+  },
+  "release": {
+    "branches": [
+      "+([0-9])?(.{+([0-9]),x}).x",
+      "master",
+      {
+        "name": "preview",
+        "prerelease": true
+      }
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      [
+        "@semantic-release/npm",
+        {
+          "npmPublish": false,
+          "tarballDir": "."
+        }
+      ],
+      "@semantic-release/git",
+      [
+        "@semantic-release/github",
+        {
+          "assets": [
+            "*.tgz"
+          ]
+        }
+      ],
+      [
+        "@semantic-release/exec",
+        {
+          "verifyReleaseCmd": "test -d Samples && mv Samples Samples~ && rm -f Samples.meta || exit 0",
+          "publishCmd": "tar -xzvf *.tgz && git snapshot --prefix=package --branch=upm --remote=${options.repositoryUrl} --tag=${nextRelease.version} --message=\"${nextRelease.version}\n\n${nextRelease.notes}\""
+        }
+      ]
+    ]
+  }
 }
