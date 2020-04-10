@@ -1,3 +1,31 @@
+# [4.0.0-preview.1](https://github.com/mob-sakai/UIEffect/compare/v3.2.0...v4.0.0-preview.1) (2020-04-10)
+
+
+### Bug Fixes
+
+* adjusting the brightness of the shiny shader ([29b4dad](https://github.com/mob-sakai/UIEffect/commit/29b4dad9296f22b00687a27c6103820b58cbd890))
+* the effect is kept even if the component is disabled (UIFlip, UIGradient) ([6124214](https://github.com/mob-sakai/UIEffect/commit/612421432defaf4e38fa97e12392021e9954027f))
+
+
+### Features
+
+* add asmdef files ([24710fc](https://github.com/mob-sakai/UIEffect/commit/24710fc892265c16a635ebad0940f779e0c9cdcd))
+* new effect that synchronize with another effect ([7a2a97c](https://github.com/mob-sakai/UIEffect/commit/7a2a97c89e90cc94c14fb614544f248824e93f3f)), closes [#159](https://github.com/mob-sakai/UIEffect/issues/159) [#158](https://github.com/mob-sakai/UIEffect/issues/158) [#143](https://github.com/mob-sakai/UIEffect/issues/143)
+* transfer TextMeshPro support to another package ([be90210](https://github.com/mob-sakai/UIEffect/commit/be90210e6cbf39133bd829e4bf08b9005dd925f4))
+* transfer UIEffectCapturedImage support to another package ([c2a2320](https://github.com/mob-sakai/UIEffect/commit/c2a23202e18d103d58d8ebf56851e693f5ac1bb7))
+* update docs to support Unity Package Manager ([bdc891a](https://github.com/mob-sakai/UIEffect/commit/bdc891a88ea2b9456276cfe99286c2e799e9c36b)), closes [#141](https://github.com/mob-sakai/UIEffect/issues/141)
+* update the effect architecture ([4c08c8c](https://github.com/mob-sakai/UIEffect/commit/4c08c8c1621cc8d3a1f5d834c77d925b51331cd5)), closes [#202](https://github.com/mob-sakai/UIEffect/issues/202) [#198](https://github.com/mob-sakai/UIEffect/issues/198) [#195](https://github.com/mob-sakai/UIEffect/issues/195) [#189](https://github.com/mob-sakai/UIEffect/issues/189) [#173](https://github.com/mob-sakai/UIEffect/issues/173) [#104](https://github.com/mob-sakai/UIEffect/issues/104)
+* update the structure of shaders ([db06e68](https://github.com/mob-sakai/UIEffect/commit/db06e68cfbe3a89e7de9d6ceef841f29f99611a5))
+* updated the Unity version used for development to 2018.3 ([c5f22c1](https://github.com/mob-sakai/UIEffect/commit/c5f22c1a3915dd9935b983af1971fa6018f2f320)), closes [#169](https://github.com/mob-sakai/UIEffect/issues/169)
+
+
+### BREAKING CHANGES
+
+* Scenes, prefabs and scripts using UIEffect v3.x may not work properly.
+* The recommended Unity version is 2018.1 or later; it will work with Unity 2017.1, but it is not guaranteed to be supported.
+* UIEffectCapturedImage will be supported by another package.
+* TextMeshPro support has been removed from this package. It will be supported by another package.
+
 # Changelog
 
 ## [v3.2.0](https://github.com/mob-sakai/UIEffect/tree/v3.2.0) (2019-07-17)
