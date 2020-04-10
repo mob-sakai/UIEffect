@@ -49,7 +49,7 @@ namespace Coffee.UIExtensions
         /// Call used to modify mesh.
         /// </summary>
         /// <param name="vh">VertexHelper.</param>
-        public override void ModifyMesh(VertexHelper vh)
+        public override void ModifyMesh(VertexHelper vh, Graphic graphic)
         {
             if (!isActiveAndEnabled) return;
 

@@ -21,13 +21,9 @@ namespace Coffee.UIExtensions.Editors
         {
             if (changed)
             {
-                var graphics = targets.OfType<BaseMaterialEffect>()
-                    .Select(x => x.graphic)
-                    .Where(x => x);
-
-                foreach (var g in graphics)
+                foreach (var effect in targets.OfType<BaseMaterialEffect>())
                 {
-                    BaseConnector.FindConnector(g).SetMaterialDirty(g);
+                    effect.SetMaterialDirty();
                 }
             }
 

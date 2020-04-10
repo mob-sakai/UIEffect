@@ -181,7 +181,7 @@ namespace Coffee.UIExtensions
         /// <summary>
         /// Modifies the mesh.
         /// </summary>
-        public override void ModifyMesh(VertexHelper vh)
+        public override void ModifyMesh(VertexHelper vh, Graphic graphic)
         {
             if (!isActiveAndEnabled || vh.currentVertCount <= 0 || m_Style == ShadowStyle.None)
             {

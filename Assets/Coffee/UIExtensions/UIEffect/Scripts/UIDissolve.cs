@@ -136,6 +136,16 @@ namespace Coffee.UIExtensions
             }
         }
 
+        private static Texture defaultTransitionTexture
+        {
+            get
+            {
+                return _defaultTransitionTexture
+                    ? _defaultTransitionTexture
+                    : (_defaultTransitionTexture = Resources.Load<Texture>("Default-Transition"));
+            }
+        }
+
         /// <summary>
         /// The area for effect.
         /// </summary>
@@ -201,19 +211,9 @@ namespace Coffee.UIExtensions
             );
         }
 
-
-        private static Texture defaultTransitionTexture
+        public override void ModifyMaterial(Material newMaterial, Graphic graphic)
         {
-            get
-            {
-                return _defaultTransitionTexture
-                    ? _defaultTransitionTexture
-                    : (_defaultTransitionTexture = Resources.Load<Texture>("Default-Transition"));
-            }
-        }
-
-        public override void ModifyMaterial(Material newMaterial)
-        {
+            var connector = BaseConnector.FindConnector(graphic);
             newMaterial.shader = connector.FindShader("UIDissolve");
             SetShaderVariants(newMaterial, m_ColorMode);
 
@@ -224,7 +224,7 @@ namespace Coffee.UIExtensions
         /// <summary>
         /// Modifies the mesh.
         /// </summary>
-        public override void ModifyMesh(VertexHelper vh)
+        public override void ModifyMesh(VertexHelper vh, Graphic graphic)
         {
             if (!isActiveAndEnabled)
                 return;

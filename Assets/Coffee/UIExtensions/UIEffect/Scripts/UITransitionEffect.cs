@@ -226,8 +226,9 @@ namespace Coffee.UIExtensions
             );
         }
 
-        public override void ModifyMaterial(Material newMaterial)
+        public override void ModifyMaterial(Material newMaterial, Graphic graphic)
         {
+            var connector = BaseConnector.FindConnector(graphic);
             newMaterial.shader = connector.FindShader("UITransition");
             SetShaderVariants(newMaterial, m_EffectMode);
 
@@ -238,7 +239,7 @@ namespace Coffee.UIExtensions
         /// <summary>
         /// Modifies the mesh.
         /// </summary>
-        public override void ModifyMesh(VertexHelper vh)
+        public override void ModifyMesh(VertexHelper vh, Graphic graphic)
         {
             if (!isActiveAndEnabled)
             {

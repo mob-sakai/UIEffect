@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -41,6 +42,8 @@ namespace Coffee.UIExtensions
             get { return _rectTransform ? _rectTransform : _rectTransform = GetComponent<RectTransform>(); }
         }
 
+        internal readonly List<UISyncEffect> syncEffects = new List<UISyncEffect>(0);
+
         /// <summary>
         /// The material for rendering.
         /// </summary>
@@ -64,6 +67,11 @@ namespace Coffee.UIExtensions
         /// <param name="vh">VertexHelper.</param>
         public virtual void ModifyMesh(VertexHelper vh)
         {
+            ModifyMesh(vh, graphic);
+        }
+
+        public virtual void ModifyMesh(VertexHelper vh, Graphic graphic)
+        {
         }
 
         /// <summary>
@@ -72,6 +80,11 @@ namespace Coffee.UIExtensions
         protected virtual void SetVerticesDirty()
         {
             connector.SetVerticesDirty(graphic);
+
+            foreach (var effect in syncEffects)
+            {
+                effect.SetVerticesDirty();
+            }
 
 // #if TMP_PRESENT
 //             if (textMeshPro)

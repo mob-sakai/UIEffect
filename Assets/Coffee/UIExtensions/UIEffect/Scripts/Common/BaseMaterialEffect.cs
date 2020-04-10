@@ -36,9 +36,15 @@ namespace Coffee.UIExtensions
         /// <summary>
         /// Mark the vertices as dirty.
         /// </summary>
-        protected void SetMaterialDirty()
+        public void SetMaterialDirty()
         {
             connector.SetMaterialDirty(graphic);
+
+            foreach (var effect in syncEffects)
+            {
+                effect.SetMaterialDirty();
+                // BaseConnector.FindConnector(effect.graphic).SetMaterialDirty(effect.graphic);
+            }
         }
 
         public virtual Hash128 GetMaterialHash(Material baseMaterial)
@@ -46,7 +52,12 @@ namespace Coffee.UIExtensions
             return k_InvalidHash;
         }
 
-        public virtual Material GetModifiedMaterial(Material baseMaterial)
+        public Material GetModifiedMaterial(Material baseMaterial)
+        {
+            return GetModifiedMaterial(baseMaterial, graphic);
+        }
+
+        public virtual Material GetModifiedMaterial(Material baseMaterial, Graphic graphic)
         {
             if (!isActiveAndEnabled) return baseMaterial;
 
@@ -55,7 +66,7 @@ namespace Coffee.UIExtensions
             var modifiedMaterial = baseMaterial;
             if (_effectMaterialHash.isValid)
             {
-                modifiedMaterial = MaterialCache.Register(baseMaterial, _effectMaterialHash, ModifyMaterial);
+                modifiedMaterial = MaterialCache.Register(baseMaterial, _effectMaterialHash, ModifyMaterial, graphic);
             }
 
             MaterialCache.Unregister(oldHash);
@@ -68,7 +79,7 @@ namespace Coffee.UIExtensions
         // 	return material && material.shader && material.shader.name.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal);
         // }
 
-        public virtual void ModifyMaterial(Material newMaterial)
+        public virtual void ModifyMaterial(Material newMaterial, Graphic graphic)
         {
             if (isActiveAndEnabled && paramTex != null)
                 paramTex.RegisterMaterial(newMaterial);
