@@ -26,7 +26,12 @@
 * UIEffectCapturedImage will be supported by another package.
 * TextMeshPro support has been removed from this package. It will be supported by another package.
 
-# Changelog
+
+
+
+<br><br><br><br>
+
+# Changelog before version 4.0.0
 
 ## [v3.2.0](https://github.com/mob-sakai/UIEffect/tree/v3.2.0) (2019-07-17)
 
