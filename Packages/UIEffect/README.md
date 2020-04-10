@@ -6,7 +6,7 @@ UIEffect provides visual effect components for Unity UI.
 [![](https://img.shields.io/npm/v/com.coffee.ui-effect?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.coffee.ui-effect/)
 [![](https://img.shields.io/github/v/release/mob-sakai/UIEffect?include_prereleases)](https://github.com/mob-sakai/UIEffect/releases)
 [![](https://img.shields.io/github/release-date/mob-sakai/UIEffect.svg)](https://github.com/mob-sakai/UIEffect/releases)  
-![](https://img.shields.io/badge/unity-2018.2%20or%20later-green.svg)
+![](https://img.shields.io/badge/unity-2017.1%20or%20later-green.svg)
 [![](https://img.shields.io/github/license/mob-sakai/UIEffect.svg)](https://github.com/mob-sakai/UIEffect/blob/master/LICENSE.txt)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-orange.svg)](http://makeapullrequest.com)
 [![](https://img.shields.io/github/watchers/mob-sakai/UIEffect.svg?style=social&label=Watch)](https://github.com/mob-sakai/UIEffect/subscription)
@@ -82,7 +82,6 @@ You can install it via [openupm-cli](https://github.com/openupm/openupm-cli).
 openupm add com.coffee.ui-effect
 ```
 
-
 #### Using Git (for Unity 2018.3 or later)
 
 Find the manifest.json file in the Packages folder of your project and edit it to look like this:
@@ -103,11 +102,11 @@ Or, use [UpmGitExtension](https://github.com/mob-sakai/UpmGitExtension) to insta
 
 #### For Unity 2018.2 or earlier
 
-Unity 2018.2 supports embedded packages.
-
 1. Download a source code zip file from [Releases](https://github.com/mob-sakai/UIEffect/releases) page
 2. Extract it
-3. Import it under `Packages` directory in your Unity project
+3. Import it into the following directory in your Unity project
+   - `Packages` (It works as an embedded package. For Unity 2018.1 or later)
+   - `Assets` (Legacy way. For Unity 2017.1 or later)
 
 
 
@@ -116,17 +115,16 @@ Unity 2018.2 supports embedded packages.
 
 #### For Unity 2019.1 or later
 
-1. Open `Package Manager` window
-2. Select `UI Particle` package in package list
-3. Click `Import Sample` button
-4. The demo project is imported into `Assets/Samples/UI Effect/{version}/Demo`
-5. Open `UIEffect_Demo` scene and play it
+1. Open `Package Manager` window and select `UI Particle` package in package list
+2. Click `Import in project` button  
+![](https://user-images.githubusercontent.com/12690315/79000480-a8bd4880-7b87-11ea-89c7-a17033a486ba.png)
+3. The demo will be imported into `Assets/Samples/UI Effect/{version}/Demo`; open `UIEffect_Demo` scene and play it
 
 #### For Unity 2018.4 or earlier
 
-1. Select `Assets/Samples/UI Effect Demo` from menu
-2. The demo project is imported into `Assets/Samples/UI Effect/{version}/Demo`
-3. Open `UIEffect_Demo` scene and play it
+1. Select `Assets/Samples/UI Effect Demo` from menu  
+![Assets_と_Menubar](https://user-images.githubusercontent.com/12690315/79001101-dd7dcf80-7b88-11ea-9cf2-b44c6c5c9b17.png)
+2. The demo will be imported into `Assets/Samples/UI Effect/{version}/Demo`; open `UIEffect_Demo` scene and play it
 
 
 
