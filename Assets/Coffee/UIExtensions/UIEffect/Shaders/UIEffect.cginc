@@ -222,13 +222,13 @@ fixed4 ApplyTransitionEffect(half4 color, half3 transParam)
 {
 	fixed4 param = tex2D(_ParamTex, float2(0.25, transParam.z));
 	float alpha = tex2D(_TransitionTex, transParam.xy).a;
-	
+
 	#if REVERSE
     fixed effectFactor = 1 - param.x;
 	#else
     fixed effectFactor = param.x;
 	#endif
-	
+
 	#if FADE
 	color.a *= saturate(alpha + (1 - effectFactor * 2));
 	#elif CUTOFF
