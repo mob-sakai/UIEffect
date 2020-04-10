@@ -51,6 +51,8 @@ namespace Coffee.UIExtensions
         /// <param name="vh">VertexHelper.</param>
         public override void ModifyMesh(VertexHelper vh)
         {
+            if (!isActiveAndEnabled) return;
+
             var vt = default(UIVertex);
             for (var i = 0; i < vh.currentVertCount; i++)
             {

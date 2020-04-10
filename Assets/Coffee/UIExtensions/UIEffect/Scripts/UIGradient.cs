@@ -232,7 +232,7 @@ namespace Coffee.UIExtensions
         /// </summary>
         public override void ModifyMesh(VertexHelper vh)
         {
-            if (!IsActive())
+            if (!isActiveAndEnabled)
                 return;
 
             // Gradient space.
