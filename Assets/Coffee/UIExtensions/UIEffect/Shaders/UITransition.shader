@@ -1,4 +1,4 @@
-﻿Shader "UI/Hidden/UI-Effect-HSV"
+Shader "Hidden/UITransition"
 {
 	Properties
 	{
@@ -15,6 +15,8 @@
 
 		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
 
+		[Header(Transition)]
+		_TransitionTex ("Transition Texture (A)", 2D) = "white" {}
 		_ParamTex ("Parameter Texture", 2D) = "white" {}
 	}
 
@@ -47,33 +49,39 @@
 
 		Pass
 		{
-			CGPROGRAM
+			Name "Default"
+
+		CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
+			#pragma target 2.0
+			
+			#define REVERSE 1
+			#define ADD 1
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
 
+			#pragma multi_compile __ FADE CUTOFF DISSOLVE
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
 
-			#define UI_HSV_MODIFIER 1
-			#include "UI-Effect.cginc"
-			#include "UI-Effect-Sprite.cginc"
+			#define UI_TRANSITION 1
+			#include "UIEffect.cginc"
+			#include "UIEffectSprite.cginc"
 
-			fixed4 frag(v2f IN) : COLOR
+			fixed4 frag(v2f IN) : SV_Target
 			{
-				half4 color = tex2D(_MainTex, IN.texcoord);// + _TextureSampleAdd) * IN.color;
+				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd);
 				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
+				
+				color = ApplyTransitionEffect(color, IN.eParam) * IN.color;
 
-				#ifdef UNITY_UI_ALPHACLIP
+				#if UNITY_UI_ALPHACLIP
 				clip (color.a - 0.001);
 				#endif
 
-				color = ApplyHsvEffect(color, IN.eParam);
-
-				return (color + _TextureSampleAdd) * IN.color;
+				return color;
 			}
-
-			ENDCG
+		ENDCG
 		}
 	}
 }

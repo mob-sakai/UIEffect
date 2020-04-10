@@ -2,7 +2,7 @@
 #define UI_EFFECT_INCLUDED
 
 
-sampler2D _NoiseTex;
+sampler2D _TransitionTex;
 sampler2D _ParamTex;
 
 #if GRAYSCALE | SEPIA | NEGA | PIXEL | MONO | CUTOFF | HUE
@@ -221,7 +221,7 @@ fixed4 ApplyColorEffect(half4 color, half4 factor)
 fixed4 ApplyTransitionEffect(half4 color, half3 transParam)
 {
 	fixed4 param = tex2D(_ParamTex, float2(0.25, transParam.z));
-	float alpha = tex2D(_NoiseTex, transParam.xy).a;
+	float alpha = tex2D(_TransitionTex, transParam.xy).a;
 	
 	#if REVERSE
     fixed effectFactor = 1 - param.x;

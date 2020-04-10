@@ -1,4 +1,4 @@
-Shader "UI/Hidden/UI-Effect-Shiny"
+Shader "Hidden/UIShiny"
 {
 	Properties
 	{
@@ -60,8 +60,8 @@ Shader "UI/Hidden/UI-Effect-Shiny"
 			#include "UnityUI.cginc"
 
 			#define UI_SHINY 1
-			#include "UI-Effect.cginc"
-			#include "UI-Effect-Sprite.cginc"
+			#include "UIEffect.cginc"
+			#include "UIEffectSprite.cginc"
 
 			fixed4 frag(v2f IN) : SV_Target
 			{

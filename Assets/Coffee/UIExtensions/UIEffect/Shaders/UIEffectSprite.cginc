@@ -12,9 +12,7 @@ struct appdata_t
 	float4 vertex   : POSITION;
 	float4 color    : COLOR;
 	float2 texcoord : TEXCOORD0;
-#if EX && TMP_SPRITE
-	float2	uvMask	: TEXCOORD2;
-#elif EX
+#if EX
 	float2	uvMask	: TEXCOORD1;
 #endif
 	UNITY_VERTEX_INPUT_INSTANCE_ID
