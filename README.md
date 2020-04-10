@@ -19,7 +19,7 @@ For details, see [CONTRIBUTING](https://github.com/mob-sakai/UIEffect/blob/upm/C
 
 ## How to release this package
 
-When you push to `preview`, `master` or `v{major}.{minor}` branch, this package is automatically released by GitHub Action.
+When you push to `preview`, `master` or `v{major}.x` branch, this package is automatically released by GitHub Action.
 
 * Update version in `package.json` 
 * Update CHANGELOG.md
