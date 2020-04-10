@@ -1,3 +1,12 @@
+# [4.0.0-preview.3](https://github.com/mob-sakai/UIEffect/compare/v4.0.0-preview.2...v4.0.0-preview.3) (2020-04-10)
+
+
+### Bug Fixes
+
+* fix sample importer ([ea7d073](https://github.com/mob-sakai/UIEffect/commit/ea7d073c53c2f1c964a209c03e78b744fd551cfc))
+* fix supported version ([09363dd](https://github.com/mob-sakai/UIEffect/commit/09363dd3f6906c9bb7f720db66baddb8b1b2029b))
+* Reduce resource file size ([4df8e3c](https://github.com/mob-sakai/UIEffect/commit/4df8e3c2dcf85ad8756f920cb2493a46e38dea6a))
+
 # [4.0.0-preview.2](https://github.com/mob-sakai/UIEffect/compare/v4.0.0-preview.1...v4.0.0-preview.2) (2020-04-10)
 
 
