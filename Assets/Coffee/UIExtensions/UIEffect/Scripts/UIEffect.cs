@@ -3,604 +3,381 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Serialization;
-
 #if UNITY_EDITOR
 using System.IO;
 using System.Linq;
 using UnityEditor;
+
 #endif
 
 namespace Coffee.UIExtensions
 {
-	/// <summary>
-	/// UIEffect.
-	/// </summary>
-	[ExecuteInEditMode]
-	[RequireComponent(typeof(Graphic))]
-	[DisallowMultipleComponent]
-	[AddComponentMenu("UI/UIEffect/UIEffect", 1)]
-	public class UIEffect : UIEffectBase, IMaterialModifier
-	{
-		//################################
-		// Constant or Static Members.
-		//################################
-		public const string shaderName = "UI/Hidden/UI-Effect";
-		static readonly ParameterTexture _ptex = new ParameterTexture(8, 1024, "_ParamTex");
-
-
-		//################################
-		// Serialize Members.
-		//################################
-		[FormerlySerializedAs("m_ToneLevel")]
-		[Tooltip("Effect factor between 0(no effect) and 1(complete effect).")]
-		[SerializeField][Range(0, 1)] float m_EffectFactor = 1;
-
-		[Tooltip("Color effect factor between 0(no effect) and 1(complete effect).")]
-		[SerializeField][Range(0, 1)] float m_ColorFactor = 1;
-
-		[FormerlySerializedAs("m_Blur")]
-		[Tooltip("How far is the blurring from the graphic.")]
-		[SerializeField][Range(0, 1)] float m_BlurFactor = 1;
-
-		[FormerlySerializedAs("m_ToneMode")]
-		[Tooltip("Effect mode")]
-		[SerializeField] EffectMode m_EffectMode = EffectMode.None;
-
-		[Tooltip("Color effect mode")]
-		[SerializeField] ColorMode m_ColorMode = ColorMode.Multiply;
-
-		[Tooltip ("Color for effect")]
-		[ColorUsage(false)]
-		[SerializeField] Color m_EffectColor = Color.white;
-
-		[Tooltip ("Blur effect mode")]
-		[SerializeField] BlurMode m_BlurMode = BlurMode.None;
-
-		[Tooltip("Advanced blurring remove common artifacts in the blur effect for uGUI.")]
-		[SerializeField] bool m_AdvancedBlur = false;
-
-		#pragma warning disable 0414
-		[Obsolete][HideInInspector]
-		[SerializeField][Range(0, 1)] float m_ShadowBlur = 1;
-		[Obsolete][HideInInspector]
-		[SerializeField] ShadowStyle m_ShadowStyle;
-		[Obsolete][HideInInspector]
-		[SerializeField] Color m_ShadowColor = Color.black;
-		[Obsolete][HideInInspector]
-		[SerializeField] Vector2 m_EffectDistance = new Vector2(1f, -1f);
-		[Obsolete][HideInInspector]
-		[SerializeField] bool m_UseGraphicAlpha = true;
-		[Obsolete][HideInInspector]
-		[SerializeField] List<UIShadow.AdditionalShadow> m_AdditionalShadows = new List<UIShadow.AdditionalShadow>();
-		#pragma warning restore 0414
-
-		public enum BlurEx
-		{
-			None = 0,
-			Ex = 1,
-		}
-
-		//################################
-		// Public Members.
-		//################################
-#if UNITY_2017_1_OR_NEWER
-		public override AdditionalCanvasShaderChannels requiredChannels
-		{
-			get
-			{
-				if (advancedBlur)
-				{
-					return isTMPro
-						? AdditionalCanvasShaderChannels.TexCoord1 | AdditionalCanvasShaderChannels.TexCoord2
-						: AdditionalCanvasShaderChannels.TexCoord1;
-				}
-				return AdditionalCanvasShaderChannels.None;
-			}
-		}
-#endif
-
-		/// <summary>
-		/// Effect factor between 0(no effect) and 1(complete effect).
-		/// </summary>
-		[System.Obsolete("Use effectFactor instead (UnityUpgradable) -> effectFactor")]
-		public float toneLevel
-		{
-			get { return m_EffectFactor; }
-			set
-			{
-				m_EffectFactor = Mathf.Clamp(value, 0, 1);
-				SetEffectDirty ();
-			}
-		}
-
-		/// <summary>
-		/// Effect factor between 0(no effect) and 1(complete effect).
-		/// </summary>
-		public float effectFactor
-		{
-			get { return m_EffectFactor; }
-			set
-			{
-				m_EffectFactor = Mathf.Clamp(value, 0, 1);
-				SetEffectDirty ();
-			}
-		}
-
-		/// <summary>
-		/// Color effect factor between 0(no effect) and 1(complete effect).
-		/// </summary>
-		public float colorFactor
-		{
-			get { return m_ColorFactor; }
-			set
-			{
-				m_ColorFactor = Mathf.Clamp(value, 0, 1);
-				SetEffectDirty ();
-			}
-		}
-
-		/// <summary>
-		/// How far is the blurring from the graphic.
-		/// </summary>
-		[System.Obsolete("Use blurFactor instead (UnityUpgradable) -> blurFactor")]
-		public float blur
-		{
-			get { return m_BlurFactor; }
-			set
-			{
-				m_BlurFactor = Mathf.Clamp(value, 0, 1);
-				SetEffectDirty ();
-			}
-		}
-
-		/// <summary>
-		/// How far is the blurring from the graphic.
-		/// </summary>
-		[System.Obsolete("Use effectFactor instead (UnityUpgradable) -> effectFactor")]
-		public float blurFactor
-		{
-			get { return m_BlurFactor; }
-			set
-			{
-				m_BlurFactor = Mathf.Clamp(value, 0, 1);
-				SetEffectDirty ();
-			}
-		}
-
-		/// <summary>
-		/// Effect mode(readonly).
-		/// </summary>
-		[System.Obsolete("Use effectMode instead (UnityUpgradable) -> effectMode")]
-		public EffectMode toneMode { get { return m_EffectMode; } }
-
-		/// <summary>
-		/// Effect mode(readonly).
-		/// </summary>
-		public EffectMode effectMode
-		{
-			get { return m_EffectMode; }
-			set
-			{
-				if (m_EffectMode != value)
-				{
-					m_EffectMode = value;
-					if (graphic)
-					{
-						graphic.SetMaterialDirty ();
-					}
-				}
-			}
-		}
-
-		/// <summary>
-		/// Color effect mode.
-		/// </summary>
-		public ColorMode colorMode
-		{
-			get { return m_ColorMode; }
-			set
-			{
-				if (m_ColorMode != value)
-				{
-					m_ColorMode = value;
-					if (graphic)
-					{
-						graphic.SetMaterialDirty ();
-					}
-				}
-			}
-		}
-
-		/// <summary>
-		/// Blur effect mode(readonly).
-		/// </summary>
-		public BlurMode blurMode
-		{
-			get { return m_BlurMode; }
-			set
-			{
-				if (m_BlurMode != value)
-				{
-					m_BlurMode = value;
-					if (graphic)
-					{
-						graphic.SetMaterialDirty ();
-					}
-				}
-			}
-		}
-
-		/// <summary>
-		/// Color for the color effect.
-		/// </summary>
-		public Color effectColor
-		{
-			get { return m_EffectColor; }
-			set
-			{
-				if (m_EffectColor != value)
-				{
-					m_EffectColor = value;
-					SetEffectDirty ();
-				}
-			}
-		}
-
-		/// <summary>
-		/// Gets the parameter texture.
-		/// </summary>
-		public override ParameterTexture ptex { get { return _ptex; } }
-
-		/// <summary>
-		/// Advanced blurring remove common artifacts in the blur effect for uGUI.
-		/// </summary>
-		public bool advancedBlur
-		{
-			get { return m_AdvancedBlur; }
-			set
-			{
-				if (m_AdvancedBlur != value)
-				{
-					m_AdvancedBlur = value;
-					if (graphic)
-					{
-						graphic.SetMaterialDirty ();
-					}
-				}
-			}
-		}
-
-		public override Hash128 GetMaterialHash (Material material)
-		{
-			if (!isActiveAndEnabled || !material || !material.shader)
-				return new Hash128 ();
-
-			uint materialId = (uint)material.GetInstanceID ();
-			uint shaderId = 2 << 3;
-
-			string materialShaderName = material.shader.name;
-			if (materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
-			{
-				shaderId += 2;
-			}
-			else if (materialShaderName.Equals ("TextMeshPro/Sprite", StringComparison.Ordinal))
-			{
-				shaderId += 0;
-			}
-			else if (materialShaderName.StartsWith ("TextMeshPro/", StringComparison.Ordinal))
-			{
-				shaderId += 1;
-			}
-			else
-			{
-				shaderId += 0;
-			}
-
-
-			uint shaderVariantId = (uint)(((int)m_EffectMode << 6) + ((int)m_ColorMode << 9) + ((int)m_BlurMode << 11) + ((m_AdvancedBlur ? 1 : 0) << 13));
-			return new Hash128 (
-					materialId,
-					shaderId + shaderVariantId,
-					0,
-					0
-				);
-		}
-
-		public override void ModifyMaterial (Material material)
-		{
-
-			string materialShaderName = material.shader.name;
-			if (materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
-			{
-				material.shader = Shader.Find ("TextMeshPro/Mobile/Distance Field (UIEffect)");
-			}
-			else if (materialShaderName.Equals ("TextMeshPro/Sprite", StringComparison.Ordinal))
-			{
-				material.shader = Shader.Find ("UI/Hidden/UI-Effect");
-			}
-			else if (materialShaderName.StartsWith ("TextMeshPro/", StringComparison.Ordinal))
-			{
-				material.shader = Shader.Find ("TextMeshPro/Distance Field (UIEffect)");
-			}
-			else
-			{
-				material.shader = Shader.Find ("UI/Hidden/UI-Effect");
-			}
-
-			SetShaderVariants (material, m_EffectMode, m_ColorMode, m_BlurMode, m_AdvancedBlur ? BlurEx.Ex : BlurEx.None);
-
-			ptex.RegisterMaterial (material);
-		}
-
-		/// <summary>
-		/// Modifies the mesh.
-		/// </summary>
-		public override void ModifyMesh(VertexHelper vh)
-		{
-			if (!isActiveAndEnabled)
-			{
-				return;
-			}
-
-			float normalizedIndex = ptex.GetNormalizedIndex(this);
-
-			if (m_BlurMode != BlurMode.None && advancedBlur)
-			{
-				vh.GetUIVertexStream(tempVerts);
-				vh.Clear();
-				var count = tempVerts.Count;
-
-				// Bundle
-				int bundleSize = (targetGraphic is Text || isTMPro) ? 6 : count;
-				Rect posBounds = default(Rect);
-				Rect uvBounds = default(Rect);
-				Vector3 size = default(Vector3);
-				Vector3 tPos = default(Vector3);
-				Vector3 tUV = default(Vector3);
-				float expand = (float)blurMode * 6 * 2;
-
-				for (int i = 0; i < count; i += bundleSize)
-				{
-					// min/max for bundled-quad
-					GetBounds(tempVerts, i, bundleSize, ref posBounds, ref uvBounds, true);
-
-					// Pack uv mask.
-					Vector2 uvMask = new Vector2(Packer.ToFloat(uvBounds.xMin, uvBounds.yMin), Packer.ToFloat(uvBounds.xMax, uvBounds.yMax));
-
-					// Quad
-					for (int j = 0; j < bundleSize; j += 6)
-					{
-						Vector3 cornerPos1 = tempVerts[i + j + 1].position;
-						Vector3 cornerPos2 = tempVerts[i + j + 4].position;
-
-						// Is outer quad?
-						bool hasOuterEdge = (bundleSize == 6)
-						                    || !posBounds.Contains(cornerPos1)
-						                    || !posBounds.Contains(cornerPos2);
-						if (hasOuterEdge)
-						{
-							Vector3 cornerUv1 = tempVerts[i + j + 1].uv0;
-							Vector3 cornerUv2 = tempVerts[i + j + 4].uv0;
-
-							Vector3 centerPos = (cornerPos1 + cornerPos2) / 2;
-							Vector3 centerUV = (cornerUv1 + cornerUv2) / 2;
-							size = (cornerPos1 - cornerPos2);
-
-							size.x = 1 + expand / Mathf.Abs(size.x);
-							size.y = 1 + expand / Mathf.Abs(size.y);
-							size.z = 1 + expand / Mathf.Abs(size.z);
-
-							tPos = centerPos - Vector3.Scale(size, centerPos);
-							tUV = centerUV - Vector3.Scale(size, centerUV);
-						}
-
-						// Vertex
-						for (int k = 0; k < 6; k++)
-						{
-							UIVertex vt = tempVerts[i + j + k];
-
-							Vector3 pos = vt.position;
-							Vector2 uv0 = vt.uv0;
-
-							if (hasOuterEdge && (pos.x < posBounds.xMin || posBounds.xMax < pos.x))
-							{
-								pos.x = pos.x * size.x + tPos.x;
-								uv0.x = uv0.x * size.x + tUV.x;
-							}
-							if (hasOuterEdge && (pos.y < posBounds.yMin || posBounds.yMax < pos.y))
-							{
-								pos.y = pos.y * size.y + tPos.y;
-								uv0.y = uv0.y * size.y + tUV.y;
-							}
-
-							vt.uv0 = new Vector2(Packer.ToFloat((uv0.x + 0.5f) / 2f, (uv0.y + 0.5f) / 2f), normalizedIndex);
-							vt.position = pos;
-
-							if (isTMPro)
-							{
-								#if UNITY_2017_1_OR_NEWER
-								vt.uv2 = uvMask;
-								#endif
-							}
-							else
-							{
-								vt.uv1 = uvMask;
-							}
-
-							tempVerts[i + j + k] = vt;
-						}
-					}
-				}
-
-				vh.AddUIVertexTriangleStream(tempVerts);
-				tempVerts.Clear();
-			}
-			else
-			{
-				int count = vh.currentVertCount;
-				UIVertex vt = default(UIVertex);
-				for (int i = 0; i < count; i++)
-				{
-					vh.PopulateUIVertex(ref vt, i);
-					Vector2 uv0 = vt.uv0;
-					vt.uv0 = new Vector2(
-						Packer.ToFloat((uv0.x + 0.5f) / 2f, (uv0.y + 0.5f) / 2f),
-						normalizedIndex
-					);
-					vh.SetUIVertex(vt, i);
-				}
-			}
-		}
-
-		protected override void SetEffectDirty ()
-		{
-			ptex.SetData(this, 0, m_EffectFactor);	// param.x : effect factor
-			ptex.SetData(this, 1, m_ColorFactor);	// param.y : color factor
-			ptex.SetData(this, 2, m_BlurFactor);    // param.z : blur factor
-			ptex.SetData (this, 4, m_EffectColor.r);  // param2.x : red
-			ptex.SetData (this, 5, m_EffectColor.g);  // param2.y : green
-			ptex.SetData (this, 6, m_EffectColor.b);  // param2.z : blue
-		}
-
-#if UNITY_EDITOR
-		/// <summary>
-		/// Gets the material.
-		/// </summary>
-		/// <returns>The material.</returns>
-		protected override Material GetMaterial()
-		{
-			return null;
-		}
-
-		#pragma warning disable 0612
-		protected override void UpgradeIfNeeded()
-		{
-			// Upgrade for v3.0.0
-			if (IsShouldUpgrade(300))
-			{
-				if (m_ColorMode != ColorMode.Multiply)
-				{
-					Color col = targetGraphic.color;
-					col.r = m_EffectColor.r;
-					col.g = m_EffectColor.g;
-					col.b = m_EffectColor.b;
-					targetGraphic.color = col;
-					m_ColorFactor = m_EffectColor.a;
-				}
-
-				if (m_ShadowStyle != ShadowStyle.None || m_AdditionalShadows.Any(x => x.style != ShadowStyle.None))
-				{
-					if (m_ShadowStyle != ShadowStyle.None)
-					{
-						var shadow = gameObject.GetComponent<UIShadow>() ?? gameObject.AddComponent<UIShadow>();
-						shadow.style = m_ShadowStyle;
-						shadow.effectDistance = m_EffectDistance;
-						shadow.effectColor = m_ShadowColor;
-						shadow.useGraphicAlpha = m_UseGraphicAlpha;
-						shadow.blurFactor = m_ShadowBlur;
-					}
-
-					foreach (var s in m_AdditionalShadows)
-					{
-						if (s.style == ShadowStyle.None)
-						{
-							continue;
-						}
-
-						var shadow = gameObject.AddComponent<UIShadow>();
-						shadow.style = s.style;
-						shadow.effectDistance = s.effectDistance;
-						shadow.effectColor = s.effectColor;
-						shadow.useGraphicAlpha = s.useGraphicAlpha;
-						shadow.blurFactor = s.blur;
-					}
-
-					m_ShadowStyle = ShadowStyle.None;
-					m_AdditionalShadows = null;
-
-					if (m_EffectMode == EffectMode.None && m_ColorMode == ColorMode.Multiply && m_BlurMode == BlurMode.None)
-					{
-						DestroyImmediate(this, true);
-					}
-				}
-
-				int tone = (int)m_EffectMode;
-				const int Mono = 5;
-				const int Cutoff = 6;
-				const int Hue = 7;
-				if (tone == Hue)
-				{
-					var go = gameObject;
-					var hue = m_EffectFactor;
-					DestroyImmediate(this, true);
-					var hsv = go.GetComponent<UIHsvModifier>() ?? go.AddComponent<UIHsvModifier>();
-					hsv.hue = hue;
-					hsv.range = 1;
-				}
-
-				// Cutoff/Mono
-				if (tone == Cutoff || tone == Mono)
-				{
-					var go = gameObject;
-					var factor = m_EffectFactor;
-					var transitionMode = tone == Cutoff
-						? UITransitionEffect.EffectMode.Cutoff
-						: UITransitionEffect.EffectMode.Fade;
-					DestroyImmediate(this, true);
-					var trans = go.GetComponent<UITransitionEffect>() ?? go.AddComponent<UITransitionEffect>();
-					trans.effectFactor = factor;
-
-					var sp = new SerializedObject(trans).FindProperty("m_EffectMode");
-					sp.intValue = (int)transitionMode;
-					sp.serializedObject.ApplyModifiedProperties();
-				}
-			}
-		}
-		#pragma warning restore 0612
-#endif
-
-		//################################
-		// Private Members.
-		//################################
-		static void GetBounds(List<UIVertex> verts, int start, int count, ref Rect posBounds, ref Rect uvBounds, bool global)
-		{
-			Vector2 minPos = new Vector2(float.MaxValue, float.MaxValue);
-			Vector2 maxPos = new Vector2(float.MinValue, float.MinValue);
-			Vector2 minUV = new Vector2(float.MaxValue, float.MaxValue);
-			Vector2 maxUV = new Vector2(float.MinValue, float.MinValue);
-			for (int i = start; i < start + count; i++)
-			{
-				UIVertex vt = verts[i];
-
-				Vector2 uv = vt.uv0;
-				Vector3 pos = vt.position;
-
-				// Left-Bottom
-				if (minPos.x >= pos.x && minPos.y >= pos.y)
-				{
-					minPos = pos;
-				}
-				// Right-Top
-				else if (maxPos.x <= pos.x && maxPos.y <= pos.y)
-				{
-					maxPos = pos;
-				}
-
-				// Left-Bottom
-				if (minUV.x >= uv.x && minUV.y >= uv.y)
-				{
-					minUV = uv;
-				}
-				// Right-Top
-				else if (maxUV.x <= uv.x && maxUV.y <= uv.y)
-				{
-					maxUV = uv;
-				}
-			}
-
-			// Shrink coordinate for detect edge
-			posBounds.Set(minPos.x + 0.001f, minPos.y + 0.001f, maxPos.x - minPos.x - 0.002f, maxPos.y - minPos.y - 0.002f);
-			uvBounds.Set(minUV.x, minUV.y, maxUV.x - minUV.x, maxUV.y - minUV.y);
-		}
-	}
+    /// <summary>
+    /// UIEffect.
+    /// </summary>
+    [ExecuteInEditMode]
+    [RequireComponent(typeof(Graphic))]
+    [DisallowMultipleComponent]
+    [AddComponentMenu("UI/UIEffects/UIEffect", 1)]
+    public class UIEffect : BaseMaterialEffect, IMaterialModifier
+    {
+        private const uint k_ShaderId = 2 << 3;
+        private static readonly ParameterTexture s_ParamTex = new ParameterTexture(4, 1024, "_ParamTex");
+
+        [FormerlySerializedAs("m_ToneLevel")]
+        [Tooltip("Effect factor between 0(no effect) and 1(complete effect).")]
+        [SerializeField]
+        [Range(0, 1)]
+        float m_EffectFactor = 1;
+
+        [Tooltip("Color effect factor between 0(no effect) and 1(complete effect).")] [SerializeField] [Range(0, 1)]
+        float m_ColorFactor = 1;
+
+        [FormerlySerializedAs("m_Blur")]
+        [Tooltip("How far is the blurring from the graphic.")]
+        [SerializeField]
+        [Range(0, 1)]
+        float m_BlurFactor = 1;
+
+        [FormerlySerializedAs("m_ToneMode")] [Tooltip("Effect mode")] [SerializeField]
+        EffectMode m_EffectMode = EffectMode.None;
+
+        [Tooltip("Color effect mode")] [SerializeField]
+        ColorMode m_ColorMode = ColorMode.Multiply;
+
+        [Tooltip("Color for effect")] [ColorUsage(false)] [SerializeField]
+        Color m_EffectColor = Color.white;
+
+        [Tooltip("Blur effect mode")] [SerializeField]
+        BlurMode m_BlurMode = BlurMode.None;
+
+        [Tooltip("Advanced blurring remove common artifacts in the blur effect for uGUI.")] [SerializeField]
+        bool m_AdvancedBlur = false;
+
+        private enum BlurEx
+        {
+            None = 0,
+            Ex = 1,
+        }
+
+        /// <summary>
+        /// Additional canvas shader channels to use this component.
+        /// </summary>
+        public AdditionalCanvasShaderChannels uvMaskChannel
+        {
+            get { return connector.extraChannel; }
+        }
+
+        /// <summary>
+        /// Effect factor between 0(no effect) and 1(complete effect).
+        /// </summary>
+        public float effectFactor
+        {
+            get { return m_EffectFactor; }
+            set
+            {
+                value = Mathf.Clamp(value, 0, 1);
+                if (Mathf.Approximately(m_EffectFactor, value)) return;
+                m_EffectFactor = value;
+                SetEffectParamsDirty();
+            }
+        }
+
+        /// <summary>
+        /// Color effect factor between 0(no effect) and 1(complete effect).
+        /// </summary>
+        public float colorFactor
+        {
+            get { return m_ColorFactor; }
+            set
+            {
+                value = Mathf.Clamp(value, 0, 1);
+                if (Mathf.Approximately(m_ColorFactor, value)) return;
+                m_ColorFactor = value;
+                SetEffectParamsDirty();
+            }
+        }
+
+        /// <summary>
+        /// How far is the blurring from the graphic.
+        /// </summary>
+        public float blurFactor
+        {
+            get { return m_BlurFactor; }
+            set
+            {
+                value = Mathf.Clamp(value, 0, 1);
+                if (Mathf.Approximately(m_BlurFactor, value)) return;
+                m_BlurFactor = value;
+                SetEffectParamsDirty();
+            }
+        }
+
+        /// <summary>
+        /// Effect mode.
+        /// </summary>
+        public EffectMode effectMode
+        {
+            get { return m_EffectMode; }
+            set
+            {
+                if (m_EffectMode == value) return;
+                m_EffectMode = value;
+                SetMaterialDirty();
+            }
+        }
+
+        /// <summary>
+        /// Color effect mode.
+        /// </summary>
+        public ColorMode colorMode
+        {
+            get { return m_ColorMode; }
+            set
+            {
+                if (m_ColorMode == value) return;
+                m_ColorMode = value;
+                SetMaterialDirty();
+            }
+        }
+
+        /// <summary>
+        /// Blur effect mode(readonly).
+        /// </summary>
+        public BlurMode blurMode
+        {
+            get { return m_BlurMode; }
+            set
+            {
+                if (m_BlurMode == value) return;
+                m_BlurMode = value;
+                SetMaterialDirty();
+            }
+        }
+
+        /// <summary>
+        /// Color for the color effect.
+        /// </summary>
+        public Color effectColor
+        {
+            get { return m_EffectColor; }
+            set
+            {
+                if (m_EffectColor == value) return;
+                m_EffectColor = value;
+                SetEffectParamsDirty();
+            }
+        }
+
+        /// <summary>
+        /// Gets the parameter texture.
+        /// </summary>
+        public override ParameterTexture paramTex
+        {
+            get { return s_ParamTex; }
+        }
+
+        /// <summary>
+        /// Advanced blurring remove common artifacts in the blur effect for uGUI.
+        /// </summary>
+        public bool advancedBlur
+        {
+            get { return m_AdvancedBlur; }
+            set
+            {
+                if (m_AdvancedBlur == value) return;
+                m_AdvancedBlur = value;
+                SetVerticesDirty();
+                SetMaterialDirty();
+            }
+        }
+
+        public override Hash128 GetMaterialHash(Material material)
+        {
+            if (!isActiveAndEnabled || !material || !material.shader)
+                return k_InvalidHash;
+
+            var shaderVariantId = (uint) (((int) m_EffectMode << 6) + ((int) m_ColorMode << 9) +
+                                          ((int) m_BlurMode << 11) + ((m_AdvancedBlur ? 1 : 0) << 13));
+            return new Hash128(
+                (uint) material.GetInstanceID(),
+                k_ShaderId + shaderVariantId,
+                0,
+                0
+            );
+        }
+
+        public override void ModifyMaterial(Material newMaterial)
+        {
+            newMaterial.shader = connector.FindShader("UIEffect");
+            SetShaderVariants(newMaterial, m_EffectMode, m_ColorMode, m_BlurMode,
+                m_AdvancedBlur ? BlurEx.Ex : BlurEx.None);
+
+            paramTex.RegisterMaterial(newMaterial);
+        }
+
+        /// <summary>
+        /// Modifies the mesh.
+        /// </summary>
+        public override void ModifyMesh(VertexHelper vh)
+        {
+            if (!isActiveAndEnabled)
+            {
+                return;
+            }
+
+            var normalizedIndex = paramTex.GetNormalizedIndex(this);
+
+            if (m_BlurMode != BlurMode.None && advancedBlur)
+            {
+                vh.GetUIVertexStream(s_TempVerts);
+                vh.Clear();
+                var count = s_TempVerts.Count;
+
+                // Bundle
+                int bundleSize = connector.IsText(graphic) ? 6 : count;
+                Rect posBounds = default(Rect);
+                Rect uvBounds = default(Rect);
+                Vector3 size = default(Vector3);
+                Vector3 tPos = default(Vector3);
+                Vector3 tUV = default(Vector3);
+                float expand = (float) blurMode * 6 * 2;
+
+                for (int i = 0; i < count; i += bundleSize)
+                {
+                    // min/max for bundled-quad
+                    GetBounds(s_TempVerts, i, bundleSize, ref posBounds, ref uvBounds, true);
+
+                    // Pack uv mask.
+                    Vector2 uvMask = new Vector2(Packer.ToFloat(uvBounds.xMin, uvBounds.yMin),
+                        Packer.ToFloat(uvBounds.xMax, uvBounds.yMax));
+
+                    // Quad
+                    for (int j = 0; j < bundleSize; j += 6)
+                    {
+                        Vector3 cornerPos1 = s_TempVerts[i + j + 1].position;
+                        Vector3 cornerPos2 = s_TempVerts[i + j + 4].position;
+
+                        // Is outer quad?
+                        bool hasOuterEdge = (bundleSize == 6)
+                                            || !posBounds.Contains(cornerPos1)
+                                            || !posBounds.Contains(cornerPos2);
+                        if (hasOuterEdge)
+                        {
+                            Vector3 cornerUv1 = s_TempVerts[i + j + 1].uv0;
+                            Vector3 cornerUv2 = s_TempVerts[i + j + 4].uv0;
+
+                            Vector3 centerPos = (cornerPos1 + cornerPos2) / 2;
+                            Vector3 centerUV = (cornerUv1 + cornerUv2) / 2;
+                            size = (cornerPos1 - cornerPos2);
+
+                            size.x = 1 + expand / Mathf.Abs(size.x);
+                            size.y = 1 + expand / Mathf.Abs(size.y);
+                            size.z = 1 + expand / Mathf.Abs(size.z);
+
+                            tPos = centerPos - Vector3.Scale(size, centerPos);
+                            tUV = centerUV - Vector3.Scale(size, centerUV);
+                        }
+
+                        // Vertex
+                        for (int k = 0; k < 6; k++)
+                        {
+                            UIVertex vt = s_TempVerts[i + j + k];
+
+                            Vector3 pos = vt.position;
+                            Vector2 uv0 = vt.uv0;
+
+                            if (hasOuterEdge && (pos.x < posBounds.xMin || posBounds.xMax < pos.x))
+                            {
+                                pos.x = pos.x * size.x + tPos.x;
+                                uv0.x = uv0.x * size.x + tUV.x;
+                            }
+
+                            if (hasOuterEdge && (pos.y < posBounds.yMin || posBounds.yMax < pos.y))
+                            {
+                                pos.y = pos.y * size.y + tPos.y;
+                                uv0.y = uv0.y * size.y + tUV.y;
+                            }
+
+                            vt.uv0 = new Vector2(Packer.ToFloat((uv0.x + 0.5f) / 2f, (uv0.y + 0.5f) / 2f),
+                                normalizedIndex);
+                            vt.position = pos;
+
+                            connector.SetExtraChannel(ref vt, uvMask);
+
+                            s_TempVerts[i + j + k] = vt;
+                        }
+                    }
+                }
+
+                vh.AddUIVertexTriangleStream(s_TempVerts);
+                s_TempVerts.Clear();
+            }
+            else
+            {
+                int count = vh.currentVertCount;
+                UIVertex vt = default(UIVertex);
+                for (int i = 0; i < count; i++)
+                {
+                    vh.PopulateUIVertex(ref vt, i);
+                    Vector2 uv0 = vt.uv0;
+                    vt.uv0 = new Vector2(
+                        Packer.ToFloat((uv0.x + 0.5f) / 2f, (uv0.y + 0.5f) / 2f),
+                        normalizedIndex
+                    );
+                    vh.SetUIVertex(vt, i);
+                }
+            }
+        }
+
+        protected override void SetEffectParamsDirty()
+        {
+            paramTex.SetData(this, 0, m_EffectFactor); // param.x : effect factor
+            paramTex.SetData(this, 1, m_ColorFactor); // param.y : color factor
+            paramTex.SetData(this, 2, m_BlurFactor); // param.z : blur factor
+        }
+
+        static void GetBounds(List<UIVertex> verts, int start, int count, ref Rect posBounds, ref Rect uvBounds,
+            bool global)
+        {
+            Vector2 minPos = new Vector2(float.MaxValue, float.MaxValue);
+            Vector2 maxPos = new Vector2(float.MinValue, float.MinValue);
+            Vector2 minUV = new Vector2(float.MaxValue, float.MaxValue);
+            Vector2 maxUV = new Vector2(float.MinValue, float.MinValue);
+            for (int i = start; i < start + count; i++)
+            {
+                UIVertex vt = verts[i];
+
+                Vector2 uv = vt.uv0;
+                Vector3 pos = vt.position;
+
+                // Left-Bottom
+                if (minPos.x >= pos.x && minPos.y >= pos.y)
+                {
+                    minPos = pos;
+                }
+                // Right-Top
+                else if (maxPos.x <= pos.x && maxPos.y <= pos.y)
+                {
+                    maxPos = pos;
+                }
+
+                // Left-Bottom
+                if (minUV.x >= uv.x && minUV.y >= uv.y)
+                {
+                    minUV = uv;
+                }
+                // Right-Top
+                else if (maxUV.x <= uv.x && maxUV.y <= uv.y)
+                {
+                    maxUV = uv;
+                }
+            }
+
+            // Shrink coordinate for detect edge
+            posBounds.Set(minPos.x + 0.001f, minPos.y + 0.001f, maxPos.x - minPos.x - 0.002f,
+                maxPos.y - minPos.y - 0.002f);
+            uvBounds.Set(minUV.x, minUV.y, maxUV.x - minUV.x, maxUV.y - minUV.y);
+        }
+    }
 }

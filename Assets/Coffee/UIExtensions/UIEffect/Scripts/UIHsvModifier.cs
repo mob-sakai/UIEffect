@@ -6,238 +6,163 @@ using UnityEngine.UI;
 
 namespace Coffee.UIExtensions
 {
-	/// <summary>
-	/// HSV Modifier.
-	/// </summary>
-	[AddComponentMenu("UI/UIEffect/UIHsvModifier", 4)]
-	public class UIHsvModifier : UIEffectBase
-	{
-		//################################
-		// Constant or Static Members.
-		//################################
-		public const string shaderName = "UI/Hidden/UI-Effect-HSV";
-		static readonly ParameterTexture _ptex = new ParameterTexture(7, 128, "_ParamTex");
+    /// <summary>
+    /// HSV Modifier.
+    /// </summary>
+    [AddComponentMenu("UI/UIEffects/UIHsvModifier", 4)]
+    public class UIHsvModifier : BaseMaterialEffect
+    {
+        private const uint k_ShaderId = 6 << 3;
+        private static readonly ParameterTexture s_ParamTex = new ParameterTexture(7, 128, "_ParamTex");
 
+        [Header("Target")] [Tooltip("Target color to affect hsv shift.")] [SerializeField] [ColorUsage(false)]
+        Color m_TargetColor = Color.red;
 
-		//################################
-		// Serialize Members.
-		//################################
-		[Header("Target")]
+        [Tooltip("Color range to affect hsv shift [0 ~ 1].")] [SerializeField] [Range(0, 1)]
+        float m_Range = 0.1f;
 
-		[Tooltip("Target color to affect hsv shift.")]
-		[SerializeField] [ColorUsage(false)] Color m_TargetColor = Color.red;
+        [Header("Adjustment")] [Tooltip("Hue shift [-0.5 ~ 0.5].")] [SerializeField] [Range(-0.5f, 0.5f)]
+        float m_Hue;
 
-		[Tooltip("Color range to affect hsv shift [0 ~ 1].")]
-		[SerializeField] [Range(0, 1)] float m_Range = 0.1f;
+        [Tooltip("Saturation shift [-0.5 ~ 0.5].")] [SerializeField] [Range(-0.5f, 0.5f)]
+        float m_Saturation;
 
-		[Header("Adjustment")]
+        [Tooltip("Value shift [-0.5 ~ 0.5].")] [SerializeField] [Range(-0.5f, 0.5f)]
+        float m_Value;
 
-		[Tooltip("Hue shift [-0.5 ~ 0.5].")]
-		[SerializeField] [Range(-0.5f, 0.5f)] float m_Hue;
+        /// <summary>
+        /// Target color to affect hsv shift.
+        /// </summary>
+        public Color targetColor
+        {
+            get { return m_TargetColor; }
+            set
+            {
+                if (m_TargetColor == value) return;
+                m_TargetColor = value;
+                SetEffectParamsDirty();
+            }
+        }
 
-		[Tooltip("Saturation shift [-0.5 ~ 0.5].")]
-		[SerializeField] [Range(-0.5f, 0.5f)] float m_Saturation;
+        /// <summary>
+        /// Color range to affect hsv shift [0 ~ 1].
+        /// </summary>
+        public float range
+        {
+            get { return m_Range; }
+            set
+            {
+                value = Mathf.Clamp(value, 0, 1);
+                if (Mathf.Approximately(m_Range, value)) return;
+                m_Range = value;
+                SetEffectParamsDirty();
+            }
+        }
 
-		[Tooltip("Value shift [-0.5 ~ 0.5].")]
-		[SerializeField] [Range(-0.5f, 0.5f)] float m_Value;
+        /// <summary>
+        /// Saturation shift [-0.5 ~ 0.5].
+        /// </summary>
+        public float saturation
+        {
+            get { return m_Saturation; }
+            set
+            {
+                value = Mathf.Clamp(value, -0.5f, 0.5f);
+                if (Mathf.Approximately(m_Saturation, value)) return;
+                m_Saturation = value;
+                SetEffectParamsDirty();
+            }
+        }
 
+        /// <summary>
+        /// Value shift [-0.5 ~ 0.5].
+        /// </summary>
+        public float value
+        {
+            get { return m_Value; }
+            set
+            {
+                value = Mathf.Clamp(value, -0.5f, 0.5f);
+                if (Mathf.Approximately(m_Value, value)) return;
+                m_Value = value;
+                SetEffectParamsDirty();
+            }
+        }
 
-		//################################
-		// Public Members.
-		//################################
+        /// <summary>
+        /// Hue shift [-0.5 ~ 0.5].
+        /// </summary>
+        public float hue
+        {
+            get { return m_Hue; }
+            set
+            {
+                value = Mathf.Clamp(value, -0.5f, 0.5f);
+                if (Mathf.Approximately(m_Hue, value)) return;
+                m_Hue = value;
+                SetEffectParamsDirty();
+            }
+        }
 
-		/// <summary>
-		/// Target color to affect hsv shift.
-		/// </summary>
-		public Color targetColor
-		{
-			get { return m_TargetColor; }
-			set
-			{ 
-				if (m_TargetColor != value)
-				{
-					m_TargetColor = value;
-					SetEffectDirty ();
-				}
-			}
-		}
+        /// <summary>
+        /// Gets the parameter texture.
+        /// </summary>
+        public override ParameterTexture paramTex
+        {
+            get { return s_ParamTex; }
+        }
 
-		/// <summary>
-		/// Color range to affect hsv shift [0 ~ 1].
-		/// </summary>
-		public float range
-		{
-			get { return m_Range; }
-			set
-			{
-				value = Mathf.Clamp(value, 0, 1);
-				if (!Mathf.Approximately(m_Range, value))
-				{
-					m_Range = value;
-					SetEffectDirty ();
-				}
-			}
-		}
+        public override Hash128 GetMaterialHash(Material material)
+        {
+            if (!isActiveAndEnabled || !material || !material.shader)
+                return k_InvalidHash;
 
-		/// <summary>
-		/// Saturation shift [-0.5 ~ 0.5].
-		/// </summary>
-		public float saturation
-		{
-			get { return m_Saturation; }
-			set
-			{
-				value = Mathf.Clamp(value, -0.5f, 0.5f);
-				if (!Mathf.Approximately(m_Saturation, value))
-				{
-					m_Saturation = value;
-					SetEffectDirty ();
-				}
-			}
-		}
+            return new Hash128(
+                (uint) material.GetInstanceID(),
+                k_ShaderId,
+                0,
+                0
+            );
+        }
 
-		/// <summary>
-		/// Value shift [-0.5 ~ 0.5].
-		/// </summary>
-		public float value
-		{
-			get { return m_Value; }
-			set
-			{
-				value = Mathf.Clamp(value, -0.5f, 0.5f);
-				if (!Mathf.Approximately(m_Value, value))
-				{
-					m_Value = value;
-					SetEffectDirty ();
-				}
-			}
-		}
+        public override void ModifyMaterial(Material newMaterial)
+        {
+            newMaterial.shader = connector.FindShader("UIHsvModifier");
+            paramTex.RegisterMaterial(newMaterial);
+        }
 
-		/// <summary>
-		/// Hue shift [-0.5 ~ 0.5].
-		/// </summary>
-		public float hue
-		{
-			get { return m_Hue; }
-			set
-			{
-				value = Mathf.Clamp(value, -0.5f, 0.5f);
-				if (!Mathf.Approximately(m_Hue, value))
-				{
-					m_Hue = value;
-					SetEffectDirty ();
-				}
-			}
-		}
+        public override void ModifyMesh(VertexHelper vh)
+        {
+            if (!isActiveAndEnabled)
+                return;
 
-		/// <summary>
-		/// Gets the parameter texture.
-		/// </summary>
-		public override ParameterTexture ptex { get { return _ptex; } }
+            var normalizedIndex = paramTex.GetNormalizedIndex(this);
+            var vertex = default(UIVertex);
+            var count = vh.currentVertCount;
+            for (var i = 0; i < count; i++)
+            {
+                vh.PopulateUIVertex(ref vertex, i);
 
-		public override Hash128 GetMaterialHash (Material material)
-		{
-			if (!isActiveAndEnabled || !material || !material.shader)
-				return new Hash128 ();
+                vertex.uv0 = new Vector2(
+                    Packer.ToFloat(vertex.uv0.x, vertex.uv0.y),
+                    normalizedIndex
+                );
+                vh.SetUIVertex(vertex, i);
+            }
+        }
 
-			uint materialId = (uint)material.GetInstanceID ();
-			uint shaderId = 6 << 3;
+        protected override void SetEffectParamsDirty()
+        {
+            float h, s, v;
+            Color.RGBToHSV(m_TargetColor, out h, out s, out v);
 
-			string materialShaderName = material.shader.name;
-			if (materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
-			{
-				shaderId += 2;
-			}
-			else if (materialShaderName.Equals ("TextMeshPro/Sprite", StringComparison.Ordinal))
-			{
-				shaderId += 0;
-			}
-			else if (materialShaderName.StartsWith ("TextMeshPro/", StringComparison.Ordinal))
-			{
-				shaderId += 1;
-			}
-			else
-			{
-				shaderId += 0;
-			}
-
-			return new Hash128 (
-					materialId,
-					shaderId,
-					0,
-					0
-				);
-		}
-
-		public override void ModifyMaterial (Material material)
-		{
-			string materialShaderName = material.shader.name;
-			if (materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
-			{
-				material.shader = Shader.Find ("TextMeshPro/Mobile/Distance Field (UIHsvModifier)");
-			}
-			else if (materialShaderName.Equals ("TextMeshPro/Sprite", StringComparison.Ordinal))
-			{
-				material.shader = Shader.Find ("UI/Hidden/UI-Effect-HSV");
-			}
-			else if (materialShaderName.StartsWith ("TextMeshPro/", StringComparison.Ordinal))
-			{
-				material.shader = Shader.Find ("TextMeshPro/Distance Field (UIHsvModifier)");
-			}
-			else
-			{
-				material.shader = Shader.Find ("UI/Hidden/UI-Effect-HSV");
-			}
-
-			ptex.RegisterMaterial (material);
-		}
-
-#if UNITY_EDITOR
-		protected override Material GetMaterial()
-		{
-			return null;
-		}
-#endif
-
-		/// <summary>
-		/// Modifies the mesh.
-		/// </summary>
-		public override void ModifyMesh(VertexHelper vh)
-		{
-			if (!isActiveAndEnabled)
-				return;
-
-			float normalizedIndex = ptex.GetNormalizedIndex(this);
-			UIVertex vertex = default(UIVertex);
-			int count = vh.currentVertCount;
-			for (int i = 0; i < count; i++)
-			{
-				vh.PopulateUIVertex(ref vertex, i);
-
-				vertex.uv0 = new Vector2(
-					Packer.ToFloat(vertex.uv0.x, vertex.uv0.y),
-					normalizedIndex
-				);
-				vh.SetUIVertex(vertex, i);
-			}
-		}
-
-		protected override void SetEffectDirty ()
-		{
-			float h, s, v;
-			Color.RGBToHSV(m_TargetColor, out h, out s, out v);
-
-			ptex.SetData(this, 0, h);	// param1.x : target hue
-			ptex.SetData(this, 1, s);	// param1.y : target saturation
-			ptex.SetData(this, 2, v);	// param1.z : target value
-			ptex.SetData(this, 3, m_Range);		// param1.w : target range
-			ptex.SetData(this, 4, m_Hue + 0.5f);		// param2.x : hue shift
-			ptex.SetData(this, 5, m_Saturation + 0.5f);	// param2.y : saturation shift
-			ptex.SetData(this, 6, m_Value + 0.5f);		// param2.z : value shift
-		}
-
-		//################################
-		// Private Members.
-		//################################
-	}
+            paramTex.SetData(this, 0, h); // param1.x : target hue
+            paramTex.SetData(this, 1, s); // param1.y : target saturation
+            paramTex.SetData(this, 2, v); // param1.z : target value
+            paramTex.SetData(this, 3, m_Range); // param1.w : target range
+            paramTex.SetData(this, 4, m_Hue + 0.5f); // param2.x : hue shift
+            paramTex.SetData(this, 5, m_Saturation + 0.5f); // param2.y : saturation shift
+            paramTex.SetData(this, 6, m_Value + 0.5f); // param2.z : value shift
+        }
+    }
 }

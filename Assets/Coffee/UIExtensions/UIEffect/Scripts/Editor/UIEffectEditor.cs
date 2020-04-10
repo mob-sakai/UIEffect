@@ -6,147 +6,112 @@ using System;
 
 namespace Coffee.UIExtensions.Editors
 {
-	/// <summary>
-	/// UIEffect editor.
-	/// </summary>
-	[CustomEditor(typeof(UIEffect))]
-	[CanEditMultipleObjects]
-	public class UIEffectEditor : BaseMeshEffectEditor
-	{
-		static readonly GUIContent contentEffectColor = new GUIContent ("Effect Color");
+    /// <summary>
+    /// UIEffect editor.
+    /// </summary>
+    [CustomEditor(typeof(UIEffect))]
+    [CanEditMultipleObjects]
+    public class UIEffectEditor : Editor
+    {
+        SerializedProperty _spEffectMode;
+        SerializedProperty _spEffectFactor;
+        SerializedProperty _spColorMode;
+        SerializedProperty _spEffectColor;
+        SerializedProperty _spColorFactor;
+        SerializedProperty _spBlurMode;
+        SerializedProperty _spBlurFactor;
+        SerializedProperty _spAdvancedBlur;
 
-		//################################
-		// Public/Protected Members.
-		//################################
+        protected void OnEnable()
+        {
+            _spEffectMode = serializedObject.FindProperty("m_EffectMode");
+            _spEffectFactor = serializedObject.FindProperty("m_EffectFactor");
+            _spColorMode = serializedObject.FindProperty("m_ColorMode");
+            _spEffectColor = serializedObject.FindProperty("m_EffectColor");
+            _spColorFactor = serializedObject.FindProperty("m_ColorFactor");
+            _spBlurMode = serializedObject.FindProperty("m_BlurMode");
+            _spBlurFactor = serializedObject.FindProperty("m_BlurFactor");
+            _spAdvancedBlur = serializedObject.FindProperty("m_AdvancedBlur");
+        }
 
-		/// <summary>
-		/// Draw effect properties.
-		/// </summary>
-		public static void DrawEffectProperties(SerializedObject serializedObject, string colorProperty = "m_Color")
-		{
-			//================
-			// Effect setting.
-			//================
-			var spToneMode = serializedObject.FindProperty("m_EffectMode");
-			EditorGUILayout.PropertyField(spToneMode);
+        public override void OnInspectorGUI()
+        {
+            //================
+            // Effect setting.
+            //================
+            using (new MaterialDirtyScope(targets))
+                EditorGUILayout.PropertyField(_spEffectMode);
 
-			// When tone is enable, show parameters.
-			if (spToneMode.intValue != (int)EffectMode.None)
-			{
-				EditorGUI.indentLevel++;
-				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_EffectFactor"));
-				EditorGUI.indentLevel--;
-			}
+            // When effect is enable, show parameters.
+            if (_spEffectMode.intValue != (int) EffectMode.None)
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(_spEffectFactor);
+                EditorGUI.indentLevel--;
+            }
 
-			//================
-			// Color setting.
-			//================
-			var spColorMode = serializedObject.FindProperty("m_ColorMode");
-			EditorGUILayout.PropertyField(spColorMode);
 
-			// When color is enable, show parameters.
-			//if (spColorMode.intValue != (int)ColorMode.Multiply)
-			{
-				EditorGUI.indentLevel++;
+            //================
+            // Color setting.
+            //================
+            using (new MaterialDirtyScope(targets))
+                EditorGUILayout.PropertyField(_spColorMode);
 
-				SerializedProperty spColor = serializedObject.FindProperty(colorProperty);
-				if (spColor == null && serializedObject.targetObject is UIEffect) {
-					spColor = new SerializedObject (serializedObject.targetObjects.Select(x=>(x as UIEffect).targetGraphic).ToArray()).FindProperty(colorProperty);
-				}
+            // When color is enable, show parameters.
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(_spEffectColor);
+                EditorGUILayout.PropertyField(_spColorFactor);
+                EditorGUI.indentLevel--;
+            }
 
-				EditorGUI.BeginChangeCheck ();
-				EditorGUI.showMixedValue = spColor.hasMultipleDifferentValues;
-#if UNITY_2018_1_OR_NEWER
-				spColor.colorValue = EditorGUILayout.ColorField (contentEffectColor, spColor.colorValue, true, false, false);
-#else
-				spColor.colorValue = EditorGUILayout.ColorField (contentEffectColor, spColor.colorValue, true, false, false, null);
-#endif
-				if (EditorGUI.EndChangeCheck ()) {
-					spColor.serializedObject.ApplyModifiedProperties ();
-				}
 
-				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_ColorFactor"));
-				EditorGUI.indentLevel--;
-			}
+            //================
+            // Blur setting.
+            //================
+            using (new MaterialDirtyScope(targets))
+                EditorGUILayout.PropertyField(_spBlurMode);
 
-			//================
-			// Blur setting.
-			//================
-			var spBlurMode = serializedObject.FindProperty("m_BlurMode");
-			EditorGUILayout.PropertyField(spBlurMode);
+            // When blur is enable, show parameters.
+            if (_spBlurMode.intValue != (int) BlurMode.None)
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(_spBlurFactor);
 
-			// When blur is enable, show parameters.
-			if (spBlurMode.intValue != (int)BlurMode.None)
-			{
-				EditorGUI.indentLevel++;
-				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_BlurFactor"));
+                // When you change a property, it marks the material as dirty.
+                using (new MaterialDirtyScope(targets))
+                    EditorGUILayout.PropertyField(_spAdvancedBlur);
+                EditorGUI.indentLevel--;
 
-				var spAdvancedBlur = serializedObject.FindProperty("m_AdvancedBlur");
-				if (spAdvancedBlur != null)
-				{
-					EditorGUILayout.PropertyField(spAdvancedBlur);
-				}
-				EditorGUI.indentLevel--;
-			}
-		}
+                // Advanced blur requires uv2 channel.
+                if (_spAdvancedBlur.boolValue)
+                {
+                    ShowCanvasChannelsWarning();
+                }
+            }
 
-		/// <summary>
-		/// Implement this function to make a custom inspector.
-		/// </summary>
-		public override void OnInspectorGUI()
-		{
-			//================
-			// Effect setting.
-			//================
-			var spToneMode = serializedObject.FindProperty("m_EffectMode");
-			using (new MaterialDirtyScope (targets))
-				EditorGUILayout.PropertyField(spToneMode);
+            serializedObject.ApplyModifiedProperties();
+        }
 
-			// When tone is enable, show parameters.
-			if (spToneMode.intValue != (int)EffectMode.None)
-			{
-				EditorGUI.indentLevel++;
-				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_EffectFactor"));
-				EditorGUI.indentLevel--;
-			}
+        void ShowCanvasChannelsWarning()
+        {
+            var effect = target as UIEffect;
+            if (effect == null || !effect.graphic) return;
 
-			//================
-			// Color setting.
-			//================
-			var spColorMode = serializedObject.FindProperty("m_ColorMode");
-			using (new MaterialDirtyScope (targets))
-				EditorGUILayout.PropertyField(spColorMode);
+            var channel = effect.uvMaskChannel;
+            var canvas = effect.graphic.canvas;
+            if (canvas == null || (canvas.additionalShaderChannels & channel) == channel) return;
 
-			// When color is enable, show parameters.
-			{
-				EditorGUI.indentLevel++;
-				EditorGUILayout.PropertyField (serializedObject.FindProperty ("m_EffectColor"));
-				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_ColorFactor"));
-				EditorGUI.indentLevel--;
-			}
-
-			//================
-			// Blur setting.
-			//================
-			var spBlurMode = serializedObject.FindProperty("m_BlurMode");
-			using (new MaterialDirtyScope (targets))
-				EditorGUILayout.PropertyField(spBlurMode);
-
-			// When blur is enable, show parameters.
-			if (spBlurMode.intValue != (int)BlurMode.None)
-			{
-				EditorGUI.indentLevel++;
-				EditorGUILayout.PropertyField(serializedObject.FindProperty("m_BlurFactor"));
-
-				var spAdvancedBlur = serializedObject.FindProperty("m_AdvancedBlur");
-				using (new MaterialDirtyScope (targets))
-					EditorGUILayout.PropertyField(spAdvancedBlur);
-				EditorGUI.indentLevel--;
-			}
-
-			ShowCanvasChannelsWarning ();
-
-			serializedObject.ApplyModifiedProperties();
-		}
-	}
+            EditorGUILayout.BeginHorizontal();
+            {
+                var msg = string.Format("Enable '{0}' of Canvas.additionalShaderChannels to use 'UIEffect'.", channel);
+                EditorGUILayout.HelpBox(msg, MessageType.Warning);
+                if (GUILayout.Button("Fix"))
+                {
+                    canvas.additionalShaderChannels |= channel;
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+        }
+    }
 }

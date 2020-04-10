@@ -1,11 +1,9 @@
 fileFormatVersion: 2
-guid: ce76b7a490bd74f34a2f2752641aea24
+guid: 1fa123391c81f40ffbbe761447b7913c
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - m_TransitionTexture: {fileID: 2800000, guid: 3e04c247fb2604af186173fce0bc62de,
-      type: 3}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

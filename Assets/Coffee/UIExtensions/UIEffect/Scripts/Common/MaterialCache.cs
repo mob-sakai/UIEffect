@@ -6,9 +6,11 @@ using System.Text;
 
 namespace Coffee.UIExtensions
 {
-    public class MaterialRepository
+    public class MaterialCache
     {
-        class MaterialEntry
+        static Dictionary<Hash128, MaterialEntry> materialMap = new Dictionary<Hash128, MaterialEntry>();
+
+        private class MaterialEntry
         {
             public Material material;
             public int referenceCount;
@@ -19,43 +21,41 @@ namespace Coffee.UIExtensions
                 {
                     UnityEngine.Object.DestroyImmediate(material, false);
                 }
+
                 material = null;
             }
         }
 
 #if UNITY_EDITOR
         [UnityEditor.InitializeOnLoadMethod]
-        static void ClearCache()
+        private static void ClearCache()
         {
             foreach (var entry in materialMap.Values)
             {
                 entry.Release();
             }
+
             materialMap.Clear();
         }
 #endif
 
-        static Dictionary<Hash128, MaterialEntry> materialMap = new Dictionary<Hash128, MaterialEntry>();
-
-        public static Material Register(Material material, Hash128 hash, System.Action<Material> onModifyMaterial)
+        public static Material Register(Material baseMaterial, Hash128 hash, System.Action<Material> onModifyMaterial)
         {
-			if(!hash.isValid)
-				return null;
+            if (!hash.isValid) return null;
 
             MaterialEntry entry;
             if (!materialMap.TryGetValue(hash, out entry))
             {
                 entry = new MaterialEntry()
                 {
-                    material = new Material(material)
+                    material = new Material(baseMaterial)
                     {
-                        // hideFlags = HideFlags.HideAndDontSave,
+                        hideFlags = HideFlags.HideAndDontSave,
                     },
                 };
 
                 onModifyMaterial(entry.material);
                 materialMap.Add(hash, entry);
-                Debug.LogFormat($"Register {hash} {entry.material}");
             }
 
             entry.referenceCount++;
@@ -65,110 +65,11 @@ namespace Coffee.UIExtensions
         public static void Unregister(Hash128 hash)
         {
             MaterialEntry entry;
-            if (hash.isValid && materialMap.TryGetValue(hash, out entry))
-            {
-                if (--entry.referenceCount <= 0)
-                {
-                    entry.Release();
-                    materialMap.Remove(hash);
-                    Debug.LogFormat($"Unregister {hash}");
-                }
-            }
-        }
-    }
+            if (!hash.isValid || !materialMap.TryGetValue(hash, out entry)) return;
+            if (--entry.referenceCount > 0) return;
 
-
-
-
-
-
-
-    public class MaterialCache
-    {
-        public ulong hash { get; private set; }
-
-        public int referenceCount { get; private set; }
-
-        public Texture texture { get; private set; }
-
-        public Material material { get; private set; }
-
-#if UNITY_EDITOR
-        [UnityEditor.InitializeOnLoadMethod]
-        static void ClearCache()
-        {
-            foreach (var cache in materialCaches)
-            {
-                cache.material = null;
-            }
-            materialCaches.Clear();
-        }
-#endif
-
-        public static List<MaterialCache> materialCaches = new List<MaterialCache>();
-
-        public static MaterialCache Register(ulong hash, Texture texture, System.Func<Material> onCreateMaterial)
-        {
-            var cache = materialCaches.FirstOrDefault(x => x.hash == hash);
-            if (cache != null && cache.material)
-            {
-                if (cache.material)
-                {
-                    cache.referenceCount++;
-                }
-                else
-                {
-
-                    materialCaches.Remove(cache);
-                    cache = null;
-                }
-            }
-            if (cache == null)
-            {
-                cache = new MaterialCache()
-                {
-                    hash = hash,
-                    material = onCreateMaterial(),
-                    referenceCount = 1,
-                };
-                materialCaches.Add(cache);
-            }
-            return cache;
-        }
-
-        public static MaterialCache Register(ulong hash, System.Func<Material> onCreateMaterial)
-        {
-            var cache = materialCaches.FirstOrDefault(x => x.hash == hash);
-            if (cache != null)
-            {
-                cache.referenceCount++;
-            }
-            if (cache == null)
-            {
-                cache = new MaterialCache()
-                {
-                    hash = hash,
-                    material = onCreateMaterial(),
-                    referenceCount = 1,
-                };
-                materialCaches.Add(cache);
-            }
-            return cache;
-        }
-
-        public static void Unregister(MaterialCache cache)
-        {
-            if (cache == null)
-            {
-                return;
-            }
-
-            cache.referenceCount--;
-            if (cache.referenceCount <= 0)
-            {
-                MaterialCache.materialCaches.Remove(cache);
-                cache.material = null;
-            }
+            entry.Release();
+            materialMap.Remove(hash);
         }
     }
 }

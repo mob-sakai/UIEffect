@@ -4,33 +4,34 @@ using UnityEngine;
 
 namespace Coffee.UIExtensions.Editors
 {
-	/// <summary>
-	/// Changes in this scope cause the graphic's material to be dirty.
-	/// </summary>
-	internal class MaterialDirtyScope : EditorGUI.ChangeCheckScope
-	{
-		readonly Object [] targets;
+    /// <summary>
+    /// Changes in this scope cause the graphic's material to be dirty.
+    /// When you change a property, it marks the material as dirty.
+    /// </summary>
+    internal class MaterialDirtyScope : EditorGUI.ChangeCheckScope
+    {
+        readonly Object[] targets;
 
-		public MaterialDirtyScope (Object [] targets)
-		{
-			this.targets = targets;
-		}
+        public MaterialDirtyScope(Object[] targets)
+        {
+            this.targets = targets;
+        }
 
-		protected override void CloseScope ()
-		{
-			if (changed)
-			{
-				var graphics = targets.OfType<UIEffectBase> ()
-					.Select (x => x.targetGraphic)
-					.Where (x => x);
+        protected override void CloseScope()
+        {
+            if (changed)
+            {
+                var graphics = targets.OfType<BaseMaterialEffect>()
+                    .Select(x => x.graphic)
+                    .Where(x => x);
 
-				foreach (var g in graphics)
-				{
-					g.SetMaterialDirty ();
-				}
-			}
+                foreach (var g in graphics)
+                {
+                    BaseConnector.FindConnector(g).SetMaterialDirty(g);
+                }
+            }
 
-			base.CloseScope ();
-		}
-	}
+            base.CloseScope();
+        }
+    }
 }

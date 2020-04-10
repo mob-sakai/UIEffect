@@ -1,13 +1,13 @@
 ﻿namespace Coffee.UIExtensions
 {
-	/// <summary>
-	/// Color effect mode.
-	/// </summary>
-	public enum ColorMode
-	{
-		Multiply = 0,
-		Fill = 1,
-		Add = 2,
-		Subtract = 3,
-	}
+    /// <summary>
+    /// Color effect mode.
+    /// </summary>
+    public enum ColorMode
+    {
+        Multiply = 0,
+        Fill = 1,
+        Add = 2,
+        Subtract = 3,
+    }
 }
