@@ -1,3 +1,10 @@
+# [4.0.0-preview.5](https://github.com/mob-sakai/UIEffect/compare/v4.0.0-preview.4...v4.0.0-preview.5) (2020-04-13)
+
+
+### Bug Fixes
+
+* move shaders to resources directory ([bc7310d](https://github.com/mob-sakai/UIEffect/commit/bc7310df96977ef48328675e9465b295b40a1418))
+
 # [4.0.0-preview.4](https://github.com/mob-sakai/UIEffect/compare/v4.0.0-preview.3...v4.0.0-preview.4) (2020-04-13)
 
 
