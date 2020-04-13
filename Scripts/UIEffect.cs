@@ -45,9 +45,6 @@ namespace Coffee.UIExtensions
         [Tooltip("Color effect mode")] [SerializeField]
         ColorMode m_ColorMode = ColorMode.Multiply;
 
-        [Tooltip("Color for effect")] [ColorUsage(false)] [SerializeField]
-        Color m_EffectColor = Color.white;
-
         [Tooltip("Blur effect mode")] [SerializeField]
         BlurMode m_BlurMode = BlurMode.None;
 
@@ -152,20 +149,6 @@ namespace Coffee.UIExtensions
                 if (m_BlurMode == value) return;
                 m_BlurMode = value;
                 SetMaterialDirty();
-            }
-        }
-
-        /// <summary>
-        /// Color for the color effect.
-        /// </summary>
-        public Color effectColor
-        {
-            get { return m_EffectColor; }
-            set
-            {
-                if (m_EffectColor == value) return;
-                m_EffectColor = value;
-                SetEffectParamsDirty();
             }
         }
 

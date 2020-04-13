@@ -1,3 +1,10 @@
+# [4.0.0-preview.4](https://github.com/mob-sakai/UIEffect/compare/v4.0.0-preview.3...v4.0.0-preview.4) (2020-04-13)
+
+
+### Bug Fixes
+
+* remove unused property ([d20ed3c](https://github.com/mob-sakai/UIEffect/commit/d20ed3c96c63ecefac6ff6eec7764e01a97a74fb))
+
 # [4.0.0-preview.3](https://github.com/mob-sakai/UIEffect/compare/v4.0.0-preview.2...v4.0.0-preview.3) (2020-04-10)
 
 

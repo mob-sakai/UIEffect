@@ -133,7 +133,7 @@ Or, use [UpmGitExtension](https://github.com/mob-sakai/UpmGitExtension) to insta
 
 1. Add any effect component to UI element (Image, RawImage, Text, etc...) from `Add Component` in inspector or `Component > UI > UIEffect > ...` menu.  
 ![](https://user-images.githubusercontent.com/12690315/78853708-811c9200-7a5a-11ea-9826-0606046525b6.png)
-2. Adjust the parameters of the effect as you like, in inspector. 
+2. Adjust the parameters of the effect as you like, in inspector.  
 ![](https://user-images.githubusercontent.com/12690315/38594668-636dd3ac-3d82-11e8-9951-820964a6a95f.gif)
 3. You can add or modify effects from the script.  
 ```cs
@@ -194,7 +194,7 @@ This is an open-source project that I am developing in my free time.
 If you like it, you can support me. 
 By supporting, you let me spend more time working on better tools that you can use for free. :)
 
-[![become_a_patron_on_patreon](https://user-images.githubusercontent.com/12690315/50731629-3b18b480-11ad-11e9-8fad-4b13f27969c1.png)](https://www.patreon.com/join/2343451?)
+[![become_a_patron_on_patreon](https://user-images.githubusercontent.com/12690315/50731629-3b18b480-11ad-11e9-8fad-4b13f27969c1.png)](https://www.patreon.com/join/2343451?)  
 [![become_a_sponsor_on_github](https://user-images.githubusercontent.com/12690315/66942881-03686280-f085-11e9-9586-fc0b6011029f.png)](https://github.com/users/mob-sakai/sponsorship)
 
 

@@ -378,7 +378,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 1
   m_AdvancedBlur: 0
 --- !u!114 &14652072
@@ -1781,7 +1780,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 2
-  m_EffectColor: {r: 0.753, g: 0.2509804, b: 0.2509804, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &64317406
@@ -2255,7 +2253,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 1
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &84494222
@@ -3288,7 +3285,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &104024126
@@ -5120,7 +5116,6 @@ MonoBehaviour:
   m_BlurFactor: 0.5
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 2
   m_AdvancedBlur: 0
 --- !u!114 &163577014
@@ -5619,7 +5614,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 3
-  m_EffectColor: {r: 0.753, g: 0.2509804, b: 0.2509804, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &174393586
@@ -6015,7 +6009,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 1
   m_AdvancedBlur: 0
 --- !u!114 &182793970
@@ -6189,7 +6182,6 @@ MonoBehaviour:
   m_BlurFactor: 0.5
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 0
 --- !u!114 &185484578
@@ -6608,7 +6600,6 @@ MonoBehaviour:
   m_BlurFactor: 0.75
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 0
 --- !u!114 &191528446
@@ -7397,7 +7388,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 0.76862746}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &214921494
@@ -7592,7 +7582,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 4
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &216375909
@@ -7762,7 +7751,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 0}
   m_BlurMode: 3
   m_AdvancedBlur: 0
 --- !u!114 &221297113
@@ -10077,7 +10065,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 3
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &324158648
@@ -11830,7 +11817,6 @@ MonoBehaviour:
   m_BlurFactor: 0.75
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 2
   m_AdvancedBlur: 0
 --- !u!114 &368156629
@@ -12133,7 +12119,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 0}
   m_BlurMode: 2
   m_AdvancedBlur: 0
 --- !u!114 &379439431
@@ -13111,7 +13096,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 2
   m_AdvancedBlur: 0
 --- !u!114 &397562436
@@ -13744,7 +13728,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 2
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &432256206
@@ -14585,7 +14568,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 4
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &461011643
@@ -15022,7 +15004,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 4
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &464566441
@@ -15948,7 +15929,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 1
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &477728562
@@ -17255,7 +17235,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &515330516
@@ -17375,7 +17354,6 @@ MonoBehaviour:
   m_BlurFactor: 0.75
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 1
   m_AdvancedBlur: 0
 --- !u!114 &517270179
@@ -17607,7 +17585,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 0}
   m_BlurMode: 2
   m_AdvancedBlur: 0
 --- !u!114 &521941302
@@ -17873,7 +17850,6 @@ MonoBehaviour:
   m_BlurFactor: 0.5
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 1
   m_AdvancedBlur: 0
 --- !u!114 &536193734
@@ -18007,7 +17983,6 @@ MonoBehaviour:
   m_BlurFactor: 0.25
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 1
 --- !u!114 &543352182
@@ -18256,7 +18231,6 @@ MonoBehaviour:
   m_BlurFactor: 0.5
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 2
   m_AdvancedBlur: 0
 --- !u!114 &546706076
@@ -18390,7 +18364,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 0}
   m_BlurMode: 3
   m_AdvancedBlur: 0
 --- !u!114 &547320603
@@ -18905,7 +18878,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 4
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &566640802
@@ -19752,7 +19724,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 3
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &594764144
@@ -20573,7 +20544,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &622930684
@@ -21216,7 +21186,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &646789306
@@ -21784,7 +21753,6 @@ MonoBehaviour:
   m_BlurFactor: 0.75
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 2
   m_AdvancedBlur: 0
 --- !u!114 &663456056
@@ -22775,7 +22743,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 0}
   m_BlurMode: 2
   m_AdvancedBlur: 0
 --- !u!114 &683549511
@@ -23089,7 +23056,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &704349458
@@ -24514,7 +24480,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 3
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &766643022
@@ -24744,7 +24709,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 2
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &768773799
@@ -25925,7 +25889,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 2
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &813870497
@@ -26924,7 +26887,6 @@ MonoBehaviour:
   m_BlurFactor: 0.5
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 0
 --- !u!114 &843537770
@@ -27149,7 +27111,6 @@ MonoBehaviour:
   m_BlurFactor: 0.5
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 1
   m_AdvancedBlur: 0
 --- !u!114 &852517264
@@ -27815,7 +27776,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 2
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 0.2509804}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &876776574
@@ -28060,7 +28020,6 @@ MonoBehaviour:
   m_BlurFactor: 0.5
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 1
 --- !u!114 &881417269
@@ -28691,7 +28650,6 @@ MonoBehaviour:
   m_BlurFactor: 0.75
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 1
   m_AdvancedBlur: 0
 --- !u!114 &902696329
@@ -28815,7 +28773,6 @@ MonoBehaviour:
   m_BlurFactor: 0.5
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 1
 --- !u!114 &905810806
@@ -29022,7 +28979,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 0
 --- !u!114 &913664184
@@ -29878,7 +29834,6 @@ MonoBehaviour:
   m_BlurFactor: 0.5
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 0}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &924573930
@@ -30624,7 +30579,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 0}
   m_BlurMode: 2
   m_AdvancedBlur: 0
 --- !u!114 &934988745
@@ -31055,7 +31009,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 1
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &947094048
@@ -31208,8 +31161,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 50857159}
   m_HandleRect: {fileID: 50857158}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.09822756
+  m_Value: 0.99999994
+  m_Size: 0.062478587
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -31311,7 +31264,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 1
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &948642377
@@ -31595,7 +31547,6 @@ MonoBehaviour:
   m_BlurFactor: 0.5
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 0}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &950303574
@@ -32167,7 +32118,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 0
 --- !u!114 &970441794
@@ -32260,7 +32210,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 1
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 0
 --- !u!114 &970497369
@@ -33289,7 +33238,6 @@ MonoBehaviour:
   m_BlurFactor: 0.75
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 1
 --- !u!114 &988031898
@@ -33539,7 +33487,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &992310945
@@ -34079,7 +34026,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 2
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1000971493
@@ -37795,7 +37741,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1108708182
@@ -38071,7 +38016,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 1
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1123579952
@@ -38696,7 +38640,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 3
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 0.2509804}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1132158762
@@ -38830,7 +38773,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 0
 --- !u!114 &1137782532
@@ -39680,7 +39622,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 3
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 0.76862746}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1158153992
@@ -40920,7 +40861,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1210093532
@@ -41308,7 +41248,6 @@ MonoBehaviour:
   m_BlurFactor: 0.25
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 0
 --- !u!114 &1227079803
@@ -42325,7 +42264,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 2
   m_AdvancedBlur: 0
 --- !u!114 &1263808163
@@ -42523,7 +42461,6 @@ MonoBehaviour:
   m_BlurFactor: 0.5
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 1
   m_AdvancedBlur: 0
 --- !u!114 &1269033946
@@ -42897,7 +42834,6 @@ MonoBehaviour:
   m_BlurFactor: 0.25
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 2
   m_AdvancedBlur: 0
 --- !u!114 &1278367298
@@ -43074,7 +43010,6 @@ MonoBehaviour:
   m_BlurFactor: 0.25
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 0
 --- !u!114 &1281251056
@@ -43174,7 +43109,6 @@ MonoBehaviour:
   m_BlurFactor: 0.75
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 1
 --- !u!114 &1284909199
@@ -45928,7 +45862,6 @@ MonoBehaviour:
   m_BlurFactor: 0.75
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 0
 --- !u!114 &1358663725
@@ -46454,7 +46387,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 1
 --- !u!114 &1377623292
@@ -46928,7 +46860,6 @@ MonoBehaviour:
   m_BlurFactor: 0.5
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 0}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1408993763
@@ -47141,7 +47072,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 2
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1413793748
@@ -47872,7 +47802,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 2
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 0.5019608}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1442348953
@@ -49115,7 +49044,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 4
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1477783063
@@ -49548,7 +49476,6 @@ MonoBehaviour:
   m_BlurFactor: 0.25
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 1
   m_AdvancedBlur: 0
 --- !u!1 &1486374268
@@ -49818,7 +49745,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 2
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 0.76862746}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1492778543
@@ -50309,7 +50235,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 0}
   m_BlurMode: 2
   m_AdvancedBlur: 0
 --- !u!114 &1502206872
@@ -51243,7 +51168,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 3
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1528458420
@@ -51685,7 +51609,6 @@ MonoBehaviour:
   m_BlurFactor: 0.25
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 2
   m_AdvancedBlur: 0
 --- !u!114 &1537043937
@@ -52627,7 +52550,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 0.753, g: 0.2509804, b: 0.2509804, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1577050584
@@ -53393,7 +53315,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 0
 --- !u!114 &1603812831
@@ -53753,7 +53674,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 0}
   m_BlurMode: 3
   m_AdvancedBlur: 0
 --- !u!114 &1630231198
@@ -54624,7 +54544,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 1
 --- !u!114 &1666331660
@@ -54747,7 +54666,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 0.5019608}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1672464528
@@ -56298,7 +56216,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 3
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1720971683
@@ -57038,7 +56955,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1738916944
@@ -57158,7 +57074,6 @@ MonoBehaviour:
   m_BlurFactor: 0.25
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 1
   m_AdvancedBlur: 0
 --- !u!114 &1740647457
@@ -58567,7 +58482,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 1
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1784530462
@@ -58860,7 +58774,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 3
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1793079430
@@ -59469,7 +59382,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 0.2509804}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1801301787
@@ -59579,7 +59491,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1802228906
@@ -59951,7 +59862,6 @@ MonoBehaviour:
   m_BlurFactor: 0.25
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 3
   m_AdvancedBlur: 1
 --- !u!114 &1808903297
@@ -60094,7 +60004,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 2
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1814068978
@@ -61526,7 +61435,6 @@ MonoBehaviour:
   m_BlurFactor: 0.5
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 0}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1837354010
@@ -61834,7 +61742,6 @@ MonoBehaviour:
   m_BlurFactor: 0.7
   m_EffectMode: 0
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 2
   m_AdvancedBlur: 0
 --- !u!114 &1842158196
@@ -62138,7 +62045,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 1
   m_ColorMode: 0
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1854314332
@@ -62804,7 +62710,6 @@ MonoBehaviour:
   m_BlurFactor: 0
   m_EffectMode: 0
   m_ColorMode: 3
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 0.5019608}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &1876284850
@@ -66819,7 +66724,6 @@ MonoBehaviour:
   m_BlurFactor: 1
   m_EffectMode: 0
   m_ColorMode: 1
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 1}
   m_BlurMode: 0
   m_AdvancedBlur: 0
 --- !u!114 &2015901105

@@ -16,7 +16,6 @@ namespace Coffee.UIExtensions.Editors
         SerializedProperty _spEffectMode;
         SerializedProperty _spEffectFactor;
         SerializedProperty _spColorMode;
-        SerializedProperty _spEffectColor;
         SerializedProperty _spColorFactor;
         SerializedProperty _spBlurMode;
         SerializedProperty _spBlurFactor;
@@ -27,7 +26,6 @@ namespace Coffee.UIExtensions.Editors
             _spEffectMode = serializedObject.FindProperty("m_EffectMode");
             _spEffectFactor = serializedObject.FindProperty("m_EffectFactor");
             _spColorMode = serializedObject.FindProperty("m_ColorMode");
-            _spEffectColor = serializedObject.FindProperty("m_EffectColor");
             _spColorFactor = serializedObject.FindProperty("m_ColorFactor");
             _spBlurMode = serializedObject.FindProperty("m_BlurMode");
             _spBlurFactor = serializedObject.FindProperty("m_BlurFactor");
@@ -60,7 +58,6 @@ namespace Coffee.UIExtensions.Editors
             // When color is enable, show parameters.
             {
                 EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(_spEffectColor);
                 EditorGUILayout.PropertyField(_spColorFactor);
                 EditorGUI.indentLevel--;
             }
