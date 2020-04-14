@@ -1,3 +1,10 @@
+# [4.0.0-preview.6](https://github.com/mob-sakai/UIEffect/compare/v4.0.0-preview.5...v4.0.0-preview.6) (2020-04-14)
+
+
+### Bug Fixes
+
+* can't import samples in Unity2019.1 or later ([13a8538](https://github.com/mob-sakai/UIEffect/commit/13a853887e87b7ecc12e937e92498af945bbeb8a)), closes [#209](https://github.com/mob-sakai/UIEffect/issues/209)
+
 # [4.0.0-preview.5](https://github.com/mob-sakai/UIEffect/compare/v4.0.0-preview.4...v4.0.0-preview.5) (2020-04-13)
 
 
