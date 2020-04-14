@@ -14,5 +14,16 @@
     "email": "sakai861104@gmail.com",
     "url": "https://github.com/mob-sakai"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "keywords": [
+    "ui",
+    "effect"
+  ],
+  "samples": [
+    {
+      "displayName": "Demo",
+      "description": "UI Effect Demo",
+      "path": "Samples~/Demo"
+    }
+  ]
 }
