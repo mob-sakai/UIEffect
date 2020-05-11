@@ -3,11 +3,11 @@
   "description": "To release upm package, execute `npm run release` on bash.",
   "version": "1.0.0",
   "devDependencies": {
-    "git-snapshot": "^2.2.0",
-    "@semantic-release/changelog": "^5.0.0",
-    "@semantic-release/git": "^9.0.0",
+    "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/exec": "^5.0.0",
-    "semantic-release": "^17.0.2"
+    "@semantic-release/git": "^9.0.0",
+    "git-snapshot": "^2.2.1",
+    "semantic-release": "^17.0.7"
   },
   "scripts": {
     "release": "npm ci && cd `find Packages/*/.releaserc -exec dirname {} +` && npx semantic-release",
