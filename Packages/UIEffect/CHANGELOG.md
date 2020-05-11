@@ -1,3 +1,11 @@
+# [4.0.0-preview.7](https://github.com/mob-sakai/UIEffect/compare/v4.0.0-preview.6...v4.0.0-preview.7) (2020-05-11)
+
+
+### Bug Fixes
+
+* not working on PS4 ([0f595eb](https://github.com/mob-sakai/UIEffect/commit/0f595eb79197433e166bf74d736d9841b4117011)), closes [#211](https://github.com/mob-sakai/UIEffect/issues/211)
+* Shaders.meta file should be removed ([e9cc165](https://github.com/mob-sakai/UIEffect/commit/e9cc165e2edba572d868d224e42df31666fd4002)), closes [#210](https://github.com/mob-sakai/UIEffect/issues/210)
+
 # [4.0.0-preview.6](https://github.com/mob-sakai/UIEffect/compare/v4.0.0-preview.5...v4.0.0-preview.6) (2020-04-14)
 
 
