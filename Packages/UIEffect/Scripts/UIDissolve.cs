@@ -7,7 +7,7 @@ using System.Text;
 using System.Linq;
 using System.IO;
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIEffects
 {
     /// <summary>
     /// Dissolve effect for uGUI.

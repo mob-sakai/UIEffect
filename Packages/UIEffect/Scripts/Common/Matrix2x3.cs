@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIEffects
 {
     /// <summary>
     /// Matrix2x3.

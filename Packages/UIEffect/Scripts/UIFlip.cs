@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIEffects
 {
     [DisallowMultipleComponent]
     [AddComponentMenu("UI/UIEffects/UIFlip", 102)]

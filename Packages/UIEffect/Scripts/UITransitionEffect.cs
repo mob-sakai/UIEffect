@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Serialization;
 using System;
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIEffects
 {
     /// <summary>
     /// Transition effect.

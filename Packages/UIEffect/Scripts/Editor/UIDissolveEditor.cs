@@ -5,7 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-namespace Coffee.UIExtensions.Editors
+namespace Coffee.UIEffects.Editors
 {
     /// <summary>
     /// UIEffect editor.

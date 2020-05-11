@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using System;
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIEffects
 {
     public interface IParameterTexture
     {

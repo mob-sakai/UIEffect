@@ -5,7 +5,7 @@ using UnityEngine;
 using System.Text;
 using UnityEngine.UI;
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIEffects
 {
     public class MaterialCache
     {
