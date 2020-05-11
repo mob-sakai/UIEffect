@@ -40,7 +40,8 @@ namespace Coffee.UIEffects
         }
 #endif
 
-        public static Material Register(Material baseMaterial, Hash128 hash, System.Action<Material, Graphic> onModifyMaterial, Graphic graphic)
+        public static Material Register(Material baseMaterial, Hash128 hash,
+            System.Action<Material, Graphic> onModifyMaterial, Graphic graphic)
         {
             if (!hash.isValid) return null;
 

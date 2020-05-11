@@ -16,7 +16,7 @@ namespace Coffee.UIEffects
         private bool m_Veritical = false;
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Coffee.UIExtensions.UIFlip"/> should be flipped horizontally.
+        /// Gets or sets a value indicating whether this <see cref="Coffee.UIEffects.UIFlip"/> should be flipped horizontally.
         /// </summary>
         /// <value><c>true</c> if be flipped horizontally; otherwise, <c>false</c>.</value>
         public bool horizontal
@@ -31,7 +31,7 @@ namespace Coffee.UIEffects
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Coffee.UIExtensions.UIFlip"/> should be flipped vertically.
+        /// Gets or sets a value indicating whether this <see cref="Coffee.UIEffects.UIFlip"/> should be flipped vertically.
         /// </summary>
         /// <value><c>true</c> if be flipped horizontally; otherwise, <c>false</c>.</value>
         public bool vertical

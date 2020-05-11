@@ -16,14 +16,14 @@ namespace Coffee.UIEffects
     {
         RectTransform _rectTransform;
         Graphic _graphic;
-        BaseConnector _connector;
+        GraphicConnector _connector;
 
         /// <summary>
         /// The Graphic attached to this GameObject.
         /// </summary>
-        protected BaseConnector connector
+        protected GraphicConnector connector
         {
-            get { return _connector ?? (_connector = BaseConnector.FindConnector(graphic)); }
+            get { return _connector ?? (_connector = GraphicConnector.FindConnector(graphic)); }
         }
 
         /// <summary>
@@ -43,15 +43,6 @@ namespace Coffee.UIEffects
         }
 
         internal readonly List<UISyncEffect> syncEffects = new List<UISyncEffect>(0);
-
-        /// <summary>
-        /// The material for rendering.
-        /// </summary>
-        // public virtual Material material
-        // {
-        //     get { return connector.GetMaterial(graphic); }
-        //     set { connector.SetMaterial(graphic, value); }
-        // }
 
         /// <summary>
         /// Call used to modify mesh. (legacy)
@@ -146,7 +137,7 @@ namespace Coffee.UIEffects
 //             _initialized = true;
 //             _graphic = _graphic ? _graphic : GetComponent<Graphic>();
 //
-//             _connector = BaseConnector.FindConnector(_graphic);
+//             _connector = GraphicConnector.FindConnector(_graphic);
 //
 //             // _canvasRenderer = _canvasRenderer ?? GetComponent<CanvasRenderer> ();
 //             _rectTransform = _rectTransform ? _rectTransform : GetComponent<RectTransform>();

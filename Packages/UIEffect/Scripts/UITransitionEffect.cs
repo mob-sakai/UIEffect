@@ -228,7 +228,7 @@ namespace Coffee.UIEffects
 
         public override void ModifyMaterial(Material newMaterial, Graphic graphic)
         {
-            var connector = BaseConnector.FindConnector(graphic);
+            var connector = GraphicConnector.FindConnector(graphic);
             newMaterial.shader = connector.FindShader("UITransition");
             SetShaderVariants(newMaterial, m_EffectMode);
 

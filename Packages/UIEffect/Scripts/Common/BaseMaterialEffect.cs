@@ -43,7 +43,6 @@ namespace Coffee.UIEffects
             foreach (var effect in syncEffects)
             {
                 effect.SetMaterialDirty();
-                // BaseConnector.FindConnector(effect.graphic).SetMaterialDirty(effect.graphic);
             }
         }
 

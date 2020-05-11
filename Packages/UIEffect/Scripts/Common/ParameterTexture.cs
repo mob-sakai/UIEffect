@@ -24,7 +24,7 @@ namespace Coffee.UIEffects
         //################################
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Coffee.UIExtensions.ParameterTexture"/> class.
+        /// Initializes a new instance of the <see cref="Coffee.UIEffects.ParameterTexture"/> class.
         /// </summary>
         /// <param name="channels">Channels.</param>
         /// <param name="instanceLimit">Instance limit.</param>

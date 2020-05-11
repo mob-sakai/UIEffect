@@ -213,7 +213,7 @@ namespace Coffee.UIEffects
 
         public override void ModifyMaterial(Material newMaterial, Graphic graphic)
         {
-            var connector = BaseConnector.FindConnector(graphic);
+            var connector = GraphicConnector.FindConnector(graphic);
             newMaterial.shader = connector.FindShader("UIDissolve");
             SetShaderVariants(newMaterial, m_ColorMode);
 
