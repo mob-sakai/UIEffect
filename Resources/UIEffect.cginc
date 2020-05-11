@@ -260,7 +260,7 @@ half4 ApplyShinyEffect(half4 color, half2 shinyParam)
 	fixed gloss = param2.x;
 	half normalized = 1 - saturate(abs((nomalizedPos - location) / width));
 	half shinePower = smoothstep(0, soft, normalized);
-	half3 reflectColor = lerp(1, color.rgb * 7, gloss);
+	half3 reflectColor = lerp(fixed3(1,1,1), color.rgb * 7, gloss);
 
 	color.rgb += color.a * (shinePower / 2) * brightness * reflectColor;
 
@@ -282,7 +282,7 @@ half3 HsvToRgb(half3 c) {
 	c = half3(c.x, clamp(c.yz, 0.0, 1.0));
 	half4 K = half4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
 	half3 p = abs(frac(c.xxx + K.xyz) * 6.0 - K.www);
-	return c.z * lerp(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+	return c.z * lerp(K.xxx, clamp(p.xyz - K.xxx, 0.0, 1.0), c.y);
 }
 
 
