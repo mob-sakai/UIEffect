@@ -6,12 +6,13 @@ using UnityEditor;
 
 namespace Coffee.UIEffects
 {
-    public static class ImportSampleMenu_UIEffect
+    public static class ImportSampleMenu
     {
-        [MenuItem("Assets/Samples/Import UIEffect Sample")]
-        private static void ImportSample()
+        private const string jsonGuid = "546af75b6221c4768be79d67c9cea1fb";
+
+        [MenuItem("Assets/Samples/UIEffect/Import Demo")]
+        private static void ImportDemo()
         {
-            const string jsonGuid = "546af75b6221c4768be79d67c9cea1fb";
             ImportSample(jsonGuid, "Demo");
         }
 

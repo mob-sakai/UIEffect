@@ -113,18 +113,13 @@ Or, use [UpmGitExtension](https://github.com/mob-sakai/UpmGitExtension) to insta
 <br><br><br><br>
 ## How to play demo
 
-#### For Unity 2019.1 or later
+- For Unity 2019.1 or later
+  - Open `Package Manager` window and select `UI Effect` package in package list and click `Demo > Import in project` button
+- For Unity 2018.4 or earlier
+  - Click `Assets/Samples/UIEffect/Import Demo` from menu
 
-1. Open `Package Manager` window and select `UI Particle` package in package list
-2. Click `Import in project` button  
-![](https://user-images.githubusercontent.com/12690315/79000480-a8bd4880-7b87-11ea-89c7-a17033a486ba.png)
-3. The demo will be imported into `Assets/Samples/UI Effect/{version}/Demo`; open `UIEffect_Demo` scene and play it
-
-#### For Unity 2018.4 or earlier
-
-1. Select `Assets/Samples/UI Effect Demo` from menu  
-![Assets_と_Menubar](https://user-images.githubusercontent.com/12690315/79001101-dd7dcf80-7b88-11ea-9cf2-b44c6c5c9b17.png)
-2. The demo will be imported into `Assets/Samples/UI Effect/{version}/Demo`; open `UIEffect_Demo` scene and play it
+The assets will be imported into `Assets/Samples/UI Effect/{version}/Demo`.  
+Open `
 
 
 
