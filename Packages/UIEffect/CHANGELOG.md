@@ -1,3 +1,20 @@
+# [4.0.0-preview.8](https://github.com/mob-sakai/UIEffect/compare/v4.0.0-preview.7...v4.0.0-preview.8) (2020-06-04)
+
+
+### change
+
+* change namespace ([7f4190c](https://github.com/mob-sakai/UIEffect/commit/7f4190c8c6f294e90869767a96194ec5ac4ba57f))
+
+
+### Features
+
+* modify EffectPlayer at runtime ([8483ba6](https://github.com/mob-sakai/UIEffect/commit/8483ba63cb546ca032915c166c0333fa5fd7aa76)), closes [#214](https://github.com/mob-sakai/UIEffect/issues/214) [#215](https://github.com/mob-sakai/UIEffect/issues/215)
+
+
+### BREAKING CHANGES
+
+* If your code contained the UIEffect API, it would fail to compile. Please change the namespace from `Coffee.UIExtensions` to `Coffee.UIEffects`.
+
 # [4.0.0-preview.7](https://github.com/mob-sakai/UIEffect/compare/v4.0.0-preview.6...v4.0.0-preview.7) (2020-05-11)
 
 
