@@ -7,7 +7,7 @@
     "@semantic-release/exec": "^5.0.0",
     "@semantic-release/git": "^9.0.0",
     "git-snapshot": "^2.2.1",
-    "semantic-release": "^17.0.7"
+    "semantic-release": "^17.0.8"
   },
   "scripts": {
     "release": "npm ci && cd `find Packages/*/.releaserc -exec dirname {} +` && npx semantic-release",
