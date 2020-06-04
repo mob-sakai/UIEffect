@@ -1,4 +1,4 @@
-﻿namespace Coffee.UIExtensions
+﻿namespace Coffee.UIEffects
 {
     /// <summary>
     /// Color effect mode.

@@ -2,7 +2,7 @@
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace Coffee.UIExtensions.Editors
+namespace Coffee.UIEffects.Editors
 {
     /// <summary>
     /// UIShadow editor.

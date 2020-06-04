@@ -4,7 +4,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIEffects
 {
     /// <summary>
     /// HSV Modifier.
@@ -127,7 +127,7 @@ namespace Coffee.UIExtensions
 
         public override void ModifyMaterial(Material newMaterial, Graphic graphic)
         {
-            var connector = BaseConnector.FindConnector(graphic);
+            var connector = GraphicConnector.FindConnector(graphic);
 
             newMaterial.shader = connector.FindShader("UIHsvModifier");
             paramTex.RegisterMaterial(newMaterial);

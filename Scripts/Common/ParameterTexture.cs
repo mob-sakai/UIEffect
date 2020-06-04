@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using System;
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIEffects
 {
     public interface IParameterTexture
     {
@@ -24,7 +24,7 @@ namespace Coffee.UIExtensions
         //################################
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Coffee.UIExtensions.ParameterTexture"/> class.
+        /// Initializes a new instance of the <see cref="Coffee.UIEffects.ParameterTexture"/> class.
         /// </summary>
         /// <param name="channels">Channels.</param>
         /// <param name="instanceLimit">Instance limit.</param>

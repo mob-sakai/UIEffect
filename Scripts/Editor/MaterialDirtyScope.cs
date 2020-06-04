@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Coffee.UIExtensions.Editors
+namespace Coffee.UIEffects.Editors
 {
     /// <summary>
     /// Changes in this scope cause the graphic's material to be dirty.

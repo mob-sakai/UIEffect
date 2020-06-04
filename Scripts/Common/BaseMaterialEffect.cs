@@ -6,7 +6,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIEffects
 {
     /// <summary>
     /// Abstract effect base for UI.
@@ -43,7 +43,6 @@ namespace Coffee.UIExtensions
             foreach (var effect in syncEffects)
             {
                 effect.SetMaterialDirty();
-                // BaseConnector.FindConnector(effect.graphic).SetMaterialDirty(effect.graphic);
             }
         }
 

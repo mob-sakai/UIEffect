@@ -10,7 +10,7 @@ using UnityEditor;
 
 #endif
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIEffects
 {
     /// <summary>
     /// UIEffect.

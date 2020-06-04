@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIEffects
 {
     [DisallowMultipleComponent]
     [AddComponentMenu("UI/UIEffects/UIFlip", 102)]
@@ -16,7 +16,7 @@ namespace Coffee.UIExtensions
         private bool m_Veritical = false;
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Coffee.UIExtensions.UIFlip"/> should be flipped horizontally.
+        /// Gets or sets a value indicating whether this <see cref="Coffee.UIEffects.UIFlip"/> should be flipped horizontally.
         /// </summary>
         /// <value><c>true</c> if be flipped horizontally; otherwise, <c>false</c>.</value>
         public bool horizontal
@@ -31,7 +31,7 @@ namespace Coffee.UIExtensions
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Coffee.UIExtensions.UIFlip"/> should be flipped vertically.
+        /// Gets or sets a value indicating whether this <see cref="Coffee.UIEffects.UIFlip"/> should be flipped vertically.
         /// </summary>
         /// <value><c>true</c> if be flipped horizontally; otherwise, <c>false</c>.</value>
         public bool vertical

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIEffects
 {
     /// <summary>
     /// Dissolve effect for uGUI.

@@ -10,7 +10,7 @@ using UnityEditor;
 
 #endif
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIEffects
 {
     /// <summary>
     /// UIEffect.
@@ -192,7 +192,7 @@ namespace Coffee.UIExtensions
 
         public override void ModifyMaterial(Material newMaterial, Graphic graphic)
         {
-            var connector = BaseConnector.FindConnector(graphic);
+            var connector = GraphicConnector.FindConnector(graphic);
 
             newMaterial.shader = connector.FindShader("UIEffect");
             SetShaderVariants(newMaterial, m_EffectMode, m_ColorMode, m_BlurMode,

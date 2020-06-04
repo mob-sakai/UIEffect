@@ -5,7 +5,7 @@ using UnityEngine;
 using System.Text;
 using UnityEngine.UI;
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIEffects
 {
     public class MaterialCache
     {
@@ -40,7 +40,8 @@ namespace Coffee.UIExtensions
         }
 #endif
 
-        public static Material Register(Material baseMaterial, Hash128 hash, System.Action<Material, Graphic> onModifyMaterial, Graphic graphic)
+        public static Material Register(Material baseMaterial, Hash128 hash,
+            System.Action<Material, Graphic> onModifyMaterial, Graphic graphic)
         {
             if (!hash.isValid) return null;
 

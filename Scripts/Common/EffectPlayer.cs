@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIEffects
 {
     /// <summary>
     /// Effect player.

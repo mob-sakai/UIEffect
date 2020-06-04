@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 using System.Collections;
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIEffects
 {
     /// <summary>
     /// UIEffect.
@@ -153,13 +153,18 @@ namespace Coffee.UIExtensions
             get { return s_ParamTex; }
         }
 
+        EffectPlayer effectPlayer
+        {
+            get { return m_Player ?? (m_Player = new EffectPlayer()); }
+        }
+
         /// <summary>
         /// This function is called when the object becomes enabled and active.
         /// </summary>
         protected override void OnEnable()
         {
             base.OnEnable();
-            _player.OnEnable(f => effectFactor = f);
+            effectPlayer.OnEnable(f => effectFactor = f);
         }
 
         /// <summary>
@@ -168,7 +173,7 @@ namespace Coffee.UIExtensions
         protected override void OnDisable()
         {
             base.OnDisable();
-            _player.OnDisable();
+            effectPlayer.OnDisable();
         }
 
 
@@ -187,7 +192,7 @@ namespace Coffee.UIExtensions
 
         public override void ModifyMaterial(Material newMaterial, Graphic graphic)
         {
-            var connector = BaseConnector.FindConnector(graphic);
+            var connector = GraphicConnector.FindConnector(graphic);
 
             newMaterial.shader = connector.FindShader("UIShiny");
             paramTex.RegisterMaterial(newMaterial);
@@ -233,7 +238,7 @@ namespace Coffee.UIExtensions
         /// </summary>
         public void Play(bool reset = true)
         {
-            _player.Play(reset);
+            effectPlayer.Play(reset);
         }
 
         /// <summary>
@@ -241,7 +246,7 @@ namespace Coffee.UIExtensions
         /// </summary>
         public void Stop(bool reset = true)
         {
-            _player.Stop(reset);
+            effectPlayer.Stop(reset);
         }
 
         protected override void SetEffectParamsDirty()
@@ -268,11 +273,6 @@ namespace Coffee.UIExtensions
             if (!Mathf.Approximately(_lastRotation, m_Rotation)
                 || _lastEffectArea != m_EffectArea)
                 SetVerticesDirty();
-        }
-
-        EffectPlayer _player
-        {
-            get { return m_Player ?? (m_Player = new EffectPlayer()); }
         }
     }
 }

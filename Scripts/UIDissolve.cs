@@ -7,7 +7,7 @@ using System.Text;
 using System.Linq;
 using System.IO;
 
-namespace Coffee.UIExtensions
+namespace Coffee.UIEffects
 {
     /// <summary>
     /// Dissolve effect for uGUI.
@@ -196,6 +196,11 @@ namespace Coffee.UIExtensions
             get { return s_ParamTex; }
         }
 
+        EffectPlayer effectPlayer
+        {
+            get { return m_Player ?? (m_Player = new EffectPlayer()); }
+        }
+
         public override Hash128 GetMaterialHash(Material material)
         {
             if (!isActiveAndEnabled || !material || !material.shader)
@@ -213,7 +218,7 @@ namespace Coffee.UIExtensions
 
         public override void ModifyMaterial(Material newMaterial, Graphic graphic)
         {
-            var connector = BaseConnector.FindConnector(graphic);
+            var connector = GraphicConnector.FindConnector(graphic);
             newMaterial.shader = connector.FindShader("UIDissolve");
             SetShaderVariants(newMaterial, m_ColorMode);
 
@@ -288,7 +293,7 @@ namespace Coffee.UIExtensions
         /// </summary>
         public void Play(bool reset = true)
         {
-            _player.Play(reset);
+            effectPlayer.Play(reset);
         }
 
         /// <summary>
@@ -296,24 +301,19 @@ namespace Coffee.UIExtensions
         /// </summary>
         public void Stop(bool reset = true)
         {
-            _player.Stop(reset);
+            effectPlayer.Stop(reset);
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            _player.OnEnable((f) => effectFactor = m_Reverse ? 1f - f : f);
+            effectPlayer.OnEnable((f) => effectFactor = m_Reverse ? 1f - f : f);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            _player.OnDisable();
-        }
-
-        EffectPlayer _player
-        {
-            get { return m_Player ?? (m_Player = new EffectPlayer()); }
+            effectPlayer.OnDisable();
         }
     }
 }
