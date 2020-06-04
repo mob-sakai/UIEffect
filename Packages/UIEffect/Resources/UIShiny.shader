@@ -1,10 +1,10 @@
-Shader "Hidden/UIShiny"
+Shader "Hidden/UI/Default (UIShiny)"
 {
 	Properties
 	{
 		[PerRendererData] _MainTex ("Main Texture", 2D) = "white" {}
 		_Color ("Tint", Color) = (1,1,1,1)
-		
+
 		_StencilComp ("Stencil Comparison", Float) = 8
 		_Stencil ("Stencil ID", Float) = 0
 		_StencilOp ("Stencil Operation", Float) = 0
@@ -21,19 +21,19 @@ Shader "Hidden/UIShiny"
 	SubShader
 	{
 		Tags
-		{ 
-			"Queue"="Transparent" 
-			"IgnoreProjector"="True" 
-			"RenderType"="Transparent" 
+		{
+			"Queue"="Transparent"
+			"IgnoreProjector"="True"
+			"RenderType"="Transparent"
 			"PreviewType"="Plane"
 			"CanUseSpriteAtlas"="True"
 		}
-		
+
 		Stencil
 		{
 			Ref [_Stencil]
 			Comp [_StencilComp]
-			Pass [_StencilOp] 
+			Pass [_StencilOp]
 			ReadMask [_StencilReadMask]
 			WriteMask [_StencilWriteMask]
 		}
@@ -53,9 +53,9 @@ Shader "Hidden/UIShiny"
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma target 2.0
-			
+
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
-			
+
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
 
@@ -69,11 +69,11 @@ Shader "Hidden/UIShiny"
 				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
 
 				color = ApplyShinyEffect(color, IN.eParam);
-				
+
 				#ifdef UNITY_UI_ALPHACLIP
 				clip (color.a - 0.001);
 				#endif
-				
+
 				return color;
 			}
 		ENDCG

@@ -113,14 +113,6 @@ namespace Coffee.UIEffects
         }
 
         /// <summary>
-        /// Event that is called just before Canvas rendering happens.
-        /// This allows you to delay processing / updating of canvas based elements until just before they are rendered.
-        /// </summary>
-        protected virtual void OnWillRenderCanvases()
-        {
-        }
-
-        /// <summary>
         /// Gets position factor for area.
         /// </summary>
         public virtual void GetPositionFactor(EffectArea area, int index, Rect rect, Vector2 position, out float x, out float y)

@@ -219,7 +219,7 @@ namespace Coffee.UIEffects
         public override void ModifyMaterial(Material newMaterial, Graphic graphic)
         {
             var connector = GraphicConnector.FindConnector(graphic);
-            newMaterial.shader = connector.FindShader("UIDissolve");
+            newMaterial.shader = Shader.Find(string.Format("Hidden/{0} (UIDissolve)", newMaterial.shader.name));
             SetShaderVariants(newMaterial, m_ColorMode);
 
             newMaterial.SetTexture(k_TransitionTexId, transitionTexture);

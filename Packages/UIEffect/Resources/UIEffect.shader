@@ -1,4 +1,4 @@
-﻿Shader "Hidden/UIEffect"
+﻿Shader "Hidden/UI/Default (UIEffect)"
 {
 	Properties
 	{

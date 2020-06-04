@@ -1,4 +1,4 @@
-Shader "Hidden/UIDissolve"
+Shader "Hidden/UI/Default (UIDissolve)"
 {
 	Properties
 	{

@@ -1,10 +1,10 @@
-﻿Shader "Hidden/UIHsvModifier"
+﻿Shader "Hidden/UI/Default (UIHsvModifier)"
 {
 	Properties
 	{
 		[PerRendererData] _MainTex ("Main Texture", 2D) = "white" {}
 		_Color ("Tint", Color) = (1,1,1,1)
-		
+
 		_StencilComp ("Stencil Comparison", Float) = 8
 		_Stencil ("Stencil ID", Float) = 0
 		_StencilOp ("Stencil Operation", Float) = 0
@@ -21,19 +21,19 @@
 	SubShader
 	{
 		Tags
-		{ 
-			"Queue"="Transparent" 
-			"IgnoreProjector"="True" 
-			"RenderType"="Transparent" 
+		{
+			"Queue"="Transparent"
+			"IgnoreProjector"="True"
+			"RenderType"="Transparent"
 			"PreviewType"="Plane"
 			"CanUseSpriteAtlas"="True"
 		}
-		
+
 		Stencil
 		{
 			Ref [_Stencil]
 			Comp [_StencilComp]
-			Pass [_StencilOp] 
+			Pass [_StencilOp]
 			ReadMask [_StencilReadMask]
 			WriteMask [_StencilWriteMask]
 		}

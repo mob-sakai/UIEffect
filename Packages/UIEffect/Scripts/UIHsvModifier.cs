@@ -129,7 +129,7 @@ namespace Coffee.UIEffects
         {
             var connector = GraphicConnector.FindConnector(graphic);
 
-            newMaterial.shader = connector.FindShader("UIHsvModifier");
+            newMaterial.shader = Shader.Find(string.Format("Hidden/{0} (UIHsvModifier)", newMaterial.shader.name));
             paramTex.RegisterMaterial(newMaterial);
         }
 

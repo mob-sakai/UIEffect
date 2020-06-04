@@ -194,7 +194,7 @@ namespace Coffee.UIEffects
         {
             var connector = GraphicConnector.FindConnector(graphic);
 
-            newMaterial.shader = connector.FindShader("UIShiny");
+            newMaterial.shader = Shader.Find(string.Format("Hidden/{0} (UIShiny)", newMaterial.shader.name));
             paramTex.RegisterMaterial(newMaterial);
         }
 
