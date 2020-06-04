@@ -192,13 +192,18 @@ namespace Coffee.UIEffects
             set { m_PassRayOnHidden = value; }
         }
 
+        EffectPlayer effectPlayer
+        {
+            get { return m_Player ?? (m_Player = new EffectPlayer()); }
+        }
+
         /// <summary>
         /// Show transition.
         /// </summary>
         public void Show(bool reset = true)
         {
-            _player.loop = false;
-            _player.Play(reset, f => effectFactor = f);
+            effectPlayer.loop = false;
+            effectPlayer.Play(reset, f => effectFactor = f);
         }
 
         /// <summary>
@@ -206,8 +211,8 @@ namespace Coffee.UIEffects
         /// </summary>
         public void Hide(bool reset = true)
         {
-            _player.loop = false;
-            _player.Play(reset, f => effectFactor = 1 - f);
+            effectPlayer.loop = false;
+            effectPlayer.Play(reset, f => effectFactor = 1 - f);
         }
 
 
@@ -277,8 +282,8 @@ namespace Coffee.UIEffects
         protected override void OnEnable()
         {
             base.OnEnable();
-            _player.OnEnable(null);
-            _player.loop = false;
+            effectPlayer.OnEnable(null);
+            effectPlayer.loop = false;
         }
 
         /// <summary>
@@ -287,7 +292,7 @@ namespace Coffee.UIEffects
         protected override void OnDisable()
         {
             base.OnDisable();
-            _player.OnDisable();
+            effectPlayer.OnDisable();
         }
 
         protected override void SetEffectParamsDirty()
@@ -322,11 +327,6 @@ namespace Coffee.UIEffects
 
             if (_lastKeepAspectRatio != m_KeepAspectRatio)
                 SetVerticesDirty();
-        }
-
-        EffectPlayer _player
-        {
-            get { return m_Player ?? (m_Player = new EffectPlayer()); }
         }
     }
 }
