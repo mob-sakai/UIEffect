@@ -192,7 +192,7 @@ namespace Coffee.UIEffects
             set { m_PassRayOnHidden = value; }
         }
 
-        EffectPlayer effectPlayer
+        public EffectPlayer effectPlayer
         {
             get { return m_Player ?? (m_Player = new EffectPlayer()); }
         }
@@ -234,7 +234,7 @@ namespace Coffee.UIEffects
         public override void ModifyMaterial(Material newMaterial, Graphic graphic)
         {
             var connector = GraphicConnector.FindConnector(graphic);
-            newMaterial.shader = connector.FindShader("UITransition");
+            newMaterial.shader = Shader.Find(string.Format("Hidden/{0} (UITransition)", newMaterial.shader.name));
             SetShaderVariants(newMaterial, m_EffectMode);
 
             newMaterial.SetTexture(k_TransitionTexId, transitionTexture);

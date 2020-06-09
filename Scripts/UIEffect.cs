@@ -194,7 +194,7 @@ namespace Coffee.UIEffects
         {
             var connector = GraphicConnector.FindConnector(graphic);
 
-            newMaterial.shader = connector.FindShader("UIEffect");
+            newMaterial.shader = Shader.Find(string.Format("Hidden/{0} (UIEffect)", newMaterial.shader.name));
             SetShaderVariants(newMaterial, m_EffectMode, m_ColorMode, m_BlurMode,
                 m_AdvancedBlur ? BlurEx.Ex : BlurEx.None);
 

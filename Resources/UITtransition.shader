@@ -1,4 +1,4 @@
-Shader "Hidden/UITransition"
+Shader "Hidden/UI/Default (UITransition)"
 {
 	Properties
 	{

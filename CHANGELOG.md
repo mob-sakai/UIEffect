@@ -1,3 +1,10 @@
+# [4.0.0-preview.9](https://github.com/mob-sakai/UIEffect/compare/v4.0.0-preview.8...v4.0.0-preview.9) (2020-06-09)
+
+
+### Features
+
+* add a new property to access EffectPlayer at runtime ([d92efa9](https://github.com/mob-sakai/UIEffect/commit/d92efa98a1fc7b78d3421d9ee0b4bdaa74511bdc)), closes [#214](https://github.com/mob-sakai/UIEffect/issues/214) [#215](https://github.com/mob-sakai/UIEffect/issues/215)
+
 # [4.0.0-preview.8](https://github.com/mob-sakai/UIEffect/compare/v4.0.0-preview.7...v4.0.0-preview.8) (2020-06-04)
 
 

@@ -2,7 +2,7 @@
   "name": "com.coffee.ui-effect",
   "displayName": "UI Effect",
   "description": "UI Effect provides visual effect components for Unity UI.\nLet's decorate your UI with effects!",
-  "version": "4.0.0-preview.8",
+  "version": "4.0.0-preview.9",
   "unity": "2017.1",
   "license": "MIT",
   "repository": {

@@ -128,12 +128,13 @@ namespace Coffee.UIEffects
         /// </summary>
         protected override void OnEnable()
         {
+            base.OnEnable();
+
             if (paramTex != null)
             {
                 paramTex.Register(this);
             }
 
-            SetVerticesDirty();
             SetMaterialDirty();
             SetEffectParamsDirty();
 
@@ -149,7 +150,8 @@ namespace Coffee.UIEffects
         /// </summary>
         protected override void OnDisable()
         {
-            SetVerticesDirty();
+            base.OnDisable();
+
             SetMaterialDirty();
 
             if (paramTex != null)
