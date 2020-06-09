@@ -192,7 +192,7 @@ namespace Coffee.UIEffects
             set { m_PassRayOnHidden = value; }
         }
 
-        EffectPlayer effectPlayer
+        public EffectPlayer effectPlayer
         {
             get { return m_Player ?? (m_Player = new EffectPlayer()); }
         }

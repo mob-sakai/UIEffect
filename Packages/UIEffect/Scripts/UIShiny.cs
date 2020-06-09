@@ -153,7 +153,7 @@ namespace Coffee.UIEffects
             get { return s_ParamTex; }
         }
 
-        EffectPlayer effectPlayer
+        public EffectPlayer effectPlayer
         {
             get { return m_Player ?? (m_Player = new EffectPlayer()); }
         }
