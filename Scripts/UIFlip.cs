@@ -53,15 +53,28 @@ namespace Coffee.UIEffects
         {
             if (!isActiveAndEnabled) return;
 
+            var pivot = rectTransform.pivot;
+            var rect = rectTransform.rect;
+            var width = rect.size.x;
+            var height = rect.size.y;
             var vt = default(UIVertex);
             for (var i = 0; i < vh.currentVertCount; i++)
             {
                 vh.PopulateUIVertex(ref vt, i);
                 var pos = vt.position;
-                vt.position = new Vector3(
-                    m_Horizontal ? -pos.x : pos.x,
-                    m_Veritical ? -pos.y : pos.y
-                );
+                if (horizontal)
+                {
+                    // pivot = 0.5, x = -x;
+                    // pivot = 0, x = width - x;
+                    // pivot = 1, x = -width - x;
+                    pos.x = (0.5f - pivot.x) * 2 * width - pos.x;
+                }
+
+                if (vertical)
+                {
+                    pos.y = (0.5f - pivot.y) * 2 * height - pos.y;
+                }
+                vertex.position = pos;
                 vh.SetUIVertex(vt, i);
             }
         }
