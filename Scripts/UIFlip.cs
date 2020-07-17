@@ -74,7 +74,7 @@ namespace Coffee.UIEffects
                 {
                     pos.y = (0.5f - pivot.y) * 2 * height - pos.y;
                 }
-                vertex.position = pos;
+                vt.position = pos;
                 vh.SetUIVertex(vt, i);
             }
         }
