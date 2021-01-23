@@ -132,6 +132,8 @@ Open `
 ![](https://user-images.githubusercontent.com/12690315/38594668-636dd3ac-3d82-11e8-9951-820964a6a95f.gif)
 3. You can add or modify effects from the script.  
 ```cs
+using Coffee.UIEffects;
+
 var uieffect = gameObject.AddComponent<UIEffect>();
 uieffect.effectMode = EffectMode.Grayscale;
 uieffect.effectFactor = 0.85f;
