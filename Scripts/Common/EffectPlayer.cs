@@ -52,23 +52,25 @@ namespace Coffee.UIEffects
         /// <summary>
         /// Register player.
         /// </summary>
-        public void OnEnable(Action<float> callback = null)
+        public void OnEnable( Action<float> callback = null )
         {
             // Register update function on canvas
-            if (s_UpdateActions == null)
+            if( s_UpdateActions == null )
             {
+                Debug.Log( $"<color=cyan><b>REGISTER ON CANVAS</b> {_delayBeforeContinuing:0.#} / {_timePassed:0.#} / {_callback} / {play}</color>" );
+
                 s_UpdateActions = new List<Action>();
-                Canvas.willRenderCanvases += () =>
+                Canvas.willRenderCanvases += () =>      // This will happen on each canvas render
                 {
                     var count = s_UpdateActions.Count;
-                    for (int i = 0; i < count; i++)
+                    for( int i = 0; i < count; i++ )
                     {
                         s_UpdateActions[i].Invoke();
                     }
                 };
             }
 
-            s_UpdateActions.Add(OnWillRenderCanvases);
+            s_UpdateActions.Add( OnWillRenderCanvases );
 
             _delayBeforeContinuing = initialPlayDelay;
             _timePassed = 0;
@@ -84,7 +86,7 @@ namespace Coffee.UIEffects
         public void OnDisable()
         {
             _callback = null;
-            s_UpdateActions.Remove(OnWillRenderCanvases);
+            if( s_UpdateActions != null ) s_UpdateActions.Remove( OnWillRenderCanvases );
 
             Debug.Log( $"<color=cyan><b>DISABLED</b> {_delayBeforeContinuing:0.#} / {_timePassed:0.#}</color>" );
         }
@@ -137,11 +139,12 @@ namespace Coffee.UIEffects
 
         void OnWillRenderCanvases()
         {
+            Debug.Log( $"<color=cyan><b>UPDATE</b> {_delayBeforeContinuing:0.#} / {_timePassed:0.#} / {_callback} / Playing: {play}</color>" );
+
             if( !play || !Application.isPlaying || _callback == null ) {
                 return;
             }
 
-            Debug.Log( $"<color=cyan><b>UPDATE</b> {_delayBeforeContinuing:0.#} / {_timePassed:0.#} / {_callback}</color>" );
 
             var dTime = updateMode == AnimatorUpdateMode.UnscaledTime
                 ? Time.unscaledDeltaTime
