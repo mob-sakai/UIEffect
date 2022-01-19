@@ -54,6 +54,7 @@ namespace Coffee.UIEffects
         /// </summary>
         public void OnEnable(Action<float> callback = null)
         {
+            // Register update function on canvas
             if (s_UpdateActions == null)
             {
                 s_UpdateActions = new List<Action>();
@@ -69,14 +70,8 @@ namespace Coffee.UIEffects
 
             s_UpdateActions.Add(OnWillRenderCanvases);
 
-            if (play)
-            {
-                _time = -initialPlayDelay;
-            }
-            else
-            {
-                _time = 0;
-            }
+            _delayBeforeContinuing = initialPlayDelay;
+            _timePassed = 0;
 
             _callback = callback;
         }
@@ -97,7 +92,8 @@ namespace Coffee.UIEffects
         {
             if (reset)
             {
-                _time = 0;
+                _delayBeforeContinuing = initialPlayDelay;
+                _timePassed = 0;
             }
 
             play = true;
@@ -114,10 +110,10 @@ namespace Coffee.UIEffects
         {
             if (reset)
             {
-                _time = 0;
+                _timePassed = 0;
                 if (_callback != null)
                 {
-                    _callback(_time);
+                    _callback( 0 );
                 }
             }
 
@@ -127,7 +123,10 @@ namespace Coffee.UIEffects
         //################################
         // Private Members.
         //################################
-        float _time = 0;
+        //float _time = 0;
+
+        float _delayBeforeContinuing;
+        float _timePassed;
         Action<float> _callback;
 
         void OnWillRenderCanvases()
@@ -137,18 +136,28 @@ namespace Coffee.UIEffects
                 return;
             }
 
-            _time += updateMode == AnimatorUpdateMode.UnscaledTime
+
+            var dTime = updateMode == AnimatorUpdateMode.UnscaledTime
                 ? Time.unscaledDeltaTime
                 : Time.deltaTime;
-            var current = _time / duration;
 
-            if (duration <= _time)
-            {
-                play = loop;
-                _time = loop ? -loopDelay : 0;
+            if( _delayBeforeContinuing > 0 ) {
+                _delayBeforeContinuing -= dTime;
+                return;
             }
 
-            _callback(current);
+            _timePassed += dTime;
+
+            var perc = Mathf.Clamp01( _timePassed / duration );
+            if( perc >= 1 )     // Finished with animation loop
+            {
+                play = loop;    // Play again, if we're in loop
+
+                _timePassed = 0;
+                _delayBeforeContinuing = loop ? loopDelay : 0;
+            }
+
+            _callback( perc );
         }
     }
 }
