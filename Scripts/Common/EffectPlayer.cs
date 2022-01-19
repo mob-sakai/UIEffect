@@ -90,17 +90,18 @@ namespace Coffee.UIEffects
         /// </summary>
         public void Play(bool reset, Action<float> callback = null)
         {
-            if (reset)
-            {
+            if( reset ) {
                 _delayBeforeContinuing = initialPlayDelay;
                 _timePassed = 0;
             }
 
             play = true;
-            if (callback != null)
-            {
+            if( callback != null ) {
                 _callback = callback;
             }
+
+            var perc = Mathf.Clamp01( _timePassed / duration );
+            _callback?.Invoke( perc );
         }
 
         /// <summary>
@@ -111,10 +112,7 @@ namespace Coffee.UIEffects
             if (reset)
             {
                 _timePassed = 0;
-                if (_callback != null)
-                {
-                    _callback( 0 );
-                }
+                _callback?.Invoke( 0 );
             }
 
             play = false;
@@ -123,8 +121,6 @@ namespace Coffee.UIEffects
         //################################
         // Private Members.
         //################################
-        //float _time = 0;
-
         float _delayBeforeContinuing;
         float _timePassed;
         Action<float> _callback;
@@ -145,8 +141,6 @@ namespace Coffee.UIEffects
                 _delayBeforeContinuing -= dTime;
                 return;
             }
-
-            Debug.Log( $"TEST {_timePassed}" );
 
             _timePassed += dTime;
 
