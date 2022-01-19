@@ -146,6 +146,8 @@ namespace Coffee.UIEffects
                 return;
             }
 
+            Debug.Log( $"TEST {_timePassed}" );
+
             _timePassed += dTime;
 
             var perc = Mathf.Clamp01( _timePassed / duration );
