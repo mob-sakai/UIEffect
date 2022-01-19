@@ -1,18 +1,15 @@
-﻿using UnityEngine;
+﻿//#define LOG_PROGRESS
+
+using UnityEngine;
 using System;
 using System.Collections.Generic;
 
 namespace Coffee.UIEffects
 {
-    /// <summary>
-    /// Effect player.
-    /// </summary>
     [Serializable]
     public class EffectPlayer
     {
-        //################################
-        // Public Members.
-        //################################
+        #region [Variables]
         /// <summary>
         /// Gets or sets a value indicating whether is playing.
         /// </summary>
@@ -47,8 +44,17 @@ namespace Coffee.UIEffects
         /// </summary>
         [Tooltip("Update mode")] public AnimatorUpdateMode updateMode = AnimatorUpdateMode.Normal;
 
+        // Private variables
+
         static List<Action> s_UpdateActions;
 
+        float _delayBeforeContinuing;
+        float _timePassed;
+        Action<float> _callback;
+
+        #endregion [Variables]
+
+        #region OnEnable()
         /// <summary>
         /// Register player.
         /// </summary>
@@ -57,7 +63,9 @@ namespace Coffee.UIEffects
             // Register update function on canvas
             if( s_UpdateActions == null )
             {
+#if LOG_PROGRESS
                 Debug.Log( $"<color=cyan><b>REGISTER ON CANVAS</b> {_delayBeforeContinuing:0.#} / {_timePassed:0.#} / {_callback} / {play}</color>" );
+#endif
 
                 s_UpdateActions = new List<Action>();
                 Canvas.willRenderCanvases += () =>      // This will happen on each canvas render
@@ -75,11 +83,15 @@ namespace Coffee.UIEffects
             _delayBeforeContinuing = initialPlayDelay;
             _timePassed = 0;
 
-            _callback = callback;
+            if( callback != null ) _callback = callback;
 
+#if LOG_PROGRESS
             Debug.Log( $"<color=cyan><b>ENABLED</b> {_delayBeforeContinuing:0.#} / {_timePassed:0.#}</color>" );
+#endif
         }
+        #endregion OnEnable()
 
+        #region OnDisable()
         /// <summary>
         /// Unregister player.
         /// </summary>
@@ -88,9 +100,13 @@ namespace Coffee.UIEffects
             _callback = null;
             if( s_UpdateActions != null ) s_UpdateActions.Remove( OnWillRenderCanvases );
 
+#if LOG_PROGRESS
             Debug.Log( $"<color=cyan><b>DISABLED</b> {_delayBeforeContinuing:0.#} / {_timePassed:0.#}</color>" );
+#endif
         }
+        #endregion OnDisable()
 
+        #region [API] Play()
         /// <summary>
         /// Start playing.
         /// </summary>
@@ -110,15 +126,21 @@ namespace Coffee.UIEffects
             var perc = Mathf.Clamp01( _timePassed / duration );
             _callback?.Invoke( perc );
 
+#if LOG_PROGRESS
             Debug.Log( $"<color=cyan><b>PLAY</b> {_delayBeforeContinuing:0.#} / {_timePassed:0.#} / {perc:0.##} / {_callback}</color>" );
+#endif
         }
+        #endregion [API] Play()
 
+        #region [API] Stop()
         /// <summary>
         /// Stop playing.
         /// </summary>
         public void Stop( bool reset )
         {
+#if LOG_PROGRESS
             Debug.Log( $"<color=cyan><b>STOP</b> {_delayBeforeContinuing:0.#} / {_timePassed:0.#} / {_callback}</color>" );
+#endif
 
             if( reset )
             {
@@ -129,17 +151,15 @@ namespace Coffee.UIEffects
 
             play = false;
         }
+        #endregion [API] Stop()
 
-        //################################
-        // Private Members.
-        //################################
-        float _delayBeforeContinuing;
-        float _timePassed;
-        Action<float> _callback;
 
+        #region OnWillRenderCanvases() - update each frame
         void OnWillRenderCanvases()
         {
+#if LOG_PROGRESS
             Debug.Log( $"<color=cyan><b>UPDATE</b> {_delayBeforeContinuing:0.#} / {_timePassed:0.#} / {_callback} / Playing: {play}</color>" );
+#endif
 
             if( !play || !Application.isPlaying || _callback == null ) {
                 return;
@@ -169,4 +189,5 @@ namespace Coffee.UIEffects
             _callback( perc );
         }
     }
+    #endregion OnWillRenderCanvases() - update each frame
 }
