@@ -88,7 +88,7 @@ namespace Coffee.UIEffects
         {
             // Set shader keywords as variants
             var keywords = variants.Where(x => 0 < (int) x)
-                .Select(x => x.ToString().ToUpper())
+                .Select(x => x.ToString().ToUpperInvariant())
                 .Concat(newMaterial.shaderKeywords)
                 .Distinct()
                 .ToArray();
