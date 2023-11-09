@@ -1,3 +1,10 @@
+# [4.0.0-preview.10](https://github.com/mob-sakai/UIEffect/compare/v4.0.0-preview.9...v4.0.0-preview.10) (2023-11-09)
+
+
+### Bug Fixes
+
+* ExecuteInEditMode to ExecuteAlways ([c750810](https://github.com/mob-sakai/UIEffect/commit/c75081095f580b12730b06f9a668a991bb5e8fe6))
+
 # [4.0.0-preview.9](https://github.com/mob-sakai/UIEffect/compare/v4.0.0-preview.8...v4.0.0-preview.9) (2020-06-09)
 
 
