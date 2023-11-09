@@ -9,7 +9,7 @@ namespace Coffee.UIEffects
     /// <summary>
     /// Dissolve effect for uGUI.
     /// </summary>
-    [ExecuteInEditMode]
+    [ExecuteAlways]
     public class UISyncEffect : BaseMaterialEffect
     {
         [Tooltip("The target effect to synchronize.")] [SerializeField]
