@@ -11,7 +11,7 @@ namespace Coffee.UIEffects
     /// </summary>
     [RequireComponent(typeof(Graphic))]
     [RequireComponent(typeof(RectTransform))]
-    [ExecuteInEditMode]
+    [ExecuteAlways]
     public abstract class BaseMeshEffect : UIBehaviour, IMeshModifier
     {
         RectTransform _rectTransform;
