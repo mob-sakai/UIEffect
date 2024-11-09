@@ -1,0 +1,46 @@
+{
+  "name": "com.coffee.ui-effect",
+  "displayName": "UI Effect",
+  "description": "UIEffect is an open-source package that allows you to intuitively apply rich UI effects directly from the Inspector or via code.\nCombine various filters, such as grayscale, blur, and dissolve, to decorate your UI with a unique visual style!",
+  "version": "5.0.0",
+  "unity": "2020.3",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mob-sakai/UIEffect.git"
+  },
+  "author": {
+    "name": "mob-sakai",
+    "email": "sakai861104@gmail.com",
+    "url": "https://github.com/mob-sakai"
+  },
+  "dependencies": {
+    "com.unity.ugui": "1.0.0"
+  },
+  "keywords": [
+    "ui",
+    "effect"
+  ],
+  "samples": [
+    {
+      "displayName": "Demo",
+      "description": "UI Effect Demo",
+      "path": "Samples~/Demo"
+    },
+    {
+      "displayName": "v4 Compatible Components",
+      "description": "v4 Compatible Components",
+      "path": "Samples~/v4 Compatible Components"
+    },
+    {
+      "displayName": "TextMeshPro Support",
+      "description": "TextMeshPro Support",
+      "path": "Samples~/TextMeshPro Support~"
+    },
+    {
+      "displayName": "TextMeshPro Support (Unity 6)",
+      "description": "TextMeshPro Support (Unity 6)",
+      "path": "Samples~/TextMeshPro Support (Unity 6)~"
+    }
+  ]
+}
