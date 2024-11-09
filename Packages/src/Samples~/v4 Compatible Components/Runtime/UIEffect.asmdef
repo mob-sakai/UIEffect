@@ -1,0 +1,16 @@
+{
+    "name": "UIEffect",
+    "rootNamespace": "",
+    "references": [
+        "GUID:735c8f008d0ad4caa9cdc4306f1c3042"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
