@@ -1,0 +1,103 @@
+# Required secrets
+#   UNITY_LICENSE: The contents of Unity license file
+#   UNITY_EMAIL: Unity user email to login
+#   UNITY_PASSWORD: Unity user password to login
+name: 🧪 Test
+run-name: 🧪 Test (${{ github.ref_name }})
+
+env:
+  # MINIMUM_VERSION: The minimum version of Unity.
+  MINIMUM_VERSION: 2020.3
+  # EXCLUDE_FILTER: The excluded versions of Unity.
+  EXCLUDE_FILTER: '(2020.2.0|2023.3)'
+
+on:
+  workflow_dispatch:
+    inputs: 
+      usePeriodVersions:
+        description: 'Use the period versions (.0f1, .10f1, 20f1, ...).'
+        required: false
+        default: 'true'
+  push:
+    branches:
+      - develop
+      - develop-preview
+    tags:
+      - "!*"
+    paths-ignore:
+      - "*.md"
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  setup:
+    name: ⚙️ Setup
+    runs-on: ubuntu-latest
+    outputs:
+      unityVersions: ${{ steps.setup.outputs.unityVersions }}
+    steps:
+      - name: ⚙️ Find target Unity versions
+        id: setup
+        run: |
+          echo "==== Target Unity Versions ===="
+          LATEST_VERSIONS=`npx unity-changeset list --versions --latest-patch --min ${MINIMUM_VERSION} --json --all`
+          if [ "${{ inputs.usePeriodVersions }}" = "true" ]; then
+            ADDITIONAL_VERSIONS=`npx unity-changeset list --versions --grep '0f' --min ${MINIMUM_VERSION} --json`
+          else
+            ADDITIONAL_VERSIONS=[]
+          fi
+
+          VERSIONS=`echo "[${LATEST_VERSIONS}, ${ADDITIONAL_VERSIONS}]" \
+            | jq -c '[ flatten | sort | unique | .[] | select( test("${{ env.EXCLUDE_FILTER }}") | not ) ]'`
+          echo "unityVersions=${VERSIONS}" | tee $GITHUB_OUTPUT
+
+  test:
+    name: 🧪 Run tests
+    runs-on: ubuntu-latest
+    env:
+      UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+    permissions:
+      checks: write
+      contents: read
+    needs: setup
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        unityVersion: ${{ fromJson(needs.setup.outputs.unityVersions) }}
+    steps:
+      - name: 🚚 Checkout
+        uses: actions/checkout@v4
+
+      - name: 📥 Cache library
+        uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-${{ matrix.unityVersion }}-${{ github.sha }}
+          restore-keys: |
+            Library-${{ matrix.unityVersion }}-
+            Library-
+
+      - name: 🛠️ Build Unity Project (Test)
+        uses: game-ci/unity-builder@v4
+        timeout-minutes: 45
+        with:
+          customImage: ghcr.io/mob-sakai/unity3d:${{ matrix.unityVersion }}
+          targetPlatform: StandaloneLinux64
+          allowDirtyBuild: true
+          customParameters: -nographics
+
+      # - name: 🧪 Run tests
+      #   uses: game-ci/unity-test-runner@v4
+      #   timeout-minutes: 45
+      #   with:
+      #     customImage: ghcr.io/mob-sakai/unity3d:${{ matrix.unityVersion }}
+      #     # unityVersion: ${{ matrix.unityVersion }}
+      #     customParameters: -nographics
+      #     checkName: ${{ matrix.unityVersion }} Test Results
+      #     githubToken: ${{ github.token }}
+      #     coverageOptions: "dontClear;generateHtmlReport;generateBadgeReport;pathFilters:+**/Packages/src/**;assemblyFilters:+<packages>,-*.Editor,-*.Test"

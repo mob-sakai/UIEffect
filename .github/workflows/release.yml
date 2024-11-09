@@ -1,0 +1,44 @@
+name: 🔖 Release
+run-name: 🔖 Release (${{ github.ref_name }})
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - preview
+      - main
+      - v*.x
+    tags-ignore:
+      - "**"
+
+jobs:
+  release:
+    name: 🔖 Release (${{ github.ref_name }})
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    outputs:
+      channel: ${{ steps.release.outputs.new_release_channel }}
+      released: ${{ steps.release.outputs.new_release_published }}
+      tag: ${{ steps.release.outputs.new_release_git_tag }}
+    steps:
+      - name: 🚚 Checkout (${{ github.ref_name }})
+        uses: actions/checkout@v4
+
+      - name: 🔖 Run semantic release
+        uses: cycjimmy/semantic-release-action@v4
+        id: release
+        with:
+          working_directory: Packages/src
+          extra_plugins: |
+            @semantic-release/changelog
+            @semantic-release/git
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - run: |
+          echo "🔖 New release published: '${{ steps.release.outputs.new_release_published }}'" | tee -a $GITHUB_STEP_SUMMARY
+          echo "🔖 New release channel: '${{ steps.release.outputs.new_release_channel }}'" | tee -a $GITHUB_STEP_SUMMARY
+          echo "🔖 New release git tag: '${{ steps.release.outputs.new_release_git_tag }}'" | tee -a $GITHUB_STEP_SUMMARY

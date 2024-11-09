@@ -1,0 +1,28 @@
+name: 🚀 Deploy with Zip
+
+on:
+  workflow_dispatch:
+    inputs:
+      zip:
+        description: 'The url to the zip file'
+        required: true
+
+jobs:
+  deploy:
+    name: 🚀 Deploy
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: 📦 Download zip file To '_site'
+        run: |
+          curl -L ${{ github.event.inputs.zip }} -o _site.zip
+          unzip _site.zip -d _site
+          find _site -name __MACOSX -exec rm -rf {} \;
+
+      - name: 📦 Upload '_site'
+        uses: actions/upload-pages-artifact@v2
+
+      - name: 🚀 Deploy To GitHub Pages
+        uses: actions/deploy-pages@v2
