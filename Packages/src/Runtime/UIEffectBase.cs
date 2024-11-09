@@ -51,6 +51,7 @@ namespace Coffee.UIEffects
 
         protected override void OnEnable()
         {
+            UIExtraCallbacks.onScreenSizeChangedAction += SetVerticesDirtyIfTextMeshPro;
             UpdateContext(context);
             SetMaterialDirty();
             SetVerticesDirty();
@@ -58,6 +59,7 @@ namespace Coffee.UIEffects
 
         protected override void OnDisable()
         {
+            UIExtraCallbacks.onScreenSizeChangedAction -= SetVerticesDirtyIfTextMeshPro;
             MaterialRepository.Release(ref _material);
             SetMaterialDirty();
             SetVerticesDirty();
@@ -195,6 +197,18 @@ namespace Coffee.UIEffects
                     canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord1;
                 }
             }
+        }
+
+
+        private void SetVerticesDirtyIfTextMeshPro()
+        {
+#if TMP_ENABLE
+            if (graphic && graphic.isActiveAndEnabled
+                        && (graphic is TextMeshProUGUI || graphic is TMP_SubMeshUI))
+            {
+                graphic.SetVerticesDirty();
+            }
+#endif
         }
 
         public virtual void SetMaterialDirty()
