@@ -251,7 +251,7 @@ UIEffect supports TextMeshProUGUI elements. To use UIEffect with TextMeshPro, fo
 1. First, you must import [TMP Essential Resources](https://docs.unity3d.com/Packages/com.unity.textmeshpro@3.0/manual/index.html#installation) before using.  
    ![](https://github.com/user-attachments/assets/70653ccf-0b5e-4352-ac62-76bdd49c5f92)
 
-2. Open the `Package Manager` window and select the `UI Soft Mask` package in the package list and click the `TextMeshPro Support > Import` button.  
+2. Open the `Package Manager` window and select the `UI Effect` package in the package list and click the `TextMeshPro Support > Import` button.  
    ⚠️ If you are using `Unity 2023.2/6000.0+` or `TextMeshPro 3.2/4.0+`, click the `TextMeshPro Support (Unity 6) > Import` button instead.  
    ![](https://github.com/user-attachments/assets/a1b246d3-3a0b-4a70-a9d2-3e75429fa757)
 
