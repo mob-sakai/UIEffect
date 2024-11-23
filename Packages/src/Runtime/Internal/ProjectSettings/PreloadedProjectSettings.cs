@@ -14,7 +14,7 @@ namespace Coffee.UIEffectInternal
     public abstract class PreloadedProjectSettings : ScriptableObject
 #if UNITY_EDITOR
     {
-        private class MyAllPostprocessor : AssetPostprocessor
+        private class Postprocessor : AssetPostprocessor
         {
             private static void OnPostprocessAllAssets(string[] _, string[] __, string[] ___, string[] ____)
             {
@@ -46,6 +46,11 @@ namespace Coffee.UIEffectInternal
                 else if (GetPreloadedSettings(t).Length != 1)
                 {
                     SetDefaultSettings(defaultSettings);
+                }
+
+                if (defaultSettings)
+                {
+                    defaultSettings.OnInitialize();
                 }
             }
         }
@@ -108,6 +113,10 @@ namespace Coffee.UIEffectInternal
         }
 
         protected virtual void OnCreateAsset()
+        {
+        }
+
+        protected virtual void OnInitialize()
         {
         }
     }

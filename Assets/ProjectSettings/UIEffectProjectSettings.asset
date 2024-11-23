@@ -300,6 +300,9 @@ MonoBehaviour:
   m_RuntimePresets:
   - {fileID: 1645081683573595507, guid: 3b09ad143990c4c8795c6e93760e132a, type: 3}
   - {fileID: 1645081683573595507, guid: 4f70ff0f1e25b4388b9bcb38d619f7bf, type: 3}
-  m_FallbackVariantBehaviour: 0
-  m_UnregisteredShaderVariants: []
   m_ShaderVariantCollection: {fileID: -8740588384831342173}
+  m_ShaderVariantRegistry:
+    m_ErrorOnUnregisteredVariant: 0
+    m_OptionalShaders: []
+    m_UnregisteredVariants: []
+    m_Asset: {fileID: -8740588384831342173}

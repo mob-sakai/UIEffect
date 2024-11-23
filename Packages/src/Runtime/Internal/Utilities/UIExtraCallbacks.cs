@@ -53,7 +53,7 @@ namespace Coffee.UIEffectInternal
         /// <summary>
         /// Event that occurs when the screen size changes.
         /// </summary>
-        public static event Action onScreenSizeChangedAction
+        public static event Action onScreenSizeChanged
         {
             add => s_OnScreenSizeChangedAction.Add(value);
             remove => s_OnScreenSizeChangedAction.Remove(value);
