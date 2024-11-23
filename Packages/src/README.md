@@ -32,7 +32,7 @@ Combine various filters, such as grayscale, blur, and dissolve, to decorate your
   - [Install via UPM (with Package Manager UI)](#install-via-upm-with-package-manager-ui)
   - [Install via UPM (Manually)](#install-via-upm-manually)
   - [Install as Embedded Package](#install-as-embedded-package)
-  - [Additional Resource Imports](#additional-resource-imports)
+  - [Import Additional Resources](#import-additional-resources)
 - [🔄 Upgrading from v4 to v5](#-upgrading-from-v4-to-v5)
 - [🚀 Usage](#-usage)
   - [Getting Started](#getting-started)
@@ -122,16 +122,17 @@ _This package requires **Unity 2020.3 or later**._
 
 ### Install as Embedded Package
 
-1. Download a source code zip file from [Releases](https://github.com/mob-sakai/UIEffect/releases) and extract it.
-2. Place `<extracted_dir>/Packages/src` directory in your project's `Packages` directory.  
+1. Download the `Source code (zip)` file from [Releases](https://github.com/mob-sakai/UIEffect/releases) and
+   extract it.
+2. Move the `<extracted_dir>/Packages/src` directory into your project's `Packages` directory.  
    ![](https://github.com/user-attachments/assets/187cbcbe-5922-4ed5-acec-cf19aa17d208)
-- You can rename the `src` directory.
-- If you want to fix bugs or add features, install it as an embedded package.
-- To update the package, you need to re-download it and replace the contents.
+    - You can rename the `src` directory if needed.
+    - If you intend to fix bugs or add features, installing it as an embedded package is recommended.
+    - To update the package, re-download it and replace the existing contents.
 
-### Additional Resource Imports
+### Import Additional Resources
 
-UIEffect includes additional resources to import.
+Additional resources can be imported to extend functionality.
 
 - [🔄 Upgrading from v4 to v5](#-upgrading-from-v4-to-v5)
 - [Usage with TextMeshPro](#usage-with-textmeshpro)
@@ -301,18 +302,26 @@ UIEffectProjectSettings.shaderVariantCollection.WarmUp();
 
 ### Project Settings
 
-![](https://github.com/user-attachments/assets/33b01665-0893-4460-a220-62f5f08b2eec)
+![](https://github.com/user-attachments/assets/54dd42cf-099d-4fb1-b699-cad29bf211b6)
 
 You can adjust the project-wide settings for UIEffect. (`Edit > Project Settings > UI > UIEffect`)
 
 - **Transform Sensitivity**: `Low`, `Medium`, `High`
   - Set the sensitivity of the transformation when `Use Target Transform` is enabled in `UIEffectReplica` component.
 - **Runtime Presets**: A list of presets that can be loaded at runtime. Load them using `UIEffect.LoadPreset(presetName)` method.
-- **Fallback Variant Behavior**: Specifies the behavior when an unregistered shader variant is used in the editor.
-  - `Register Variant`: Adds the variant to `Registered Variants` for runtime use.
-  - `LogError`: Outputs a error and adds it to `Unregistered Variants`.
+- **Optional Shaders (UIEffect)**: A list of shaders that will be prioritized when a ui-effect shader is
+  requested.
+    - If the shader is included in the list, that shader will be used.
+    - If it is not in the list, the following shaders will be used in order:
+        - If the shader name contains `(UIEffect)`, that shader will be used.
+        - If `Hidden/<shader_name> (UIEffect)` exists, that shader will be used.
+        - As a fallback, `UI/Default (UIEffect)` will be used.
+- **Registered Variants**: A list of shader variants available at runtime. Use "-" button to remove unused variants,
+  reducing build time and file size.
+    - By default, the used ui-effect shaders will be included in the build. You can remove them if you don't need.
 - **Unregistered Variants**: A list of shader variants that are not registered. Use "+" button to add variants.
-- **Registered Variants**: A list of shader variants available at runtime. Use "-" button to remove unused variants, reducing build time and file size.
+- **Error On Unregistered Variant**: If enabled, an error will be displayed when an unregistered shader variant is used.
+    - The shader variant will be automatically added to the `Unregistered Variants` list.
 
 <br><br>
 

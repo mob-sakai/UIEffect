@@ -22,7 +22,6 @@ namespace Coffee.UIEffects
     {
         private static readonly VertexHelper s_VertexHelper = new VertexHelper();
         private static Mesh s_Mesh;
-        private static readonly Dictionary<int, string> s_ShaderNameCache = new Dictionary<int, string>();
 
         private static readonly ObjectPool<UIEffectContext> s_ContextPool =
             new ObjectPool<UIEffectContext>(() => new UIEffectContext(), x => true, x => x.Reset());
@@ -52,7 +51,7 @@ namespace Coffee.UIEffects
 
         protected override void OnEnable()
         {
-            UIExtraCallbacks.onScreenSizeChangedAction += SetVerticesDirtyIfTextMeshPro;
+            UIExtraCallbacks.onScreenSizeChanged += SetVerticesDirtyIfTextMeshPro;
             UpdateContext(context);
             SetMaterialDirty();
             SetVerticesDirty();
@@ -60,7 +59,7 @@ namespace Coffee.UIEffects
 
         protected override void OnDisable()
         {
-            UIExtraCallbacks.onScreenSizeChangedAction -= SetVerticesDirtyIfTextMeshPro;
+            UIExtraCallbacks.onScreenSizeChanged -= SetVerticesDirtyIfTextMeshPro;
             MaterialRepository.Release(ref _material);
             SetMaterialDirty();
             SetVerticesDirty();
@@ -97,7 +96,10 @@ namespace Coffee.UIEffects
                 Profiler.BeginSample("(UIE)[UIEffect] GetModifiedMaterial > Get or create material");
                 MaterialRepository.Get(hash, ref _material, x => new Material(x)
                 {
-                    shader = FindShader(x),
+                    shader = UIEffectProjectSettings.shaderRegistry.FindOptionalShader(x.shader,
+                        "(UIEffect)",
+                        "Hidden/{0} (UIEffect)",
+                        "Hidden/UI/Default (UIEffect)"),
                     hideFlags = HideFlags.HideAndDontSave
                 }, baseMaterial);
                 Profiler.EndSample();
@@ -106,33 +108,6 @@ namespace Coffee.UIEffects
             ApplyContextToMaterial();
             Profiler.EndSample();
             return _material;
-        }
-
-
-        private static Shader FindShader(Material material)
-        {
-            var shader = material.shader;
-            var hash = shader.GetInstanceID();
-            if (!s_ShaderNameCache.TryGetValue(hash, out var shaderName))
-            {
-                shaderName = shader.name;
-                if (!shaderName.Contains("(UIEffect)"))
-                {
-                    shaderName = $"Hidden/{shaderName} (UIEffect)";
-                }
-
-                var uiEffectShader = Shader.Find(shaderName);
-                if (!uiEffectShader)
-                {
-                    shaderName = "Hidden/UI/Default (UIEffect)";
-                    uiEffectShader = Shader.Find(shaderName);
-                }
-
-                s_ShaderNameCache[hash] = shaderName;
-                return uiEffectShader;
-            }
-
-            return Shader.Find(shaderName);
         }
 
 #if UNITY_EDITOR
@@ -200,7 +175,6 @@ namespace Coffee.UIEffects
             }
         }
 
-
         private void SetVerticesDirtyIfTextMeshPro()
         {
 #if TMP_ENABLE
@@ -229,7 +203,7 @@ namespace Coffee.UIEffects
             context.ApplyToMaterial(_material);
 
 #if UNITY_EDITOR
-            UIEffectProjectSettings.RegisterVariant(_material);
+            UIEffectProjectSettings.shaderRegistry.RegisterVariant(_material, "UI > UIEffect");
             if (!EditorApplication.isPlaying)
             {
                 EditorApplication.QueuePlayerLoopUpdate();
@@ -239,13 +213,12 @@ namespace Coffee.UIEffects
 
 #if TMP_ENABLE
 #if UNITY_EDITOR
-        private class MyAllPostprocessor : AssetPostprocessor
+        private class Postprocessor : AssetPostprocessor
         {
             private static void OnPostprocessAllAssets(string[] _, string[] __, string[] ___, string[] ____)
             {
                 if (Application.isBatchMode || BuildPipeline.isBuildingPlayer) return;
 
-                s_ShaderNameCache.Clear();
                 foreach (var effect in Misc.FindObjectsOfType<UIEffectBase>()
                              .Concat(Misc.GetAllComponentsInPrefabStage<UIEffectBase>()))
                 {

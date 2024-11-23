@@ -105,7 +105,7 @@ namespace Coffee.UIEffects
             return useTargetTransform
                    && target
                    && transform.HasChanged(target.transform, ref _prevTransformHash,
-                       UIEffectProjectSettings.sensitivity);
+                       UIEffectProjectSettings.transformSensitivity);
         }
 
         private void SetVerticesDirtyIfTransformChanged()
