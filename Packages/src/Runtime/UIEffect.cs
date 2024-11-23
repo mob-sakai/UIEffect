@@ -5,6 +5,7 @@ using UnityEngine.Rendering;
 
 namespace Coffee.UIEffects
 {
+    // comment
     [ExecuteAlways]
     [DisallowMultipleComponent]
     public class UIEffect : UIEffectBase
