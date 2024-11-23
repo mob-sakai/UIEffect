@@ -3,7 +3,7 @@
 #   UNITY_EMAIL: Unity user email to login
 #   UNITY_PASSWORD: Unity user password to login
 name: 🧪 Test
-run-name: 🧪 Test (${{ github.ref_name }})
+run-name: 🧪 Test (${{ github.event.pull_request.title || github.ref_name }})
 
 env:
   # MINIMUM_VERSION: The minimum version of Unity.
@@ -25,11 +25,14 @@ on:
     tags:
       - "!*"
     paths-ignore:
-      - "*.md"
-  pull_request:
+      - "**.md"
+  pull_request_target:
     types:
       - opened
+      - reopened
       - synchronize
+    paths-ignore:
+      - "**.md"
 
 jobs:
   setup:
@@ -56,13 +59,11 @@ jobs:
   test:
     name: 🧪 Run tests
     runs-on: ubuntu-latest
-    env:
-      UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-      UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
     permissions:
       checks: write
       contents: read
+      pull-requests: write
+      secrets: read
     needs: setup
     strategy:
       fail-fast: false
@@ -71,8 +72,23 @@ jobs:
         unityVersion: ${{ fromJson(needs.setup.outputs.unityVersions) }}
     steps:
       - name: 🚚 Checkout
+        if: github.event_name == 'push'
         uses: actions/checkout@v4
 
+      - name: 🚚 Checkout pull request (pull_request_target)
+        if: github.event_name == 'pull_request_target'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: 🚚 Marge pull request (pull_request_target)
+        if: github.event_name == 'pull_request_target'
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git merge origin/${{ github.event.pull_request.base.ref }} --no-edit
+        
       - name: 📥 Cache library
         uses: actions/cache@v4
         with:
@@ -90,6 +106,10 @@ jobs:
           targetPlatform: StandaloneLinux64
           allowDirtyBuild: true
           customParameters: -nographics
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
       # - name: 🧪 Run tests
       #   uses: game-ci/unity-test-runner@v4
