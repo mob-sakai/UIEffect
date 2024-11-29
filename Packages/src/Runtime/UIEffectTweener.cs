@@ -22,6 +22,12 @@ namespace Coffee.UIEffects
             Manual
         }
 
+        public enum StartMode
+        {
+            Automatic,
+            Manual
+        }
+
         public enum WrapMode
         {
             Once,
@@ -83,6 +89,13 @@ namespace Coffee.UIEffects
         [SerializeField]
         private UpdateMode m_UpdateMode = UpdateMode.Normal;
 
+        [Tooltip("Specifies how the effect tweener will start.\n" +
+                 "  Automatic: Plays the tween automatically when it starts.\n" +
+                 "  Manual: Waits for the first `Play()` call to start.")]
+        [SerializeField]
+        private StartMode m_StartMode = StartMode.Automatic;
+
+        public bool _isAwaitingStart;
         private float _rate;
         private float _time;
         private UIEffectBase _target;
@@ -208,23 +221,32 @@ namespace Coffee.UIEffects
             set => m_UpdateMode = value;
         }
 
+        public StartMode startMode
+        {
+            get => m_StartMode;
+            set => m_StartMode = value;
+        }
+
         public AnimationCurve curve
         {
             get => m_Curve;
             set => m_Curve = value;
         }
 
+        private void Awake()
+        {
+            _isAwaitingStart = m_StartMode == StartMode.Manual;
+        }
+
         private void Update()
         {
-            switch (m_UpdateMode)
+            if (m_StartMode == StartMode.Manual && _isAwaitingStart)
             {
-                case UpdateMode.Normal:
-                    UpdateTime(Time.deltaTime);
-                    break;
-                case UpdateMode.Unscaled:
-                    UpdateTime(Time.unscaledDeltaTime);
-                    break;
+                return;
             }
+
+            float deltaTime = m_UpdateMode == UpdateMode.Unscaled ? Time.unscaledDeltaTime : Time.deltaTime;
+            UpdateTime(deltaTime);
         }
 
         private void OnEnable()
@@ -233,6 +255,18 @@ namespace Coffee.UIEffects
             {
                 Restart();
             }
+        }
+
+        public void Play()
+        {
+            _isAwaitingStart = false;
+            Restart();
+        }
+
+        public void Stop()
+        {
+            _isAwaitingStart = true;
+            Restart();
         }
 
         public void Restart()

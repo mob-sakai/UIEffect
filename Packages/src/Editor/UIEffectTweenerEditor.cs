@@ -17,6 +17,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _restartOnEnable;
         private SerializedProperty _updateMode;
         private SerializedProperty _wrapMode;
+        private SerializedProperty _startMode;
 
         private void OnEnable()
         {
@@ -29,6 +30,7 @@ namespace Coffee.UIEffects.Editors
             _interval = serializedObject.FindProperty("m_Interval");
             _wrapMode = serializedObject.FindProperty("m_WrapMode");
             _updateMode = serializedObject.FindProperty("m_UpdateMode");
+            _startMode = serializedObject.FindProperty("m_StartMode");
         }
 
         public override void OnInspectorGUI()
@@ -44,6 +46,7 @@ namespace Coffee.UIEffects.Editors
             EditorGUILayout.PropertyField(_restartOnEnable);
             EditorGUILayout.PropertyField(_wrapMode);
             EditorGUILayout.PropertyField(_updateMode);
+            EditorGUILayout.PropertyField(_startMode);
             serializedObject.ApplyModifiedProperties();
             DrawPlayer(target as UIEffectTweener);
             Profiler.EndSample();
