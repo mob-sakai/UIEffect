@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       zip:
-        description: 'The url to the zip file'
+        description: "The url to the zip file"
         required: true
 
 jobs:
