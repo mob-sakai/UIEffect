@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Coffee.UIEffects
 {
+    [ExecuteAlways]
     [RequireComponent(typeof(UIEffectBase))]
     public class UIEffectTweener : MonoBehaviour
     {
@@ -44,8 +45,7 @@ namespace Coffee.UIEffects
 
         [Tooltip("The culling mask of the tween.")]
         [SerializeField]
-        private CullingMask m_CullingMask =
-            CullingMask.Tone | CullingMask.Color | CullingMask.Sampling | CullingMask.Transition;
+        private CullingMask m_CullingMask = (CullingMask)(-1);
 
         [Tooltip("The direction of the tween.")]
         [SerializeField]
@@ -96,7 +96,8 @@ namespace Coffee.UIEffects
         private StartMode m_StartMode = StartMode.Automatic;
 
         public bool _isAwaitingStart;
-        private float _rate;
+        private bool _isPaused;
+        private float _rate = -1;
         private float _time;
         private UIEffectBase _target;
 
@@ -171,19 +172,12 @@ namespace Coffee.UIEffects
         {
             get
             {
-                if (_time < delay) return _time;
-                var t = _time - delay;
-                switch (wrapMode)
+                if (wrapMode == WrapMode.Once || wrapMode == WrapMode.PingPongOnce)
                 {
-                    case WrapMode.Once:
-                    case WrapMode.PingPongOnce:
-                        return Mathf.Clamp(t, 0, totalTime - delay) + delay;
-                    case WrapMode.Loop:
-                    case WrapMode.PingPongLoop:
-                        return Mathf.Repeat(t, totalTime - delay) + delay;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    return Mathf.Clamp(_time, 0, totalTime);
                 }
+
+                return Mathf.Repeat(_time, totalTime);
             }
         }
 
@@ -233,45 +227,99 @@ namespace Coffee.UIEffects
             set => m_Curve = value;
         }
 
-        private void Awake()
+        public bool isTweening
         {
-            _isAwaitingStart = m_StartMode == StartMode.Manual;
+            get
+            {
+                if (_isPaused) return false;
+                if (wrapMode == WrapMode.Loop || wrapMode == WrapMode.PingPongLoop) return true;
+
+                return direction == Direction.Forward
+                    ? _time < totalTime
+                    : 0 < _time;
+            }
+        }
+
+        public bool isPaused => _isPaused;
+
+        public bool isDelaying => _time < delay;
+
+        private void OnEnable()
+        {
+            _isPaused = true;
+            if (playOnEnable)
+            {
+                Play();
+            }
+        }
+
+        private void OnDisable()
+        {
+            _isPaused = true;
         }
 
         private void Update()
         {
-            if (m_StartMode == StartMode.Manual && _isAwaitingStart)
-            {
-                return;
-            }
+#if UNITY_EDITOR
+            if (!Application.isPlaying) return;
+#endif
+            if (!isTweening) return;
 
-            float deltaTime = m_UpdateMode == UpdateMode.Unscaled ? Time.unscaledDeltaTime : Time.deltaTime;
-            UpdateTime(deltaTime);
+            var deltaTime = m_UpdateMode == UpdateMode.Unscaled
+                ? Time.unscaledDeltaTime
+                : Time.deltaTime;
+            UpdateTime(direction == Direction.Forward ? deltaTime : -deltaTime);
         }
 
-        private void OnEnable()
+        public void Play(bool resetTime)
         {
-            if (m_RestartOnEnable)
+            if (resetTime)
             {
-                Restart();
+                ResetTime();
             }
+
+            _isPaused = false;
         }
 
         public void Play()
         {
-            _isAwaitingStart = false;
-            Restart();
+            ResetTime();
+            _isPaused = false;
+        }
+
+        public void PlayForward()
+        {
+            direction = Direction.Forward;
+            _isPaused = false;
+        }
+
+        public void PlayReverse()
+        {
+            direction = Direction.Reverse;
+            _isPaused = false;
         }
 
         public void Stop()
         {
-            _isAwaitingStart = true;
-            Restart();
+            _isPaused = true;
+            ResetTime();
         }
 
-        public void Restart()
+        public void SetPause(bool pause)
+        {
+            _isPaused = pause;
+        }
+
+        public void ResetTime()
         {
             SetTime(0);
+        }
+
+        [Obsolete(
+            "UIEffectTweener.Restart has been deprecated. Use UIEffectTweener.ResetTime instead (UnityUpgradable) -> ResetTime")]
+        public void Restart()
+        {
+            ResetTime();
         }
 
         public void SetTime(float sec)
@@ -282,33 +330,60 @@ namespace Coffee.UIEffects
 
         public void UpdateTime(float deltaSec)
         {
-            rate = UpdateTime_Internal(Mathf.Max(0, deltaSec)) / duration;
-        }
-
-        private float UpdateTime_Internal(float delta)
-        {
-            _time += direction == Direction.Forward ? delta : -delta;
-            if (_time < delay) return 0;
+            var isLoop = wrapMode == WrapMode.Loop || wrapMode == WrapMode.PingPongLoop;
+            _time += deltaSec;
+            if (isLoop)
+            {
+                if (_time < 0)
+                {
+                    _time = Mathf.Repeat(_time, totalTime);
+                }
+                else if (delay < _time)
+                {
+                    _time = Mathf.Repeat(_time - delay, totalTime - delay) + delay;
+                }
+                else if (deltaSec < 0 && delay <= _time - deltaSec)
+                {
+                    _time = Mathf.Repeat(_time - delay, totalTime - delay) + delay;
+                }
+            }
+            else
+            {
+                _time = Mathf.Clamp(_time, 0, totalTime);
+            }
 
             var t = _time - delay;
+            if (t <= 0 && 0 <= _time)
+            {
+                rate = 0;
+                return;
+            }
+
             switch (wrapMode)
             {
+                case WrapMode.Once:
+                    t = Mathf.Clamp(t, 0, duration);
+                    _time = t + delay;
+                    break;
                 case WrapMode.Loop:
                     t = Mathf.Repeat(t, duration + interval);
+                    _time = t + delay;
                     break;
                 case WrapMode.PingPongOnce:
                     t = Mathf.Clamp(t, 0, duration * 2 + interval);
+                    _time = t + delay;
                     t = Mathf.PingPong(t, duration + interval * 0.5f);
                     break;
                 case WrapMode.PingPongLoop:
                     t = Mathf.Repeat(t, (duration + interval) * 2);
+                    _time = t + delay;
                     t = t < duration * 2 + interval
                         ? Mathf.PingPong(t, duration + interval * 0.5f)
                         : 0;
                     break;
             }
 
-            return Mathf.Clamp(t, 0, duration);
+            rate = Mathf.Clamp(t, 0, duration) / duration;
         }
     }
 }
