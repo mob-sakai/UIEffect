@@ -275,7 +275,7 @@ SubShader {
 			float c = tex2D(_MainTex, input.atlas + uvMove).a;
 
 		    #ifndef UNDERLAY_ON
-			clip(c - input.param.x);
+			c *= step(input.param.x, c);
 		    #endif
 
 			float	scale	= input.param.y;
@@ -298,7 +298,7 @@ SubShader {
 
 		    #if BEVEL_ON
 			float3 dxy = float3(0.5 / _TextureWidth, 0.5 / _TextureHeight, 0);
-			float3 n = GetSurfaceNormal(input.atlas, weight, dxy);
+			float3 n = GetSurfaceNormal(input.atlas + uvMove, weight, dxy);
 
 			float3 bump = UnpackNormal(tex2D(_BumpMap, input.textures.xy + float2(_FaceUVSpeedX, _FaceUVSpeedY) * _Time.y)).xyz;
 			bump *= lerp(_BumpFace, _BumpOutline, saturate(sd + outline * 0.5));
@@ -328,16 +328,6 @@ SubShader {
 		    #if GLOW_ON
 			float4 glowColor = GetGlowColor(sd, scale);
 			faceColor.rgb += glowColor.rgb * glowColor.a;
-		    #endif
-
-		// Alternative implementation to UnityGet2DClipping with support for softness.
-		    #if UNITY_UI_CLIP_RECT
-			half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(input.mask.xy)) * input.mask.zw);
-			faceColor *= m.x * m.y;
-		    #endif
-
-		    #if UNITY_UI_ALPHACLIP
-			clip(faceColor.a - 0.001);
 		    #endif
 
   		    return faceColor * input.color.a;
