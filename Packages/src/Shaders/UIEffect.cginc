@@ -30,10 +30,8 @@ uniform float _TargetSoftness;
 #endif
 
 #define TONE_NONE (!TONE_GRAYSCALE && !TONE_SEPIA && !TONE_NEGATIVE && !TONE_RETRO && !TONE_POSTERIZE)
-#define COLOR_NONE (!COLOR_MULTIPLY && !COLOR_ADDITIVE && !COLOR_SUBTRACTIVE && !COLOR_REPLACE && !COLOR_MULTIPLY_LUMINANCE && !COLOR_MULTIPLY_ADDITIVE && !COLOR_HSV_MODIFIER && !COLOR_CONTRAST)
 #define SAMPLING_NONE (!SAMPLING_BLUR_FAST && !SAMPLING_BLUR_MEDIUM && !SAMPLING_BLUR_DETAIL && !SAMPLING_PIXELATION && !SAMPLING_RGB_SHIFT && !SAMPLING_EDGE)
 #define TRANSITION_NONE (!TRANSITION_FADE && !TRANSITION_CUTOFF && !TRANSITION_DISSOLVE && !TRANSITION_SHINY && !TRANSITION_MASK && !TRANSITION_MELT && !TRANSITION_BURN)
-#define TRANSITION_COLOR_NONE (!TRANSITION_COLOR_MULTIPLY && !TRANSITION_COLOR_ADDITIVE && !TRANSITION_COLOR_SUBTRACTIVE && !TRANSITION_COLOR_REPLACE && !TRANSITION_COLOR_MULTIPLY_LUMINANCE && !TRANSITION_COLOR_MULTIPLY_ADDITIVE && !TRANSITION_COLOR_HSV_MODIFIER && !TRANSITION_COLOR_CONTRAST)
 #define TARGET_NONE (!TARGET_HUE && !TARGET_LUMINANCE)
 
 #define UIEFFECT_SAMPLE(uv) uieffect_frag(uv)
@@ -133,11 +131,7 @@ half4 apply_tone_filter(half4 color)
 half4 apply_color_filter(half4 color, const half4 factor, const float intensity)
 {
     const half4 inColor = color;
-    #if COLOR_NONE // Color.None
-    {
-        return color;
-    }
-    #elif COLOR_MULTIPLY // Color.Multiply
+    #if COLOR_MULTIPLY // Color.Multiply
     {
         color.rgb = color.rgb * factor.rgb;
     }
@@ -172,19 +166,18 @@ half4 apply_color_filter(half4 color, const half4 factor, const float intensity)
         color.rgb = ((color.rgb - 0.5) * (factor.r + 1) + 0.5 + factor.g * 1.5) * color.a * factor.a;
         color.a = color.a * factor.a;
     }
+    #else
+    {
+        return color;
+    }
     #endif
     return lerp(inColor, color, intensity);
 }
 
-
 half4 apply_transition_color_filter(half4 color, const half4 factor, const float intensity)
 {
     const half4 inColor = color;
-    #if TRANSITION_COLOR_NONE // Color.None
-    {
-        return color;
-    }
-    #elif TRANSITION_COLOR_MULTIPLY // Color.Multiply
+    #if TRANSITION_COLOR_MULTIPLY // Color.Multiply
     {
         color.rgb = color.rgb * factor.rgb;
     }
@@ -219,6 +212,11 @@ half4 apply_transition_color_filter(half4 color, const half4 factor, const float
         color.rgb = ((color.rgb - 0.5) * (factor.r + 1) + 0.5 + factor.g * 1.5) * color.a * factor.a;
         color.a = color.a * factor.a;
     }
+    #else
+    {
+        return color;
+    }
+    #endif
     #endif
     return lerp(inColor, color, intensity);
 }
