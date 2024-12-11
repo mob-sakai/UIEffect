@@ -300,7 +300,7 @@ half4 apply_transition_filter(half4 color, const float alpha)
     }
     #elif TRANSITION_CUTOFF  // Transition.Cutoff
     {
-        color *= step(0.001, color.a * alpha - _TransitionRate);
+        color *= step(0.001, alpha - _TransitionRate);
     }
     // Transition.Dissolve/Shiny/ShinyOnly/Melt
     #elif TRANSITION_DISSOLVE || TRANSITION_SHINY || TRANSITION_MASK || TRANSITION_MELT || TRANSITION_BURN
