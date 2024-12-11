@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Coffee.UIEffects
 {
@@ -20,12 +21,6 @@ namespace Coffee.UIEffects
         {
             Normal,
             Unscaled,
-            Manual
-        }
-
-        public enum StartMode
-        {
-            Automatic,
             Manual
         }
 
@@ -70,9 +65,10 @@ namespace Coffee.UIEffects
         [Range(0f, 10)]
         private float m_Interval;
 
-        [Tooltip("Whether to restart the tween when enabled.")]
+        [FormerlySerializedAs("m_ResetTimeOnEnable")]
+        [Tooltip("Play the tween when the component is enabled.")]
         [SerializeField]
-        private bool m_RestartOnEnable = true;
+        private bool m_PlayOnEnable = true;
 
         [Tooltip("The wrap mode of the tween.\n" +
                  "  Clamp: Clamp the tween value (not loop).\n" +
@@ -89,13 +85,6 @@ namespace Coffee.UIEffects
         [SerializeField]
         private UpdateMode m_UpdateMode = UpdateMode.Normal;
 
-        [Tooltip("Specifies how the effect tweener will start.\n" +
-                 "  Automatic: Plays the tween automatically when it starts.\n" +
-                 "  Manual: Waits for the first `Play()` call to start.")]
-        [SerializeField]
-        private StartMode m_StartMode = StartMode.Automatic;
-
-        public bool _isAwaitingStart;
         private bool _isPaused;
         private float _rate = -1;
         private float _time;
@@ -197,10 +186,18 @@ namespace Coffee.UIEffects
             }
         }
 
+        public bool playOnEnable
+        {
+            get => m_PlayOnEnable;
+            set => m_PlayOnEnable = value;
+        }
+
+        [Obsolete(
+            "UIEffectTweener.restartOnEnable has been deprecated. Use UIEffectTweener.playOnEnable instead (UnityUpgradable) -> playOnEnable")]
         public bool restartOnEnable
         {
-            get => m_RestartOnEnable;
-            set => m_RestartOnEnable = value;
+            get => m_PlayOnEnable;
+            set => m_PlayOnEnable = value;
         }
 
         public WrapMode wrapMode
@@ -213,12 +210,6 @@ namespace Coffee.UIEffects
         {
             get => m_UpdateMode;
             set => m_UpdateMode = value;
-        }
-
-        public StartMode startMode
-        {
-            get => m_StartMode;
-            set => m_StartMode = value;
         }
 
         public AnimationCurve curve
