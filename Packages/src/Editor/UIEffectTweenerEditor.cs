@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -6,7 +7,7 @@ namespace Coffee.UIEffects.Editors
 {
     [CanEditMultipleObjects]
     [CustomEditor(typeof(UIEffectTweener))]
-    internal class UIMaterialPropertyTweenerEditor : Editor
+    internal class UIEffectTweenerEditor : Editor
     {
         private SerializedProperty _cullingMask;
         private SerializedProperty _direction;
@@ -17,6 +18,8 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _playOnEnable;
         private SerializedProperty _updateMode;
         private SerializedProperty _wrapMode;
+        private bool _isPlaying = false;
+        private double _lastTime;
 
         private void OnEnable()
         {
@@ -29,11 +32,18 @@ namespace Coffee.UIEffects.Editors
             _interval = serializedObject.FindProperty("m_Interval");
             _wrapMode = serializedObject.FindProperty("m_WrapMode");
             _updateMode = serializedObject.FindProperty("m_UpdateMode");
+
+            EditorApplication.update += UpdateTweeners;
+        }
+
+        private void OnDisable()
+        {
+            EditorApplication.update -= UpdateTweeners;
         }
 
         public override void OnInspectorGUI()
         {
-            Profiler.BeginSample("(MPI)[MPTweenerEditor] OnInspectorGUI");
+            Profiler.BeginSample("(UIE)[UIEffectTweener] OnInspectorGUI");
             serializedObject.UpdateIfRequiredOrScript();
             EditorGUILayout.PropertyField(_cullingMask);
             EditorGUILayout.PropertyField(_direction);
@@ -53,74 +63,62 @@ namespace Coffee.UIEffects.Editors
         {
             if (!tweener) return;
 
-            EditorGUILayout.BeginHorizontal();
-            EditorGUI.BeginDisabledGroup(!Application.isPlaying);
-            var icon = EditorGUIUtility.IconContent("icons/playbutton.png");
-            var r = EditorGUILayout.GetControlRect(false);
+            EditorGUILayout.Space(4);
+            GUILayout.Label(GUIContent.none, "sv_iconselector_sep", GUILayout.ExpandWidth(true));
 
-            var rButton = new Rect(r.x, r.y, 20, r.height);
-            if (GUI.Button(rButton, icon, "IconButton"))
+            EditorGUILayout.BeginHorizontal();
+            var r = EditorGUILayout.GetControlRect(false);
+            var rResetTimeButton = new Rect(r.x, r.y, 20, r.height);
+            if (GUI.Button(rResetTimeButton, EditorGUIUtility.IconContent("animation.firstkey"), "IconButton"))
             {
-                tweener.SetTime(0);
+                SetTime(0);
             }
 
-            EditorGUI.EndDisabledGroup();
+            var rPlayButton = new Rect(r.x + 20, r.y, 20, r.height);
+            if (GUI.Button(rPlayButton, EditorGUIUtility.IconContent("playbutton"), "IconButton"))
+            {
+                SetPlaying(true);
+            }
+
+            var rPauseButton = new Rect(r.x + 40, r.y, 20, r.height);
+            if (GUI.Button(rPauseButton, EditorGUIUtility.IconContent("pausebutton"), "IconButton"))
+            {
+                SetPlaying(false);
+            }
 
             var totalTime = tweener.totalTime;
             var time = tweener.time;
             var label = EditorGUIUtility.TrTempContent($"{time:N2}/{totalTime:N2}");
-            var wLabel = Mathf.CeilToInt(EditorStyles.label.CalcSize(label).x / 5f) * 5f;
-            wLabel = 80;
-            var rLabel = new Rect(r.x + r.width - wLabel, r.y, wLabel, r.height);
+            var rLabel = new Rect(r.x + r.width - 80, r.y, 80, r.height);
             GUI.Label(rLabel, label, "RightLabel");
             EditorGUILayout.EndHorizontal();
 
             EditorGUI.BeginChangeCheck();
-            var rSlider = new Rect(r.x + 20, r.y, r.width - wLabel - 20, r.height);
+            var rSlider = new Rect(r.x + 60, r.y, r.width - 140, r.height);
+            var r0 = new Rect(rSlider.x, rSlider.y + 4, rSlider.width, rSlider.height - 8);
+            r0.x += DrawBackground(r0, rSlider.width * tweener.delay / totalTime, Color.blue);
+            r0.x += DrawBackground(r0, rSlider.width * tweener.duration / totalTime, Color.green);
 
-            //
-
-            var
-                r0 = rSlider; //new Rect(rSlider.x, rSlider.y, rSlider.width * tweener.interval / totalTime, rSlider.height);
-            r0.y += 4;
-            r0.height -= 8;
-            r0.width = rSlider.width * tweener.delay / totalTime;
-            GUI.color = Color.blue;
-            GUI.Label(r0, GUIContent.none, "TE DefaultTime");
-
-            r0.x += r0.width;
-            r0.width = rSlider.width * tweener.duration / totalTime;
-            GUI.color = Color.green;
-            GUI.Label(r0, GUIContent.none, "TE DefaultTime");
-
-            r0.x += r0.width;
-            r0.width = rSlider.width * tweener.interval / totalTime;
-            GUI.color = Color.red;
-            GUI.Label(r0, GUIContent.none, "TE DefaultTime");
+            if (UIEffectTweener.WrapMode.Loop <= tweener.wrapMode)
+            {
+                r0.x += DrawBackground(r0, rSlider.width * tweener.interval / totalTime, Color.red);
+            }
 
             if (UIEffectTweener.WrapMode.PingPongOnce <= tweener.wrapMode)
             {
-                r0.x += r0.width;
-                r0.width = rSlider.width * tweener.duration / totalTime;
-                GUI.color = Color.green;
-                GUI.Label(r0, GUIContent.none, "TE DefaultTime");
+                r0.x += DrawBackground(r0, rSlider.width * tweener.duration / totalTime, Color.green);
             }
 
             if (UIEffectTweener.WrapMode.PingPongLoop <= tweener.wrapMode)
             {
-                r0.x += r0.width;
-                r0.width = rSlider.width * tweener.interval / totalTime;
-                GUI.color = Color.red;
-                GUI.Label(r0, GUIContent.none, "TE DefaultTime");
+                r0.x += DrawBackground(r0, rSlider.width * tweener.interval / totalTime, Color.red);
             }
 
-
             GUI.color = Color.white;
-
             time = GUI.HorizontalSlider(rSlider, time, 0, totalTime);
             if (EditorGUI.EndChangeCheck())
             {
-                tweener.SetTime(time);
+                SetTime(time);
             }
 
             if (Application.isPlaying && tweener.isActiveAndEnabled)
@@ -129,21 +127,56 @@ namespace Coffee.UIEffects.Editors
             }
         }
 
-        // private static void PostAddElement(SerializedProperty prop, string propertyName)
-        // {
-        //     prop.FindPropertyRelative("m_From.m_Type").intValue = -1;
-        //     prop.FindPropertyRelative("m_From.m_PropertyName").stringValue = propertyName;
-        //     prop.FindPropertyRelative("m_To.m_Type").intValue = -1;
-        //     prop.FindPropertyRelative("m_To.m_PropertyName").stringValue = propertyName;
-        // }
-        //
-        // private void ResetCallback()
-        // {
-        //     var current = serializedObject.targetObject as UIEffectTweener;
-        //     if (!current) return;
-        //
-        //     Undo.RecordObject(current, "Reset Values");
-        //     current.ResetPropertiesToDefault();
-        // }
+        private static float DrawBackground(Rect r, float width, Color color)
+        {
+            r.width = width;
+            GUI.color = color;
+            GUI.Label(r, GUIContent.none, "TE DefaultTime");
+            return width;
+        }
+
+        private void SetTime(float time)
+        {
+            foreach (var tweener in targets.OfType<UIEffectTweener>())
+            {
+                tweener.SetTime(time);
+            }
+        }
+
+        private void SetPlaying(bool enable)
+        {
+            if (!EditorApplication.isPlaying)
+            {
+                _isPlaying = enable;
+                _lastTime = EditorApplication.timeSinceStartup;
+                return;
+            }
+
+            foreach (var tweener in targets.OfType<UIEffectTweener>())
+            {
+                if (enable)
+                {
+                    tweener.Play(false);
+                }
+                else
+                {
+                    tweener.SetPause(true);
+                }
+            }
+        }
+
+        private void UpdateTweeners()
+        {
+            if (!_isPlaying || EditorApplication.isPlayingOrWillChangePlaymode) return;
+
+            var delta = (float)(EditorApplication.timeSinceStartup - _lastTime);
+            _lastTime = EditorApplication.timeSinceStartup;
+            foreach (var tweener in targets.OfType<UIEffectTweener>())
+            {
+                tweener.UpdateTime(tweener.direction == UIEffectTweener.Direction.Forward ? delta : -delta);
+            }
+
+            EditorApplication.QueuePlayerLoopUpdate();
+        }
     }
 }
