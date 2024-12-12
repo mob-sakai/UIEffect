@@ -37,6 +37,10 @@ namespace Coffee.UIEffects
         [SerializeField]
         protected float m_SamplingIntensity = 0.5f;
 
+        [PowerRange(0.01f, 100f, 10f)]
+        [SerializeField]
+        protected float m_SamplingScale = 1f;
+
         [SerializeField]
         protected TransitionFilter m_TransitionFilter = TransitionFilter.None;
 
@@ -204,6 +208,22 @@ namespace Coffee.UIEffects
                 ApplyContextToMaterial();
             }
         }
+
+        public float samplingScale
+        {
+            get => m_SamplingScale;
+            set
+            {
+                value = Mathf.Clamp(value, 0.01f, 100);
+                if (Mathf.Approximately(m_SamplingScale, value)) return;
+                m_SamplingScale = value;
+                ApplyContextToMaterial();
+            }
+        }
+
+        public override float actualSamplingScale => samplingFilter != SamplingFilter.None
+            ? Mathf.Clamp(m_SamplingScale, 0.01f, 100)
+            : 1;
 
         public TransitionFilter transitionFilter
         {
@@ -651,6 +671,7 @@ namespace Coffee.UIEffects
 
             m_SamplingFilter = preset.m_SamplingFilter;
             m_SamplingIntensity = preset.m_SamplingIntensity;
+            m_SamplingScale = preset.m_SamplingScale;
 
             m_TransitionFilter = preset.m_TransitionFilter;
             m_TransitionRate = preset.m_TransitionRate;
