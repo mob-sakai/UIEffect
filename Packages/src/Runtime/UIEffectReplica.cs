@@ -8,6 +8,10 @@ namespace Coffee.UIEffects
         [SerializeField] private UIEffect m_Target;
         [SerializeField] private bool m_UseTargetTransform = true;
 
+        [PowerRange(0.01f, 100, 10f)]
+        [SerializeField]
+        protected float m_SamplingScale = 1f;
+
         private UIEffect _currentTarget;
         private Matrix4x4 _prevTransformHash;
 
@@ -34,6 +38,22 @@ namespace Coffee.UIEffects
                 SetVerticesDirty();
             }
         }
+
+        public float samplingScale
+        {
+            get => m_SamplingScale;
+            set
+            {
+                value = Mathf.Clamp(value, 0.01f, 100);
+                if (Mathf.Approximately(m_SamplingScale, value)) return;
+                m_SamplingScale = value;
+                ApplyContextToMaterial();
+            }
+        }
+
+        public override float actualSamplingScale => target && target.samplingFilter != SamplingFilter.None
+            ? Mathf.Clamp(m_SamplingScale, 0.01f, 100)
+            : 1;
 
         public override uint effectId => target ? target.effectId : 0;
         public override UIEffectContext context => target && target.isActiveAndEnabled ? target.context : null;

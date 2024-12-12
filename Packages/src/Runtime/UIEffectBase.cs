@@ -32,6 +32,7 @@ namespace Coffee.UIEffects
 
         public Graphic graphic => _graphic ? _graphic : _graphic = GetComponent<Graphic>();
         public virtual uint effectId => (uint)GetInstanceID();
+        public virtual float actualSamplingScale => 1;
 
         public virtual UIEffectContext context
         {
@@ -102,7 +103,8 @@ namespace Coffee.UIEffects
             }
 
             Profiler.BeginSample("(UIE)[UIEffect] GetModifiedMaterial");
-            var hash = new Hash128((uint)baseMaterial.GetInstanceID(), effectId, 0, 0);
+            var samplingScaleId = (uint)(Mathf.InverseLerp(0.01f, 100, actualSamplingScale) * uint.MaxValue);
+            var hash = new Hash128((uint)baseMaterial.GetInstanceID(), effectId, samplingScaleId, 0);
             if (!MaterialRepository.Valid(hash, _material))
             {
                 Profiler.BeginSample("(UIE)[UIEffect] GetModifiedMaterial > Get or create material");
@@ -201,7 +203,7 @@ namespace Coffee.UIEffects
         {
             if (!isActiveAndEnabled || context == null) return;
 
-            context.ApplyToMaterial(_material);
+            context.ApplyToMaterial(_material, actualSamplingScale);
 
 #if UNITY_EDITOR
             UIEffectProjectSettings.shaderRegistry.RegisterVariant(_material, "UI > UIEffect");

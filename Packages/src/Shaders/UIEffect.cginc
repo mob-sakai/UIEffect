@@ -6,6 +6,7 @@ uniform float _ToneIntensity;
 uniform half4 _ColorValue;
 uniform float _ColorIntensity;
 uniform float _SamplingIntensity;
+uniform float _SamplingScale;
 uniform sampler2D _TransitionTex;
 uniform float4 _TransitionTex_ST;
 uniform float _TransitionRate;
@@ -38,6 +39,11 @@ uniform float _TargetSoftness;
 #define UIEFFECT_SAMPLE_CLAMP(uv, uvMask) uieffect_frag(uv) \
     * step(uvMask.x, uv.x) * step(uv.x, uvMask.z) \
     * step(uvMask.y, uv.y) * step(uv.y, uvMask.w)
+
+float2 texel_size()
+{
+    return _MainTex_TexelSize.xy * _SamplingScale;
+}
 
 float3 rgb_to_hsv(float3 c)
 {
@@ -241,7 +247,7 @@ half4 apply_sampling_filter(float2 uv, const float4 uvMask, const float2 uvLocal
             float4 o = 0;
             float sum = 0;
             float2 shift = 0;
-            const half2 blur = _MainTex_TexelSize.xy * _SamplingIntensity * 2;
+            const half2 blur = texel_size() * _SamplingIntensity * 2;
             for (int x = 0; x < KERNEL_SIZE; x++)
             {
                 shift.x = blur.x * (float(x) - KERNEL_SIZE / 2);
@@ -380,13 +386,13 @@ half4 uieffect(float2 uv, const float4 uvMask, const float2 uvLocal)
     // Sampling.Pixelation
     #if SAMPLING_PIXELATION
     {
-        const half2 pixelSize = max(2, (1 - lerp(0.5, 0.95, _SamplingIntensity)) * _MainTex_TexelSize.zw);
+        const half2 pixelSize = max(2, (1 - lerp(0.5, 0.95, _SamplingIntensity)) / texel_size());
         uv = round(uv * pixelSize) / pixelSize;
     }
     // Sampling.RgbShift
     #elif SAMPLING_RGB_SHIFT
     {
-        const half2 offset = half2(_SamplingIntensity * _MainTex_TexelSize.x * 20, 0);
+        const half2 offset = half2(_SamplingIntensity * texel_size().x * 20, 0);
         const half2 r = uieffect_internal(uv + offset, uvMask, uvLocal).ra;
         const half2 g = uieffect_internal(uv, uvMask, uvLocal).ga;
         const half2 b = uieffect_internal(uv - offset, uvMask, uvLocal).ba;
@@ -396,8 +402,8 @@ half4 uieffect(float2 uv, const float4 uvMask, const float2 uvLocal)
     #elif SAMPLING_EDGE_LUMINANCE || SAMPLING_EDGE_ALPHA
     {
         // Pixel size
-        const float dx = _MainTex_TexelSize.x;
-        const float dy = _MainTex_TexelSize.y;
+        const float dx = texel_size().x;
+        const float dy = texel_size().y;
 
         // Pixel values around the current pixel (3x3, 8 neighbors)
         const float2 uv00 = uv + half2(-dx, -dy);

@@ -11,12 +11,14 @@ namespace Coffee.UIEffects.Editors
     {
         private SerializedProperty _target;
         private SerializedProperty _useTargetTransform;
+        private SerializedProperty _samplingScale;
         private Editor _uiEffectEditor;
 
         private void OnEnable()
         {
             _target = serializedObject.FindProperty("m_Target");
             _useTargetTransform = serializedObject.FindProperty("m_UseTargetTransform");
+            _samplingScale = serializedObject.FindProperty("m_SamplingScale");
         }
 
         public override void OnInspectorGUI()
@@ -24,6 +26,7 @@ namespace Coffee.UIEffects.Editors
             serializedObject.Update();
             EditorGUILayout.PropertyField(_target);
             EditorGUILayout.PropertyField(_useTargetTransform);
+            EditorGUILayout.PropertyField(_samplingScale);
 
             if (_target.objectReferenceValue)
             {

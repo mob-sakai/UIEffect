@@ -23,6 +23,7 @@ namespace Coffee.UIEffects
         private static readonly int s_ColorValue = Shader.PropertyToID("_ColorValue");
         private static readonly int s_ColorIntensity = Shader.PropertyToID("_ColorIntensity");
         private static readonly int s_SamplingIntensity = Shader.PropertyToID("_SamplingIntensity");
+        private static readonly int s_SamplingScale = Shader.PropertyToID("_SamplingScale");
         private static readonly int s_TransitionRate = Shader.PropertyToID("_TransitionRate");
         private static readonly int s_TransitionReverse = Shader.PropertyToID("_TransitionReverse");
         private static readonly int s_TransitionTex = Shader.PropertyToID("_TransitionTex");
@@ -189,7 +190,7 @@ namespace Coffee.UIEffects
             shadowEffectOnOrigin = preset.shadowEffectOnOrigin;
         }
 
-        public void ApplyToMaterial(Material material)
+        public void ApplyToMaterial(Material material, float actualSamplingScale = 1f)
         {
             if (!material) return;
 
@@ -205,6 +206,7 @@ namespace Coffee.UIEffects
             material.SetFloat(s_ColorIntensity, Mathf.Clamp01(colorIntensity));
 
             material.SetFloat(s_SamplingIntensity, Mathf.Clamp01(samplingIntensity));
+            material.SetFloat(s_SamplingScale, actualSamplingScale);
 
             material.SetFloat(s_TransitionRate, Mathf.Clamp01(transitionRate));
             material.SetInt(s_TransitionReverse, transitionReverse ? 1 : 0);
