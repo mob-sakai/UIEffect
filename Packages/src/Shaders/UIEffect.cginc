@@ -1,6 +1,7 @@
 #ifndef UI_EFFECT_INCLUDED
 #define UI_EFFECT_INCLUDED
 
+uniform int _UIEffect_PreferSamplingSize;
 uniform float4 _MainTex_TexelSize;
 uniform float _ToneIntensity;
 uniform half4 _ColorValue;
@@ -44,7 +45,13 @@ uniform float _TargetSoftness;
 
 float2 texel_size()
 {
-    return _MainTex_TexelSize.xy * _SamplingScale;
+    float2 scale = _MainTex_TexelSize.xy * _SamplingScale;
+    if (0 < _UIEffect_PreferSamplingSize)
+    {
+        scale *= max(_MainTex_TexelSize.z, _MainTex_TexelSize.w) / _UIEffect_PreferSamplingSize;
+    }
+
+    return scale;
 }
 
 float3 rgb_to_hsv(float3 c)

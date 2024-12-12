@@ -10,6 +10,8 @@ namespace Coffee.UIEffects
 {
     public class UIEffectProjectSettings : PreloadedProjectSettings<UIEffectProjectSettings>
     {
+        private static readonly int s_PreferSamplingSize = Shader.PropertyToID("_UIEffect_PreferSamplingSize");
+
         [Tooltip(
             "The sensitivity of the transformation when `Use Target Transform` is enabled in the `UIEffectReplica` component.")]
         [Header("Setting")]
@@ -19,6 +21,9 @@ namespace Coffee.UIEffects
         [SerializeField]
         internal List<UIEffect> m_RuntimePresets = new List<UIEffect>();
 
+        [SerializeField]
+        private PreferSamplingSize m_PreferSamplingSize = PreferSamplingSize.None;
+
         [HideInInspector]
         [SerializeField]
         internal ShaderVariantCollection m_ShaderVariantCollection;
@@ -26,6 +31,17 @@ namespace Coffee.UIEffects
         [HideInInspector]
         [SerializeField]
         private ShaderVariantRegistry m_ShaderVariantRegistry = new ShaderVariantRegistry();
+
+        public static PreferSamplingSize preferSamplingSize
+        {
+            get => instance.m_PreferSamplingSize;
+            set
+            {
+                if (instance.m_PreferSamplingSize == value) return;
+                instance.m_PreferSamplingSize = value;
+                instance.SetPreferSamplingSize();
+            }
+        }
 
         public static ShaderVariantRegistry shaderRegistry => instance.m_ShaderVariantRegistry;
 
@@ -62,6 +78,20 @@ namespace Coffee.UIEffects
             return null;
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            SetPreferSamplingSize();
+        }
+
+        private void SetPreferSamplingSize()
+        {
+            if (instance == this)
+            {
+                Shader.SetGlobalInt(s_PreferSamplingSize, (int)instance.m_PreferSamplingSize);
+            }
+        }
+
 #if UNITY_EDITOR
         private const string k_PresetDir = "UIEffectPresets";
         private const string k_PresetSaveDir = "Assets/ProjectSettings/" + k_PresetDir;
@@ -80,6 +110,11 @@ namespace Coffee.UIEffects
         private void Reset()
         {
             m_ShaderVariantRegistry.InitializeIfNeeded(this, "(UIEffect)");
+        }
+
+        private void OnValidate()
+        {
+            SetPreferSamplingSize();
         }
 
         internal static UIEffect[] LoadEditorPresets()

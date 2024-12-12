@@ -76,6 +76,14 @@ namespace Coffee.UIEffects
         Mirror
     }
 
+    public enum PreferSamplingSize
+    {
+        None = 0,
+        x512 = 512,
+        x1024 = 1024,
+        x2048 = 2048
+    }
+
     internal static class BlendTypeConverter
     {
         public static (BlendMode, BlendMode) Convert(this (BlendType type, BlendMode src, BlendMode dst) self)

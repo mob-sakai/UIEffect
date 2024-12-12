@@ -10,6 +10,7 @@ namespace Coffee.UIEffects.Editors
     {
         private ReorderableList _reorderableList;
         private SerializedProperty _transformSensitivity;
+        private SerializedProperty _preferSamplingSize;
         private bool _isInitialized;
         private ShaderVariantRegistryEditor _shaderVariantRegistryEditor;
 
@@ -18,6 +19,7 @@ namespace Coffee.UIEffects.Editors
             if (_isInitialized) return;
 
             _transformSensitivity = serializedObject.FindProperty("m_TransformSensitivity");
+            _preferSamplingSize = serializedObject.FindProperty("m_PreferSamplingSize");
             var runtimePresets = serializedObject.FindProperty("m_RuntimePresets");
             _reorderableList = new ReorderableList(serializedObject, runtimePresets, true, true, true, true);
             _reorderableList.drawHeaderCallback = rect => EditorGUI.LabelField(rect, "Runtime Presets");
@@ -64,6 +66,7 @@ namespace Coffee.UIEffects.Editors
 
             // Settings
             EditorGUILayout.PropertyField(_transformSensitivity);
+            EditorGUILayout.PropertyField(_preferSamplingSize);
             _reorderableList.DoLayoutList();
 
             // Shader registry
