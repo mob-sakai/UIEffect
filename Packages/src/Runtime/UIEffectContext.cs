@@ -32,6 +32,9 @@ namespace Coffee.UIEffects
         private static readonly int s_TargetColor = Shader.PropertyToID("_TargetColor");
         private static readonly int s_TargetRange = Shader.PropertyToID("_TargetRange");
         private static readonly int s_TargetSoftness = Shader.PropertyToID("_TargetSoftness");
+        private static readonly int s_ShadowColor = Shader.PropertyToID("_ShadowColor");
+        private static readonly int s_ShadowBlurIntensity = Shader.PropertyToID("_ShadowBlurIntensity");
+        private static readonly int s_ShadowGlow = Shader.PropertyToID("_ShadowGlow");
 
         private static readonly string[] s_ToneKeywords =
         {
@@ -130,8 +133,10 @@ namespace Coffee.UIEffects
         public Vector2 shadowDistance = new Vector2(1f, -1f);
         public int shadowIteration = 1;
         public float shadowFade = 0.9f;
-        public bool shadowEffectOnOrigin = false;
         public float shadowMirrorScale = 0.5f;
+        public float shadowBlurIntensity;
+        public Color shadowColor;
+        public bool shadowGlow;
         public GradationMode gradationMode;
         public Color gradationColor1;
         public Color gradationColor2;
@@ -142,7 +147,8 @@ namespace Coffee.UIEffects
                                           || toneFilter != ToneFilter.None
                                           || colorFilter != ColorFilter.None
                                           || srcBlendMode != BlendMode.One
-                                          || dstBlendMode != BlendMode.OneMinusSrcAlpha;
+                                          || dstBlendMode != BlendMode.OneMinusSrcAlpha
+                                          || shadowMode != ShadowMode.None;
 
         public void Reset()
         {
@@ -187,7 +193,10 @@ namespace Coffee.UIEffects
             shadowDistance = preset.shadowDistance;
             shadowIteration = preset.shadowIteration;
             shadowFade = preset.shadowFade;
-            shadowEffectOnOrigin = preset.shadowEffectOnOrigin;
+            shadowMirrorScale = preset.shadowMirrorScale;
+            shadowBlurIntensity = preset.shadowBlurIntensity;
+            shadowColor = preset.shadowColor;
+            shadowGlow = preset.shadowGlow;
 
             gradationMode = preset.gradationMode;
             gradationColor1 = preset.gradationColor1;
@@ -227,6 +236,21 @@ namespace Coffee.UIEffects
             material.SetColor(s_TargetColor, targetColor);
             material.SetFloat(s_TargetRange, Mathf.Clamp01(targetRange));
             material.SetFloat(s_TargetSoftness, Mathf.Clamp01(targetSoftness));
+
+            switch (samplingFilter)
+            {
+                case SamplingFilter.BlurFast:
+                case SamplingFilter.BlurMedium:
+                case SamplingFilter.BlurDetail:
+                    material.SetFloat(s_ShadowBlurIntensity, Mathf.Clamp01(shadowBlurIntensity));
+                    break;
+                default:
+                    material.SetFloat(s_ShadowBlurIntensity, Mathf.Clamp01(samplingIntensity));
+                    break;
+            }
+
+            material.SetColor(s_ShadowColor, shadowColor);
+            material.SetFloat(s_ShadowGlow, shadowGlow ? 1 : 0);
 
             SetKeyword(material, s_ToneKeywords, (int)toneFilter);
             SetKeyword(material, s_ColorKeywords, (int)colorFilter);

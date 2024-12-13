@@ -55,8 +55,10 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _shadowDistanceY;
         private SerializedProperty _shadowIteration;
         private SerializedProperty _shadowFade;
-        private SerializedProperty _shadowEffectOnOrigin;
+        private SerializedProperty _shadowGlow;
         private SerializedProperty _shadowMirrorScale;
+        private SerializedProperty _shadowBlurIntensity;
+        private SerializedProperty _shadowColor;
 
         private SerializedProperty _gradationMode;
         private SerializedProperty _gradationColor1;
@@ -107,8 +109,10 @@ namespace Coffee.UIEffects.Editors
             _shadowDistanceY = _shadowDistance.FindPropertyRelative("y");
             _shadowIteration = serializedObject.FindProperty("m_ShadowIteration");
             _shadowFade = serializedObject.FindProperty("m_ShadowFade");
-            _shadowEffectOnOrigin = serializedObject.FindProperty("m_ShadowEffectOnOrigin");
             _shadowMirrorScale = serializedObject.FindProperty("m_ShadowMirrorScale");
+            _shadowBlurIntensity = serializedObject.FindProperty("m_ShadowBlurIntensity");
+            _shadowColor = serializedObject.FindProperty("m_ShadowColor");
+            _shadowGlow = serializedObject.FindProperty("m_ShadowGlow");
 
             _gradationMode = serializedObject.FindProperty("m_GradationMode");
             _gradationColor1 = serializedObject.FindProperty("m_GradationColor1");
@@ -226,6 +230,7 @@ namespace Coffee.UIEffects.Editors
                     EditorGUILayout.Slider(_shadowDistanceX, 0, 1, "Reflection");
                     EditorGUILayout.PropertyField(_shadowDistanceY, EditorGUIUtility.TrTempContent("Offset"));
                     EditorGUILayout.PropertyField(_shadowMirrorScale);
+                    EditorGUILayout.PropertyField(_shadowFade);
                 }
                 else
                 {
@@ -237,10 +242,19 @@ namespace Coffee.UIEffects.Editors
 
                     EditorGUILayout.PropertyField(_shadowDistance);
                     EditorGUILayout.PropertyField(_shadowIteration);
+                    EditorGUILayout.PropertyField(_shadowFade);
+                    EditorGUILayout.PropertyField(_shadowColor);
+                    EditorGUILayout.PropertyField(_shadowGlow);
+                    switch ((SamplingFilter)_samplingFilter.intValue)
+                    {
+                        case SamplingFilter.BlurFast:
+                        case SamplingFilter.BlurMedium:
+                        case SamplingFilter.BlurDetail:
+                            EditorGUILayout.PropertyField(_shadowBlurIntensity);
+                            break;
+                    }
                 }
 
-                EditorGUILayout.PropertyField(_shadowFade);
-                EditorGUILayout.PropertyField(_shadowEffectOnOrigin);
                 EditorGUI.indentLevel--;
             }
 

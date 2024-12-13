@@ -18,6 +18,9 @@ uniform float _TransitionWidth;
 uniform fixed4 _TargetColor;
 uniform float _TargetRange;
 uniform float _TargetSoftness;
+uniform float _ShadowBlurIntensity;
+uniform half4 _ShadowColor;
+uniform int _ShadowGlow;
 
 // For performance reasons, limit the sampling of blur in TextMeshPro.
 #ifdef UIEFFECT_TEXTMESHPRO
@@ -239,7 +242,8 @@ half4 apply_sampling_filter(float2 uv, const float4 uvMask, const float2 uvLocal
 {
     #if SAMPLING_BLUR_FAST || SAMPLING_BLUR_MEDIUM || SAMPLING_BLUR_DETAIL
     {
-        if (0 < _SamplingIntensity && -4 < uvLocal.x + uvLocal.y)
+        float intensity = -4 < uvLocal.x + uvLocal.y ? _SamplingIntensity : _ShadowBlurIntensity;
+        if (0 < intensity)
         {
     #if SAMPLING_BLUR_FAST
             const int KERNEL_SIZE = 5;
@@ -255,7 +259,7 @@ half4 apply_sampling_filter(float2 uv, const float4 uvMask, const float2 uvLocal
             float4 o = 0;
             float sum = 0;
             float2 shift = 0;
-            const half2 blur = texel_size() * _SamplingIntensity * 2;
+            const half2 blur = texel_size() * intensity * 2;
             for (int x = 0; x < KERNEL_SIZE; x++)
             {
                 shift.x = blur.x * (float(x) - KERNEL_SIZE / 2);
@@ -380,6 +384,11 @@ half4 uieffect_internal(float2 uv, const float4 uvMask, const float2 uvLocal)
     if (-4 <= uvLocal.x + uvLocal.y)
     {
         color = apply_color_filter(color, _ColorValue, _ColorIntensity);
+    }
+    else
+    {
+        color.rgb = _ShadowColor.rgb * color.a;
+        color.a *= 1 - _ShadowGlow;
     }
 
     return color;
