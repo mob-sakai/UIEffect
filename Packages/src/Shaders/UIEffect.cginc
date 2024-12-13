@@ -189,7 +189,6 @@ half4 apply_color_filter(half4 color, const half4 factor, const float intensity)
     return lerp(inColor, color, intensity);
 }
 
-
 half4 apply_transition_color_filter(half4 color, const half4 factor, const float intensity)
 {
     const half4 inColor = color;

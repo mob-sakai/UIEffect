@@ -45,14 +45,24 @@ namespace Coffee.UIEffects
             set
             {
                 if (value.x > k_KMaxEffectDistance)
+                {
                     value.x = k_KMaxEffectDistance;
+                }
+
                 if (value.x < -k_KMaxEffectDistance)
+                {
                     value.x = -k_KMaxEffectDistance;
+                }
 
                 if (value.y > k_KMaxEffectDistance)
+                {
                     value.y = k_KMaxEffectDistance;
+                }
+
                 if (value.y < -k_KMaxEffectDistance)
+                {
                     value.y = -k_KMaxEffectDistance;
+                }
 
                 if (m_EffectDistance == value) return;
                 m_EffectDistance = value;

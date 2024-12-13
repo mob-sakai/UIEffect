@@ -21,7 +21,7 @@ on:
   push:
     branches:
       - develop
-      - develop-preview
+      - "develop-*"
     tags:
       - "!*"
     paths-ignore:

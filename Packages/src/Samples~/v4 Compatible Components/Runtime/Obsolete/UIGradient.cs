@@ -13,14 +13,14 @@ namespace Coffee.UIEffects
             Horizontal,
             Vertical,
             Angle,
-            Diagonal,
+            Diagonal
         }
 
         public enum GradientStyle
         {
             Rect,
             Fit,
-            Split,
+            Split
         }
 
         [Tooltip("Gradient Direction.")]

@@ -207,7 +207,7 @@ namespace Coffee.UIEffects
                 effectFactor = rate;
             }
 
-            if (colorMode != ColorMode.Multiply &&  0 < (mask & UIEffectTweener.CullingMask.Color))
+            if (colorMode != ColorMode.Multiply && 0 < (mask & UIEffectTweener.CullingMask.Color))
             {
                 colorFactor = rate;
             }

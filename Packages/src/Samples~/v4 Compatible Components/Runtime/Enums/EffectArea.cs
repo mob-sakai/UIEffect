@@ -4,6 +4,6 @@
     {
         RectTransform,
         Fit,
-        Character,
+        Character
     }
 }

@@ -38,7 +38,7 @@ namespace Coffee.UIEffects
         [FormerlySerializedAs("m_NoiseTexture")]
         private Texture m_TransitionTexture;
 
-       [SerializeField]
+        [SerializeField]
         private EffectArea m_EffectArea = EffectArea.RectTransform;
 
         [Tooltip("Keep effect aspect ratio.")]

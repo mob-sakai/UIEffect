@@ -124,7 +124,6 @@ namespace Coffee.UIEffects.Editors
             {
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(_toneIntensity);
-
                 EditorGUI.indentLevel--;
             }
 
@@ -195,7 +194,6 @@ namespace Coffee.UIEffects.Editors
             if (!DrawHeaderPopup(_blendType))
             {
                 EditorGUI.indentLevel++;
-
                 EditorGUILayout.PropertyField(_srcBlendMode);
                 EditorGUILayout.PropertyField(_dstBlendMode);
                 EditorGUI.indentLevel--;

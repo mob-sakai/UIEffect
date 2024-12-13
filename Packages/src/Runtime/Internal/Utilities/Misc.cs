@@ -5,6 +5,7 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 #if UNITY_EDITOR && UNITY_2021_2_OR_NEWER
 using UnityEditor.SceneManagement;
+
 #elif UNITY_EDITOR
 using UnityEditor.Experimental.SceneManagement;
 #endif
