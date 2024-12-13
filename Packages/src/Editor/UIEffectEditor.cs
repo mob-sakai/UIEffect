@@ -58,6 +58,11 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _shadowEffectOnOrigin;
         private SerializedProperty _shadowMirrorScale;
 
+        private SerializedProperty _gradationMode;
+        private SerializedProperty _gradationColor1;
+        private SerializedProperty _gradationColor2;
+        private SerializedProperty _gradationGradient;
+
         private void OnEnable()
         {
             if (target == null) return;
@@ -104,6 +109,11 @@ namespace Coffee.UIEffects.Editors
             _shadowFade = serializedObject.FindProperty("m_ShadowFade");
             _shadowEffectOnOrigin = serializedObject.FindProperty("m_ShadowEffectOnOrigin");
             _shadowMirrorScale = serializedObject.FindProperty("m_ShadowMirrorScale");
+
+            _gradationMode = serializedObject.FindProperty("m_GradationMode");
+            _gradationColor1 = serializedObject.FindProperty("m_GradationColor1");
+            _gradationColor2 = serializedObject.FindProperty("m_GradationColor2");
+            _gradationGradient = serializedObject.FindProperty("m_GradationGradient");
         }
 
         public override void OnInspectorGUI()
@@ -231,6 +241,26 @@ namespace Coffee.UIEffects.Editors
 
                 EditorGUILayout.PropertyField(_shadowFade);
                 EditorGUILayout.PropertyField(_shadowEffectOnOrigin);
+                EditorGUI.indentLevel--;
+            }
+
+            // Gradient
+            DrawSeparator();
+            if (DrawHeaderPopup(_gradationMode))
+            {
+                EditorGUI.indentLevel++;
+                switch ((GradationMode)_gradationMode.intValue)
+                {
+                    case GradationMode.HorizontalGradient:
+                    case GradationMode.VerticalGradient:
+                        EditorGUILayout.PropertyField(_gradationGradient);
+                        break;
+                    default:
+                        EditorGUILayout.PropertyField(_gradationColor1);
+                        EditorGUILayout.PropertyField(_gradationColor2);
+                        break;
+                }
+
                 EditorGUI.indentLevel--;
             }
         }

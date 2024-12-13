@@ -132,6 +132,10 @@ namespace Coffee.UIEffects
         public float shadowFade = 0.9f;
         public bool shadowEffectOnOrigin = false;
         public float shadowMirrorScale = 0.5f;
+        public GradationMode gradationMode;
+        public Color gradationColor1;
+        public Color gradationColor2;
+        public Gradient gradationGradient;
 
         public bool willModifyMaterial => samplingFilter != SamplingFilter.None
                                           || transitionFilter != TransitionFilter.None
@@ -184,6 +188,11 @@ namespace Coffee.UIEffects
             shadowIteration = preset.shadowIteration;
             shadowFade = preset.shadowFade;
             shadowEffectOnOrigin = preset.shadowEffectOnOrigin;
+
+            gradationMode = preset.gradationMode;
+            gradationColor1 = preset.gradationColor1;
+            gradationColor2 = preset.gradationColor2;
+            gradationGradient = preset.gradationGradient;
         }
 
         public void ApplyToMaterial(Material material, float actualSamplingScale = 1f)
@@ -384,6 +393,10 @@ namespace Coffee.UIEffects
                     }
                 }
             }
+
+            // Apply gradation.
+            GradientUtil.DoGradient(gradationMode, verts, gradationColor1, gradationColor2, gradationGradient,
+                transitionRoot.rect);
 
             // Apply shadow.
             switch (shadowMode)

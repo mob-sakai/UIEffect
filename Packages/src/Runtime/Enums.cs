@@ -76,6 +76,18 @@ namespace Coffee.UIEffects
         Mirror
     }
 
+    public enum GradationMode
+    {
+        None = 0,
+        Horizontal,
+        HorizontalGradient,
+        Vertical,
+        VerticalGradient,
+        Radial,
+        DiagonalLeftTopToRightBottom,
+        DiagonalRightTopToLeftBottom
+    }
+
     public enum PreferSamplingSize
     {
         None = 0,

@@ -127,6 +127,18 @@ namespace Coffee.UIEffects
         [SerializeField]
         protected float m_ShadowMirrorScale = 0.5f;
 
+        [SerializeField]
+        protected GradationMode m_GradationMode = GradationMode.None;
+
+        [SerializeField]
+        protected Color m_GradationColor1 = Color.white;
+
+        [SerializeField]
+        protected Color m_GradationColor2 = Color.white;
+
+        [SerializeField]
+        private Gradient m_GradationGradient = new Gradient();
+
         public ToneFilter toneFilter
         {
             get => m_ToneFilter;
@@ -521,6 +533,50 @@ namespace Coffee.UIEffects
             }
         }
 
+        public GradationMode gradationMode
+        {
+            get => m_GradationMode;
+            set
+            {
+                if (m_GradationMode == value) return;
+                context.gradationMode = m_GradationMode = value;
+                SetVerticesDirty();
+            }
+        }
+
+        public Color gradationColor1
+        {
+            get => m_GradationColor1;
+            set
+            {
+                if (m_GradationColor1 == value) return;
+                context.gradationColor1 = m_GradationColor1 = value;
+                SetVerticesDirty();
+            }
+        }
+
+        public Color gradationColor2
+        {
+            get => m_GradationColor2;
+            set
+            {
+                if (m_GradationColor2 == value) return;
+                context.gradationColor2 = m_GradationColor2 = value;
+                SetVerticesDirty();
+            }
+        }
+
+        public Gradient gradationGradient
+        {
+            get => m_GradationGradient;
+            set
+            {
+                if (m_GradationGradient == value) return;
+                context.gradationGradient = m_GradationGradient = value;
+                SetVerticesDirty();
+            }
+        }
+
         public List<UIEffectReplica> replicas => _replicas ??= ListPool<UIEffectReplica>.Rent();
         private List<UIEffectReplica> _replicas;
 
@@ -604,6 +660,10 @@ namespace Coffee.UIEffects
             c.shadowFade = m_ShadowFade;
             c.shadowEffectOnOrigin = m_ShadowEffectOnOrigin;
             c.shadowMirrorScale = m_ShadowMirrorScale;
+            c.gradationMode = m_GradationMode;
+            c.gradationColor1 = m_GradationColor1;
+            c.gradationColor2 = m_GradationColor2;
+            c.gradationGradient = m_GradationGradient;
         }
 
         public override void ApplyContextToMaterial()
@@ -748,6 +808,11 @@ namespace Coffee.UIEffects
             m_ShadowFade = c.shadowFade;
             m_ShadowEffectOnOrigin = c.shadowEffectOnOrigin;
             m_ShadowMirrorScale = c.shadowMirrorScale;
+
+            m_GradationMode = c.gradationMode;
+            m_GradationColor1 = c.gradationColor1;
+            m_GradationColor2 = c.gradationColor2;
+            m_GradationGradient = c.gradationGradient;
 
             UpdateContext(context);
             ApplyContextToMaterial();
