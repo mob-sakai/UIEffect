@@ -18,10 +18,10 @@ namespace Coffee.UIEffectInternal
         public static T[] GetComponentsInChildren<T>(this Component self, int depth)
             where T : Component
         {
-            var results = ListPool<T>.Rent();
+            var results = InternalListPool<T>.Rent();
             self.GetComponentsInChildren_Internal(results, depth);
             var array = results.ToArray();
-            ListPool<T>.Return(ref results);
+            InternalListPool<T>.Return(ref results);
             return array;
         }
 

@@ -133,6 +133,8 @@ namespace Coffee.UIEffectInternal
 #if UNITY_EDITOR
         private string _jsonText;
 
+        public static bool hasInstance => s_Instance;
+
         public static T instance
         {
             get

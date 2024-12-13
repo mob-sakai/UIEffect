@@ -5,7 +5,7 @@ namespace Coffee.UIEffectInternal
 {
     internal static class MeshExtensions
     {
-        internal static readonly ObjectPool<Mesh> s_MeshPool = new ObjectPool<Mesh>(
+        internal static readonly InternalObjectPool<Mesh> s_MeshPool = new InternalObjectPool<Mesh>(
             () =>
             {
                 var mesh = new Mesh
@@ -38,10 +38,10 @@ namespace Coffee.UIEffectInternal
         {
             if (!self || !dst) return;
 
-            var vector3List = ListPool<Vector3>.Rent();
-            var vector4List = ListPool<Vector4>.Rent();
-            var color32List = ListPool<Color32>.Rent();
-            var intList = ListPool<int>.Rent();
+            var vector3List = InternalListPool<Vector3>.Rent();
+            var vector4List = InternalListPool<Vector4>.Rent();
+            var color32List = InternalListPool<Color32>.Rent();
+            var intList = InternalListPool<int>.Rent();
 
             dst.Clear(false);
 
@@ -73,10 +73,10 @@ namespace Coffee.UIEffectInternal
             dst.SetUVs(3, vector4List);
 
             dst.RecalculateBounds();
-            ListPool<Vector3>.Return(ref vector3List);
-            ListPool<Vector4>.Return(ref vector4List);
-            ListPool<Color32>.Return(ref color32List);
-            ListPool<int>.Return(ref intList);
+            InternalListPool<Vector3>.Return(ref vector3List);
+            InternalListPool<Vector4>.Return(ref vector4List);
+            InternalListPool<Color32>.Return(ref color32List);
+            InternalListPool<int>.Return(ref intList);
         }
 
         public static void CopyTo(this Mesh self, VertexHelper dst)
@@ -92,13 +92,13 @@ namespace Coffee.UIEffectInternal
         {
             if (!self || dst == null) return;
 
-            var positions = ListPool<Vector3>.Rent();
-            var normals = ListPool<Vector3>.Rent();
-            var uv0 = ListPool<Vector4>.Rent();
-            var uv1 = ListPool<Vector4>.Rent();
-            var tangents = ListPool<Vector4>.Rent();
-            var colors = ListPool<Color32>.Rent();
-            var indices = ListPool<int>.Rent();
+            var positions = InternalListPool<Vector3>.Rent();
+            var normals = InternalListPool<Vector3>.Rent();
+            var uv0 = InternalListPool<Vector4>.Rent();
+            var uv1 = InternalListPool<Vector4>.Rent();
+            var tangents = InternalListPool<Vector4>.Rent();
+            var colors = InternalListPool<Color32>.Rent();
+            var indices = InternalListPool<int>.Rent();
             self.GetVertices(positions);
             self.GetColors(colors);
             self.GetUVs(0, uv0);
@@ -118,13 +118,13 @@ namespace Coffee.UIEffectInternal
                 dst.AddTriangle(indices[i], indices[i + 1], indices[i + 2]);
             }
 
-            ListPool<Vector3>.Return(ref positions);
-            ListPool<Vector3>.Return(ref normals);
-            ListPool<Vector4>.Return(ref uv0);
-            ListPool<Vector4>.Return(ref uv1);
-            ListPool<Vector4>.Return(ref tangents);
-            ListPool<Color32>.Return(ref colors);
-            ListPool<int>.Return(ref indices);
+            InternalListPool<Vector3>.Return(ref positions);
+            InternalListPool<Vector3>.Return(ref normals);
+            InternalListPool<Vector4>.Return(ref uv0);
+            InternalListPool<Vector4>.Return(ref uv1);
+            InternalListPool<Vector4>.Return(ref tangents);
+            InternalListPool<Color32>.Return(ref colors);
+            InternalListPool<int>.Return(ref indices);
         }
     }
 }

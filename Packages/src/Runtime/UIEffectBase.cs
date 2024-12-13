@@ -23,8 +23,8 @@ namespace Coffee.UIEffects
         private static readonly VertexHelper s_VertexHelper = new VertexHelper();
         private static Mesh s_Mesh;
 
-        private static readonly ObjectPool<UIEffectContext> s_ContextPool =
-            new ObjectPool<UIEffectContext>(() => new UIEffectContext(), x => true, x => x.Reset());
+        private static readonly InternalObjectPool<UIEffectContext> s_ContextPool =
+            new InternalObjectPool<UIEffectContext>(() => new UIEffectContext(), x => true, x => x.Reset());
 
         private Graphic _graphic;
         private Material _material;
@@ -57,7 +57,7 @@ namespace Coffee.UIEffects
             {
                 _prevLossyScaleY = transform.lossyScale.y;
                 UIExtraCallbacks.onAfterCanvasRebuild += CheckSDFScaleForTMP;
-                UIExtraCallbacks.onScreenSizeChangedAction += SetVerticesDirtyForTMP;
+                UIExtraCallbacks.onScreenSizeChanged += SetVerticesDirtyForTMP;
             }
 #endif
 
@@ -69,7 +69,7 @@ namespace Coffee.UIEffects
         protected override void OnDisable()
         {
 #if TMP_ENABLE
-            UIExtraCallbacks.onScreenSizeChangedAction -= SetVerticesDirtyForTMP;
+            UIExtraCallbacks.onScreenSizeChanged -= SetVerticesDirtyForTMP;
             UIExtraCallbacks.onAfterCanvasRebuild -= CheckSDFScaleForTMP;
 #endif
 
@@ -267,8 +267,8 @@ namespace Coffee.UIEffects
                 : effect is UIEffectReplica parentReplica
                     ? parentReplica.target
                     : null;
-            var subMeshes = ListPool<TMP_SubMeshUI>.Rent();
-            var modifiers = ListPool<IMeshModifier>.Rent();
+            var subMeshes = InternalListPool<TMP_SubMeshUI>.Rent();
+            var modifiers = InternalListPool<IMeshModifier>.Rent();
             textMeshProUGUI.GetComponentsInChildren(subMeshes, 1);
             for (var i = 0; i < textMeshProUGUI.textInfo.meshInfo.Length; i++)
             {
@@ -310,8 +310,8 @@ namespace Coffee.UIEffects
                 }
             }
 
-            ListPool<IMeshModifier>.Return(ref modifiers);
-            ListPool<TMP_SubMeshUI>.Return(ref subMeshes);
+            InternalListPool<IMeshModifier>.Return(ref modifiers);
+            InternalListPool<TMP_SubMeshUI>.Return(ref subMeshes);
             s_Mesh.Clear(false);
         }
 

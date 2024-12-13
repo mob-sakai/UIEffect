@@ -521,7 +521,7 @@ namespace Coffee.UIEffects
             }
         }
 
-        public List<UIEffectReplica> replicas => _replicas ??= ListPool<UIEffectReplica>.Rent();
+        public List<UIEffectReplica> replicas => _replicas ??= InternalListPool<UIEffectReplica>.Rent();
         private List<UIEffectReplica> _replicas;
 
         protected override void OnEnable()
@@ -539,7 +539,7 @@ namespace Coffee.UIEffects
 
         protected override void OnDestroy()
         {
-            ListPool<UIEffectReplica>.Return(ref _replicas);
+            InternalListPool<UIEffectReplica>.Return(ref _replicas);
         }
 
 #if UNITY_EDITOR

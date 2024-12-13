@@ -10,8 +10,9 @@ namespace Coffee.UIEffectInternal
     /// </summary>
     internal class FastActionBase<T>
     {
-        private static readonly ObjectPool<LinkedListNode<T>> s_NodePool =
-            new ObjectPool<LinkedListNode<T>>(() => new LinkedListNode<T>(default), _ => true, x => x.Value = default);
+        private static readonly InternalObjectPool<LinkedListNode<T>> s_NodePool =
+            new InternalObjectPool<LinkedListNode<T>>(() => new LinkedListNode<T>(default), _ => true,
+                x => x.Value = default);
 
         private readonly LinkedList<T> _delegates = new LinkedList<T>();
 

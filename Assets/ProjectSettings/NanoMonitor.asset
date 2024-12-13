@@ -22,7 +22,8 @@ MonoBehaviour:
     type: 3}
   m_Interval: 0.5
   m_Anchor: 0
-  m_Width: 750
+  m_Width: 800
+  m_HelpUrl: https://github.com/mob-sakai/UIEffect
   m_CustomMonitorItems:
   - m_Format: Screen:{0}x{1}
     m_Arg0:

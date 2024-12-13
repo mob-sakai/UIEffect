@@ -37,8 +37,8 @@ namespace Coffee.UIEffectInternal
         {
             switch (self)
             {
-                case TransformSensitivity.Low: return 1f / (1 << 2);
-                case TransformSensitivity.Medium: return 1f / (1 << 5);
+                case TransformSensitivity.Low: return 1f / (1 << 4);
+                case TransformSensitivity.Medium: return 1f / (1 << 8);
                 case TransformSensitivity.High: return 1f / (1 << 12);
                 default: return 1f / (1 << (int)self);
             }
