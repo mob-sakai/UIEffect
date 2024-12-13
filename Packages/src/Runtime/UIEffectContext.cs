@@ -141,6 +141,7 @@ namespace Coffee.UIEffects
         public Color gradationColor1;
         public Color gradationColor2;
         public Gradient gradationGradient;
+        public bool allowExtendVertex;
 
         public bool willModifyMaterial => samplingFilter != SamplingFilter.None
                                           || transitionFilter != TransitionFilter.None
@@ -202,6 +203,8 @@ namespace Coffee.UIEffects
             gradationColor1 = preset.gradationColor1;
             gradationColor2 = preset.gradationColor2;
             gradationGradient = preset.gradationGradient;
+
+            allowExtendVertex = preset.allowExtendVertex;
         }
 
         public void ApplyToMaterial(Material material, float actualSamplingScale = 1f)
@@ -465,6 +468,8 @@ namespace Coffee.UIEffects
 
         private Vector2 GetExpandSize()
         {
+            if (!allowExtendVertex) return Vector2.zero;
+
             var expandSize = Vector2.zero;
             switch (samplingFilter)
             {
@@ -544,36 +549,22 @@ namespace Coffee.UIEffects
             for (var i = start; i < start + count; i++)
             {
                 var vt = verts[i];
-                var uv = vt.uv0;
-                var pos = vt.position;
-
-                // Left-Bottom
-                if (minPos.x >= pos.x && minPos.y >= pos.y)
-                {
-                    minPos = pos;
-                }
-                // Right-Top
-                else if (maxPos.x <= pos.x && maxPos.y <= pos.y)
-                {
-                    maxPos = pos;
-                }
-
-                // Left-Bottom
-                if (minUV.x >= uv.x && minUV.y >= uv.y)
-                {
-                    minUV = uv;
-                }
-                // Right-Top
-                else if (maxUV.x <= uv.x && maxUV.y <= uv.y)
-                {
-                    maxUV = uv;
-                }
+                UpdateMinMax(ref minPos, ref maxPos, vt.position);
+                UpdateMinMax(ref minUV, ref maxUV, vt.uv0);
             }
 
             // Shrink coordinate to avoid uv edge
             posBounds = new Rect(minPos.x + 0.001f, minPos.y + 0.001f,
                 maxPos.x - minPos.x - 0.002f, maxPos.y - minPos.y - 0.002f);
             uvBounds = new Rect(minUV.x, minUV.y, maxUV.x - minUV.x, maxUV.y - minUV.y);
+        }
+
+        private static void UpdateMinMax(ref Vector2 min, ref Vector2 max, Vector2 value)
+        {
+            if (value.x < min.x) min.x = value.x; // Left
+            if (max.x < value.x) max.x = value.x; // Right
+            if (value.y < min.y) min.y = value.y; // Bottom
+            if (max.y < value.y) max.y = value.y; // Top
         }
     }
 }

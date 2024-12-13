@@ -147,6 +147,9 @@ namespace Coffee.UIEffects
         [SerializeField]
         private Gradient m_GradationGradient = new Gradient();
 
+        [SerializeField]
+        protected bool m_AllowExtendVertex = true;
+
         public ToneFilter toneFilter
         {
             get => m_ToneFilter;
@@ -608,6 +611,17 @@ namespace Coffee.UIEffects
             }
         }
 
+        public bool allowExtendVertex
+        {
+            get => m_AllowExtendVertex;
+            set
+            {
+                if (m_AllowExtendVertex == value) return;
+                context.allowExtendVertex = m_AllowExtendVertex = value;
+                SetVerticesDirty();
+            }
+        }
+
         public List<UIEffectReplica> replicas => _replicas ??= ListPool<UIEffectReplica>.Rent();
         private List<UIEffectReplica> _replicas;
 
@@ -697,6 +711,7 @@ namespace Coffee.UIEffects
             c.gradationColor1 = m_GradationColor1;
             c.gradationColor2 = m_GradationColor2;
             c.gradationGradient = m_GradationGradient;
+            c.allowExtendVertex = m_AllowExtendVertex;
         }
 
         public override void ApplyContextToMaterial()
@@ -850,6 +865,8 @@ namespace Coffee.UIEffects
             m_GradationColor1 = c.gradationColor1;
             m_GradationColor2 = c.gradationColor2;
             m_GradationGradient = c.gradationGradient;
+
+            m_AllowExtendVertex = c.allowExtendVertex;
 
             UpdateContext(context);
             ApplyContextToMaterial();
