@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Coffee.UIEffectInternal;
 using UnityEngine;
@@ -245,11 +246,8 @@ namespace Coffee.UIEffects
                 if (Application.isBatchMode || BuildPipeline.isBuildingPlayer) return;
 
                 s_ShaderNameCache.Clear();
-#if UNITY_2021_3 || UNITY_2022_2_OR_NEWER
-                foreach (var effect in FindObjectsByType<UIEffectBase>(FindObjectsSortMode.None))
-#else
-                foreach (var effect in FindObjectsOfType<UIEffectBase>())
-#endif
+                foreach (var effect in Misc.FindObjectsOfType<UIEffectBase>()
+                             .Concat(Misc.GetAllComponentsInPrefabStage<UIEffectBase>()))
                 {
                     if (!effect.isActiveAndEnabled) continue;
                     if (!(effect.graphic is TextMeshProUGUI tmp) || !tmp.isActiveAndEnabled) continue;
