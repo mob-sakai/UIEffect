@@ -142,6 +142,8 @@ namespace Coffee.UIEffects
         public Color gradationColor2;
         public Gradient gradationGradient;
         public bool allowExtendVertex;
+        public float gradationOffset;
+        public float gradationScale;
 
         public bool willModifyMaterial => samplingFilter != SamplingFilter.None
                                           || transitionFilter != TransitionFilter.None
@@ -203,6 +205,8 @@ namespace Coffee.UIEffects
             gradationColor1 = preset.gradationColor1;
             gradationColor2 = preset.gradationColor2;
             gradationGradient = preset.gradationGradient;
+            gradationOffset = preset.gradationOffset;
+            gradationScale = preset.gradationScale;
 
             allowExtendVertex = preset.allowExtendVertex;
         }
@@ -423,7 +427,7 @@ namespace Coffee.UIEffects
 
             // Apply gradation.
             GradientUtil.DoGradient(gradationMode, verts, gradationColor1, gradationColor2, gradationGradient,
-                transitionRoot.rect);
+                gradationOffset, gradationScale, transitionRoot.rect);
 
             // Apply shadow.
             switch (shadowMode)

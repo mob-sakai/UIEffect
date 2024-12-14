@@ -64,6 +64,8 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _gradationColor1;
         private SerializedProperty _gradationColor2;
         private SerializedProperty _gradationGradient;
+        private SerializedProperty _gradationOffset;
+        private SerializedProperty _gradationScale;
 
         private bool _expandOthers;
         private SerializedProperty _allowExtendVertex;
@@ -121,6 +123,8 @@ namespace Coffee.UIEffects.Editors
             _gradationColor1 = serializedObject.FindProperty("m_GradationColor1");
             _gradationColor2 = serializedObject.FindProperty("m_GradationColor2");
             _gradationGradient = serializedObject.FindProperty("m_GradationGradient");
+            _gradationOffset = serializedObject.FindProperty("m_GradationOffset");
+            _gradationScale = serializedObject.FindProperty("m_GradationScale");
 
             _allowExtendVertex = serializedObject.FindProperty("m_AllowExtendVertex");
         }
@@ -280,6 +284,8 @@ namespace Coffee.UIEffects.Editors
                         break;
                 }
 
+                EditorGUILayout.PropertyField(_gradationOffset);
+                EditorGUILayout.PropertyField(_gradationScale);
                 EditorGUI.indentLevel--;
             }
 

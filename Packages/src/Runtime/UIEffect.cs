@@ -147,6 +147,14 @@ namespace Coffee.UIEffects
         [SerializeField]
         private Gradient m_GradationGradient = new Gradient();
 
+        [Range(-1, 1)]
+        [SerializeField]
+        protected float m_GradationOffset = 0;
+
+        [Range(0.01f, 1)]
+        [SerializeField]
+        protected float m_GradationScale = 1;
+
         [SerializeField]
         protected bool m_AllowExtendVertex = true;
 
@@ -611,6 +619,28 @@ namespace Coffee.UIEffects
             }
         }
 
+        public float gradationOffset
+        {
+            get => m_GradationOffset;
+            set
+            {
+                if (Mathf.Approximately(m_GradationOffset, value)) return;
+                context.gradationOffset = m_GradationOffset = value;
+                SetVerticesDirty();
+            }
+        }
+
+        public float gradationScale
+        {
+            get => m_GradationScale;
+            set
+            {
+                if (Mathf.Approximately(m_GradationScale, value)) return;
+                context.gradationScale = m_GradationScale = value;
+                SetVerticesDirty();
+            }
+        }
+
         public bool allowExtendVertex
         {
             get => m_AllowExtendVertex;
@@ -711,6 +741,8 @@ namespace Coffee.UIEffects
             c.gradationColor1 = m_GradationColor1;
             c.gradationColor2 = m_GradationColor2;
             c.gradationGradient = m_GradationGradient;
+            c.gradationOffset = m_GradationOffset;
+            c.gradationScale = m_GradationScale;
             c.allowExtendVertex = m_AllowExtendVertex;
         }
 
@@ -744,6 +776,11 @@ namespace Coffee.UIEffects
             if (transitionFilter != TransitionFilter.None && 0 < (mask & UIEffectTweener.CullingMask.Transition))
             {
                 transitionRate = rate;
+            }
+
+            if (gradationMode != GradationMode.None && 0 < (mask & UIEffectTweener.CullingMask.Gradiation))
+            {
+                gradationOffset = Mathf.Lerp(-1f, 1f, rate);
             }
         }
 
@@ -865,6 +902,8 @@ namespace Coffee.UIEffects
             m_GradationColor1 = c.gradationColor1;
             m_GradationColor2 = c.gradationColor2;
             m_GradationGradient = c.gradationGradient;
+            m_GradationOffset = c.gradationOffset;
+            m_GradationScale = c.gradationScale;
 
             m_AllowExtendVertex = c.allowExtendVertex;
 

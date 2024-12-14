@@ -14,7 +14,8 @@ namespace Coffee.UIEffects
             Tone = 1 << 0,
             Color = 1 << 1,
             Sampling = 1 << 2,
-            Transition = 1 << 3
+            Transition = 1 << 3,
+            Gradiation = 1 << 5
         }
 
         public enum UpdateMode

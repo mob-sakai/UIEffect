@@ -83,7 +83,8 @@ namespace Coffee.UIEffects
         HorizontalGradient,
         Vertical,
         VerticalGradient,
-        Radial,
+        RadialFast,
+        RadialDetail,
         DiagonalLeftTopToRightBottom,
         DiagonalRightTopToLeftBottom
     }
