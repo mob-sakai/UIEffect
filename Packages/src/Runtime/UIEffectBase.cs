@@ -52,7 +52,15 @@ namespace Coffee.UIEffects
 
         protected override void OnEnable()
         {
-            UIExtraCallbacks.onScreenSizeChangedAction += SetVerticesDirtyIfTextMeshPro;
+#if TMP_ENABLE
+            if (graphic is TextMeshProUGUI)
+            {
+                _prevLossyScaleY = transform.lossyScale.y;
+                UIExtraCallbacks.onAfterCanvasRebuild += CheckSDFScaleForTMP;
+                UIExtraCallbacks.onScreenSizeChangedAction += SetVerticesDirtyForTMP;
+            }
+#endif
+
             UpdateContext(context);
             SetMaterialDirty();
             SetVerticesDirty();
@@ -60,7 +68,11 @@ namespace Coffee.UIEffects
 
         protected override void OnDisable()
         {
-            UIExtraCallbacks.onScreenSizeChangedAction -= SetVerticesDirtyIfTextMeshPro;
+#if TMP_ENABLE
+            UIExtraCallbacks.onScreenSizeChangedAction -= SetVerticesDirtyForTMP;
+            UIExtraCallbacks.onAfterCanvasRebuild -= CheckSDFScaleForTMP;
+#endif
+
             MaterialRepository.Release(ref _material);
             SetMaterialDirty();
             SetVerticesDirty();
@@ -200,18 +212,6 @@ namespace Coffee.UIEffects
             }
         }
 
-
-        private void SetVerticesDirtyIfTextMeshPro()
-        {
-#if TMP_ENABLE
-            if (graphic && graphic.isActiveAndEnabled
-                        && (graphic is TextMeshProUGUI || graphic is TMP_SubMeshUI))
-            {
-                graphic.SetVerticesDirty();
-            }
-#endif
-        }
-
         public virtual void SetMaterialDirty()
         {
             if (graphic)
@@ -348,6 +348,28 @@ namespace Coffee.UIEffects
 
             return null;
         }
+
+        private void SetVerticesDirtyForTMP()
+        {
+            if (graphic && graphic.isActiveAndEnabled)
+            {
+                graphic.SetVerticesDirty();
+            }
+        }
+
+        private void CheckSDFScaleForTMP()
+        {
+            var lossyScaleY = transform.lossyScale.y;
+            if (Mathf.Approximately(_prevLossyScaleY, lossyScaleY)) return;
+
+            _prevLossyScaleY = lossyScaleY;
+            if (graphic is TextMeshProUGUI textMeshProUGUI && graphic.isActiveAndEnabled)
+            {
+                OnTMPChanged(textMeshProUGUI);
+            }
+        }
+
+        private float _prevLossyScaleY;
 #endif
 
         public abstract void SetRate(float rate, UIEffectTweener.CullingMask cullingMask);
