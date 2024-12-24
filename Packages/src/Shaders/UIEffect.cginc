@@ -328,6 +328,10 @@ half4 apply_transition_filter(half4 color, const float alpha)
             color.rgb *= (1 - inv_lerp(0.85, 1.0, bandLerp * 1.3)) * color.a;
             return color;
         }
+        #elif TRANSITION_SHINY && UIEFFECT_TEXTMESHPRO
+        {
+            color.rgb *= color.a;
+        }
         #endif
 
         color.rgb = lerp(color.rgb, bandColor, bandLerp * softLerp);
