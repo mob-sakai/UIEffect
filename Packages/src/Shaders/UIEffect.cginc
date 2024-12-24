@@ -307,18 +307,15 @@ half4 apply_transition_filter(half4 color, const float alpha)
     {
         const float factor = alpha - _TransitionRate * (1 + _TransitionWidth) + _TransitionWidth;
         const float softness = max(0.0001, _TransitionWidth * _TransitionSoftness);
-        // const fixed bandLerp = step(factor, color.a) * saturate((_TransitionWidth - factor) * 1 / softness);
         const fixed bandLerp = saturate((_TransitionWidth - factor) * 1 / softness);
         const fixed softLerp = saturate(factor * 2 / softness);
         half4 bandColor = apply_transition_color_filter(half4(color.rgb, 1), half4(_TransitionColor.rgb, 1),
                                                         _TransitionColor.a);
-        // bandColor.a *= color.a;
         bandColor *= color.a;
 
         #if TRANSITION_MELT
         {
             color = lerp(color, bandColor, bandLerp);
-            // return color * color.a;
             return color;
         }
         #elif TRANSITION_BURN
