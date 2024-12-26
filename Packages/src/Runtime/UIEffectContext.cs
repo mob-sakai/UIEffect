@@ -15,7 +15,7 @@ namespace Coffee.UIEffects
     {
         private const float k_MaxEffectDistance = 600f;
         private static readonly UIEffectContext s_DefaultContext = new UIEffectContext();
-        private static readonly List<UIVertex> s_WorkingVertices = new List<UIVertex>();
+        private static readonly List<UIVertex> s_WorkingVertices = new List<UIVertex>(1024 * 8);
         private static readonly int s_SrcBlend = Shader.PropertyToID("_SrcBlend");
         private static readonly int s_DstBlend = Shader.PropertyToID("_DstBlend");
         private static readonly int s_ToneIntensity = Shader.PropertyToID("_ToneIntensity");
@@ -30,8 +30,8 @@ namespace Coffee.UIEffects
         private static readonly int s_TransitionTex_ST = Shader.PropertyToID("_TransitionTex_ST");
         private static readonly int s_TransitionWidth = Shader.PropertyToID("_TransitionWidth");
         private static readonly int s_TransitionSoftness = Shader.PropertyToID("_TransitionSoftness");
-        private static readonly int s_TransitionColor = Shader.PropertyToID("_TransitionColor");
         private static readonly int s_TransitionColorFilter = Shader.PropertyToID("_TransitionColorFilter");
+        private static readonly int s_TransitionColor = Shader.PropertyToID("_TransitionColor");
         private static readonly int s_TargetColor = Shader.PropertyToID("_TargetColor");
         private static readonly int s_TargetRange = Shader.PropertyToID("_TargetRange");
         private static readonly int s_TargetSoftness = Shader.PropertyToID("_TargetSoftness");
@@ -106,11 +106,14 @@ namespace Coffee.UIEffects
         public ToneFilter toneFilter = ToneFilter.None;
         public float toneIntensity = 1;
         public Vector4 toneParams = new Vector4(0, 0, 0, 0);
+
         public ColorFilter colorFilter = ColorFilter.None;
         public float colorIntensity = 1;
         public Color color = Color.white;
+
         public SamplingFilter samplingFilter = SamplingFilter.None;
         public float samplingIntensity = 0.5f;
+
         public TransitionFilter transitionFilter = TransitionFilter.None;
         public float transitionRate = 0.5f;
         public bool transitionReverse;
@@ -123,19 +126,22 @@ namespace Coffee.UIEffects
         public float transitionSoftness = 0.2f;
         public ColorFilter transitionColorFilter = ColorFilter.MultiplyAdditive;
         public Color transitionColor = new Color(0f, 0.5f, 1.0f, 1.0f);
+
         public TargetMode targetMode = TargetMode.None;
         public Color targetColor = Color.white;
         public float targetRange = 1;
         public float targetSoftness = 0.5f;
+
         public BlendMode srcBlendMode = BlendMode.One;
         public BlendMode dstBlendMode = BlendMode.OneMinusSrcAlpha;
+
         public ShadowMode shadowMode = ShadowMode.None;
         public Vector2 shadowDistance = new Vector2(1f, -1f);
         public int shadowIteration = 1;
         public float shadowFade = 0.9f;
         public bool shadowEffectOnOrigin = false;
         public float shadowMirrorScale = 0.5f;
-        // public RectTransform transitionRoot;
+
 
         public bool willModifyMaterial => samplingFilter != SamplingFilter.None
                                           || transitionFilter != TransitionFilter.None
@@ -265,8 +271,6 @@ namespace Coffee.UIEffects
 
         public void ModifyMesh(Graphic graphic, RectTransform transitionRoot, VertexHelper vh)
         {
-            // var graphic = uiEffect.graphic;
-            // var transitionRoot = uiEffect.transitionRoot;
 #if TMP_ENABLE
             var isTextMeshPro = graphic is TextMeshProUGUI || graphic is TMP_SubMeshUI;
             var isText = isTextMeshPro || graphic is Text;

@@ -3,9 +3,6 @@ using UnityEngine;
 using System.Linq;
 using System;
 using Object = UnityEngine.Object;
-#if TMP_ENABLE
-using TMPro;
-#endif
 
 namespace Coffee.UIEffects.Editors
 {
@@ -124,7 +121,6 @@ namespace Coffee.UIEffects.Editors
             {
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(_toneIntensity);
-
                 EditorGUI.indentLevel--;
             }
 
@@ -195,7 +191,6 @@ namespace Coffee.UIEffects.Editors
             if (!DrawHeaderPopup(_blendType))
             {
                 EditorGUI.indentLevel++;
-
                 EditorGUILayout.PropertyField(_srcBlendMode);
                 EditorGUILayout.PropertyField(_dstBlendMode);
                 EditorGUI.indentLevel--;

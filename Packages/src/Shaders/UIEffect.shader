@@ -126,8 +126,12 @@
                 }
 
                 OUT.color = v.color * _Color;
+
+                // ==== UIEFFECT START ====
                 OUT.uvMask = v.uvMask;
                 OUT.uvLocal = v.texcoord.zw;
+                // ==== UIEFFECT END ====
+
                 return OUT;
             }
 

@@ -590,8 +590,8 @@ namespace Coffee.UIEffects
             c.transitionKeepAspectRatio = m_TransitionKeepAspectRatio;
             c.transitionWidth = m_TransitionWidth;
             c.transitionSoftness = m_TransitionSoftness;
-            c.transitionColor = m_TransitionColor;
             c.transitionColorFilter = m_TransitionColorFilter;
+            c.transitionColor = m_TransitionColor;
             c.targetMode = m_TargetMode;
             c.targetColor = m_TargetColor;
             c.targetRange = m_TargetRange;
@@ -683,8 +683,8 @@ namespace Coffee.UIEffects
             m_TransitionKeepAspectRatio = preset.m_TransitionKeepAspectRatio;
             m_TransitionWidth = preset.m_TransitionWidth;
             m_TransitionSoftness = preset.m_TransitionSoftness;
-            m_TransitionColor = preset.m_TransitionColor;
             m_TransitionColorFilter = preset.m_TransitionColorFilter;
+            m_TransitionColor = preset.m_TransitionColor;
 
             m_TargetMode = preset.m_TargetMode;
             m_TargetColor = preset.m_TargetColor;
@@ -730,8 +730,8 @@ namespace Coffee.UIEffects
             m_TransitionKeepAspectRatio = c.transitionKeepAspectRatio;
             m_TransitionWidth = c.transitionWidth;
             m_TransitionSoftness = c.transitionSoftness;
-            m_TransitionColor = c.transitionColor;
             m_TransitionColorFilter = c.transitionColorFilter;
+            m_TransitionColor = c.transitionColor;
 
             m_TargetMode = c.targetMode;
             m_TargetColor = c.targetColor;
