@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Samples/Demo/UIEffect_Showcase.unity
     guid: 96317674ad83b4b38b0b7c9e3402bfd3
   - enabled: 1
+    path: Assets/Demos/UIEffectTweenerControl/UIEffectTweenerControl.unity
+    guid: dda1700a67f894a5cafc5d16748cf4fb
+  - enabled: 1
     path: Assets/Demos/TextMeshPro Support/TextMeshProSupport.unity
     guid: b29fc66cd80684c2d903f2d65255b59b
   - enabled: 1
