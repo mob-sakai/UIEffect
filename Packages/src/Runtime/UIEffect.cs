@@ -127,6 +127,9 @@ namespace Coffee.UIEffects
         [SerializeField]
         protected float m_ShadowMirrorScale = 0.5f;
 
+        [SerializeField]
+        protected bool m_AllowExtendVertex = true;
+
         public ToneFilter toneFilter
         {
             get => m_ToneFilter;
@@ -521,6 +524,17 @@ namespace Coffee.UIEffects
             }
         }
 
+        public bool allowExtendVertex
+        {
+            get => m_AllowExtendVertex;
+            set
+            {
+                if (m_AllowExtendVertex == value) return;
+                context.allowExtendVertex = m_AllowExtendVertex = value;
+                SetVerticesDirty();
+            }
+        }
+
         public List<UIEffectReplica> replicas => _replicas ??= InternalListPool<UIEffectReplica>.Rent();
         private List<UIEffectReplica> _replicas;
 
@@ -604,6 +618,7 @@ namespace Coffee.UIEffects
             c.shadowFade = m_ShadowFade;
             c.shadowEffectOnOrigin = m_ShadowEffectOnOrigin;
             c.shadowMirrorScale = m_ShadowMirrorScale;
+            c.allowExtendVertex = m_AllowExtendVertex;
         }
 
         public override void ApplyContextToMaterial()
@@ -748,6 +763,8 @@ namespace Coffee.UIEffects
             m_ShadowFade = c.shadowFade;
             m_ShadowEffectOnOrigin = c.shadowEffectOnOrigin;
             m_ShadowMirrorScale = c.shadowMirrorScale;
+
+            m_AllowExtendVertex = c.allowExtendVertex;
 
             UpdateContext(context);
             ApplyContextToMaterial();

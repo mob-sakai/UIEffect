@@ -55,6 +55,9 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _shadowEffectOnOrigin;
         private SerializedProperty _shadowMirrorScale;
 
+        private bool _expandOthers;
+        private SerializedProperty _allowExtendVertex;
+
         private void OnEnable()
         {
             if (target == null) return;
@@ -101,6 +104,8 @@ namespace Coffee.UIEffects.Editors
             _shadowFade = serializedObject.FindProperty("m_ShadowFade");
             _shadowEffectOnOrigin = serializedObject.FindProperty("m_ShadowEffectOnOrigin");
             _shadowMirrorScale = serializedObject.FindProperty("m_ShadowMirrorScale");
+
+            _allowExtendVertex = serializedObject.FindProperty("m_AllowExtendVertex");
         }
 
         public override void OnInspectorGUI()
@@ -229,6 +234,13 @@ namespace Coffee.UIEffects.Editors
                 EditorGUILayout.PropertyField(_shadowFade);
                 EditorGUILayout.PropertyField(_shadowEffectOnOrigin);
                 EditorGUI.indentLevel--;
+            }
+
+            DrawSeparator();
+            _expandOthers = EditorGUILayout.BeginFoldoutHeaderGroup(_expandOthers, "Others");
+            if (_expandOthers)
+            {
+                EditorGUILayout.PropertyField(_allowExtendVertex);
             }
         }
 

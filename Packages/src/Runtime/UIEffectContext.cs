@@ -139,6 +139,8 @@ namespace Coffee.UIEffects
         public bool shadowEffectOnOrigin = false;
         public float shadowMirrorScale = 0.5f;
 
+        public bool allowExtendVertex;
+
 
         public bool willModifyMaterial => samplingFilter != SamplingFilter.None
                                           || transitionFilter != TransitionFilter.None
@@ -191,6 +193,8 @@ namespace Coffee.UIEffects
             shadowIteration = preset.shadowIteration;
             shadowFade = preset.shadowFade;
             shadowEffectOnOrigin = preset.shadowEffectOnOrigin;
+
+            allowExtendVertex = preset.allowExtendVertex;
         }
 
         public void ApplyToMaterial(Material material, float actualSamplingScale = 1f)
@@ -435,6 +439,8 @@ namespace Coffee.UIEffects
 
         private Vector2 GetExpandSize()
         {
+            if (!allowExtendVertex) return Vector2.zero;
+
             var expandSize = Vector2.zero;
             switch (samplingFilter)
             {
