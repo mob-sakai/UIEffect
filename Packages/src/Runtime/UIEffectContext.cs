@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Coffee.UIEffectInternal;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
@@ -13,7 +11,6 @@ namespace Coffee.UIEffects
 {
     public class UIEffectContext
     {
-        private const float k_MaxEffectDistance = 600f;
         private static readonly UIEffectContext s_DefaultContext = new UIEffectContext();
         private static readonly List<UIVertex> s_WorkingVertices = new List<UIVertex>(1024 * 8);
         private static readonly int s_SrcBlend = Shader.PropertyToID("_SrcBlend");
@@ -285,19 +282,20 @@ namespace Coffee.UIEffects
             var isText = graphic is Text;
 #endif
 
+            var verts = s_WorkingVertices;
             var expandSize = GetExpandSize();
             var useExpand = expandSize != Vector2.zero;
 
             // Update capacity of workingVertices if needed.
             var count = vh.currentIndexCount;
             var neededCapacity = Mathf.NextPowerOfTwo(count * GetVertexCountMultiply());
-            if (s_WorkingVertices.Capacity < neededCapacity)
+            if (verts.Capacity < neededCapacity)
             {
-                s_WorkingVertices.Capacity = neededCapacity;
+                verts.Capacity = neededCapacity;
             }
 
             // Get the rectangle to calculate the normalized position.
-            vh.GetUIVertexStream(s_WorkingVertices);
+            vh.GetUIVertexStream(verts);
             var bundleSize = isText ? 6 : count;
             var rot = Matrix4x4.Rotate(Quaternion.Euler(0, 0, transitionRotation));
             var v1 = rot.MultiplyPoint3x4(new Vector3(1, 1, 0));
@@ -337,7 +335,7 @@ namespace Coffee.UIEffects
             for (var i = 0; i < count; i += bundleSize)
             {
                 // min/max for bundled-quad
-                GetBounds(s_WorkingVertices, i, bundleSize, out var bounds, out var uvMask);
+                GetBounds(verts, i, bundleSize, out var bounds, out var uvMask);
 
                 // Quad (6 vertices)
                 for (var j = 0; j < bundleSize; j += 6)
@@ -345,16 +343,16 @@ namespace Coffee.UIEffects
                     var size = default(Vector3);
                     var extendPos = default(Vector3);
                     var extendUV = default(Vector3);
-                    var posLB = s_WorkingVertices[i + j + 1].position;
-                    var posRT = s_WorkingVertices[i + j + 4].position;
+                    var posLB = verts[i + j + 1].position;
+                    var posRT = verts[i + j + 4].position;
                     var willExpand = useExpand
                                      && (bundleSize == 6 // Text or simple quad
                                          || !bounds.Contains(posLB) ||
                                          !bounds.Contains(posRT)); // Outer 9-sliced quad
                     if (willExpand)
                     {
-                        var uvLB = s_WorkingVertices[i + j + 1].uv0;
-                        var uvRT = s_WorkingVertices[i + j + 4].uv0;
+                        var uvLB = verts[i + j + 1].uv0;
+                        var uvRT = verts[i + j + 4].uv0;
                         var posCenter = (posLB + posRT) / 2;
                         var uvCenter = (uvLB + uvRT) / 2;
                         size = posLB - posRT;
@@ -368,7 +366,7 @@ namespace Coffee.UIEffects
                     // Set vertex position, uv, uvMask and local normalized position.
                     for (var k = 0; k < 6; k++)
                     {
-                        var vt = s_WorkingVertices[i + j + k];
+                        var vt = verts[i + j + k];
                         var pos = vt.position;
                         var uv0 = vt.uv0;
 
@@ -389,64 +387,37 @@ namespace Coffee.UIEffects
                         }
 
                         ModifyVertex(isTextMeshPro, ref vt, pos, uv0, uvMask, rect, rot);
-                        s_WorkingVertices[i + j + k] = vt;
+                        verts[i + j + k] = vt;
                     }
                 }
             }
 
-            if (shadowMode != ShadowMode.None)
+            // Apply shadow.
+            switch (shadowMode)
             {
-                var start = 0;
-                var end = count;
-                if (shadowMode == ShadowMode.Mirror)
-                {
-                    var rect2 = transitionRoot.rect;
-                    var pivot = transitionRoot.pivot.y;
-                    var height = rect2.height;
-                    var rate = shadowDistance.x;
-                    var scale = shadowMirrorScale;
-                    var offset = shadowDistance.y - (scale + 1) * pivot * height;
-                    var range = new Vector2(rect2.yMin, rect2.yMax);
-                    ApplyMirror(s_WorkingVertices, count, rate, range, scale, offset, shadowFade);
-                }
-                else
-                {
-                    var d = Vector2.zero;
-                    var a = 1f;
-                    var distance = new Vector2(Mathf.Clamp(shadowDistance.x, -k_MaxEffectDistance, k_MaxEffectDistance),
-                        Mathf.Clamp(shadowDistance.y, -k_MaxEffectDistance, k_MaxEffectDistance));
-                    for (var i = 0; i < shadowIteration; i++)
-                    {
-                        d += distance / (i + 1);
-                        a *= shadowFade;
-                        ApplyShadow(s_WorkingVertices, ref start, ref end, d, shadowMode, a);
-                    }
-                }
+                case ShadowMode.Shadow:
+                case ShadowMode.Shadow3:
+                case ShadowMode.Outline:
+                case ShadowMode.Outline8:
+                    count = verts.Count;
+                    ShadowUtil.DoShadow(shadowMode, verts, shadowDistance, shadowIteration, shadowFade);
 
-                // Mark as origin vertices.
-                if (!shadowEffectOnOrigin)
-                {
-                    for (var i = s_WorkingVertices.Count - count; i < s_WorkingVertices.Count; i++)
+                    // Mark as shadow vertices.
+                    for (var i = 0; i < verts.Count - count; i++)
                     {
-                        var vt = s_WorkingVertices[i];
-                        if (isTextMeshPro)
-                        {
-                            vt.uv1.z -= 8;
-                            vt.uv1.w -= 8;
-                        }
-                        else
-                        {
-                            vt.uv0.z -= 8;
-                            vt.uv0.w -= 8;
-                        }
-
-                        s_WorkingVertices[i] = vt;
+                        var vt = verts[i];
+                        MarkAsShadowVertex(isTextMeshPro, ref vt);
+                        verts[i] = vt;
                     }
-                }
+
+                    break;
+                case ShadowMode.Mirror:
+                    ShadowUtil.DoMirror(verts, shadowDistance, shadowMirrorScale, shadowFade, transitionRoot);
+                    break;
             }
 
             vh.Clear();
-            vh.AddUIVertexTriangleStream(s_WorkingVertices);
+            vh.AddUIVertexTriangleStream(verts);
         }
 
         private int GetVertexCountMultiply()
@@ -519,6 +490,20 @@ namespace Coffee.UIEffects
             }
         }
 
+        private static void MarkAsShadowVertex(bool isTextMeshPro, ref UIVertex vt)
+        {
+            if (isTextMeshPro)
+            {
+                vt.uv1.z -= 8;
+                vt.uv1.w -= 8;
+            }
+            else
+            {
+                vt.uv0.z -= 8;
+                vt.uv0.w -= 8;
+            }
+        }
+
         private static void GetBounds(List<UIVertex> verts, int start, int count, out Rect posBounds,
             out Rect uvBounds)
         {
@@ -559,129 +544,6 @@ namespace Coffee.UIEffects
             posBounds = new Rect(minPos.x + 0.001f, minPos.y + 0.001f,
                 maxPos.x - minPos.x - 0.002f, maxPos.y - minPos.y - 0.002f);
             uvBounds = new Rect(minUV.x, minUV.y, maxUV.x - minUV.x, maxUV.y - minUV.y);
-        }
-
-        private static void ApplyMirror(List<UIVertex> verts, int count, float rate, Vector2 range, float scale,
-            float offset, float alpha)
-        {
-            rate = Mathf.Clamp01(rate);
-            var start = 0;
-            var end = count;
-            ApplyShadowZeroAlloc(verts, ref start, ref end, 0, 0, alpha);
-
-            for (var i = 0; i < count; i += 6)
-            {
-                var lb = s_WorkingVertices[i];
-                var lbRate = Mathf.InverseLerp(range.x, range.y, lb.position.y);
-                var lt = s_WorkingVertices[i + 1];
-                var ltRate = Mathf.InverseLerp(range.x, range.y, lt.position.y);
-                var rt = s_WorkingVertices[i + 2];
-                var rtRate = Mathf.InverseLerp(range.x, range.y, rt.position.y);
-                var rb = s_WorkingVertices[i + 4];
-                var rbRate = Mathf.InverseLerp(range.x, range.y, rb.position.y);
-
-                lb.color.a = (byte)(Mathf.InverseLerp(rate, 0, lbRate) * lb.color.a);
-                lt.color.a = (byte)(Mathf.InverseLerp(rate, 0, ltRate) * lt.color.a);
-                rt.color.a = (byte)(Mathf.InverseLerp(rate, 0, rtRate) * rt.color.a);
-                rb.color.a = (byte)(Mathf.InverseLerp(rate, 0, rbRate) * rb.color.a);
-
-                if (lbRate < rate && rate < ltRate)
-                {
-                    var t = (rate - lbRate) / (ltRate - lbRate);
-                    lt.position = Vector3.Lerp(lb.position, lt.position, t);
-                    lt.uv0 = Vector4.Lerp(lb.uv0, lt.uv0, t);
-                    lt.uv1 = Vector4.Lerp(lb.uv1, lt.uv1, t);
-                    lt.uv2 = Vector4.Lerp(lb.uv2, lt.uv2, t);
-                    lt.color = Color.Lerp(lb.color, lt.color, t);
-                }
-
-                if (rbRate < rate && rate < rtRate)
-                {
-                    var t = (rate - rbRate) / (rtRate - rbRate);
-                    rt.position = Vector3.Lerp(rb.position, rt.position, t);
-                    rt.uv0 = Vector4.Lerp(rb.uv0, rt.uv0, t);
-                    rt.uv1 = Vector4.Lerp(rb.uv1, rt.uv1, t);
-                    rt.uv2 = Vector4.Lerp(rb.uv2, rt.uv2, t);
-                    rt.color = Color.Lerp(rb.color, rt.color, t);
-                }
-
-
-                lb.position.y = -lb.position.y * scale + offset;
-                lt.position.y = -lt.position.y * scale + offset;
-                rt.position.y = -rt.position.y * scale + offset;
-                rb.position.y = -rb.position.y * scale + offset;
-
-                s_WorkingVertices[i] = s_WorkingVertices[i + 5] = lb;
-                s_WorkingVertices[i + 1] = lt;
-                s_WorkingVertices[i + 2] = s_WorkingVertices[i + 3] = rt;
-                s_WorkingVertices[i + 4] = rb;
-            }
-        }
-
-        /// <summary>
-        /// Append shadow vertices.
-        /// * It is similar to Shadow component implementation.
-        /// </summary>
-        private static void ApplyShadow(List<UIVertex> verts, ref int start, ref int end, Vector2 distance,
-            ShadowMode mode, float alpha)
-        {
-            if (mode == ShadowMode.None) return;
-
-            var x = distance.x;
-            var y = distance.y;
-            switch (mode)
-            {
-                case ShadowMode.Shadow:
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, x, y, alpha);
-                    break;
-                case ShadowMode.Shadow3:
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, x, y, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, x, 0, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, 0, y, alpha);
-                    break;
-                case ShadowMode.Outline:
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, x, y, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, x, -y, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, -x, y, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, -x, -y, alpha);
-                    break;
-                case ShadowMode.Outline8:
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, x, y, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, x, -y, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, -x, y, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, -x, -y, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, x, 0, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, 0, y, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, -x, 0, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, 0, -y, alpha);
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// Append shadow vertices.
-        /// * It is similar to Shadow component implementation.
-        /// </summary>
-        private static void ApplyShadowZeroAlloc(List<UIVertex> verts, ref int start, ref int end, float x, float y,
-            float alpha)
-        {
-            var count = end - start;
-            for (var i = 0; i < count; i++)
-            {
-                // The original vertices is pushed backward.
-                verts.Add(verts[end - count + i]);
-
-                // Set shadow vertex.
-                var vt = verts[start + i];
-                vt.position.x += x;
-                vt.position.y += y;
-                vt.color.a = (byte)(alpha * vt.color.a);
-                verts[start + i] = vt;
-            }
-
-            // Update next shadow offset.
-            start = end;
-            end = verts.Count;
         }
     }
 }
