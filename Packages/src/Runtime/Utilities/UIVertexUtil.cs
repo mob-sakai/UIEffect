@@ -143,18 +143,18 @@ namespace Coffee.UIEffects
             verts[i + 4] = rb;
         }
 
-        public static void SplitHorizontal(List<UIVertex> verts, UIVertex lb, UIVertex lt, ref UIVertex rb,
-            ref UIVertex rt, Rect rect, List<float> times)
+        public static void SplitHorizontal(List<UIVertex> verts, List<float> times, UIVertex lb, UIVertex lt,
+            ref UIVertex rb, ref UIVertex rt, Rect rect, Matrix4x4 m)
         {
             if (times == null || times.Count == 0) return;
 
-            var min = Mathf.InverseLerp(rect.xMin, rect.xMax, lb.position.x);
+            var min = Mathf.InverseLerp(rect.xMin, rect.xMax, m.MultiplyPoint3x4(lb.position).x);
             for (var i = 0; i < times.Count; i++)
             {
                 var time = times[i];
                 if (time <= 0 || 1 <= time) continue;
 
-                var max = Mathf.InverseLerp(rect.xMin, rect.xMax, rt.position.x);
+                var max = Mathf.InverseLerp(rect.xMin, rect.xMax, m.MultiplyPoint3x4(rt.position).x);
                 if (time <= min || max <= time) continue;
 
                 SplitHorizontal(verts, lb, lt, ref rb, ref rt, Mathf.InverseLerp(min, max, time));
@@ -176,16 +176,16 @@ namespace Coffee.UIEffects
             rb = mb;
         }
 
-        public static void SplitVertical(List<UIVertex> verts, UIVertex lb, ref UIVertex lt, UIVertex rb,
-            ref UIVertex rt, Rect rect, List<float> times)
+        public static void SplitVertical(List<UIVertex> verts, List<float> times, UIVertex lb, ref UIVertex lt,
+            UIVertex rb, ref UIVertex rt, Rect rect, Matrix4x4 m)
         {
             if (times == null || times.Count == 0) return;
 
-            var min = Mathf.InverseLerp(rect.yMin, rect.yMax, lb.position.y);
+            var min = Mathf.InverseLerp(rect.yMin, rect.yMax, m.MultiplyPoint3x4(lb.position).y);
             for (var i = 0; i < times.Count; i++)
             {
                 var time = times[i];
-                var max = Mathf.InverseLerp(rect.yMin, rect.yMax, rt.position.y);
+                var max = Mathf.InverseLerp(rect.yMin, rect.yMax, m.MultiplyPoint3x4(rt.position).y);
                 if (time <= min || max <= time) continue;
 
                 SplitVertical(verts, lb, ref lt, rb, ref rt, Mathf.InverseLerp(min, max, time));

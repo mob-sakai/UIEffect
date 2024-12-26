@@ -145,6 +145,26 @@ namespace Coffee.UIEffects
         protected bool m_ShadowColorGlow = false;
 
         [SerializeField]
+        protected GradationMode m_GradationMode = GradationMode.None;
+
+        [SerializeField]
+        protected Color m_GradationColor1 = Color.white;
+
+        [SerializeField]
+        protected Color m_GradationColor2 = Color.white;
+
+        [SerializeField]
+        private Gradient m_GradationGradient = new Gradient();
+
+        [Range(-1, 1)]
+        [SerializeField]
+        protected float m_GradationOffset = 0;
+
+        [PowerRange(0.01f, 10, 10)]
+        [SerializeField]
+        protected float m_GradationScale = 1;
+
+        [SerializeField]
         protected bool m_AllowExtendVertex = true;
 
         public ToneFilter toneFilter
@@ -597,6 +617,61 @@ namespace Coffee.UIEffects
             }
         }
 
+        public GradationMode gradationMode
+        {
+            get => m_GradationMode;
+            set
+            {
+                if (m_GradationMode == value) return;
+                context.gradationMode = m_GradationMode = value;
+                SetVerticesDirty();
+            }
+        }
+
+        public Color gradationColor1
+        {
+            get => m_GradationColor1;
+            set
+            {
+                if (m_GradationColor1 == value) return;
+                context.gradationColor1 = m_GradationColor1 = value;
+                SetVerticesDirty();
+            }
+        }
+
+        public Color gradationColor2
+        {
+            get => m_GradationColor2;
+            set
+            {
+                if (m_GradationColor2 == value) return;
+                context.gradationColor2 = m_GradationColor2 = value;
+                SetVerticesDirty();
+            }
+        }
+
+        public float gradationOffset
+        {
+            get => m_GradationOffset;
+            set
+            {
+                if (Mathf.Approximately(m_GradationOffset, value)) return;
+                context.gradationOffset = m_GradationOffset = value;
+                SetVerticesDirty();
+            }
+        }
+
+        public float gradationScale
+        {
+            get => m_GradationScale;
+            set
+            {
+                if (Mathf.Approximately(m_GradationScale, value)) return;
+                context.gradationScale = m_GradationScale = value;
+                SetVerticesDirty();
+            }
+        }
+
         public bool allowExtendVertex
         {
             get => m_AllowExtendVertex;
@@ -633,6 +708,7 @@ namespace Coffee.UIEffects
         protected override void OnValidate()
         {
             (m_SrcBlendMode, m_DstBlendMode) = (m_BlendType, m_SrcBlendMode, m_DstBlendMode).Convert();
+            context?.SetGradationDirty();
             base.OnValidate();
         }
 #endif
@@ -655,6 +731,13 @@ namespace Coffee.UIEffects
                 if (!c) return;
                 c.SetMaterialDirty();
             });
+        }
+
+        public void SetGradientKeys(GradientColorKey[] colorKeys, GradientAlphaKey[] alphaKeys)
+        {
+            m_GradationGradient ??= new Gradient();
+            m_GradationGradient.SetKeys(colorKeys, alphaKeys);
+            context?.SetGradationDirty();
         }
 
         protected override void UpdateContext(UIEffectContext c)
@@ -696,6 +779,12 @@ namespace Coffee.UIEffects
             c.shadowColorFilter = m_ShadowColorFilter;
             c.shadowColor = m_ShadowColor;
             c.shadowColorGlow = m_ShadowColorGlow;
+            c.gradationMode = m_GradationMode;
+            c.gradationColor1 = m_GradationColor1;
+            c.gradationColor2 = m_GradationColor2;
+            c.gradationGradient = m_GradationGradient;
+            c.gradationOffset = m_GradationOffset;
+            c.gradationScale = m_GradationScale;
             c.allowExtendVertex = m_AllowExtendVertex;
         }
 
@@ -729,6 +818,11 @@ namespace Coffee.UIEffects
             if (transitionFilter != TransitionFilter.None && 0 < (mask & UIEffectTweener.CullingMask.Transition))
             {
                 transitionRate = rate;
+            }
+
+            if (gradationMode != GradationMode.None && 0 < (mask & UIEffectTweener.CullingMask.Gradiation))
+            {
+                gradationOffset = Mathf.Lerp(-1f, 1f, rate);
             }
         }
 
@@ -851,6 +945,13 @@ namespace Coffee.UIEffects
             m_ShadowColorFilter = c.shadowColorFilter;
             m_ShadowColor = c.shadowColor;
             m_ShadowColorGlow = c.shadowColorGlow;
+
+            m_GradationMode = c.gradationMode;
+            m_GradationColor1 = c.gradationColor1;
+            m_GradationColor2 = c.gradationColor2;
+            m_GradationGradient = c.gradationGradient;
+            m_GradationOffset = c.gradationOffset;
+            m_GradationScale = c.gradationScale;
 
             m_AllowExtendVertex = c.allowExtendVertex;
 

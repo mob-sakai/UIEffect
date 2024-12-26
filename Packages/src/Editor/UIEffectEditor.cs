@@ -60,6 +60,13 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _shadowColor;
         private SerializedProperty _shadowColorGlow;
 
+        private SerializedProperty _gradationMode;
+        private SerializedProperty _gradationColor1;
+        private SerializedProperty _gradationColor2;
+        private SerializedProperty _gradationGradient;
+        private SerializedProperty _gradationOffset;
+        private SerializedProperty _gradationScale;
+
         private bool _expandOthers;
         private SerializedProperty _allowExtendVertex;
 
@@ -114,6 +121,13 @@ namespace Coffee.UIEffects.Editors
             _shadowColorFilter = serializedObject.FindProperty("m_ShadowColorFilter");
             _shadowColor = serializedObject.FindProperty("m_ShadowColor");
             _shadowColorGlow = serializedObject.FindProperty("m_ShadowColorGlow");
+
+            _gradationMode = serializedObject.FindProperty("m_GradationMode");
+            _gradationColor1 = serializedObject.FindProperty("m_GradationColor1");
+            _gradationColor2 = serializedObject.FindProperty("m_GradationColor2");
+            _gradationGradient = serializedObject.FindProperty("m_GradationGradient");
+            _gradationOffset = serializedObject.FindProperty("m_GradationOffset");
+            _gradationScale = serializedObject.FindProperty("m_GradationScale");
 
             _allowExtendVertex = serializedObject.FindProperty("m_AllowExtendVertex");
         }
@@ -257,6 +271,28 @@ namespace Coffee.UIEffects.Editors
                         break;
                 }
 
+                EditorGUI.indentLevel--;
+            }
+
+            // Gradient
+            DrawSeparator();
+            if (DrawHeaderPopup(_gradationMode))
+            {
+                EditorGUI.indentLevel++;
+                switch ((GradationMode)_gradationMode.intValue)
+                {
+                    case GradationMode.HorizontalGradient:
+                    case GradationMode.VerticalGradient:
+                        EditorGUILayout.PropertyField(_gradationGradient);
+                        break;
+                    default:
+                        EditorGUILayout.PropertyField(_gradationColor1);
+                        EditorGUILayout.PropertyField(_gradationColor2);
+                        break;
+                }
+
+                EditorGUILayout.PropertyField(_gradationOffset);
+                EditorGUILayout.PropertyField(_gradationScale);
                 EditorGUI.indentLevel--;
             }
 

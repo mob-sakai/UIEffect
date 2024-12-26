@@ -76,6 +76,19 @@ namespace Coffee.UIEffects
         Mirror
     }
 
+    public enum GradationMode
+    {
+        None = 0,
+        Horizontal,
+        HorizontalGradient,
+        Vertical,
+        VerticalGradient,
+        RadialFast,
+        RadialDetail,
+        DiagonalToRightBottom,
+        DiagonalToLeftBottom
+    }
+
     internal static class BlendTypeConverter
     {
         public static (BlendMode, BlendMode) Convert(this (BlendType type, BlendMode src, BlendMode dst) self)

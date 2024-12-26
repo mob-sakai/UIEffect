@@ -175,6 +175,15 @@ namespace Coffee.UIEffects
         public Color shadowColor;
         public bool shadowColorGlow;
 
+        public GradationMode gradationMode;
+        public Color gradationColor1;
+        public Color gradationColor2;
+        public Gradient gradationGradient;
+        public float gradationOffset;
+        public float gradationScale;
+        private List<float> _keyTimes;
+        private List<float> _splitTimes;
+
         public bool allowExtendVertex;
 
 
@@ -188,6 +197,7 @@ namespace Coffee.UIEffects
 
         public void Reset()
         {
+            InternalListPool<float>.Return(ref _keyTimes);
             CopyFrom(s_DefaultContext);
         }
 
@@ -237,7 +247,19 @@ namespace Coffee.UIEffects
             shadowColor = preset.shadowColor;
             shadowColorGlow = preset.shadowColorGlow;
 
+            gradationMode = preset.gradationMode;
+            gradationColor1 = preset.gradationColor1;
+            gradationColor2 = preset.gradationColor2;
+            gradationGradient = preset.gradationGradient;
+            gradationOffset = preset.gradationOffset;
+            gradationScale = preset.gradationScale;
+
             allowExtendVertex = preset.allowExtendVertex;
+        }
+
+        public void SetGradationDirty()
+        {
+            InternalListPool<float>.Return(ref _keyTimes);
         }
 
         public void ApplyToMaterial(Material material, float actualSamplingScale = 1f)
@@ -353,6 +375,7 @@ namespace Coffee.UIEffects
             // Get the rectangle to calculate the normalized position.
             vh.GetUIVertexStream(verts);
             var bundleSize = isText ? 6 : count;
+            var rectMatrix = Matrix4x4.identity;
             var rot = Matrix4x4.Rotate(Quaternion.Euler(0, 0, transitionRotation));
             var v1 = rot.MultiplyPoint3x4(new Vector3(1, 1, 0));
             var multiplier = Mathf.Max(Mathf.Abs(v1.x), Mathf.Abs(v1.y));
@@ -361,9 +384,10 @@ namespace Coffee.UIEffects
             if (transitionRoot)
             {
                 rect = transitionRoot.rect;
+                rectMatrix = transitionRoot.worldToLocalMatrix
+                             * graphic.transform.localToWorldMatrix;
                 rot *= Matrix4x4.Scale(new Vector3(1 / multiplier, 1 / multiplier, 1))
-                       * transitionRoot.worldToLocalMatrix
-                       * graphic.rectTransform.localToWorldMatrix;
+                       * rectMatrix;
             }
             else
             {
@@ -401,11 +425,72 @@ namespace Coffee.UIEffects
                 }
             }
 
+            // Apply gradation.
+            ApplyGradation(verts, transitionRoot.rect, rectMatrix);
+
             // Apply shadow.
             ApplyShadow(transitionRoot, verts);
 
             vh.Clear();
             vh.AddUIVertexTriangleStream(verts);
+        }
+
+        private void ApplyGradation(List<UIVertex> verts, Rect rect, Matrix4x4 m)
+        {
+            var a = gradationColor1;
+            var b = gradationColor2;
+            var offset = gradationOffset;
+            var scale = gradationScale;
+            var grad = gradationGradient;
+            switch (gradationMode)
+            {
+                case GradationMode.Horizontal:
+                    GradientUtil.DoHorizontalGradient(verts, a, b, offset, scale, rect, m);
+                    break;
+                case GradationMode.Vertical:
+                    GradientUtil.DoVerticalGradient(verts, a, b, offset, scale, rect, m);
+                    break;
+                case GradationMode.DiagonalToRightBottom:
+                    GradientUtil.DoDiagonalGradientToRightBottom(verts, a, b, offset, scale, rect, m);
+                    break;
+                case GradationMode.DiagonalToLeftBottom:
+                    GradientUtil.DoDiagonalGradientToLeftBottom(verts, a, b, offset, scale, rect, m);
+                    break;
+                case GradationMode.RadialFast:
+                    GradientUtil.DoRadialGradient(verts, a, b, offset, scale, rect, m, 4);
+                    break;
+                case GradationMode.RadialDetail:
+                    GradientUtil.DoRadialGradient(verts, a, b, offset, scale, rect, m, 12);
+                    break;
+                case GradationMode.HorizontalGradient:
+                {
+                    if (_keyTimes == null)
+                    {
+                        _keyTimes = InternalListPool<float>.Rent();
+                        GradientUtil.GetKeyTimes(grad, _keyTimes);
+                    }
+
+                    var splitTimes = InternalListPool<float>.Rent();
+                    GradientUtil.SplitKeyTimes(_keyTimes, splitTimes, offset, scale);
+                    GradientUtil.DoHorizontalGradient(verts, grad, splitTimes, offset, scale, rect, m);
+                    InternalListPool<float>.Return(ref splitTimes);
+                    break;
+                }
+                case GradationMode.VerticalGradient:
+                {
+                    if (_keyTimes == null)
+                    {
+                        _keyTimes = InternalListPool<float>.Rent();
+                        GradientUtil.GetKeyTimes(grad, _keyTimes);
+                    }
+
+                    var splitTimes = InternalListPool<float>.Rent();
+                    GradientUtil.SplitKeyTimes(_keyTimes, splitTimes, offset, scale);
+                    GradientUtil.DoVerticalGradient(verts, grad, splitTimes, offset, scale, rect, m);
+                    InternalListPool<float>.Return(ref splitTimes);
+                    break;
+                }
+            }
         }
 
         private void ApplyShadow(RectTransform transitionRoot, List<UIVertex> verts)
