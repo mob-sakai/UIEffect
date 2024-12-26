@@ -18,6 +18,7 @@ namespace Coffee.UIEffects
         private static readonly int s_ToneParams = Shader.PropertyToID("_ToneParams");
         private static readonly int s_ColorValue = Shader.PropertyToID("_ColorValue");
         private static readonly int s_ColorIntensity = Shader.PropertyToID("_ColorIntensity");
+        private static readonly int s_ColorGlow = Shader.PropertyToID("_ColorGlow");
         private static readonly int s_SamplingIntensity = Shader.PropertyToID("_SamplingIntensity");
         private static readonly int s_SamplingScale = Shader.PropertyToID("_SamplingScale");
         private static readonly int s_TransitionRate = Shader.PropertyToID("_TransitionRate");
@@ -28,11 +29,13 @@ namespace Coffee.UIEffects
         private static readonly int s_TransitionSoftness = Shader.PropertyToID("_TransitionSoftness");
         private static readonly int s_TransitionColorFilter = Shader.PropertyToID("_TransitionColorFilter");
         private static readonly int s_TransitionColor = Shader.PropertyToID("_TransitionColor");
+        private static readonly int s_TransitionColorGlow = Shader.PropertyToID("_TransitionColorGlow");
         private static readonly int s_TargetColor = Shader.PropertyToID("_TargetColor");
         private static readonly int s_TargetRange = Shader.PropertyToID("_TargetRange");
         private static readonly int s_TargetSoftness = Shader.PropertyToID("_TargetSoftness");
         private static readonly int s_ShadowColor = Shader.PropertyToID("_ShadowColor");
         private static readonly int s_ShadowBlurIntensity = Shader.PropertyToID("_ShadowBlurIntensity");
+        private static readonly int s_ShadowColorGlow = Shader.PropertyToID("_ShadowColorGlow");
 
         private static readonly string[] s_ToneKeywords =
         {
@@ -135,6 +138,7 @@ namespace Coffee.UIEffects
         public ColorFilter colorFilter = ColorFilter.None;
         public float colorIntensity = 1;
         public Color color = Color.white;
+        public bool colorGlow;
 
         public SamplingFilter samplingFilter = SamplingFilter.None;
         public float samplingIntensity = 0.5f;
@@ -151,6 +155,7 @@ namespace Coffee.UIEffects
         public float transitionSoftness = 0.2f;
         public ColorFilter transitionColorFilter = ColorFilter.MultiplyAdditive;
         public Color transitionColor = new Color(0f, 0.5f, 1.0f, 1.0f);
+        public bool transitionColorGlow;
 
         public TargetMode targetMode = TargetMode.None;
         public Color targetColor = Color.white;
@@ -168,6 +173,7 @@ namespace Coffee.UIEffects
         public float shadowBlurIntensity;
         public ColorFilter shadowColorFilter;
         public Color shadowColor;
+        public bool shadowColorGlow;
 
         public bool allowExtendVertex;
 
@@ -194,6 +200,7 @@ namespace Coffee.UIEffects
             colorFilter = preset.colorFilter;
             color = preset.color;
             colorIntensity = preset.colorIntensity;
+            colorGlow = preset.colorGlow;
 
             samplingFilter = preset.samplingFilter;
             samplingIntensity = preset.samplingIntensity;
@@ -210,6 +217,7 @@ namespace Coffee.UIEffects
             transitionSoftness = preset.transitionSoftness;
             transitionColor = preset.transitionColor;
             transitionColorFilter = preset.transitionColorFilter;
+            transitionColorGlow = preset.transitionColorGlow;
 
             targetMode = preset.targetMode;
             targetColor = preset.targetColor;
@@ -227,6 +235,7 @@ namespace Coffee.UIEffects
             shadowBlurIntensity = preset.shadowBlurIntensity;
             shadowColorFilter = preset.shadowColorFilter;
             shadowColor = preset.shadowColor;
+            shadowColorGlow = preset.shadowColorGlow;
 
             allowExtendVertex = preset.allowExtendVertex;
         }
@@ -245,6 +254,7 @@ namespace Coffee.UIEffects
 
             material.SetColor(s_ColorValue, color);
             material.SetFloat(s_ColorIntensity, Mathf.Clamp01(colorIntensity));
+            material.SetInt(s_ColorGlow, colorGlow ? 1 : 0);
 
             material.SetFloat(s_SamplingIntensity, Mathf.Clamp01(samplingIntensity));
             material.SetFloat(s_SamplingScale, actualSamplingScale);
@@ -259,6 +269,7 @@ namespace Coffee.UIEffects
             material.SetFloat(s_TransitionSoftness, Mathf.Clamp01(transitionSoftness));
             material.SetInt(s_TransitionColorFilter, (int)transitionColorFilter);
             material.SetColor(s_TransitionColor, transitionColor);
+            material.SetInt(s_TransitionColorGlow, transitionColorGlow ? 1 : 0);
 
             material.SetColor(s_TargetColor, targetColor);
             material.SetFloat(s_TargetRange, Mathf.Clamp01(targetRange));
@@ -277,6 +288,7 @@ namespace Coffee.UIEffects
             }
 
             material.SetColor(s_ShadowColor, shadowColor);
+            material.SetInt(s_ShadowColorGlow, shadowColorGlow ? 1 : 0);
 
             SetKeyword(material, s_ToneKeywords, (int)toneFilter);
             SetKeyword(material, s_ColorKeywords, (int)colorFilter);

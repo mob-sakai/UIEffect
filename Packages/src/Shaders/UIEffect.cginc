@@ -5,6 +5,7 @@ uniform float4 _MainTex_TexelSize;
 uniform float _ToneIntensity;
 uniform half4 _ColorValue;
 uniform float _ColorIntensity;
+uniform int _ColorGlow;
 uniform float _SamplingIntensity;
 uniform float _SamplingScale;
 uniform sampler2D _TransitionTex;
@@ -12,6 +13,7 @@ uniform float4 _TransitionTex_ST;
 uniform float _TransitionRate;
 uniform int _TransitionReverse;
 uniform half4 _TransitionColor;
+uniform int _TransitionColorGlow;
 uniform float _TransitionSoftness;
 uniform float _TransitionWidth;
 uniform fixed4 _TargetColor;
@@ -19,6 +21,7 @@ uniform float _TargetRange;
 uniform float _TargetSoftness;
 uniform float _ShadowBlurIntensity;
 uniform half4 _ShadowColor;
+uniform int _ShadowColorGlow;
 
 // For performance reasons, limit the sampling of blur in TextMeshPro.
 #ifdef UIEFFECT_TEXTMESHPRO
@@ -180,6 +183,7 @@ half4 apply_color_filter(half4 color, const half4 factor, const float intensity)
     }
     #endif
     color = lerp(inColor, color, intensity);
+    color.a *= 1 - _ColorGlow;
     return color;
 }
 
@@ -227,6 +231,7 @@ half4 apply_transition_color_filter(half4 color, const half4 factor, const float
     }
     #endif
     color = lerp(inColor, color, intensity);
+    color.a *= 1 - _TransitionColorGlow;
     return color;
 }
 
@@ -278,6 +283,7 @@ half4 apply_shadow_color_filter(half4 color, const half4 factor, const float int
     }
     #endif
     color = lerp(inColor, color, intensity);
+    color.a *= 1 - _ShadowColorGlow;
     return color;
 }
 

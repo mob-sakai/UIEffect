@@ -19,6 +19,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _colorFilter;
         private SerializedProperty _color;
         private SerializedProperty _colorIntensity;
+        private SerializedProperty _colorGlow;
 
         private SerializedProperty _samplingFilter;
         private SerializedProperty _samplingIntensity;
@@ -36,6 +37,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _transitionSoftness;
         private SerializedProperty _transitionColorFilter;
         private SerializedProperty _transitionColor;
+        private SerializedProperty _transitionColorGlow;
 
         private SerializedProperty _targetMode;
         private SerializedProperty _targetColor;
@@ -56,6 +58,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _shadowBlurIntensity;
         private SerializedProperty _shadowColorFilter;
         private SerializedProperty _shadowColor;
+        private SerializedProperty _shadowColorGlow;
 
         private bool _expandOthers;
         private SerializedProperty _allowExtendVertex;
@@ -71,6 +74,7 @@ namespace Coffee.UIEffects.Editors
             _colorFilter = serializedObject.FindProperty("m_ColorFilter");
             _color = serializedObject.FindProperty("m_Color");
             _colorIntensity = serializedObject.FindProperty("m_ColorIntensity");
+            _colorGlow = serializedObject.FindProperty("m_ColorGlow");
 
             _samplingFilter = serializedObject.FindProperty("m_SamplingFilter");
             _samplingIntensity = serializedObject.FindProperty("m_SamplingIntensity");
@@ -88,6 +92,7 @@ namespace Coffee.UIEffects.Editors
             _transitionSoftness = serializedObject.FindProperty("m_TransitionSoftness");
             _transitionColorFilter = serializedObject.FindProperty("m_TransitionColorFilter");
             _transitionColor = serializedObject.FindProperty("m_TransitionColor");
+            _transitionColorGlow = serializedObject.FindProperty("m_TransitionColorGlow");
 
             _targetMode = serializedObject.FindProperty("m_TargetMode");
             _targetColor = serializedObject.FindProperty("m_TargetColor");
@@ -108,6 +113,7 @@ namespace Coffee.UIEffects.Editors
             _shadowBlurIntensity = serializedObject.FindProperty("m_ShadowBlurIntensity");
             _shadowColorFilter = serializedObject.FindProperty("m_ShadowColorFilter");
             _shadowColor = serializedObject.FindProperty("m_ShadowColor");
+            _shadowColorGlow = serializedObject.FindProperty("m_ShadowColorGlow");
 
             _allowExtendVertex = serializedObject.FindProperty("m_AllowExtendVertex");
         }
@@ -141,6 +147,7 @@ namespace Coffee.UIEffects.Editors
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(_colorIntensity);
                 DrawColor(_colorFilter, _color, prevColorFilter);
+                EditorGUILayout.PropertyField(_colorGlow);
                 EditorGUI.indentLevel--;
             }
 
@@ -179,6 +186,7 @@ namespace Coffee.UIEffects.Editors
                     prevColorFilter = (ColorFilter)_transitionColorFilter.intValue;
                     EditorGUILayout.PropertyField(_transitionColorFilter);
                     DrawColor(_transitionColorFilter, _transitionColor, prevColorFilter);
+                    EditorGUILayout.PropertyField(_transitionColorGlow);
                 }
 
                 EditorGUI.indentLevel--;
@@ -237,6 +245,7 @@ namespace Coffee.UIEffects.Editors
 
                 EditorGUILayout.PropertyField(_shadowColorFilter);
                 EditorGUILayout.PropertyField(_shadowColor);
+                EditorGUILayout.PropertyField(_shadowColorGlow);
                 EditorGUILayout.PropertyField(_shadowFade);
 
                 switch ((SamplingFilter)_samplingFilter.intValue)

@@ -31,6 +31,9 @@ namespace Coffee.UIEffects
         protected Color m_Color = Color.white;
 
         [SerializeField]
+        protected bool m_ColorGlow = false;
+
+        [SerializeField]
         protected SamplingFilter m_SamplingFilter = SamplingFilter.None;
 
         [Range(0, 1)]
@@ -81,6 +84,9 @@ namespace Coffee.UIEffects
         [ColorUsage(true, true)]
         [SerializeField]
         protected Color m_TransitionColor = new Color(0f, 0.5f, 1.0f, 1.0f);
+
+        [SerializeField]
+        protected bool m_TransitionColorGlow = false;
 
         [SerializeField]
         protected TargetMode m_TargetMode = TargetMode.None;
@@ -134,6 +140,9 @@ namespace Coffee.UIEffects
         [ColorUsage(false, true)]
         [SerializeField]
         protected Color m_ShadowColor = Color.white;
+
+        [SerializeField]
+        protected bool m_ShadowColorGlow = false;
 
         [SerializeField]
         protected bool m_AllowExtendVertex = true;
@@ -192,6 +201,17 @@ namespace Coffee.UIEffects
                 m_Color.a = 1;
                 if (m_Color == value) return;
                 context.color = m_Color = value;
+                ApplyContextToMaterial();
+            }
+        }
+
+        public bool colorGlow
+        {
+            get => m_ColorGlow;
+            set
+            {
+                if (m_ColorGlow == value) return;
+                context.colorGlow = m_ColorGlow = value;
                 ApplyContextToMaterial();
             }
         }
@@ -368,6 +388,17 @@ namespace Coffee.UIEffects
             {
                 if (m_TransitionColor == value) return;
                 context.transitionColor = m_TransitionColor = value;
+                ApplyContextToMaterial();
+            }
+        }
+
+        public bool transitionColorGlow
+        {
+            get => m_TransitionColorGlow;
+            set
+            {
+                if (m_TransitionColorGlow == value) return;
+                context.transitionColorGlow = m_TransitionColorGlow = value;
                 ApplyContextToMaterial();
             }
         }
@@ -555,6 +586,17 @@ namespace Coffee.UIEffects
             }
         }
 
+        public bool shadowGlow
+        {
+            get => m_ShadowColorGlow;
+            set
+            {
+                if (m_ShadowColorGlow == value) return;
+                context.shadowColorGlow = m_ShadowColorGlow = value;
+                ApplyContextToMaterial();
+            }
+        }
+
         public bool allowExtendVertex
         {
             get => m_AllowExtendVertex;
@@ -623,6 +665,7 @@ namespace Coffee.UIEffects
             c.colorFilter = m_ColorFilter;
             c.color = m_Color;
             c.colorIntensity = m_ColorIntensity;
+            c.colorGlow = m_ColorGlow;
             c.samplingFilter = m_SamplingFilter;
             c.samplingIntensity = m_SamplingIntensity;
             c.transitionFilter = m_TransitionFilter;
@@ -637,6 +680,7 @@ namespace Coffee.UIEffects
             c.transitionSoftness = m_TransitionSoftness;
             c.transitionColorFilter = m_TransitionColorFilter;
             c.transitionColor = m_TransitionColor;
+            c.transitionColorGlow = m_TransitionColorGlow;
             c.targetMode = m_TargetMode;
             c.targetColor = m_TargetColor;
             c.targetRange = m_TargetRange;
@@ -651,6 +695,7 @@ namespace Coffee.UIEffects
             c.shadowBlurIntensity = m_ShadowBlurIntensity;
             c.shadowColorFilter = m_ShadowColorFilter;
             c.shadowColor = m_ShadowColor;
+            c.shadowColorGlow = m_ShadowColorGlow;
             c.allowExtendVertex = m_AllowExtendVertex;
         }
 
@@ -716,6 +761,7 @@ namespace Coffee.UIEffects
             m_ColorFilter = preset.m_ColorFilter;
             m_Color = preset.m_Color;
             m_ColorIntensity = preset.m_ColorIntensity;
+            m_ColorGlow = preset.m_ColorGlow;
 
             m_SamplingFilter = preset.m_SamplingFilter;
             m_SamplingIntensity = preset.m_SamplingIntensity;
@@ -733,6 +779,7 @@ namespace Coffee.UIEffects
             m_TransitionSoftness = preset.m_TransitionSoftness;
             m_TransitionColorFilter = preset.m_TransitionColorFilter;
             m_TransitionColor = preset.m_TransitionColor;
+            m_TransitionColorGlow = preset.m_TransitionColorGlow;
 
             m_TargetMode = preset.m_TargetMode;
             m_TargetColor = preset.m_TargetColor;
@@ -750,6 +797,7 @@ namespace Coffee.UIEffects
             m_ShadowBlurIntensity = preset.m_ShadowBlurIntensity;
             m_ShadowColorFilter = preset.m_ShadowColorFilter;
             m_ShadowColor = preset.m_ShadowColor;
+            m_ShadowColorGlow = preset.m_ShadowColorGlow;
 
             UpdateContext(context);
             ApplyContextToMaterial();
@@ -766,6 +814,7 @@ namespace Coffee.UIEffects
             m_ColorFilter = c.colorFilter;
             m_Color = c.color;
             m_ColorIntensity = c.colorIntensity;
+            m_ColorGlow = c.colorGlow;
 
             m_SamplingFilter = c.samplingFilter;
             m_SamplingIntensity = c.samplingIntensity;
@@ -782,6 +831,7 @@ namespace Coffee.UIEffects
             m_TransitionSoftness = c.transitionSoftness;
             m_TransitionColorFilter = c.transitionColorFilter;
             m_TransitionColor = c.transitionColor;
+            m_TransitionColorGlow = c.transitionColorGlow;
 
             m_TargetMode = c.targetMode;
             m_TargetColor = c.targetColor;
@@ -800,6 +850,7 @@ namespace Coffee.UIEffects
             m_ShadowBlurIntensity = c.shadowBlurIntensity;
             m_ShadowColorFilter = c.shadowColorFilter;
             m_ShadowColor = c.shadowColor;
+            m_ShadowColorGlow = c.shadowColorGlow;
 
             m_AllowExtendVertex = c.allowExtendVertex;
 
