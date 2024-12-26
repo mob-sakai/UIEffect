@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,24 +6,45 @@ namespace Coffee.UIEffects
 {
     public static class ShadowUtil
     {
-        public static void DoShadow(ShadowMode mode, List<UIVertex> verts, Vector2 distance, int iteration, float fade)
+        public static Func<UIVertex, UIVertex> onMarkAsShadow;
+
+        public static void DoShadow(List<UIVertex> verts, Vector2[] vectors, Vector2 distance, int iteration,
+            float fade)
         {
+            UIVertexUtil.ExpandCapacity(verts, 1 + vectors.Length);
             distance = new Vector2(Mathf.Clamp(distance.x, -600, 600), Mathf.Clamp(distance.y, -600, 600));
             var count = verts.Count;
             var start = 0;
             var end = count;
             var d = Vector2.zero;
-            var a = 1f;
+            var a = fade;
             for (var i = 0; i < iteration; i++)
             {
                 d += distance / (i + 1);
-                a *= fade;
-                ApplyShadow(verts, ref start, ref end, d, mode, a);
+                a *= 0.75f;
+                ApplyShadow(verts, vectors, ref start, ref end, d, a);
+            }
+
+            // Mark as shadow vertices.
+            for (var i = 0; i < verts.Count - count; i++)
+            {
+                if (onMarkAsShadow != null)
+                {
+                    verts[i] = onMarkAsShadow(verts[i]);
+                }
+                else
+                {
+                    var vt = verts[i];
+                    vt.uv0.z -= 8;
+                    vt.uv0.w -= 8;
+                    verts[i] = vt;
+                }
             }
         }
 
         public static void DoMirror(List<UIVertex> verts, Vector2 distance, float scale, float fade, RectTransform root)
         {
+            UIVertexUtil.ExpandCapacity(verts, 2);
             distance = new Vector2(Mathf.Clamp(distance.x, -600, 600), Mathf.Clamp(distance.y, -600, 600));
             var count = verts.Count;
             var rect2 = root.rect;
@@ -61,23 +83,14 @@ namespace Coffee.UIEffects
                 if (lbRate < rate && rate < ltRate)
                 {
                     var t = (rate - lbRate) / (ltRate - lbRate);
-                    lt.position = Vector3.Lerp(lb.position, lt.position, t);
-                    lt.uv0 = Vector4.Lerp(lb.uv0, lt.uv0, t);
-                    lt.uv1 = Vector4.Lerp(lb.uv1, lt.uv1, t);
-                    lt.uv2 = Vector4.Lerp(lb.uv2, lt.uv2, t);
-                    lt.color = Color.Lerp(lb.color, lt.color, t);
+                    lt = UIVertexUtil.VertexLerp(lb, lt, t);
                 }
 
                 if (rbRate < rate && rate < rtRate)
                 {
                     var t = (rate - rbRate) / (rtRate - rbRate);
-                    rt.position = Vector3.Lerp(rb.position, rt.position, t);
-                    rt.uv0 = Vector4.Lerp(rb.uv0, rt.uv0, t);
-                    rt.uv1 = Vector4.Lerp(rb.uv1, rt.uv1, t);
-                    rt.uv2 = Vector4.Lerp(rb.uv2, rt.uv2, t);
-                    rt.color = Color.Lerp(rb.color, rt.color, t);
+                    rt = UIVertexUtil.VertexLerp(rb, rt, t);
                 }
-
 
                 lb.position.y = -lb.position.y * scale + offset;
                 lt.position.y = -lt.position.y * scale + offset;
@@ -95,39 +108,16 @@ namespace Coffee.UIEffects
         /// Append shadow vertices.
         /// * It is similar to Shadow component implementation.
         /// </summary>
-        private static void ApplyShadow(List<UIVertex> verts, ref int start, ref int end, Vector2 distance,
-            ShadowMode mode, float alpha)
+        private static void ApplyShadow(List<UIVertex> verts, Vector2[] vectors, ref int start, ref int end,
+            Vector2 distance, float alpha)
         {
-            if (mode == ShadowMode.None) return;
-
             var x = distance.x;
             var y = distance.y;
-            switch (mode)
+            for (var i = 0; i < vectors.Length; i++)
             {
-                case ShadowMode.Shadow:
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, x, y, alpha);
-                    break;
-                case ShadowMode.Shadow3:
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, x, y, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, x, 0, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, 0, y, alpha);
-                    break;
-                case ShadowMode.Outline:
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, x, y, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, x, -y, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, -x, y, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, -x, -y, alpha);
-                    break;
-                case ShadowMode.Outline8:
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, x, y, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, x, -y, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, -x, y, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, -x, -y, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, x, 0, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, 0, y, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, -x, 0, alpha);
-                    ApplyShadowZeroAlloc(verts, ref start, ref end, 0, -y, alpha);
-                    break;
+                var dx = x * vectors[i].x;
+                var dy = y * vectors[i].y;
+                ApplyShadowZeroAlloc(verts, ref start, ref end, dx, dy, alpha);
             }
         }
 

@@ -120,12 +120,20 @@ namespace Coffee.UIEffects
         [SerializeField]
         protected float m_ShadowFade = 0.9f;
 
-        [SerializeField]
-        protected bool m_ShadowEffectOnOrigin = false;
-
         [Range(0, 2)]
         [SerializeField]
         protected float m_ShadowMirrorScale = 0.5f;
+
+        [Range(0, 1)]
+        [SerializeField]
+        protected float m_ShadowBlurIntensity = 1;
+
+        [SerializeField]
+        protected ColorFilter m_ShadowColorFilter = ColorFilter.Replace;
+
+        [ColorUsage(false, true)]
+        [SerializeField]
+        protected Color m_ShadowColor = Color.white;
 
         [SerializeField]
         protected bool m_AllowExtendVertex = true;
@@ -501,17 +509,6 @@ namespace Coffee.UIEffects
             }
         }
 
-        public bool shadowEffectOnOrigin
-        {
-            get => m_ShadowEffectOnOrigin;
-            set
-            {
-                if (m_ShadowEffectOnOrigin == value) return;
-                m_ShadowEffectOnOrigin = value;
-                SetVerticesDirty();
-            }
-        }
-
         public float shadowMirrorScale
         {
             get => m_ShadowMirrorScale;
@@ -521,6 +518,40 @@ namespace Coffee.UIEffects
                 if (Mathf.Approximately(m_ShadowMirrorScale, value)) return;
                 context.shadowMirrorScale = m_ShadowMirrorScale = value;
                 SetVerticesDirty();
+            }
+        }
+
+        public float shadowBlurIntensity
+        {
+            get => m_ShadowBlurIntensity;
+            set
+            {
+                value = Mathf.Clamp(value, 0, 1);
+                if (Mathf.Approximately(m_ShadowBlurIntensity, value)) return;
+                context.shadowBlurIntensity = m_ShadowBlurIntensity = value;
+                ApplyContextToMaterial();
+            }
+        }
+
+        public ColorFilter shadowColorFilter
+        {
+            get => m_ShadowColorFilter;
+            set
+            {
+                if (m_ShadowColorFilter == value) return;
+                context.shadowColorFilter = m_ShadowColorFilter = value;
+                ApplyContextToMaterial();
+            }
+        }
+
+        public Color shadowColor
+        {
+            get => m_ShadowColor;
+            set
+            {
+                if (m_ShadowColor == value) return;
+                context.shadowColor = m_ShadowColor = value;
+                ApplyContextToMaterial();
             }
         }
 
@@ -616,8 +647,10 @@ namespace Coffee.UIEffects
             c.shadowDistance = m_ShadowDistance;
             c.shadowIteration = m_ShadowIteration;
             c.shadowFade = m_ShadowFade;
-            c.shadowEffectOnOrigin = m_ShadowEffectOnOrigin;
             c.shadowMirrorScale = m_ShadowMirrorScale;
+            c.shadowBlurIntensity = m_ShadowBlurIntensity;
+            c.shadowColorFilter = m_ShadowColorFilter;
+            c.shadowColor = m_ShadowColor;
             c.allowExtendVertex = m_AllowExtendVertex;
         }
 
@@ -713,8 +746,10 @@ namespace Coffee.UIEffects
             m_ShadowDistance = preset.m_ShadowDistance;
             m_ShadowIteration = preset.m_ShadowIteration;
             m_ShadowFade = preset.m_ShadowFade;
-            m_ShadowEffectOnOrigin = preset.m_ShadowEffectOnOrigin;
             m_ShadowMirrorScale = preset.m_ShadowMirrorScale;
+            m_ShadowBlurIntensity = preset.m_ShadowBlurIntensity;
+            m_ShadowColorFilter = preset.m_ShadowColorFilter;
+            m_ShadowColor = preset.m_ShadowColor;
 
             UpdateContext(context);
             ApplyContextToMaterial();
@@ -761,8 +796,10 @@ namespace Coffee.UIEffects
             m_ShadowDistance = c.shadowDistance;
             m_ShadowIteration = c.shadowIteration;
             m_ShadowFade = c.shadowFade;
-            m_ShadowEffectOnOrigin = c.shadowEffectOnOrigin;
             m_ShadowMirrorScale = c.shadowMirrorScale;
+            m_ShadowBlurIntensity = c.shadowBlurIntensity;
+            m_ShadowColorFilter = c.shadowColorFilter;
+            m_ShadowColor = c.shadowColor;
 
             m_AllowExtendVertex = c.allowExtendVertex;
 

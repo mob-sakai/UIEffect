@@ -52,8 +52,10 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _shadowDistanceY;
         private SerializedProperty _shadowIteration;
         private SerializedProperty _shadowFade;
-        private SerializedProperty _shadowEffectOnOrigin;
         private SerializedProperty _shadowMirrorScale;
+        private SerializedProperty _shadowBlurIntensity;
+        private SerializedProperty _shadowColorFilter;
+        private SerializedProperty _shadowColor;
 
         private bool _expandOthers;
         private SerializedProperty _allowExtendVertex;
@@ -102,8 +104,10 @@ namespace Coffee.UIEffects.Editors
             _shadowDistanceY = _shadowDistance.FindPropertyRelative("y");
             _shadowIteration = serializedObject.FindProperty("m_ShadowIteration");
             _shadowFade = serializedObject.FindProperty("m_ShadowFade");
-            _shadowEffectOnOrigin = serializedObject.FindProperty("m_ShadowEffectOnOrigin");
             _shadowMirrorScale = serializedObject.FindProperty("m_ShadowMirrorScale");
+            _shadowBlurIntensity = serializedObject.FindProperty("m_ShadowBlurIntensity");
+            _shadowColorFilter = serializedObject.FindProperty("m_ShadowColorFilter");
+            _shadowColor = serializedObject.FindProperty("m_ShadowColor");
 
             _allowExtendVertex = serializedObject.FindProperty("m_AllowExtendVertex");
         }
@@ -231,8 +235,19 @@ namespace Coffee.UIEffects.Editors
                     EditorGUILayout.PropertyField(_shadowIteration);
                 }
 
+                EditorGUILayout.PropertyField(_shadowColorFilter);
+                EditorGUILayout.PropertyField(_shadowColor);
                 EditorGUILayout.PropertyField(_shadowFade);
-                EditorGUILayout.PropertyField(_shadowEffectOnOrigin);
+
+                switch ((SamplingFilter)_samplingFilter.intValue)
+                {
+                    case SamplingFilter.BlurFast:
+                    case SamplingFilter.BlurMedium:
+                    case SamplingFilter.BlurDetail:
+                        EditorGUILayout.PropertyField(_shadowBlurIntensity);
+                        break;
+                }
+
                 EditorGUI.indentLevel--;
             }
 

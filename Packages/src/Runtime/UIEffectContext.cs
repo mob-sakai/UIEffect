@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Coffee.UIEffectInternal;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
-#if TMP_ENABLE
-using TMPro;
-#endif
 
 namespace Coffee.UIEffects
 {
@@ -32,6 +31,8 @@ namespace Coffee.UIEffects
         private static readonly int s_TargetColor = Shader.PropertyToID("_TargetColor");
         private static readonly int s_TargetRange = Shader.PropertyToID("_TargetRange");
         private static readonly int s_TargetSoftness = Shader.PropertyToID("_TargetSoftness");
+        private static readonly int s_ShadowColor = Shader.PropertyToID("_ShadowColor");
+        private static readonly int s_ShadowBlurIntensity = Shader.PropertyToID("_ShadowBlurIntensity");
 
         private static readonly string[] s_ToneKeywords =
         {
@@ -100,6 +101,33 @@ namespace Coffee.UIEffects
             "TARGET_LUMINANCE"
         };
 
+        private static readonly string[] s_ShadowColorKeywords =
+        {
+            "",
+            "SHADOW_COLOR_MULTIPLY",
+            "SHADOW_COLOR_ADDITIVE",
+            "SHADOW_COLOR_SUBTRACTIVE",
+            "SHADOW_COLOR_REPLACE",
+            "SHADOW_COLOR_MULTIPLY_LUMINANCE",
+            "SHADOW_COLOR_MULTIPLY_ADDITIVE",
+            "SHADOW_COLOR_HSV_MODIFIER",
+            "SHADOW_COLOR_CONTRAST"
+        };
+
+        private static readonly Vector2[][] s_ShadowVectors = new[]
+        {
+            Array.Empty<Vector2>(), // None
+            new[] { Vector2.one }, // Shadow
+            new[] { Vector2.one, Vector2.right, Vector2.up }, // Shadow3
+            new[] { Vector2.one, -Vector2.one, new Vector2(1, -1), new Vector2(-1, 1) }, // Outline
+            new[]
+            {
+                Vector2.one, -Vector2.one, new Vector2(1, -1), new Vector2(-1, 1),
+                Vector2.right, Vector2.up, Vector2.left, Vector2.down
+            } // Outline8
+        };
+
+        public static Func<UIVertex, Rect, float, float, UIVertex> onModifyVertex;
         public ToneFilter toneFilter = ToneFilter.None;
         public float toneIntensity = 1;
         public Vector4 toneParams = new Vector4(0, 0, 0, 0);
@@ -136,8 +164,10 @@ namespace Coffee.UIEffects
         public Vector2 shadowDistance = new Vector2(1f, -1f);
         public int shadowIteration = 1;
         public float shadowFade = 0.9f;
-        public bool shadowEffectOnOrigin = false;
         public float shadowMirrorScale = 0.5f;
+        public float shadowBlurIntensity;
+        public ColorFilter shadowColorFilter;
+        public Color shadowColor;
 
         public bool allowExtendVertex;
 
@@ -147,7 +177,8 @@ namespace Coffee.UIEffects
                                           || toneFilter != ToneFilter.None
                                           || colorFilter != ColorFilter.None
                                           || srcBlendMode != BlendMode.One
-                                          || dstBlendMode != BlendMode.OneMinusSrcAlpha;
+                                          || dstBlendMode != BlendMode.OneMinusSrcAlpha
+                                          || shadowMode != ShadowMode.None;
 
         public void Reset()
         {
@@ -192,7 +223,10 @@ namespace Coffee.UIEffects
             shadowDistance = preset.shadowDistance;
             shadowIteration = preset.shadowIteration;
             shadowFade = preset.shadowFade;
-            shadowEffectOnOrigin = preset.shadowEffectOnOrigin;
+            shadowMirrorScale = preset.shadowMirrorScale;
+            shadowBlurIntensity = preset.shadowBlurIntensity;
+            shadowColorFilter = preset.shadowColorFilter;
+            shadowColor = preset.shadowColor;
 
             allowExtendVertex = preset.allowExtendVertex;
         }
@@ -223,12 +257,26 @@ namespace Coffee.UIEffects
                     transitionTexOffset.x, transitionTexOffset.y));
             material.SetFloat(s_TransitionWidth, Mathf.Clamp01(transitionWidth));
             material.SetFloat(s_TransitionSoftness, Mathf.Clamp01(transitionSoftness));
-            material.SetColor(s_TransitionColor, transitionColor);
             material.SetInt(s_TransitionColorFilter, (int)transitionColorFilter);
+            material.SetColor(s_TransitionColor, transitionColor);
 
             material.SetColor(s_TargetColor, targetColor);
             material.SetFloat(s_TargetRange, Mathf.Clamp01(targetRange));
             material.SetFloat(s_TargetSoftness, Mathf.Clamp01(targetSoftness));
+
+            switch (samplingFilter)
+            {
+                case SamplingFilter.BlurFast:
+                case SamplingFilter.BlurMedium:
+                case SamplingFilter.BlurDetail:
+                    material.SetFloat(s_ShadowBlurIntensity, Mathf.Clamp01(shadowBlurIntensity));
+                    break;
+                default:
+                    material.SetFloat(s_ShadowBlurIntensity, Mathf.Clamp01(samplingIntensity));
+                    break;
+            }
+
+            material.SetColor(s_ShadowColor, shadowColor);
 
             SetKeyword(material, s_ToneKeywords, (int)toneFilter);
             SetKeyword(material, s_ColorKeywords, (int)colorFilter);
@@ -247,6 +295,16 @@ namespace Coffee.UIEffects
                 case TransitionFilter.Melt:
                 case TransitionFilter.Burn:
                     SetKeyword(material, s_TransitionColorKeywords, (int)transitionColorFilter);
+                    break;
+            }
+
+            switch (shadowMode)
+            {
+                case ShadowMode.None:
+                    SetKeyword(material, s_ShadowColorKeywords, (int)ColorFilter.None);
+                    break;
+                default:
+                    SetKeyword(material, s_ShadowColorKeywords, (int)shadowColorFilter);
                     break;
             }
 
@@ -272,31 +330,13 @@ namespace Coffee.UIEffects
 
         public void ModifyMesh(Graphic graphic, RectTransform transitionRoot, VertexHelper vh)
         {
-#if TMP_ENABLE
-            var isTextMeshPro = graphic is TextMeshProUGUI || graphic is TMP_SubMeshUI;
-            var isText = isTextMeshPro || graphic is Text;
-
-            // Sprite mode.
-            if (graphic is TMP_SubMeshUI sub && sub.spriteAsset && sub.sharedMaterial == sub.spriteAsset.material)
-            {
-                isTextMeshPro = false;
-            }
-#else
-            var isTextMeshPro = false;
-            var isText = graphic is Text;
-#endif
+            var processor = ContextProcessor.FindProcessor(graphic);
+            var isText = processor.IsText(graphic);
+            processor.OnPreModifyMesh(graphic);
 
             var verts = s_WorkingVertices;
             var expandSize = GetExpandSize();
-            var useExpand = expandSize != Vector2.zero;
-
-            // Update capacity of workingVertices if needed.
             var count = vh.currentIndexCount;
-            var neededCapacity = Mathf.NextPowerOfTwo(count * GetVertexCountMultiply());
-            if (verts.Capacity < neededCapacity)
-            {
-                verts.Capacity = neededCapacity;
-            }
 
             // Get the rectangle to calculate the normalized position.
             vh.GetUIVertexStream(verts);
@@ -339,101 +379,37 @@ namespace Coffee.UIEffects
             for (var i = 0; i < count; i += bundleSize)
             {
                 // min/max for bundled-quad
-                GetBounds(verts, i, bundleSize, out var bounds, out var uvMask);
-
-                // Quad (6 vertices)
-                for (var j = 0; j < bundleSize; j += 6)
+                UIVertexUtil.GetBounds(verts, i, bundleSize, out var bounds, out var uvMask);
+                UIVertexUtil.Expand(verts, i, bundleSize, expandSize, bounds);
+                for (var j = 0; j < bundleSize; j++)
                 {
-                    var size = default(Vector3);
-                    var extendPos = default(Vector3);
-                    var extendUV = default(Vector3);
-                    var posLB = verts[i + j + 1].position;
-                    var posRT = verts[i + j + 4].position;
-                    var willExpand = useExpand
-                                     && (bundleSize == 6 // Text or simple quad
-                                         || !bounds.Contains(posLB) ||
-                                         !bounds.Contains(posRT)); // Outer 9-sliced quad
-                    if (willExpand)
-                    {
-                        var uvLB = verts[i + j + 1].uv0;
-                        var uvRT = verts[i + j + 4].uv0;
-                        var posCenter = (posLB + posRT) / 2;
-                        var uvCenter = (uvLB + uvRT) / 2;
-                        size = posLB - posRT;
-                        size.x = 1 + expandSize.x / Mathf.Abs(size.x);
-                        size.y = 1 + expandSize.y / Mathf.Abs(size.y);
-                        size.z = 1;
-                        extendPos = posCenter - Vector3.Scale(size, posCenter);
-                        extendUV = uvCenter - Vector4.Scale(size, uvCenter);
-                    }
-
-                    // Set vertex position, uv, uvMask and local normalized position.
-                    for (var k = 0; k < 6; k++)
-                    {
-                        var vt = verts[i + j + k];
-                        var pos = vt.position;
-                        var uv0 = vt.uv0;
-
-                        // Expand edge vertex
-                        if (willExpand)
-                        {
-                            if (pos.x < bounds.xMin || bounds.xMax < pos.x)
-                            {
-                                pos.x = pos.x * size.x + extendPos.x;
-                                uv0.x = uv0.x * size.x + extendUV.x;
-                            }
-
-                            if (pos.y < bounds.yMin || bounds.yMax < pos.y)
-                            {
-                                pos.y = pos.y * size.y + extendPos.y;
-                                uv0.y = uv0.y * size.y + extendUV.y;
-                            }
-                        }
-
-                        ModifyVertex(isTextMeshPro, ref vt, pos, uv0, uvMask, rect, rot);
-                        verts[i + j + k] = vt;
-                    }
+                    var vt = verts[i + j];
+                    ModifyVertex(ref vt, vt.position, vt.uv0, uvMask, rect, rot);
+                    verts[i + j] = vt;
                 }
             }
 
             // Apply shadow.
+            ApplyShadow(transitionRoot, verts);
+
+            vh.Clear();
+            vh.AddUIVertexTriangleStream(verts);
+        }
+
+        private void ApplyShadow(RectTransform transitionRoot, List<UIVertex> verts)
+        {
             switch (shadowMode)
             {
                 case ShadowMode.Shadow:
                 case ShadowMode.Shadow3:
                 case ShadowMode.Outline:
                 case ShadowMode.Outline8:
-                    count = verts.Count;
-                    ShadowUtil.DoShadow(shadowMode, verts, shadowDistance, shadowIteration, shadowFade);
-
-                    // Mark as shadow vertices.
-                    for (var i = 0; i < verts.Count - count; i++)
-                    {
-                        var vt = verts[i];
-                        MarkAsShadowVertex(isTextMeshPro, ref vt);
-                        verts[i] = vt;
-                    }
-
+                    ShadowUtil.DoShadow(verts, s_ShadowVectors[(int)shadowMode], shadowDistance, shadowIteration,
+                        shadowFade);
                     break;
                 case ShadowMode.Mirror:
                     ShadowUtil.DoMirror(verts, shadowDistance, shadowMirrorScale, shadowFade, transitionRoot);
                     break;
-            }
-
-            vh.Clear();
-            vh.AddUIVertexTriangleStream(verts);
-        }
-
-        private int GetVertexCountMultiply()
-        {
-            switch (shadowMode)
-            {
-                case ShadowMode.Shadow: return 1 + shadowIteration * 1;
-                case ShadowMode.Shadow3: return 1 + shadowIteration * 3;
-                case ShadowMode.Outline: return 1 + shadowIteration * 4;
-                case ShadowMode.Outline8: return 1 + shadowIteration * 8;
-                case ShadowMode.Mirror: return 1 + 1;
-                default: return 1;
             }
         }
 
@@ -473,83 +449,23 @@ namespace Coffee.UIEffects
             return expandSize;
         }
 
-        private static void ModifyVertex(bool isTextMeshPro, ref UIVertex vt, Vector2 pos, Vector2 uv, Rect uvMask,
+        private static void ModifyVertex(ref UIVertex vt, Vector2 pos, Vector2 uv, Rect uvMask,
             Rect rect, Matrix4x4 m)
         {
-            vt.position = pos;
             pos = m.MultiplyPoint3x4(pos);
             var normalizedX = Mathf.InverseLerp(rect.xMin, rect.xMax, pos.x);
             var normalizedY = Mathf.InverseLerp(rect.yMin, rect.yMax, pos.y);
 
-            if (isTextMeshPro)
+            if (onModifyVertex != null)
             {
-                vt.uv0.x = uv.x;
-                vt.uv0.y = uv.y;
-                vt.uv1.z = normalizedX;
-                vt.uv1.w = normalizedY;
-                vt.uv2 = new Vector4(uvMask.xMin, uvMask.yMin, uvMask.xMax, uvMask.yMax);
+                vt = onModifyVertex(vt, uvMask, normalizedX, normalizedY);
             }
             else
             {
-                vt.uv0 = new Vector4(uv.x, uv.y, normalizedX, normalizedY);
+                vt.uv0.z = normalizedX;
+                vt.uv0.w = normalizedY;
                 vt.uv1 = new Vector4(uvMask.xMin, uvMask.yMin, uvMask.xMax, uvMask.yMax);
             }
-        }
-
-        private static void MarkAsShadowVertex(bool isTextMeshPro, ref UIVertex vt)
-        {
-            if (isTextMeshPro)
-            {
-                vt.uv1.z -= 8;
-                vt.uv1.w -= 8;
-            }
-            else
-            {
-                vt.uv0.z -= 8;
-                vt.uv0.w -= 8;
-            }
-        }
-
-        private static void GetBounds(List<UIVertex> verts, int start, int count, out Rect posBounds,
-            out Rect uvBounds)
-        {
-            var minPos = new Vector2(float.MaxValue, float.MaxValue);
-            var maxPos = new Vector2(float.MinValue, float.MinValue);
-            var minUV = new Vector2(float.MaxValue, float.MaxValue);
-            var maxUV = new Vector2(float.MinValue, float.MinValue);
-            for (var i = start; i < start + count; i++)
-            {
-                var vt = verts[i];
-                var uv = vt.uv0;
-                var pos = vt.position;
-
-                // Left-Bottom
-                if (minPos.x >= pos.x && minPos.y >= pos.y)
-                {
-                    minPos = pos;
-                }
-                // Right-Top
-                else if (maxPos.x <= pos.x && maxPos.y <= pos.y)
-                {
-                    maxPos = pos;
-                }
-
-                // Left-Bottom
-                if (minUV.x >= uv.x && minUV.y >= uv.y)
-                {
-                    minUV = uv;
-                }
-                // Right-Top
-                else if (maxUV.x <= uv.x && maxUV.y <= uv.y)
-                {
-                    maxUV = uv;
-                }
-            }
-
-            // Shrink coordinate to avoid uv edge
-            posBounds = new Rect(minPos.x + 0.001f, minPos.y + 0.001f,
-                maxPos.x - minPos.x - 0.002f, maxPos.y - minPos.y - 0.002f);
-            uvBounds = new Rect(minUV.x, minUV.y, maxUV.x - minUV.x, maxUV.y - minUV.y);
         }
     }
 }

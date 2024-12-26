@@ -17,6 +17,8 @@ uniform float _TransitionWidth;
 uniform fixed4 _TargetColor;
 uniform float _TargetRange;
 uniform float _TargetSoftness;
+uniform float _ShadowBlurIntensity;
+uniform half4 _ShadowColor;
 
 // For performance reasons, limit the sampling of blur in TextMeshPro.
 #ifdef UIEFFECT_TEXTMESHPRO
@@ -177,7 +179,8 @@ half4 apply_color_filter(half4 color, const half4 factor, const float intensity)
         return color;
     }
     #endif
-    return lerp(inColor, color, intensity);
+    color = lerp(inColor, color, intensity);
+    return color;
 }
 
 half4 apply_transition_color_filter(half4 color, const half4 factor, const float intensity)
@@ -223,15 +226,67 @@ half4 apply_transition_color_filter(half4 color, const half4 factor, const float
         return color;
     }
     #endif
+    color = lerp(inColor, color, intensity);
+    return color;
+}
+
+half4 apply_shadow_color_filter(half4 color, const half4 factor, const float intensity)
+{
+    const half4 inColor = color;
+    #if SHADOW_COLOR_NONE // Color.None
+    {
+        return color;
+    }
+    #elif SHADOW_COLOR_MULTIPLY // Color.Multiply
+    {
+        color.rgb = color.rgb * factor.rgb;
+    }
+    #elif SHADOW_COLOR_ADDITIVE // Color.Additive
+    {
+        color.rgb = color.rgb + factor.rgb * color.a;
+    }
+    #elif SHADOW_COLOR_SUBTRACTIVE // Color.Subtractive
+    {
+        color.rgb = color.rgb - factor.rgb * color.a;
+    }
+    #elif SHADOW_COLOR_REPLACE // Color.Replace
+    {
+        color.rgb = factor.rgb * color.a;
+    }
+    #elif SHADOW_COLOR_MULTIPLY_LUMINANCE // Color.MultiplyLuminance
+    {
+        color.rgb = (1 + Luminance(color.rgb)) * factor.rgb / 2 * color.a;
+    }
+    #elif SHADOW_COLOR_MULTIPLY_ADDITIVE // Color.MultiplyAdditive
+    {
+        color.rgb = color.rgb * (1 + factor.rgb);
+    }
+    #elif SHADOW_COLOR_HSV_MODIFIER // Color.HsvModifier
+    {
+        const float3 hsv = rgb_to_hsv(color.rgb);
+        color.rgb = hsv_to_rgb(hsv + factor.rgb) * color.a * factor.a;
+        color.a = color.a * factor.a;
+    }
+    #elif SHADOW_COLOR_CONTRAST // Color.Contrast
+    {
+        color.rgb = ((color.rgb - 0.5) * (factor.r + 1) + 0.5 + factor.g * 1.5) * color.a * factor.a;
+        color.a = color.a * factor.a;
+    }
+    #else
+    {
+        return color;
+    }
     #endif
-    return lerp(inColor, color, intensity);
+    color = lerp(inColor, color, intensity);
+    return color;
 }
 
 half4 apply_sampling_filter(float2 uv, const float4 uvMask, const float2 uvLocal)
 {
     #if SAMPLING_BLUR_FAST || SAMPLING_BLUR_MEDIUM || SAMPLING_BLUR_DETAIL
     {
-        if (0 < _SamplingIntensity && -4 < uvLocal.x + uvLocal.y)
+        float intensity = -4 < uvLocal.x + uvLocal.y ? _SamplingIntensity : _ShadowBlurIntensity;
+        if (0 < intensity)
         {
     #if SAMPLING_BLUR_FAST
             const int KERNEL_SIZE = 5;
@@ -247,7 +302,7 @@ half4 apply_sampling_filter(float2 uv, const float4 uvMask, const float2 uvLocal
             float4 o = 0;
             float sum = 0;
             float2 shift = 0;
-            const half2 blur = texel_size() * _SamplingIntensity * 2;
+            const half2 blur = texel_size() * intensity * 2;
             for (int x = 0; x < KERNEL_SIZE; x++)
             {
                 shift.x = blur.x * (float(x) - KERNEL_SIZE / 2);
@@ -335,7 +390,7 @@ half4 apply_transition_filter(half4 color, const float alpha)
         }
         #endif
 
-        color.rgb = lerp(color.rgb, bandColor, bandLerp * softLerp);
+        color = lerp(color, bandColor, bandLerp * softLerp);
 
         #if TRANSITION_DISSOLVE
         {
@@ -373,6 +428,10 @@ half4 uieffect_internal(float2 uv, const float4 uvMask, const float2 uvLocal)
     if (-4 <= uvLocal.x + uvLocal.y)
     {
         color = apply_color_filter(color, _ColorValue, _ColorIntensity);
+    }
+    else
+    {
+        color = apply_shadow_color_filter(color, _ShadowColor, 1);
     }
 
     return color;
