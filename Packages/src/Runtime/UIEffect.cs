@@ -516,7 +516,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, 0f, 2f);
                 if (Mathf.Approximately(m_ShadowMirrorScale, value)) return;
-                m_ShadowMirrorScale = value;
+                context.shadowMirrorScale = m_ShadowMirrorScale = value;
                 SetVerticesDirty();
             }
         }
