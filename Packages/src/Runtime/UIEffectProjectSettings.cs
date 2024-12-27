@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -62,6 +63,15 @@ namespace Coffee.UIEffects
             return null;
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+#if UNITY_EDITOR
+            SetupSamplesForShaderVariantRegistry();
+            m_ShaderVariantRegistry.ClearCache();
+#endif
+        }
+
 #if UNITY_EDITOR
         private const string k_PresetDir = "UIEffectPresets";
         private const string k_PresetSaveDir = "Assets/ProjectSettings/" + k_PresetDir;
@@ -80,6 +90,35 @@ namespace Coffee.UIEffects
         private void Reset()
         {
             m_ShaderVariantRegistry.InitializeIfNeeded(this, "(UIEffect)");
+        }
+
+        private void SetupSamplesForShaderVariantRegistry()
+        {
+#if UNITY_2023_2_OR_NEWER
+            const string tmpSupport = "TextMeshPro Support (Unity 6)";
+#else
+            const string tmpSupport = "TextMeshPro Support";
+#endif
+            m_ShaderVariantRegistry.RegisterSamples(new[]
+            {
+                ("Hidden/TextMeshPro/Bitmap (UIEffect)", tmpSupport),
+                ("Hidden/TextMeshPro/Mobile/Bitmap (UIEffect)", tmpSupport),
+                ("Hidden/TextMeshPro/Distance Field (UIEffect)", tmpSupport),
+                ("Hidden/TextMeshPro/Mobile/Distance Field (UIEffect)", tmpSupport)
+            });
+        }
+
+        private void Refresh()
+        {
+            m_ShaderVariantRegistry.ClearCache();
+            MaterialRepository.Clear();
+            foreach (var c in Misc.FindObjectsOfType<UIEffectBase>()
+                         .Concat(Misc.GetAllComponentsInPrefabStage<UIEffectBase>()))
+            {
+                c.SetMaterialDirty();
+            }
+
+            EditorApplication.QueuePlayerLoopUpdate();
         }
 
         internal static UIEffect[] LoadEditorPresets()
@@ -127,6 +166,16 @@ namespace Coffee.UIEffects
             var assetPath = AssetDatabase.GetAssetPath(preset);
             var m = Regex.Match(assetPath, k_PresetPathPattern);
             return m.Success ? m.Groups[1].Value : Path.GetFileNameWithoutExtension(assetPath);
+        }
+
+        private class Postprocessor : AssetPostprocessor
+        {
+            private static void OnPostprocessAllAssets(string[] _, string[] __, string[] ___, string[] ____)
+            {
+                if (Misc.isBatchOrBuilding) return;
+
+                instance.Refresh();
+            }
         }
 #endif
     }

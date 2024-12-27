@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using Coffee.UIEffectInternal;
 using UnityEngine;
@@ -215,26 +214,6 @@ namespace Coffee.UIEffects
         }
 
 #if TMP_ENABLE
-#if UNITY_EDITOR
-        private class Postprocessor : AssetPostprocessor
-        {
-            private static void OnPostprocessAllAssets(string[] _, string[] __, string[] ___, string[] ____)
-            {
-                if (Application.isBatchMode || BuildPipeline.isBuildingPlayer) return;
-
-                foreach (var effect in Misc.FindObjectsOfType<UIEffectBase>()
-                             .Concat(Misc.GetAllComponentsInPrefabStage<UIEffectBase>()))
-                {
-                    if (!effect.isActiveAndEnabled) continue;
-                    if (!(effect.graphic is TextMeshProUGUI tmp) || !tmp.isActiveAndEnabled) continue;
-                    effect.SetMaterialDirty();
-                }
-
-                EditorApplication.QueuePlayerLoopUpdate();
-            }
-        }
-#endif
-
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
 #else

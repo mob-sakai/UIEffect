@@ -1,14 +1,17 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
+using UnityEngine.Profiling;
 #if UNITY_EDITOR
 using System.IO;
-using Object = UnityEngine.Object;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using UnityEditor;
+using UnityEditor.PackageManager.UI;
 using UnityEditorInternal;
+using PackageInfo = UnityEditor.PackageManager.PackageInfo;
+using Object = UnityEngine.Object;
 #endif
 
 namespace Coffee.UIEffectInternal
@@ -75,7 +78,7 @@ namespace Coffee.UIEffectInternal
                 return Shader.Find(optionalShaderName);
             }
 
-            // Required shader.
+            // The shader has
             if (shader.name.Contains(requiredName))
             {
                 _cachedOptionalShaders[id] = shader.name;
@@ -105,16 +108,70 @@ namespace Coffee.UIEffectInternal
                 return optionalShader;
             }
 
+#if UNITY_EDITOR
+            ImportFromSample(optionalShaderName);
+#endif
+
             // Find default optional shader.
             _cachedOptionalShaders[id] = defaultOptionalShaderName;
             return Shader.Find(defaultOptionalShaderName);
         }
 
 #if UNITY_EDITOR
-        private HashSet<StringPair> _logVariants = new HashSet<StringPair>();
+        private readonly HashSet<StringPair> _logVariants = new HashSet<StringPair>();
+        private readonly Dictionary<string, string> _sampleNames = new Dictionary<string, string>();
+
+        /// <summary>
+        /// Import the sample containing the requested shader.
+        /// If choice 'Import' is selected, the sample is imported.
+        /// If choice 'Skip in this session' is selected, the sample is skipped in this session.
+        /// </summary>
+        public void ImportFromSample(string shaderName)
+        {
+            if (Misc.isBatchOrBuilding) return;
+
+            // Find sample name.
+            if (_sampleNames.TryGetValue(shaderName, out var sampleName))
+            {
+                // Find package info.
+                var pInfo = PackageInfo.FindForAssembly(typeof(ShaderVariantRegistry).Assembly);
+                if (pInfo == null) return;
+
+                // Find sample. If not found (resolvedPath == null), skip.
+                var sample = Sample.FindByPackage(pInfo.name, pInfo.version)
+                    .FirstOrDefault(x => x.displayName == sampleName);
+                if (sample.resolvedPath == null) return;
+
+                // Import the sample if selected.
+                var importSelected = EditorUtility.DisplayDialog($"Import {sampleName}",
+                    $"Import '{sampleName}' to use the shader '{shaderName}'", "Import", "Cancel");
+                if (importSelected)
+                {
+                    EditorApplication.delayCall += () =>
+                    {
+                        sample.Import();
+                    };
+                }
+            }
+        }
+
+        public void ClearCache()
+        {
+            _cachedOptionalShaders.Clear();
+        }
+
+        public void RegisterSamples((string shaderName, string sampleName)[] samples)
+        {
+            foreach (var (shaderName, sampleName) in samples)
+            {
+                _sampleNames[shaderName] = sampleName;
+            }
+        }
 
         public void InitializeIfNeeded(Object owner, string optionalName)
         {
+            Profiler.BeginSample("(EDITOR/COF)[ShaderVariantRegistry] InitializeIfNeeded");
+
             // Register optional shader names by shader comment.
             if (!string.IsNullOrEmpty(optionalName))
             {
@@ -159,12 +216,16 @@ namespace Coffee.UIEffectInternal
                 EditorUtility.SetDirty(owner);
                 AssetDatabase.SaveAssets();
             }
+
+            ClearCache();
+            Profiler.EndSample();
         }
 
         internal void RegisterVariant(Material material, string path)
         {
             if (!material || !material.shader || !m_Asset) return;
 
+            Profiler.BeginSample("(EDITOR/COF)[ShaderVariantRegistry] RegisterVariant");
             var shaderName = material.shader.name;
             var validKeywords = material.shaderKeywords
                 .Where(x => !Regex.IsMatch(x, "(_EDITOR|EDITOR_)"))
@@ -181,6 +242,7 @@ namespace Coffee.UIEffectInternal
             if (m_Asset.Contains(variant))
             {
                 m_UnregisteredVariants.Remove(pair);
+                Profiler.EndSample();
                 return;
             }
 
@@ -199,11 +261,13 @@ namespace Coffee.UIEffectInternal
                                    $"Register it in 'ProjectSettings > {path}' to use it in player.", m_Asset);
                 }
 
+                Profiler.EndSample();
                 return;
             }
 
             m_Asset.Add(variant);
             m_UnregisteredVariants.Remove(pair);
+            Profiler.EndSample();
         }
 #endif
     }
