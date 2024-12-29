@@ -286,9 +286,23 @@ namespace Coffee.UIEffects.Editors
                         EditorGUILayout.PropertyField(_gradationGradient);
                         break;
                     default:
+                    {
                         EditorGUILayout.PropertyField(_gradationColor1);
-                        EditorGUILayout.PropertyField(_gradationColor2);
+                        var r = EditorGUILayout.GetControlRect();
+                        r.width -= 20;
+                        EditorGUI.PropertyField(r, _gradationColor2);
+
+                        r.x += r.width;
+                        r.width = 20;
+                        // Swap colors
+                        if (GUI.Button(r, EditorGUIUtility.IconContent("preaudioloopoff"), "iconbutton"))
+                        {
+                            (_gradationColor1.colorValue, _gradationColor2.colorValue)
+                                = (_gradationColor2.colorValue, _gradationColor1.colorValue);
+                        }
+
                         break;
+                    }
                 }
 
                 EditorGUILayout.PropertyField(_gradationOffset);
