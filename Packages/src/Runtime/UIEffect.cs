@@ -167,6 +167,9 @@ namespace Coffee.UIEffects
         [SerializeField]
         protected bool m_AllowExtendVertex = true;
 
+        /// <summary>
+        /// Tone filter for rendering.
+        /// </summary>
         public ToneFilter toneFilter
         {
             get => m_ToneFilter;
@@ -178,6 +181,9 @@ namespace Coffee.UIEffects
             }
         }
 
+        /// <summary>
+        /// 0.0 (no effect) - 1.0 (full effect).
+        /// </summary>
         public float toneIntensity
         {
             get => m_ToneIntensity;
@@ -190,6 +196,9 @@ namespace Coffee.UIEffects
             }
         }
 
+        /// <summary>
+        /// Color filter for rendering.
+        /// </summary>
         public ColorFilter colorFilter
         {
             get => m_ColorFilter;
@@ -201,6 +210,9 @@ namespace Coffee.UIEffects
             }
         }
 
+        /// <summary>
+        /// 0.0 (no effect) - 1.0 (full effect).
+        /// </summary>
         public float colorIntensity
         {
             get => m_ColorIntensity;
@@ -236,6 +248,9 @@ namespace Coffee.UIEffects
             }
         }
 
+        /// <summary>
+        /// Sampling filter for rendering.
+        /// </summary>
         public SamplingFilter samplingFilter
         {
             get => m_SamplingFilter;
@@ -248,6 +263,9 @@ namespace Coffee.UIEffects
             }
         }
 
+        /// <summary>
+        /// 0.0 (no effect) - 1.0 (full effect).
+        /// </summary>
         public float samplingIntensity
         {
             get => m_SamplingIntensity;
@@ -276,6 +294,9 @@ namespace Coffee.UIEffects
             ? Mathf.Clamp(m_SamplingScale, 0.01f, 100)
             : 1;
 
+        /// <summary>
+        /// Transition filter for rendering.
+        /// </summary>
         public TransitionFilter transitionFilter
         {
             get => m_TransitionFilter;
@@ -288,6 +309,9 @@ namespace Coffee.UIEffects
             }
         }
 
+        /// <summary>
+        /// 0.0 (no effect) - 1.0 (full effect).
+        /// </summary>
         public float transitionRate
         {
             get => m_TransitionRate;
@@ -733,6 +757,9 @@ namespace Coffee.UIEffects
             });
         }
 
+        /// <summary>
+        /// Set gradation gradient's keys.
+        /// </summary>
         public void SetGradientKeys(GradientColorKey[] colorKeys, GradientAlphaKey[] alphaKeys)
         {
             m_GradationGradient ??= new Gradient();
@@ -745,12 +772,15 @@ namespace Coffee.UIEffects
             c.toneFilter = m_ToneFilter;
             c.toneIntensity = m_ToneIntensity;
             c.toneParams = m_ToneParams;
+
             c.colorFilter = m_ColorFilter;
             c.color = m_Color;
             c.colorIntensity = m_ColorIntensity;
             c.colorGlow = m_ColorGlow;
+
             c.samplingFilter = m_SamplingFilter;
             c.samplingIntensity = m_SamplingIntensity;
+
             c.transitionFilter = m_TransitionFilter;
             c.transitionRate = m_TransitionRate;
             c.transitionReverse = m_TransitionReverse;
@@ -764,12 +794,15 @@ namespace Coffee.UIEffects
             c.transitionColorFilter = m_TransitionColorFilter;
             c.transitionColor = m_TransitionColor;
             c.transitionColorGlow = m_TransitionColorGlow;
+
             c.targetMode = m_TargetMode;
             c.targetColor = m_TargetColor;
             c.targetRange = m_TargetRange;
             c.targetSoftness = m_TargetSoftness;
+
             c.srcBlendMode = m_SrcBlendMode;
             c.dstBlendMode = m_DstBlendMode;
+
             c.shadowMode = m_ShadowMode;
             c.shadowDistance = m_ShadowDistance;
             c.shadowIteration = m_ShadowIteration;
@@ -779,6 +812,7 @@ namespace Coffee.UIEffects
             c.shadowColorFilter = m_ShadowColorFilter;
             c.shadowColor = m_ShadowColor;
             c.shadowColorGlow = m_ShadowColorGlow;
+
             c.gradationMode = m_GradationMode;
             c.gradationColor1 = m_GradationColor1;
             c.gradationColor2 = m_GradationColor2;
@@ -839,11 +873,17 @@ namespace Coffee.UIEffects
             }
         }
 
+        /// <summary>
+        /// Load preset settings.
+        /// </summary>
         public void LoadPreset(string presetName)
         {
             LoadPreset(UIEffectProjectSettings.LoadRuntimePreset(presetName));
         }
 
+        /// <summary>
+        /// Load preset settings.
+        /// </summary>
         public void LoadPreset(UIEffect preset)
         {
             if (!preset) return;

@@ -80,7 +80,7 @@ namespace Coffee.UIEffects
         private PlayOnEnable m_PlayOnEnable = PlayOnEnable.Forward;
 
         [Tooltip("The wrap mode of the tween.\n" +
-                 "  Clamp: Clamp the tween value (not loop).\n" +
+                 "  Once: Clamp the tween value (not loop).\n" +
                  "  Loop: Loop the tween value.\n" +
                  "  PingPongOnce: PingPong the tween value (not loop).\n" +
                  "  PingPong: PingPong the tween value.")]
@@ -104,12 +104,18 @@ namespace Coffee.UIEffects
         /// </summary>
         private UIEffectBase target => _target ? _target : _target = GetComponent<UIEffectBase>();
 
+        /// <summary>
+        /// The culling mask of the tween.
+        /// </summary>
         public CullingMask cullingMask
         {
             get => m_CullingMask;
             set => m_CullingMask = value;
         }
 
+        /// <summary>
+        /// The direction of the tween.
+        /// </summary>
         public Direction direction
         {
             get => m_Direction;
@@ -122,7 +128,7 @@ namespace Coffee.UIEffects
         public float rate
         {
             get => _rate;
-            set
+            private set
             {
                 value = Mathf.Clamp01(value);
                 if (Mathf.Approximately(_rate, value)) return;
@@ -179,6 +185,10 @@ namespace Coffee.UIEffects
             }
         }
 
+        /// <summary>
+        /// The total time of the tween. (read only)
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public float totalTime
         {
             get
@@ -195,6 +205,9 @@ namespace Coffee.UIEffects
             }
         }
 
+        /// <summary>
+        /// Play the tween when the component is enabled.
+        /// </summary>
         public PlayOnEnable playOnEnable
         {
             get => m_PlayOnEnable;
@@ -208,24 +221,43 @@ namespace Coffee.UIEffects
             set => m_PlayOnEnable = value ? PlayOnEnable.None : PlayOnEnable.Forward;
         }
 
+        /// <summary>
+        /// The wrap mode of the tween.
+        /// <p>Once: Clamp the tween value (not loop).</p>
+        /// <p>Loop: Loop the tween value.</p>
+        /// <p>PingPongOnce: PingPong the tween value (not loop).</p>
+        /// <p>PingPong: PingPong the tween value.</p>
+        /// </summary>
         public WrapMode wrapMode
         {
             get => m_WrapMode;
             set => m_WrapMode = value;
         }
 
+        /// <summary>
+        /// Specifies how to get delta time.
+        /// <p>Normal: Use `Time.deltaTime`.</p>
+        /// <p>Unscaled: Use `Time.unscaledDeltaTime`.</p>
+        /// <p>Manual: Not updated automatically and update manually with `UpdateTime` or `SetTime` method.</p>
+        /// </summary>
         public UpdateMode updateMode
         {
             get => m_UpdateMode;
             set => m_UpdateMode = value;
         }
 
+        /// <summary>
+        /// The curve to tween the properties.
+        /// </summary>
         public AnimationCurve curve
         {
             get => m_Curve;
             set => m_Curve = value;
         }
 
+        /// <summary>
+        /// Is the tween playing?
+        /// </summary>
         public bool isTweening
         {
             get
@@ -239,8 +271,14 @@ namespace Coffee.UIEffects
             }
         }
 
+        /// <summary>
+        /// Is the tween paused?
+        /// </summary>
         public bool isPaused => _isPaused;
 
+        /// <summary>
+        /// Is the tween delaying?
+        /// </summary>
         public bool isDelaying => _time < delay;
 
         private void OnEnable()
