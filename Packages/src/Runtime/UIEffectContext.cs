@@ -184,7 +184,7 @@ namespace Coffee.UIEffects
         private List<float> _keyTimes;
         private List<float> _splitTimes;
 
-        public bool allowExtendVertex;
+        public bool allowToModifyMeshShape;
 
 
         public bool willModifyMaterial => samplingFilter != SamplingFilter.None
@@ -254,7 +254,7 @@ namespace Coffee.UIEffects
             gradationOffset = preset.gradationOffset;
             gradationScale = preset.gradationScale;
 
-            allowExtendVertex = preset.allowExtendVertex;
+            allowToModifyMeshShape = preset.allowToModifyMeshShape;
         }
 
         public void SetGradationDirty()
@@ -470,10 +470,18 @@ namespace Coffee.UIEffects
                         GradientUtil.GetKeyTimes(grad, _keyTimes);
                     }
 
-                    var splitTimes = InternalListPool<float>.Rent();
-                    GradientUtil.SplitKeyTimes(_keyTimes, splitTimes, offset, scale);
-                    GradientUtil.DoHorizontalGradient(verts, grad, splitTimes, offset, scale, rect, m);
-                    InternalListPool<float>.Return(ref splitTimes);
+                    if (allowToModifyMeshShape)
+                    {
+                        var splitTimes = InternalListPool<float>.Rent();
+                        GradientUtil.SplitKeyTimes(_keyTimes, splitTimes, offset, scale);
+                        GradientUtil.DoHorizontalGradient(verts, grad, splitTimes, offset, scale, rect, m);
+                        InternalListPool<float>.Return(ref splitTimes);
+                    }
+                    else
+                    {
+                        GradientUtil.DoHorizontalGradient(verts, grad, offset, scale, rect, m);
+                    }
+
                     break;
                 }
                 case GradationMode.VerticalGradient:
@@ -484,10 +492,17 @@ namespace Coffee.UIEffects
                         GradientUtil.GetKeyTimes(grad, _keyTimes);
                     }
 
-                    var splitTimes = InternalListPool<float>.Rent();
-                    GradientUtil.SplitKeyTimes(_keyTimes, splitTimes, offset, scale);
-                    GradientUtil.DoVerticalGradient(verts, grad, splitTimes, offset, scale, rect, m);
-                    InternalListPool<float>.Return(ref splitTimes);
+                    if (allowToModifyMeshShape)
+                    {
+                        var splitTimes = InternalListPool<float>.Rent();
+                        GradientUtil.SplitKeyTimes(_keyTimes, splitTimes, offset, scale);
+                        GradientUtil.DoVerticalGradient(verts, grad, splitTimes, offset, scale, rect, m);
+                        InternalListPool<float>.Return(ref splitTimes);
+                    }
+                    else
+                    {
+                        GradientUtil.DoVerticalGradient(verts, grad, offset, scale, rect, m);
+                    }
                     break;
                 }
             }
@@ -512,7 +527,7 @@ namespace Coffee.UIEffects
 
         private Vector2 GetExpandSize()
         {
-            if (!allowExtendVertex) return Vector2.zero;
+            if (!allowToModifyMeshShape) return Vector2.zero;
 
             var expandSize = Vector2.zero;
             switch (samplingFilter)

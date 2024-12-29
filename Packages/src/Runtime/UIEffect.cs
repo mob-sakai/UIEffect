@@ -165,7 +165,7 @@ namespace Coffee.UIEffects
         protected float m_GradationScale = 1;
 
         [SerializeField]
-        protected bool m_AllowExtendVertex = true;
+        protected bool m_AllowToModifyMeshShape = true;
 
         /// <summary>
         /// Tone filter for rendering.
@@ -696,13 +696,13 @@ namespace Coffee.UIEffects
             }
         }
 
-        public bool allowExtendVertex
+        public bool allowToModifyMeshShape
         {
-            get => m_AllowExtendVertex;
+            get => m_AllowToModifyMeshShape;
             set
             {
-                if (m_AllowExtendVertex == value) return;
-                context.allowExtendVertex = m_AllowExtendVertex = value;
+                if (m_AllowToModifyMeshShape == value) return;
+                context.allowToModifyMeshShape = m_AllowToModifyMeshShape = value;
                 SetVerticesDirty();
             }
         }
@@ -819,7 +819,8 @@ namespace Coffee.UIEffects
             c.gradationGradient = m_GradationGradient;
             c.gradationOffset = m_GradationOffset;
             c.gradationScale = m_GradationScale;
-            c.allowExtendVertex = m_AllowExtendVertex;
+
+            c.allowToModifyMeshShape = m_AllowToModifyMeshShape;
         }
 
         public override void ApplyContextToMaterial()
@@ -993,7 +994,7 @@ namespace Coffee.UIEffects
             m_GradationOffset = c.gradationOffset;
             m_GradationScale = c.gradationScale;
 
-            m_AllowExtendVertex = c.allowExtendVertex;
+            m_AllowToModifyMeshShape = c.allowToModifyMeshShape;
 
             UpdateContext(context);
             ApplyContextToMaterial();

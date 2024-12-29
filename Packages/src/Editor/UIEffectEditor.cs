@@ -68,7 +68,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _gradationScale;
 
         private bool _expandOthers;
-        private SerializedProperty _allowExtendVertex;
+        private SerializedProperty _allowToModifyMeshShape;
 
         private void OnEnable()
         {
@@ -129,7 +129,7 @@ namespace Coffee.UIEffects.Editors
             _gradationOffset = serializedObject.FindProperty("m_GradationOffset");
             _gradationScale = serializedObject.FindProperty("m_GradationScale");
 
-            _allowExtendVertex = serializedObject.FindProperty("m_AllowExtendVertex");
+            _allowToModifyMeshShape = serializedObject.FindProperty("m_AllowToModifyMeshShape");
         }
 
         public override void OnInspectorGUI()
@@ -314,7 +314,7 @@ namespace Coffee.UIEffects.Editors
             _expandOthers = EditorGUILayout.BeginFoldoutHeaderGroup(_expandOthers, "Others");
             if (_expandOthers)
             {
-                EditorGUILayout.PropertyField(_allowExtendVertex);
+                EditorGUILayout.PropertyField(_allowToModifyMeshShape);
             }
         }
 

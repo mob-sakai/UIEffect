@@ -47,6 +47,27 @@ namespace Coffee.UIEffects
             }
         }
 
+        public static void DoHorizontalGradient(List<UIVertex> verts, Gradient gradient, float offset, float scale,
+            Rect rect, Matrix4x4 m)
+        {
+            var count = verts.Count;
+            for (var i = 0; i < count; i ++)
+            {
+                var vt = verts[i];
+                vt.color *= Evaluate(gradient, rect, m.MultiplyPoint3x4(vt.position).x, offset, scale);
+                verts[i] = vt;
+            }
+
+            return;
+
+            static Color Evaluate(Gradient gradient, Rect rect, float t, float offset, float scale)
+            {
+                t = Mathf.InverseLerp(rect.xMin, rect.xMax, t); // 0-1
+                t = Mathf.Repeat((t - offset * scale - (1 - scale) / 2) / scale, 1); // Revert
+                return gradient.Evaluate(t);
+            }
+        }
+
         public static void DoVerticalGradient(List<UIVertex> verts, Color a, Color b, float offset, float scale,
             Rect rect, Matrix4x4 m)
         {
@@ -77,6 +98,27 @@ namespace Coffee.UIEffects
                 rt.color *= Evaluate(gradient, rect, m.MultiplyPoint3x4(rt.position).y - 0.0005f, offset, scale);
                 rb.color *= Evaluate(gradient, rect, m.MultiplyPoint3x4(rb.position).y + 0.0005f, offset, scale);
                 UIVertexUtil.SetQuad(verts, i, lb, lt, rt, rb);
+            }
+
+            return;
+
+            static Color Evaluate(Gradient gradient, Rect rect, float t, float offset, float scale)
+            {
+                t = Mathf.InverseLerp(rect.yMin, rect.yMax, t); // 0-1
+                t = Mathf.Repeat((t - offset * scale - (1 - scale) / 2) / scale, 1); // Revert
+                return gradient.Evaluate(t);
+            }
+        }
+
+        public static void DoVerticalGradient(List<UIVertex> verts, Gradient gradient, float offset, float scale,
+            Rect rect, Matrix4x4 m)
+        {
+            var count = verts.Count;
+            for (var i = 0; i < count; i ++)
+            {
+                var vt = verts[i];
+                vt.color *= Evaluate(gradient, rect, m.MultiplyPoint3x4(vt.position).y, offset, scale);
+                verts[i] = vt;
             }
 
             return;
