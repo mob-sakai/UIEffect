@@ -27,7 +27,7 @@ namespace Coffee.UIEffects
                 UIVertexUtil.GetQuad(verts, i, out var lb, out var lt, out var rt, out var rb);
                 if (i + 5 < count)
                 {
-                    UIVertexUtil.SplitHorizontal(verts, splitTimes, lb, lt, ref rb, ref rt, rect, m);
+                    UIVertexUtil.SplitHorizontalFast(verts, splitTimes, lb, lt, ref rb, ref rt, rect, m);
                 }
 
                 lb.color *= Evaluate(gradient, rect, m.MultiplyPoint3x4(lb.position).x + 0.0005f, offset, scale);
@@ -51,7 +51,7 @@ namespace Coffee.UIEffects
             Rect rect, Matrix4x4 m)
         {
             var count = verts.Count;
-            for (var i = 0; i < count; i ++)
+            for (var i = 0; i < count; i++)
             {
                 var vt = verts[i];
                 vt.color *= Evaluate(gradient, rect, m.MultiplyPoint3x4(vt.position).x, offset, scale);
@@ -90,7 +90,7 @@ namespace Coffee.UIEffects
                 UIVertexUtil.GetQuad(verts, i, out var lb, out var lt, out var rt, out var rb);
                 if (i + 5 < count)
                 {
-                    UIVertexUtil.SplitVertical(verts, splitTimes, lb, ref lt, rb, ref rt, rect, m);
+                    UIVertexUtil.SplitVerticalFast(verts, splitTimes, lb, ref lt, rb, ref rt, rect, m);
                 }
 
                 lb.color *= Evaluate(gradient, rect, m.MultiplyPoint3x4(lb.position).y + 0.0005f, offset, scale);
@@ -114,7 +114,7 @@ namespace Coffee.UIEffects
             Rect rect, Matrix4x4 m)
         {
             var count = verts.Count;
-            for (var i = 0; i < count; i ++)
+            for (var i = 0; i < count; i++)
             {
                 var vt = verts[i];
                 vt.color *= Evaluate(gradient, rect, m.MultiplyPoint3x4(vt.position).y, offset, scale);
@@ -213,6 +213,13 @@ namespace Coffee.UIEffects
                 var t = Mathf.Clamp01(offset + Mathf.Sqrt(x * x + y * y) * 2 * scale);
                 return Color.Lerp(a, b, t);
             }
+        }
+
+        public static void DoAngleGradient(List<UIVertex> verts, Gradient gradient, List<float> splitTimes,
+            float offset, float scale, Rect rect, Matrix4x4 m)
+        {
+            UIVertexUtil.SplitAngle(verts, splitTimes, rect, m);
+            DoHorizontalGradient(verts, gradient, offset, scale, rect, m);
         }
 
         public static void GetKeyTimes(Gradient gradient, List<float> results)

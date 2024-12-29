@@ -66,6 +66,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _gradationGradient;
         private SerializedProperty _gradationOffset;
         private SerializedProperty _gradationScale;
+        private SerializedProperty _gradationRotation;
 
         private bool _expandOthers;
         private SerializedProperty _allowToModifyMeshShape;
@@ -128,6 +129,7 @@ namespace Coffee.UIEffects.Editors
             _gradationGradient = serializedObject.FindProperty("m_GradationGradient");
             _gradationOffset = serializedObject.FindProperty("m_GradationOffset");
             _gradationScale = serializedObject.FindProperty("m_GradationScale");
+            _gradationRotation = serializedObject.FindProperty("m_GradationRotation");
 
             _allowToModifyMeshShape = serializedObject.FindProperty("m_AllowToModifyMeshShape");
         }
@@ -283,10 +285,10 @@ namespace Coffee.UIEffects.Editors
                 {
                     case GradationMode.HorizontalGradient:
                     case GradationMode.VerticalGradient:
+                    case GradationMode.AngleGradient:
                         EditorGUILayout.PropertyField(_gradationGradient);
                         break;
                     default:
-                    {
                         EditorGUILayout.PropertyField(_gradationColor1);
                         var r = EditorGUILayout.GetControlRect();
                         r.width -= 20;
@@ -302,11 +304,17 @@ namespace Coffee.UIEffects.Editors
                         }
 
                         break;
-                    }
                 }
 
                 EditorGUILayout.PropertyField(_gradationOffset);
                 EditorGUILayout.PropertyField(_gradationScale);
+
+                if ((GradationMode)_gradationMode.intValue == GradationMode.Angle
+                    || (GradationMode)_gradationMode.intValue == GradationMode.AngleGradient)
+                {
+                    EditorGUILayout.PropertyField(_gradationRotation);
+                }
+
                 EditorGUI.indentLevel--;
             }
 

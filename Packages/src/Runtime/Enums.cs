@@ -86,7 +86,9 @@ namespace Coffee.UIEffects
         RadialFast,
         RadialDetail,
         DiagonalToRightBottom,
-        DiagonalToLeftBottom
+        DiagonalToLeftBottom,
+        Angle,
+        AngleGradient
     }
 
     internal static class BlendTypeConverter

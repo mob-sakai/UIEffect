@@ -148,9 +148,11 @@ namespace Coffee.UIEffects
         protected GradationMode m_GradationMode = GradationMode.None;
 
         [SerializeField]
+        [ColorUsage(true, true)]
         protected Color m_GradationColor1 = Color.white;
 
         [SerializeField]
+        [ColorUsage(true, true)]
         protected Color m_GradationColor2 = Color.white;
 
         [SerializeField]
@@ -163,6 +165,10 @@ namespace Coffee.UIEffects
         [PowerRange(0.01f, 10, 10)]
         [SerializeField]
         protected float m_GradationScale = 1;
+
+        [SerializeField]
+        [Range(0, 360)]
+        private float m_GradationRotation = 0;
 
         [SerializeField]
         protected bool m_AllowToModifyMeshShape = true;
@@ -696,6 +702,18 @@ namespace Coffee.UIEffects
             }
         }
 
+        public float gradationRotation
+        {
+            get => m_GradationRotation;
+            set
+            {
+                value = Mathf.Repeat(value, 360);
+                if (Mathf.Approximately(m_GradationRotation, value)) return;
+                context.gradationRotation = m_GradationRotation = value;
+                SetVerticesDirty();
+            }
+        }
+
         public bool allowToModifyMeshShape
         {
             get => m_AllowToModifyMeshShape;
@@ -819,6 +837,7 @@ namespace Coffee.UIEffects
             c.gradationGradient = m_GradationGradient;
             c.gradationOffset = m_GradationOffset;
             c.gradationScale = m_GradationScale;
+            c.gradationRotation = m_GradationRotation;
 
             c.allowToModifyMeshShape = m_AllowToModifyMeshShape;
         }
@@ -855,9 +874,15 @@ namespace Coffee.UIEffects
                 transitionRate = rate;
             }
 
-            if (gradationMode != GradationMode.None && 0 < (mask & UIEffectTweener.CullingMask.Gradiation))
+            if (gradationMode != GradationMode.None && 0 < (mask & UIEffectTweener.CullingMask.GradiationOffset))
             {
                 gradationOffset = Mathf.Lerp(-1f, 1f, rate);
+            }
+
+            if ((gradationMode == GradationMode.Angle || gradationMode == GradationMode.AngleGradient)
+                && 0 < (mask & UIEffectTweener.CullingMask.GradiationRotation))
+            {
+                gradationRotation = Mathf.Lerp(0f, 360f, rate);
             }
         }
 
@@ -993,6 +1018,7 @@ namespace Coffee.UIEffects
             m_GradationGradient = c.gradationGradient;
             m_GradationOffset = c.gradationOffset;
             m_GradationScale = c.gradationScale;
+            m_GradationRotation = c.gradationRotation;
 
             m_AllowToModifyMeshShape = c.allowToModifyMeshShape;
 

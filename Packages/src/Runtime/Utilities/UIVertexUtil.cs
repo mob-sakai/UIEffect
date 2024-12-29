@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Coffee.UIEffectInternal;
 using UnityEngine;
 
 namespace Coffee.UIEffects
@@ -79,14 +80,16 @@ namespace Coffee.UIEffects
 
         public static UIVertex VertexLerp(UIVertex a, UIVertex b, float t)
         {
-            var vt = new UIVertex();
-            vt.position = Vector3.Lerp(a.position, b.position, t);
-            vt.normal = Vector3.Lerp(a.normal, b.normal, t);
-            vt.tangent = Vector4.Lerp(a.tangent, b.tangent, t);
-            vt.color = Color.Lerp(a.color, b.color, t);
-            vt.uv0 = Vector4.Lerp(a.uv0, b.uv0, t);
-            vt.uv1 = Vector4.Lerp(a.uv1, b.uv1, t);
-            vt.uv2 = Vector4.Lerp(a.uv2, b.uv2, t);
+            var vt = new UIVertex
+            {
+                position = Vector3.Lerp(a.position, b.position, t),
+                normal = Vector3.Lerp(a.normal, b.normal, t),
+                tangent = Vector4.Lerp(a.tangent, b.tangent, t),
+                color = Color.Lerp(a.color, b.color, t),
+                uv0 = Vector4.Lerp(a.uv0, b.uv0, t),
+                uv1 = Vector4.Lerp(a.uv1, b.uv1, t),
+                uv2 = Vector4.Lerp(a.uv2, b.uv2, t)
+            };
 
             if (onLerpVertex != null)
             {
@@ -143,7 +146,7 @@ namespace Coffee.UIEffects
             verts[i + 4] = rb;
         }
 
-        public static void SplitHorizontal(List<UIVertex> verts, List<float> times, UIVertex lb, UIVertex lt,
+        public static void SplitHorizontalFast(List<UIVertex> verts, List<float> times, UIVertex lb, UIVertex lt,
             ref UIVertex rb, ref UIVertex rt, Rect rect, Matrix4x4 m)
         {
             if (times == null || times.Count == 0) return;
@@ -176,7 +179,7 @@ namespace Coffee.UIEffects
             rb = mb;
         }
 
-        public static void SplitVertical(List<UIVertex> verts, List<float> times, UIVertex lb, ref UIVertex lt,
+        public static void SplitVerticalFast(List<UIVertex> verts, List<float> times, UIVertex lb, ref UIVertex lt,
             UIVertex rb, ref UIVertex rt, Rect rect, Matrix4x4 m)
         {
             if (times == null || times.Count == 0) return;
@@ -205,6 +208,95 @@ namespace Coffee.UIEffects
             verts.Add(lm);
             lt = lm;
             rt = rm;
+        }
+
+        public static void SplitAngle(List<UIVertex> verts, List<float> times, Rect rect, Matrix4x4 m)
+        {
+            if (times == null || times.Count == 0) return;
+
+            for (var i = 0; i < times.Count; i++)
+            {
+                var x = Mathf.Lerp(rect.xMin, rect.xMax, times[i]);
+                Split(verts, new Vector2(x, 0), new Vector2(0, 1), m);
+            }
+
+            return;
+
+            static void Split(List<UIVertex> verts, Vector2 p, Vector2 dir, Matrix4x4 m)
+            {
+                // Each triangle
+                var intersections = InternalListPool<UIVertex>.Rent();
+                var count = verts.Count;
+                for (var i = 0; i < count; i += 3)
+                {
+                    intersections.Clear();
+                    var n = -1;
+                    // Each edge
+                    for (var j = 0; j < 3; j++)
+                    {
+                        var start = verts[i + j];
+                        var end = verts[i + (j + 1) % 3];
+
+                        if (DoesIntersect(start, end, p, dir, m, out var intersection))
+                        {
+                            intersections.Add(intersection);
+                        }
+                        else
+                        {
+                            n = j;
+                        }
+                    }
+
+                    if (intersections.Count == 2)
+                    {
+                        var vt0 = verts[i + (n + 2) % 3];
+                        var vt1 = verts[i + (n + 0) % 3];
+                        var vt2 = verts[i + (n + 1) % 3];
+                        var it0 = intersections[0];
+                        var it1 = intersections[1];
+                        var it2 = intersections[(n + 1) % 2];
+                        verts[i + 0] = vt0;
+                        verts[i + 1] = it0;
+                        verts[i + 2] = it1;
+                        verts.Add(it2);
+                        verts.Add(vt1);
+                        verts.Add(vt2);
+                        verts.Add(vt2);
+                        verts.Add(it0);
+                        verts.Add(it1);
+                    }
+                }
+
+                InternalListPool<UIVertex>.Return(ref intersections);
+            }
+
+            static bool DoesIntersect(UIVertex start, UIVertex end, Vector2 p, Vector2 dir, Matrix4x4 m,
+                out UIVertex intersection)
+            {
+                intersection = default;
+                var startPosition = (Vector2)m.MultiplyPoint3x4(start.position);
+                var endPosition = (Vector2)m.MultiplyPoint3x4(end.position);
+                var segDir = endPosition - startPosition;
+                var cross = Vector3.Cross(segDir, dir);
+
+                // Parallel.
+                if (cross.magnitude < Mathf.Epsilon)
+                {
+                    return false; // 線と線分が平行
+                }
+
+                var diff = p - startPosition;
+                var determinant = Vector3.Dot(cross, cross);
+                var t = Vector3.Dot(Vector3.Cross(diff, dir), cross) / determinant;
+
+                if (0 <= t && t <= 1)
+                {
+                    intersection = VertexLerp(start, end, t);
+                    return true;
+                }
+
+                return false;
+            }
         }
     }
 }

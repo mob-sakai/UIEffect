@@ -181,8 +181,8 @@ namespace Coffee.UIEffects
         public Gradient gradationGradient;
         public float gradationOffset;
         public float gradationScale;
+        public float gradationRotation;
         private List<float> _keyTimes;
-        private List<float> _splitTimes;
 
         public bool allowToModifyMeshShape;
 
@@ -253,6 +253,7 @@ namespace Coffee.UIEffects
             gradationGradient = preset.gradationGradient;
             gradationOffset = preset.gradationOffset;
             gradationScale = preset.gradationScale;
+            gradationRotation = preset.gradationRotation;
 
             allowToModifyMeshShape = preset.allowToModifyMeshShape;
         }
@@ -442,6 +443,7 @@ namespace Coffee.UIEffects
             var offset = gradationOffset;
             var scale = gradationScale;
             var grad = gradationGradient;
+            var rot = gradationRotation;
             switch (gradationMode)
             {
                 case GradationMode.Horizontal:
@@ -461,6 +463,10 @@ namespace Coffee.UIEffects
                     break;
                 case GradationMode.RadialDetail:
                     GradientUtil.DoRadialGradient(verts, a, b, offset, scale, rect, m, 12);
+                    break;
+                case GradationMode.Angle:
+                    m = Matrix4x4.Rotate(Quaternion.Euler(0, 0, rot)) * m;
+                    GradientUtil.DoHorizontalGradient(verts, a, b, offset, scale, rect, m);
                     break;
                 case GradationMode.HorizontalGradient:
                 {
@@ -503,6 +509,30 @@ namespace Coffee.UIEffects
                     {
                         GradientUtil.DoVerticalGradient(verts, grad, offset, scale, rect, m);
                     }
+
+                    break;
+                }
+                case GradationMode.AngleGradient:
+                {
+                    if (_keyTimes == null)
+                    {
+                        _keyTimes = InternalListPool<float>.Rent();
+                        GradientUtil.GetKeyTimes(grad, _keyTimes);
+                    }
+
+                    m = Matrix4x4.Rotate(Quaternion.Euler(0, 0, rot)) * m;
+                    if (allowToModifyMeshShape)
+                    {
+                        var splitTimes = InternalListPool<float>.Rent();
+                        GradientUtil.SplitKeyTimes(_keyTimes, splitTimes, offset, scale);
+                        GradientUtil.DoAngleGradient(verts, grad, splitTimes, offset, scale, rect, m);
+                        InternalListPool<float>.Return(ref splitTimes);
+                    }
+                    else
+                    {
+                        GradientUtil.DoHorizontalGradient(verts, grad, offset, scale, rect, m);
+                    }
+
                     break;
                 }
             }
