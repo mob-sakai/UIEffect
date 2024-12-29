@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Serialization;
 
 namespace Coffee.UIEffects
@@ -93,6 +94,10 @@ namespace Coffee.UIEffects
                  "  Manual: Not updated automatically and update manually with `UpdateTime` or `SetTime` method.")]
         [SerializeField]
         private UpdateMode m_UpdateMode = UpdateMode.Normal;
+
+        [Tooltip("Event to invoke when the tween has completed.")]
+        [SerializeField]
+        private UnityEvent m_OnComplete = new UnityEvent();
 
         private bool _isPaused;
         private float _rate = -1;
@@ -256,6 +261,11 @@ namespace Coffee.UIEffects
         }
 
         /// <summary>
+        /// Event to invoke when the tween has completed.
+        /// </summary>
+        public UnityEvent onComplete => m_OnComplete;
+
+        /// <summary>
         /// Is the tween playing?
         /// </summary>
         public bool isTweening
@@ -329,24 +339,44 @@ namespace Coffee.UIEffects
             }
 
             _isPaused = false;
+
+            if (!isTweening)
+            {
+                m_OnComplete.Invoke();
+            }
         }
 
         public void Play()
         {
             ResetTime();
             _isPaused = false;
+
+            if (!isTweening)
+            {
+                m_OnComplete.Invoke();
+            }
         }
 
         public void PlayForward()
         {
             direction = Direction.Forward;
             _isPaused = false;
+
+            if (!isTweening)
+            {
+                m_OnComplete.Invoke();
+            }
         }
 
         public void PlayReverse()
         {
             direction = Direction.Reverse;
             _isPaused = false;
+
+            if (!isTweening)
+            {
+                m_OnComplete.Invoke();
+            }
         }
 
         public void Stop()
@@ -380,6 +410,7 @@ namespace Coffee.UIEffects
 
         public void UpdateTime(float deltaSec)
         {
+            var prevTweening = isTweening;
             var isLoop = wrapMode == WrapMode.Loop || wrapMode == WrapMode.PingPongLoop;
             _time += deltaSec;
             if (isLoop)
@@ -406,6 +437,12 @@ namespace Coffee.UIEffects
             if (t <= 0 && 0 <= _time)
             {
                 rate = 0;
+
+                if (prevTweening && !isTweening)
+                {
+                    m_OnComplete.Invoke();
+                }
+
                 return;
             }
 
@@ -434,6 +471,11 @@ namespace Coffee.UIEffects
             }
 
             rate = Mathf.Clamp(t, 0, duration) / duration;
+
+            if (prevTweening && !isTweening)
+            {
+                m_OnComplete.Invoke();
+            }
         }
     }
 }

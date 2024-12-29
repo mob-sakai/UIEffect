@@ -18,6 +18,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _playOnEnable;
         private SerializedProperty _updateMode;
         private SerializedProperty _wrapMode;
+        private SerializedProperty _onComplete;
         private bool _isPlaying = false;
         private double _lastTime;
 
@@ -32,6 +33,7 @@ namespace Coffee.UIEffects.Editors
             _interval = serializedObject.FindProperty("m_Interval");
             _wrapMode = serializedObject.FindProperty("m_WrapMode");
             _updateMode = serializedObject.FindProperty("m_UpdateMode");
+            _onComplete = serializedObject.FindProperty("m_OnComplete");
 
             EditorApplication.update += UpdateTweeners;
         }
@@ -54,6 +56,7 @@ namespace Coffee.UIEffects.Editors
             EditorGUILayout.PropertyField(_playOnEnable);
             EditorGUILayout.PropertyField(_wrapMode);
             EditorGUILayout.PropertyField(_updateMode);
+            EditorGUILayout.PropertyField(_onComplete);
             serializedObject.ApplyModifiedProperties();
             DrawPlayer(target as UIEffectTweener);
             Profiler.EndSample();
