@@ -1,0 +1,11 @@
+{
+    "MonoBehaviour": {
+        "m_Enabled": true,
+        "m_EditorHideFlags": 0,
+        "m_Name": "",
+        "m_EditorClassIdentifier": "",
+        "m_OutputDllPaths": [
+            "Packages/com.coffee.ui-effect/Runtime/Coffee.UIEffect.R.dll"
+        ]
+    }
+}

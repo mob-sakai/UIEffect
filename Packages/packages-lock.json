@@ -7,6 +7,13 @@
       "dependencies": {},
       "hash": "5d0bd14be288153555f975240608e7ee1576b091"
     },
+    "com.coffee.minimal-resource": {
+      "version": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/MinimalResource",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "52987fb6e66e7fc48498d8d164c3c8808de4de6b"
+    },
     "com.coffee.nano-monitor": {
       "version": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/NanoMonitor",
       "depth": 0,

@@ -19,8 +19,8 @@
 
 ## 📝 Description <!-- omit in toc -->
 
-**_"Decorate your uGUI, simply and powerfully."_**  
-UIEffect is an open-source package that allows you to intuitively apply rich UI effects directly from the Inspector or via code.  
+**_"Decorate your UI, simply and powerfully."_**  
+UIEffect is an open-source package that allows you to intuitively apply rich Unity UI effects directly from the Inspector or via code.  
 Combine various filters, such as grayscale, blur, and dissolve, to decorate your UI with a unique visual style!
 
 ![](https://github.com/user-attachments/assets/bce4ddb2-766f-4bed-bad2-fda91bb8133c)
@@ -56,7 +56,7 @@ Combine various filters, such as grayscale, blur, and dissolve, to decorate your
 
 ## 📌 Key Features
 
-![](https://github.com/user-attachments/assets/eab596e5-6cae-4441-b02b-7fc1fb45743d)
+![](https://github.com/user-attachments/assets/e5112713-166d-451f-8090-501e6ea156ca)
 
 - **UIEffect is out-of-the-box!**: Easily apply effects by adjusting parameters directly in the inspector.
 - **Rich effect combinations**: Decorate your UI with a variety of effects, such as grayscale, blur, and dissolve, by combining multiple filters and parameters.
@@ -73,7 +73,7 @@ Combine various filters, such as grayscale, blur, and dissolve, to decorate your
 
 ## 🎮 Demo
 
-![](https://github.com/user-attachments/assets/17e5ee27-f7d5-43aa-942f-182e2b4c838c)  
+![](https://github.com/user-attachments/assets/c52f6f40-5fae-484f-b69e-516da706ae54)  
 ![](https://github.com/user-attachments/assets/02ab1686-03d4-4500-bd89-004b2c401441)
 
 [WebGL Demo](https://mob-sakai.github.io/UIEffect/)
@@ -86,7 +86,7 @@ _This package requires **Unity 2020.3 or later**._
 
 ### Install via OpenUPM
 
-- This package is available on [OpenUPM](https://openupm.com) package registry.
+- This package is available on [OpenUPM](https://openupm.com/packages/com.coffee.ui-effect/) package registry.
 - This is the preferred method of installation, as you can easily receive updates as they're released.
 - If you have [openupm-cli](https://github.com/openupm/openupm-cli) installed, then run the following command in your project's directory:
   ```
@@ -183,71 +183,131 @@ If upgrading from UIEffect v4 to v5, note the following breaking changes:
 
 ### Component: UIEffect
 
-![](https://github.com/user-attachments/assets/090a71ea-81b4-4264-852c-af03f9346dd3)
+![](https://github.com/user-attachments/assets/f1d0d8a3-a0cf-4595-bda2-78165527a99b)
 
 The `UIEffect` component applies visual effects to UI elements, allowing various effects to be achieved by combining multiple filters.
 
+#### Tone Filter
+
 - **Tone Filter**: `None`, `Grayscale`, `Sepia`, `Nega`, `Retro`, `Posterize`
 - **Tone Intensity**: 0.0 (no effect) - 1.0 (full effect).
+
+#### Color Filter
+
 - **Color Filter**: `None`, `Multiply`, `Additive`, `Subtractive`, `Replace`, `Multiply Luminance`, `Multiply Additive`, `Hsv Modifier`, `Contrast`
 - **Color Intensity**: 0.0 (no effect) - 1.0 (full effect).
+- **Color Glow**: Set the color to glow.
+
+#### Sampling Filter
+
 - **Sampling Filter**: `None`, `Blur Fast`, `Blur Medium`, `Blur Detail`, `Pixelation`, `Rgb Shift`, `Edge Luminescence`, `Edge Alpha`
 - **Sampling Intensity**: 0.0 (no effect) - 1.0 (full effect).
+- **Sampling Scale**: The referencing scale during sampling.
+    - Larger values are suitable for high-resolution textures.
+
+#### Transition Filter
+
 - **Transition Filter**: `None`, `Fade`, `Cutoff`, `Dissolve`, `Shiny`, `Mask`, `Melt`, `Burn`
 - **Transition Rate**: 0.0 (no effect) - 1.0 (full effect).
 - **Transition Tex**: The texture used for the transition filter.- **Transition Width**: The width where the transition color is applied.
 - **Transition Softness**: The softness of the boundary for the transition color.
-- **Transition Color Filter/Transition Color**: Specifies the transition color.
+- **Transition Color Filter**: Specifies the transition color.
+    - **Transition Color**: The color of the transition.
+    - **Transition Color Glow**: Set the transition color to glow.
+
+#### Target Mode
+
 - **Target Mode**: `None`, `Hue`, `Luminance`
   - Restricts the effect application area based on hue or luminance.
 - **Target Range**: The range of target hue or luminance.
 - **Target Softness**: The softness of the target boundary.
-- **Blend Type**: `Alpha Blend`, `Multiply`, `Additive`, `Soft Additive`, `Multiply Additive`, `Custom (SrcBlend, DstBlend)`
+
+#### Blend Type
+
+- **Blend Type**: `Alpha Blend`, `Multiply`, `Additive`, `Soft Additive`, `Multiply Additive`, `Custom`
+  - `Custom` blend type can be set using the `SrcBlend` and `DstBlend` properties. 
+
+#### Shadow Mode
+
 - **Shadow Mode**: `None`, `Shadow`, `Shadow3`, `Outline`, `Outline8`, `Mirror`
 - **Shadow Distance**: Distance of the shadow or outline.
 - **Shadow Iteration**: Number of times the shadow or outline is applied.
+- **Shadow Color Filter**: Specifies the shadow color.
+    - **Shadow Color**: The color of the shadow.
+    - **Shadow Color Glow**: Set the shadow color to glow.
 - **Shadow Fade**: Alpha value of the shadow or outline.
-- **Shadow Effect On Origin**: Applies effects to meshes other than shadows.
+- **Shadow Blur Intensity**: Intensity of the shadow or outline blur.
 - **Mirror Reflection**: Distance of the mirrored image.
 - **Mirror Offset**: Offset for the mirrored image.
 - **Mirror Scale**: Scale of the mirrored image.
+
+#### Gradation Mode
+
+- **Gradation Mode**: `None`, `Horizontal Gradient`, `Horizontal`, `Vertical Gradient`, `Vertical`, `Radial Fast`, `Radial Detail`, `Diagonal To Right Bottom`, `Diagonal To Right Top`, `Diagonal To Left Bottom`, `Angle`, `Angle Gradient`
+- **Gradation Gradient**: The gradient of the gradation.
+- **Gradation Color 1**: The first color of the gradation.
+- **Gradation Color 2**: The second color of the gradation.
+- **Gradation Offset**: The offset of the gradation range.
+- **Gradation Scale**: The scale of the gradation range.
+- **Gradation Rotation**: The rotation of the gradation range.
+
+> [!TIP]
+> `Horizontal Gradient` and `Vertical Gradient` divide the mesh horizontally or vertically and apply a gradient.
+> This is very fast but only supports Full Rect.  
+> `Angle Gradient` divides the mesh at the specified angle and applies a gradient.  
+> It can be applied to meshes other than Full Rect because it applies the gradient according to the original mesh shape.
+
+#### Others
+
+- **Allow To Modify Mesh Shape**: If enabled, the mesh shape can be modified.
 
 <br><br>
 
 ### Component: UIEffectTweener
 
-![](https://github.com/user-attachments/assets/7b02f029-c9d4-4e00-aad7-240f893af775)
+![](https://github.com/user-attachments/assets/118df4dc-3c08-4e2b-b6c8-97f15c9e5c9f)
 
 The `UIEffectTweener` component animates the effect, enabling easy control over effect animations without the need for an `AnimationClip`.
 
 - **Culling Mask**: `Tone`, `Color`, `Sampling`, `Transition`
-- **Direction**: `Forward (0.0 -> 1.0)`, `Backward (1.0 -> 0.0)`
+- **Direction**: `Forward (0.0 -> 1.0)`, `Reverse (1.0 -> 0.0)`
+- **Curve**: The curve of the animation.
 - **Delay**: The delay time before starting the animation.
 - **Duration**: The duration of the animation.
 - **Interval**: The interval time between the animation.
-- **Curve**: The curve of the animation.
-- **Restart On Enable**: Play the animation automatically when the component is enabled.
+- **Play On Enable**: `None`, `Forward`, `Reverse`, `Keep Direction`
+   - Play the animation automatically when the component is enabled.
+   - If `None` is selected, the animation will not play automatically. You can play it using the `Play`, `PlayForward` or `PlayReverse`  method.
 - **Wrap Mode**: `Once`, `Loop`, `PingPongOnce`, `PingPongLoop`
 - **Update Mode**: `Normal`, `UnscaledTime`, `Manual`
+- **On Complete**: A event that is triggered when the animation is completed.
+
+You can preview the animation using the seek bar and play button.
 
 <br><br>
 
 ### Component: UIEffectReplica
 
-![](https://github.com/user-attachments/assets/a1fad455-de60-4a18-b587-1ae138af1d37)
+![](https://github.com/user-attachments/assets/27d1840f-77c2-45cd-bde8-716626479c46)
 
 The `UIEffectReplica` component applies visual effects to UI elements by replicating the settings of another `UIEffect` component. This allows the same effect to be applied across multiple UI elements simultaneously.
 
 - **Target**: The target `UIEffect` component to replicate.
-- **Use Target Transform**: Use the target's transform for some effects.  
+- **Use Target Transform**: Use the target's transform for some effects.
+- **Sampling Scale**: Override the sampling scale.  
   ![](https://github.com/user-attachments/assets/127e30fb-15c7-4002-ab65-e8f29e640330)
+
 <br><br>
 
 ### Usage with TextMeshPro
 
-![](https://github.com/user-attachments/assets/bd12baa3-52f7-41e9-bf05-a052d0aabc37)
+To use UIEffect with TextMeshPro, you need to import additional resources.  
+When a shader included in the samples is requested, an import dialog will automatically appear.  
+Click the `Import` button.
 
-UIEffect supports TextMeshProUGUI elements. To use UIEffect with TextMeshPro, follow these steps:
+![](https://github.com/user-attachments/assets/78b262fc-1581-49f2-8c93-06d591b525c6)
+
+Alternatively, you can manually import the resources by following these steps:
 
 1. First, you must import [TMP Essential Resources](https://docs.unity3d.com/Packages/com.unity.textmeshpro@3.0/manual/index.html#installation) before using.  
    ![](https://github.com/user-attachments/assets/70653ccf-0b5e-4352-ac62-76bdd49c5f92)
