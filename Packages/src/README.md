@@ -362,7 +362,7 @@ UIEffectProjectSettings.shaderVariantCollection.WarmUp();
 
 ### Project Settings
 
-![](https://github.com/user-attachments/assets/54dd42cf-099d-4fb1-b699-cad29bf211b6)
+![](https://github.com/user-attachments/assets/e9938d45-ccb1-4e8a-819d-01329cda637a)
 
 You can adjust the project-wide settings for UIEffect. (`Edit > Project Settings > UI > UIEffect`)
 
