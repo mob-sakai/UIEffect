@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 using Coffee.UIEffectInternal;
 using UnityEditorInternal;
@@ -8,7 +9,10 @@ namespace Coffee.UIEffects.Editors
     [CustomEditor(typeof(UIEffectProjectSettings))]
     public class UIEffectProjectSettingsEditor : Editor
     {
+        private const string k_HDRGradientScriptingDefine = "UIEFFECTS_GRADIENT_HDR";
+
         private ReorderableList _reorderableList;
+        private bool _useHdrGradient;
         private SerializedProperty _transformSensitivity;
         private bool _isInitialized;
         private ShaderVariantRegistryEditor _shaderVariantRegistryEditor;
@@ -57,6 +61,14 @@ namespace Coffee.UIEffects.Editors
             _isInitialized = false;
         }
 
+        private void Awake()
+        {
+            // Called when the domain reloads,
+            // So we check if the scripting define is altered manually
+            PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
+            _useHdrGradient = Array.IndexOf(defines, k_HDRGradientScriptingDefine) != -1;
+        }
+
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
@@ -64,6 +76,24 @@ namespace Coffee.UIEffects.Editors
 
             // Settings
             EditorGUILayout.PropertyField(_transformSensitivity);
+            if (EditorGUILayout.Toggle(new GUIContent("HDR Gradient", "Use HDR colors on two-color gradients"), _useHdrGradient) != _useHdrGradient)
+            {
+                _useHdrGradient = !_useHdrGradient;
+                if (_useHdrGradient)
+                {
+                    PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
+                    Array.Resize(ref defines, defines.Length + 1);
+                    defines[defines.Length - 1] = k_HDRGradientScriptingDefine;
+                    PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, defines);
+                }
+                else
+                {
+                    PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
+                    defines[Array.IndexOf(defines, k_HDRGradientScriptingDefine)] = defines[defines.Length - 1];
+                    Array.Resize(ref defines, defines.Length - 1);
+                    PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, defines);
+                }
+            }
             _reorderableList.DoLayoutList();
 
             // Shader registry

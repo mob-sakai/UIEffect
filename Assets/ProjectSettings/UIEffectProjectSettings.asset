@@ -13,54 +13,45 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 0
-      - keywords: COLOR_ADDITIVE
+      - keywords: TONE_GRAYSCALE
         passType: 0
-      - keywords: COLOR_ADDITIVE SAMPLING_BLUR_FAST
+      - keywords: TONE_SEPIA
         passType: 0
-      - keywords: COLOR_ADDITIVE SAMPLING_BLUR_FAST UNITY_UI_CLIP_RECT
+      - keywords: TONE_NEGATIVE
         passType: 0
-      - keywords: COLOR_CONTRAST
+      - keywords: TONE_RETRO
         passType: 0
-      - keywords: COLOR_HSV_MODIFIER
-        passType: 0
-      - keywords: COLOR_HSV_MODIFIER TARGET_HUE
-        passType: 0
-      - keywords: COLOR_HSV_MODIFIER TARGET_LUMINANCE
+      - keywords: TONE_POSTERIZE
         passType: 0
       - keywords: COLOR_MULTIPLY
         passType: 0
-      - keywords: COLOR_MULTIPLY SAMPLING_BLUR_FAST SHADOW_COLOR_REPLACE TARGET_HUE
-          TONE_GRAYSCALE TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_DISSOLVE
-        passType: 0
-      - keywords: COLOR_MULTIPLY_ADDITIVE
-        passType: 0
-      - keywords: COLOR_MULTIPLY_ADDITIVE SAMPLING_BLUR_FAST TONE_GRAYSCALE TRANSITION_COLOR_MULTIPLY_ADDITIVE
-          TRANSITION_DISSOLVE
-        passType: 0
-      - keywords: COLOR_MULTIPLY_ADDITIVE SAMPLING_RGB_SHIFT TONE_GRAYSCALE TRANSITION_COLOR_MULTIPLY_ADDITIVE
-          TRANSITION_DISSOLVE
-        passType: 0
-      - keywords: COLOR_MULTIPLY_LUMINANCE
-        passType: 0
-      - keywords: COLOR_REPLACE
-        passType: 0
-      - keywords: COLOR_REPLACE SAMPLING_BLUR_FAST
+      - keywords: COLOR_ADDITIVE
         passType: 0
       - keywords: COLOR_SUBTRACTIVE
         passType: 0
-      - keywords: SAMPLING_BLUR_DETAIL
+      - keywords: COLOR_REPLACE
+        passType: 0
+      - keywords: COLOR_MULTIPLY_LUMINANCE
+        passType: 0
+      - keywords: COLOR_MULTIPLY_ADDITIVE
+        passType: 0
+      - keywords: COLOR_HSV_MODIFIER
+        passType: 0
+      - keywords: COLOR_CONTRAST
         passType: 0
       - keywords: SAMPLING_BLUR_FAST
         passType: 0
       - keywords: SAMPLING_BLUR_FAST TONE_GRAYSCALE
         passType: 0
+      - keywords: COLOR_ADDITIVE SAMPLING_BLUR_FAST
+        passType: 0
+      - keywords: COLOR_ADDITIVE SAMPLING_BLUR_FAST UNITY_UI_CLIP_RECT
+        passType: 0
+      - keywords: COLOR_REPLACE SAMPLING_BLUR_FAST
+        passType: 0
       - keywords: SAMPLING_BLUR_MEDIUM
         passType: 0
-      - keywords: SAMPLING_EDGE_ALPHA
-        passType: 0
-      - keywords: SAMPLING_EDGE_LUMINANCE
-        passType: 0
-      - keywords: SAMPLING_EDGE_LUMINANCE TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_MASK
+      - keywords: SAMPLING_BLUR_DETAIL
         passType: 0
       - keywords: SAMPLING_PIXELATION
         passType: 0
@@ -70,39 +61,48 @@ ShaderVariantCollection:
         passType: 0
       - keywords: SAMPLING_RGB_SHIFT
         passType: 0
-      - keywords: TONE_GRAYSCALE
+      - keywords: SAMPLING_EDGE_LUMINANCE
         passType: 0
-      - keywords: TONE_NEGATIVE
+      - keywords: SAMPLING_EDGE_ALPHA
         passType: 0
-      - keywords: TONE_POSTERIZE
+      - keywords: TRANSITION_FADE
         passType: 0
-      - keywords: TONE_RETRO
+      - keywords: TRANSITION_CUTOFF
         passType: 0
-      - keywords: TONE_SEPIA
-        passType: 0
-      - keywords: TRANSITION_BURN TRANSITION_COLOR_MULTIPLY_ADDITIVE
-        passType: 0
-      - keywords: TRANSITION_BURN TRANSITION_COLOR_MULTIPLY_ADDITIVE UNITY_UI_CLIP_RECT
+      - keywords: TRANSITION_COLOR_REPLACE TRANSITION_MELT
         passType: 0
       - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_DISSOLVE
         passType: 0
       - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_DISSOLVE UNITY_UI_CLIP_RECT
         passType: 0
-      - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_MASK
+      - keywords: COLOR_MULTIPLY_ADDITIVE SAMPLING_BLUR_FAST TONE_GRAYSCALE TRANSITION_COLOR_MULTIPLY_ADDITIVE
+          TRANSITION_DISSOLVE
         passType: 0
-      - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_MELT
-        passType: 0
-      - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_MELT UNITY_UI_CLIP_RECT
+      - keywords: COLOR_MULTIPLY_ADDITIVE SAMPLING_RGB_SHIFT TONE_GRAYSCALE TRANSITION_COLOR_MULTIPLY_ADDITIVE
+          TRANSITION_DISSOLVE
         passType: 0
       - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_SHINY
         passType: 0
       - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_SHINY UNITY_UI_CLIP_RECT
         passType: 0
-      - keywords: TRANSITION_COLOR_REPLACE TRANSITION_MELT
+      - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_MASK
         passType: 0
-      - keywords: TRANSITION_CUTOFF
+      - keywords: SAMPLING_EDGE_LUMINANCE TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_MASK
         passType: 0
-      - keywords: TRANSITION_FADE
+      - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_MELT
+        passType: 0
+      - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_MELT UNITY_UI_CLIP_RECT
+        passType: 0
+      - keywords: TRANSITION_BURN TRANSITION_COLOR_MULTIPLY_ADDITIVE
+        passType: 0
+      - keywords: TRANSITION_BURN TRANSITION_COLOR_MULTIPLY_ADDITIVE UNITY_UI_CLIP_RECT
+        passType: 0
+      - keywords: COLOR_HSV_MODIFIER TARGET_HUE
+        passType: 0
+      - keywords: COLOR_MULTIPLY SAMPLING_BLUR_FAST SHADOW_COLOR_REPLACE TARGET_HUE
+          TONE_GRAYSCALE TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_DISSOLVE
+        passType: 0
+      - keywords: COLOR_HSV_MODIFIER TARGET_LUMINANCE
         passType: 0
   - first: {fileID: 4800000, guid: e65241fa80a374114b3f55ed746c04d9, type: 3}
     second:
