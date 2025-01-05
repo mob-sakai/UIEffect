@@ -4,6 +4,10 @@ using UnityEngine;
 using Coffee.UIEffectInternal;
 using UnityEditorInternal;
 
+#if UNITY_2021_3_OR_NEWER
+using UnityEditor.Build;
+#endif
+
 namespace Coffee.UIEffects.Editors
 {
     [CustomEditor(typeof(UIEffectProjectSettings))]
@@ -65,8 +69,8 @@ namespace Coffee.UIEffects.Editors
         {
             // Called when the domain reloads,
             // So we check if the scripting define is altered manually
-#if UNITY_2023_1_OR_NEWER
-            PlayerSettings.GetScriptingDefineSymbols(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
+#if UNITY_2021_3_OR_NEWER
+            PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup), out var defines);
 #else
             PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
 #endif
@@ -87,8 +91,8 @@ namespace Coffee.UIEffects.Editors
                 _noHdrGradient = !_noHdrGradient;
                 if (_noHdrGradient)
                 {
-#if UNITY_2023_1_OR_NEWER
-                    PlayerSettings.GetScriptingDefineSymbols(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
+#if UNITY_2021_3_OR_NEWER
+                    PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup), out var defines);
 #else
                     PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
 #endif
@@ -96,16 +100,16 @@ namespace Coffee.UIEffects.Editors
                     Array.Resize(ref defines, defines.Length + 1);
                     defines[defines.Length - 1] = k_NoHDRGradientScriptingDefine;
 
-#if UNITY_2023_1_OR_NEWER
-                    PlayerSettings.SetScriptingDefineSymbols(EditorUserBuildSettings.selectedBuildTargetGroup, defines);
+#if UNITY_2021_3_OR_NEWER
+                    PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup), defines);
 #else
                     PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, defines);
 #endif
                 }
                 else
                 {
-#if UNITY_2023_1_OR_NEWER
-                    PlayerSettings.GetScriptingDefineSymbols(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
+#if UNITY_2021_3_OR_NEWER
+                    PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup), out var defines);
 #else
                     PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
 #endif
@@ -113,8 +117,8 @@ namespace Coffee.UIEffects.Editors
                     defines[Array.IndexOf(defines, k_NoHDRGradientScriptingDefine)] = defines[defines.Length - 1];
                     Array.Resize(ref defines, defines.Length - 1);
 
-#if UNITY_2023_1_OR_NEWER
-                    PlayerSettings.SetScriptingDefineSymbols(EditorUserBuildSettings.selectedBuildTargetGroup, defines);
+#if UNITY_2021_3_OR_NEWER
+                    PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup), defines);
 #else
                     PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, defines);
 #endif
