@@ -65,7 +65,11 @@ namespace Coffee.UIEffects.Editors
         {
             // Called when the domain reloads,
             // So we check if the scripting define is altered manually
+#if UNITY_2023_1_OR_NEWER
+            PlayerSettings.GetScriptingDefineSymbols(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
+#else
             PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
+#endif
             _useHdrGradient = Array.IndexOf(defines, k_HDRGradientScriptingDefine) != -1;
         }
 
@@ -81,17 +85,37 @@ namespace Coffee.UIEffects.Editors
                 _useHdrGradient = !_useHdrGradient;
                 if (_useHdrGradient)
                 {
+#if UNITY_2023_1_OR_NEWER
+                    PlayerSettings.GetScriptingDefineSymbols(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
+#else
                     PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
+#endif
+
                     Array.Resize(ref defines, defines.Length + 1);
                     defines[defines.Length - 1] = k_HDRGradientScriptingDefine;
+
+#if UNITY_2023_1_OR_NEWER
+                    PlayerSettings.SetScriptingDefineSymbols(EditorUserBuildSettings.selectedBuildTargetGroup, defines);
+#else
                     PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, defines);
+#endif
                 }
                 else
                 {
+#if UNITY_2023_1_OR_NEWER
+                    PlayerSettings.GetScriptingDefineSymbols(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
+#else
                     PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
+#endif
+
                     defines[Array.IndexOf(defines, k_HDRGradientScriptingDefine)] = defines[defines.Length - 1];
                     Array.Resize(ref defines, defines.Length - 1);
+
+#if UNITY_2023_1_OR_NEWER
+                    PlayerSettings.SetScriptingDefineSymbols(EditorUserBuildSettings.selectedBuildTargetGroup, defines);
+#else
                     PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, defines);
+#endif
                 }
             }
             _reorderableList.DoLayoutList();
