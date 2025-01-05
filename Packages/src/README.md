@@ -368,6 +368,7 @@ You can adjust the project-wide settings for UIEffect. (`Edit > Project Settings
 
 - **Transform Sensitivity**: `Low`, `Medium`, `High`
   - Set the sensitivity of the transformation when `Use Target Transform` is enabled in `UIEffectReplica` component.
+- **HDR Gradient**: Use HDR input fields for two-color gradients.
 - **Runtime Presets**: A list of presets that can be loaded at runtime. Load them using `UIEffect.LoadPreset(presetName)` method.
 - **Optional Shaders (UIEffect)**: A list of shaders that will be prioritized when a ui-effect shader is
   requested.
