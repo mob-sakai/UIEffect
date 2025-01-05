@@ -9,10 +9,10 @@ namespace Coffee.UIEffects.Editors
     [CustomEditor(typeof(UIEffectProjectSettings))]
     public class UIEffectProjectSettingsEditor : Editor
     {
-        private const string k_HDRGradientScriptingDefine = "UIEFFECTS_GRADIENT_HDR";
+        private const string k_NoHDRGradientScriptingDefine = "UIEFFECTS_GRADIENT_NO_HDR";
 
         private ReorderableList _reorderableList;
-        private bool _useHdrGradient;
+        private bool _noHdrGradient;
         private SerializedProperty _transformSensitivity;
         private bool _isInitialized;
         private ShaderVariantRegistryEditor _shaderVariantRegistryEditor;
@@ -70,7 +70,7 @@ namespace Coffee.UIEffects.Editors
 #else
             PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
 #endif
-            _useHdrGradient = Array.IndexOf(defines, k_HDRGradientScriptingDefine) != -1;
+            _noHdrGradient = Array.IndexOf(defines, k_NoHDRGradientScriptingDefine) != -1;
         }
 
         public override void OnInspectorGUI()
@@ -80,10 +80,12 @@ namespace Coffee.UIEffects.Editors
 
             // Settings
             EditorGUILayout.PropertyField(_transformSensitivity);
-            if (EditorGUILayout.Toggle(new GUIContent("HDR Gradient", "Use HDR colors on two-color gradients"), _useHdrGradient) != _useHdrGradient)
+
+            var useHdrGradient = !_noHdrGradient;
+            if (EditorGUILayout.Toggle(new GUIContent("HDR Gradient", "Use HDR colors on two-color gradients"), useHdrGradient) != useHdrGradient)
             {
-                _useHdrGradient = !_useHdrGradient;
-                if (_useHdrGradient)
+                _noHdrGradient = !_noHdrGradient;
+                if (_noHdrGradient)
                 {
 #if UNITY_2023_1_OR_NEWER
                     PlayerSettings.GetScriptingDefineSymbols(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
@@ -92,7 +94,7 @@ namespace Coffee.UIEffects.Editors
 #endif
 
                     Array.Resize(ref defines, defines.Length + 1);
-                    defines[defines.Length - 1] = k_HDRGradientScriptingDefine;
+                    defines[defines.Length - 1] = k_NoHDRGradientScriptingDefine;
 
 #if UNITY_2023_1_OR_NEWER
                     PlayerSettings.SetScriptingDefineSymbols(EditorUserBuildSettings.selectedBuildTargetGroup, defines);
@@ -108,7 +110,7 @@ namespace Coffee.UIEffects.Editors
                     PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
 #endif
 
-                    defines[Array.IndexOf(defines, k_HDRGradientScriptingDefine)] = defines[defines.Length - 1];
+                    defines[Array.IndexOf(defines, k_NoHDRGradientScriptingDefine)] = defines[defines.Length - 1];
                     Array.Resize(ref defines, defines.Length - 1);
 
 #if UNITY_2023_1_OR_NEWER
