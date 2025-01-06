@@ -260,7 +260,7 @@ namespace Coffee.UIEffects.Editors
                 }
 
                 EditorGUILayout.PropertyField(_shadowColorFilter);
-                EditorGUILayout.PropertyField(_shadowColor);
+                DrawColorPickerField(_shadowColor, false);
                 EditorGUILayout.PropertyField(_shadowColorGlow);
                 EditorGUILayout.PropertyField(_shadowFade);
 
@@ -289,12 +289,14 @@ namespace Coffee.UIEffects.Editors
                         EditorGUILayout.PropertyField(_gradationGradient);
                         break;
                     default:
-                        EditorGUILayout.PropertyField(_gradationColor1);
                         var r = EditorGUILayout.GetControlRect();
-                        r.width -= 20;
-                        EditorGUI.PropertyField(r, _gradationColor2);
+                        r.height = EditorGUIUtility.singleLineHeight;
+                        DrawColorPickerField(_gradationColor1, r, new GUIContent("Gradation Color 1"));
+                        r = EditorGUILayout.GetControlRect();
+                        r.width -= 24;
+                        DrawColorPickerField(_gradationColor2, r, new GUIContent("Gradation Color 2"));
 
-                        r.x += r.width;
+                        r.x += r.width + 4;
                         r.width = 20;
                         // Swap colors
                         if (GUI.Button(r, EditorGUIUtility.IconContent("preaudioloopoff"), "iconbutton"))
@@ -324,6 +326,22 @@ namespace Coffee.UIEffects.Editors
             {
                 EditorGUILayout.PropertyField(_allowToModifyMeshShape);
             }
+        }
+
+        private static void DrawColorPickerField(SerializedProperty color, bool showAlpha = true)
+        {
+            var r = EditorGUILayout.GetControlRect();
+            r.height = EditorGUIUtility.singleLineHeight;
+            DrawColorPickerField(color, r, new GUIContent(color.displayName, color.tooltip), showAlpha);
+        }
+
+        private static void DrawColorPickerField(SerializedProperty color, Rect rect, GUIContent label, bool showAlpha = true)
+        {
+            EditorGUI.BeginChangeCheck();
+            EditorGUI.showMixedValue = color.hasMultipleDifferentValues;
+            var colorField = EditorGUI.ColorField(rect, label, color.colorValue, true, showAlpha, UIEffectProjectSettings.useHdrColorPicker);
+            if (EditorGUI.EndChangeCheck())
+                color.colorValue = colorField;
         }
 
         private static void DrawColor(SerializedProperty filter, SerializedProperty color, ColorFilter prevFilter)
@@ -361,7 +379,7 @@ namespace Coffee.UIEffects.Editors
                     color.colorValue = Color.white;
                 }
 
-                EditorGUILayout.PropertyField(color);
+                DrawColorPickerField(color);
             }
         }
 

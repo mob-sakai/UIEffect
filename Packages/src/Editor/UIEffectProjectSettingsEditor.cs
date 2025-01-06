@@ -4,21 +4,15 @@ using UnityEngine;
 using Coffee.UIEffectInternal;
 using UnityEditorInternal;
 
-#if UNITY_2021_3_OR_NEWER
-using UnityEditor.Build;
-#endif
-
 namespace Coffee.UIEffects.Editors
 {
     [CustomEditor(typeof(UIEffectProjectSettings))]
     public class UIEffectProjectSettingsEditor : Editor
     {
-        private const string k_NoHDRGradientScriptingDefine = "UIEFFECTS_GRADIENT_NO_HDR";
-
-        private ReorderableList _reorderableList;
-        private bool _noHdrGradient;
-        private SerializedProperty _transformSensitivity;
         private bool _isInitialized;
+        private ReorderableList _reorderableList;
+        private SerializedProperty _useHdrColorPicker;
+        private SerializedProperty _transformSensitivity;
         private ShaderVariantRegistryEditor _shaderVariantRegistryEditor;
 
         private void InitializeIfNeeded()
@@ -26,6 +20,7 @@ namespace Coffee.UIEffects.Editors
             if (_isInitialized) return;
 
             _transformSensitivity = serializedObject.FindProperty("m_TransformSensitivity");
+            _useHdrColorPicker = serializedObject.FindProperty("m_UseHdrColorPicker");
             var runtimePresets = serializedObject.FindProperty("m_RuntimePresets");
             _reorderableList = new ReorderableList(serializedObject, runtimePresets, true, true, true, true);
             _reorderableList.drawHeaderCallback = rect => EditorGUI.LabelField(rect, "Runtime Presets");
@@ -65,18 +60,6 @@ namespace Coffee.UIEffects.Editors
             _isInitialized = false;
         }
 
-        private void Awake()
-        {
-            // Called when the domain reloads,
-            // So we check if the scripting define is altered manually
-#if UNITY_2021_3_OR_NEWER
-            PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup), out var defines);
-#else
-            PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
-#endif
-            _noHdrGradient = Array.IndexOf(defines, k_NoHDRGradientScriptingDefine) != -1;
-        }
-
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
@@ -85,45 +68,9 @@ namespace Coffee.UIEffects.Editors
             // Settings
             EditorGUILayout.PropertyField(_transformSensitivity);
 
-            var useHdrGradient = !_noHdrGradient;
-            if (EditorGUILayout.Toggle(new GUIContent("HDR Gradient", "Use HDR colors on two-color gradients"), useHdrGradient) != useHdrGradient)
-            {
-                _noHdrGradient = !_noHdrGradient;
-                if (_noHdrGradient)
-                {
-#if UNITY_2021_3_OR_NEWER
-                    PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup), out var defines);
-#else
-                    PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
-#endif
+            // A GUIContent is used here to override the capitalization of HDR
+            EditorGUILayout.PropertyField(_useHdrColorPicker, new GUIContent("HDR Color Picker", "Use HDR color pickers on color fields."));
 
-                    Array.Resize(ref defines, defines.Length + 1);
-                    defines[defines.Length - 1] = k_NoHDRGradientScriptingDefine;
-
-#if UNITY_2021_3_OR_NEWER
-                    PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup), defines);
-#else
-                    PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, defines);
-#endif
-                }
-                else
-                {
-#if UNITY_2021_3_OR_NEWER
-                    PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup), out var defines);
-#else
-                    PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, out var defines);
-#endif
-
-                    defines[Array.IndexOf(defines, k_NoHDRGradientScriptingDefine)] = defines[defines.Length - 1];
-                    Array.Resize(ref defines, defines.Length - 1);
-
-#if UNITY_2021_3_OR_NEWER
-                    PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup), defines);
-#else
-                    PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, defines);
-#endif
-                }
-            }
             _reorderableList.DoLayoutList();
 
             // Shader registry

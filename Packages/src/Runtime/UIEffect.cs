@@ -148,19 +148,11 @@ namespace Coffee.UIEffects
         protected GradationMode m_GradationMode = GradationMode.None;
 
         [SerializeField]
-#if UIEFFECTS_GRADIENT_NO_HDR
-        [ColorUsage(true)]
-#else
         [ColorUsage(true, true)]
-#endif
         protected Color m_GradationColor1 = Color.white;
 
         [SerializeField]
-#if UIEFFECTS_GRADIENT_NO_HDR
-        [ColorUsage(true)]
-#else
         [ColorUsage(true, true)]
-#endif
         protected Color m_GradationColor2 = Color.white;
 
         [SerializeField]

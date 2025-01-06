@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,6 +15,9 @@ namespace Coffee.UIEffects
         [Header("Setting")]
         [SerializeField]
         private TransformSensitivity m_TransformSensitivity = TransformSensitivity.Medium;
+
+        [Tooltip("Use HDR color pickers on color fields.")]
+        [SerializeField] private bool m_UseHdrColorPicker = true;
 
         [SerializeField]
         internal List<UIEffect> m_RuntimePresets = new List<UIEffect>();
@@ -36,6 +38,12 @@ namespace Coffee.UIEffects
         {
             get => instance.m_TransformSensitivity;
             set => instance.m_TransformSensitivity = value;
+        }
+
+        public static bool useHdrColorPicker
+        {
+            get => instance.m_UseHdrColorPicker;
+            set => instance.m_UseHdrColorPicker = value;
         }
 
         public static void RegisterRuntimePreset(UIEffect effect)
@@ -113,7 +121,7 @@ namespace Coffee.UIEffects
             m_ShaderVariantRegistry.ClearCache();
             MaterialRepository.Clear();
             foreach (var c in Misc.FindObjectsOfType<UIEffectBase>()
-                         .Concat(Misc.GetAllComponentsInPrefabStage<UIEffectBase>()))
+                .Concat(Misc.GetAllComponentsInPrefabStage<UIEffectBase>()))
             {
                 c.SetMaterialDirty();
             }
