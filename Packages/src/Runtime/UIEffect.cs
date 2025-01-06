@@ -514,8 +514,8 @@ namespace Coffee.UIEffects
             {
                 if (m_BlendType == value) return;
                 (m_SrcBlendMode, m_DstBlendMode) = (m_BlendType, m_SrcBlendMode, m_DstBlendMode).Convert();
-                context.srcBlendMode             = m_SrcBlendMode;
-                context.dstBlendMode             = m_DstBlendMode;
+                context.srcBlendMode = m_SrcBlendMode;
+                context.dstBlendMode = m_DstBlendMode;
                 ApplyContextToMaterial();
             }
         }
@@ -531,7 +531,7 @@ namespace Coffee.UIEffects
             {
                 if (m_SrcBlendMode == value) return;
                 context.srcBlendMode = m_SrcBlendMode = value;
-                m_BlendType          = (m_SrcBlendMode, m_DstBlendMode).Convert();
+                m_BlendType = (m_SrcBlendMode, m_DstBlendMode).Convert();
                 ApplyContextToMaterial();
             }
         }
@@ -547,7 +547,7 @@ namespace Coffee.UIEffects
             {
                 if (m_DstBlendMode == value) return;
                 context.dstBlendMode = m_DstBlendMode = value;
-                m_BlendType          = (m_SrcBlendMode, m_DstBlendMode).Convert();
+                m_BlendType = (m_SrcBlendMode, m_DstBlendMode).Convert();
                 ApplyContextToMaterial();
             }
         }
@@ -733,7 +733,7 @@ namespace Coffee.UIEffects
             }
         }
 
-        public  List<UIEffectReplica> replicas => _replicas ??= InternalListPool<UIEffectReplica>.Rent();
+        public List<UIEffectReplica> replicas => _replicas ??= InternalListPool<UIEffectReplica>.Rent();
         private List<UIEffectReplica> _replicas;
 
         protected override void OnEnable()
@@ -795,56 +795,56 @@ namespace Coffee.UIEffects
 
         protected override void UpdateContext(UIEffectContext c)
         {
-            c.toneFilter    = m_ToneFilter;
+            c.toneFilter = m_ToneFilter;
             c.toneIntensity = m_ToneIntensity;
-            c.toneParams    = m_ToneParams;
+            c.toneParams = m_ToneParams;
 
-            c.colorFilter    = m_ColorFilter;
-            c.color          = m_Color;
+            c.colorFilter = m_ColorFilter;
+            c.color = m_Color;
             c.colorIntensity = m_ColorIntensity;
-            c.colorGlow      = m_ColorGlow;
+            c.colorGlow = m_ColorGlow;
 
-            c.samplingFilter    = m_SamplingFilter;
+            c.samplingFilter = m_SamplingFilter;
             c.samplingIntensity = m_SamplingIntensity;
 
-            c.transitionFilter          = m_TransitionFilter;
-            c.transitionRate            = m_TransitionRate;
-            c.transitionReverse         = m_TransitionReverse;
-            c.transitionTex             = m_TransitionTex;
-            c.transitionTexScale        = m_TransitionTexScale;
-            c.transitionTexOffset       = m_TransitionTexOffset;
-            c.transitionRotation        = m_TransitionRotation;
+            c.transitionFilter = m_TransitionFilter;
+            c.transitionRate = m_TransitionRate;
+            c.transitionReverse = m_TransitionReverse;
+            c.transitionTex = m_TransitionTex;
+            c.transitionTexScale = m_TransitionTexScale;
+            c.transitionTexOffset = m_TransitionTexOffset;
+            c.transitionRotation = m_TransitionRotation;
             c.transitionKeepAspectRatio = m_TransitionKeepAspectRatio;
-            c.transitionWidth           = m_TransitionWidth;
-            c.transitionSoftness        = m_TransitionSoftness;
-            c.transitionColorFilter     = m_TransitionColorFilter;
-            c.transitionColor           = m_TransitionColor;
-            c.transitionColorGlow       = m_TransitionColorGlow;
+            c.transitionWidth = m_TransitionWidth;
+            c.transitionSoftness = m_TransitionSoftness;
+            c.transitionColorFilter = m_TransitionColorFilter;
+            c.transitionColor = m_TransitionColor;
+            c.transitionColorGlow = m_TransitionColorGlow;
 
-            c.targetMode     = m_TargetMode;
-            c.targetColor    = m_TargetColor;
-            c.targetRange    = m_TargetRange;
+            c.targetMode = m_TargetMode;
+            c.targetColor = m_TargetColor;
+            c.targetRange = m_TargetRange;
             c.targetSoftness = m_TargetSoftness;
 
             c.srcBlendMode = m_SrcBlendMode;
             c.dstBlendMode = m_DstBlendMode;
 
-            c.shadowMode          = m_ShadowMode;
-            c.shadowDistance      = m_ShadowDistance;
-            c.shadowIteration     = m_ShadowIteration;
-            c.shadowFade          = m_ShadowFade;
-            c.shadowMirrorScale   = m_ShadowMirrorScale;
+            c.shadowMode = m_ShadowMode;
+            c.shadowDistance = m_ShadowDistance;
+            c.shadowIteration = m_ShadowIteration;
+            c.shadowFade = m_ShadowFade;
+            c.shadowMirrorScale = m_ShadowMirrorScale;
             c.shadowBlurIntensity = m_ShadowBlurIntensity;
-            c.shadowColorFilter   = m_ShadowColorFilter;
-            c.shadowColor         = m_ShadowColor;
-            c.shadowColorGlow     = m_ShadowColorGlow;
+            c.shadowColorFilter = m_ShadowColorFilter;
+            c.shadowColor = m_ShadowColor;
+            c.shadowColorGlow = m_ShadowColorGlow;
 
-            c.gradationMode     = m_GradationMode;
-            c.gradationColor1   = m_GradationColor1;
-            c.gradationColor2   = m_GradationColor2;
+            c.gradationMode = m_GradationMode;
+            c.gradationColor1 = m_GradationColor1;
+            c.gradationColor2 = m_GradationColor2;
             c.gradationGradient = m_GradationGradient;
-            c.gradationOffset   = m_GradationOffset;
-            c.gradationScale    = m_GradationScale;
+            c.gradationOffset = m_GradationOffset;
+            c.gradationScale = m_GradationScale;
             c.gradationRotation = m_GradationRotation;
 
             c.allowToModifyMeshShape = m_AllowToModifyMeshShape;
@@ -922,50 +922,50 @@ namespace Coffee.UIEffects
         {
             if (!preset) return;
 
-            m_ToneFilter    = preset.m_ToneFilter;
+            m_ToneFilter = preset.m_ToneFilter;
             m_ToneIntensity = preset.m_ToneIntensity;
-            m_ToneParams    = preset.m_ToneParams;
+            m_ToneParams = preset.m_ToneParams;
 
-            m_ColorFilter    = preset.m_ColorFilter;
-            m_Color          = preset.m_Color;
+            m_ColorFilter = preset.m_ColorFilter;
+            m_Color = preset.m_Color;
             m_ColorIntensity = preset.m_ColorIntensity;
-            m_ColorGlow      = preset.m_ColorGlow;
+            m_ColorGlow = preset.m_ColorGlow;
 
-            m_SamplingFilter    = preset.m_SamplingFilter;
+            m_SamplingFilter = preset.m_SamplingFilter;
             m_SamplingIntensity = preset.m_SamplingIntensity;
-            m_SamplingScale     = preset.m_SamplingScale;
+            m_SamplingScale = preset.m_SamplingScale;
 
-            m_TransitionFilter          = preset.m_TransitionFilter;
-            m_TransitionRate            = preset.m_TransitionRate;
-            m_TransitionReverse         = preset.m_TransitionReverse;
-            m_TransitionTex             = preset.m_TransitionTex;
-            m_TransitionTexScale        = preset.m_TransitionTexScale;
-            m_TransitionTexOffset       = preset.m_TransitionTexOffset;
-            m_TransitionRotation        = preset.m_TransitionRotation;
+            m_TransitionFilter = preset.m_TransitionFilter;
+            m_TransitionRate = preset.m_TransitionRate;
+            m_TransitionReverse = preset.m_TransitionReverse;
+            m_TransitionTex = preset.m_TransitionTex;
+            m_TransitionTexScale = preset.m_TransitionTexScale;
+            m_TransitionTexOffset = preset.m_TransitionTexOffset;
+            m_TransitionRotation = preset.m_TransitionRotation;
             m_TransitionKeepAspectRatio = preset.m_TransitionKeepAspectRatio;
-            m_TransitionWidth           = preset.m_TransitionWidth;
-            m_TransitionSoftness        = preset.m_TransitionSoftness;
-            m_TransitionColorFilter     = preset.m_TransitionColorFilter;
-            m_TransitionColor           = preset.m_TransitionColor;
-            m_TransitionColorGlow       = preset.m_TransitionColorGlow;
+            m_TransitionWidth = preset.m_TransitionWidth;
+            m_TransitionSoftness = preset.m_TransitionSoftness;
+            m_TransitionColorFilter = preset.m_TransitionColorFilter;
+            m_TransitionColor = preset.m_TransitionColor;
+            m_TransitionColorGlow = preset.m_TransitionColorGlow;
 
-            m_TargetMode     = preset.m_TargetMode;
-            m_TargetColor    = preset.m_TargetColor;
-            m_TargetRange    = preset.m_TargetRange;
+            m_TargetMode = preset.m_TargetMode;
+            m_TargetColor = preset.m_TargetColor;
+            m_TargetRange = preset.m_TargetRange;
             m_TargetSoftness = preset.m_TargetSoftness;
 
-            m_BlendType                      = preset.m_BlendType;
+            m_BlendType = preset.m_BlendType;
             (m_SrcBlendMode, m_DstBlendMode) = (m_BlendType, preset.m_SrcBlendMode, preset.m_DstBlendMode).Convert();
 
-            m_ShadowMode          = preset.m_ShadowMode;
-            m_ShadowDistance      = preset.m_ShadowDistance;
-            m_ShadowIteration     = preset.m_ShadowIteration;
-            m_ShadowFade          = preset.m_ShadowFade;
-            m_ShadowMirrorScale   = preset.m_ShadowMirrorScale;
+            m_ShadowMode = preset.m_ShadowMode;
+            m_ShadowDistance = preset.m_ShadowDistance;
+            m_ShadowIteration = preset.m_ShadowIteration;
+            m_ShadowFade = preset.m_ShadowFade;
+            m_ShadowMirrorScale = preset.m_ShadowMirrorScale;
             m_ShadowBlurIntensity = preset.m_ShadowBlurIntensity;
-            m_ShadowColorFilter   = preset.m_ShadowColorFilter;
-            m_ShadowColor         = preset.m_ShadowColor;
-            m_ShadowColorGlow     = preset.m_ShadowColorGlow;
+            m_ShadowColorFilter = preset.m_ShadowColorFilter;
+            m_ShadowColor = preset.m_ShadowColor;
+            m_ShadowColorGlow = preset.m_ShadowColorGlow;
 
             UpdateContext(context);
             ApplyContextToMaterial();
@@ -975,57 +975,57 @@ namespace Coffee.UIEffects
 
         internal void CopyFrom(UIEffectContext c)
         {
-            m_ToneFilter    = c.toneFilter;
+            m_ToneFilter = c.toneFilter;
             m_ToneIntensity = c.toneIntensity;
-            m_ToneParams    = c.toneParams;
+            m_ToneParams = c.toneParams;
 
-            m_ColorFilter    = c.colorFilter;
-            m_Color          = c.color;
+            m_ColorFilter = c.colorFilter;
+            m_Color = c.color;
             m_ColorIntensity = c.colorIntensity;
-            m_ColorGlow      = c.colorGlow;
+            m_ColorGlow = c.colorGlow;
 
-            m_SamplingFilter    = c.samplingFilter;
+            m_SamplingFilter = c.samplingFilter;
             m_SamplingIntensity = c.samplingIntensity;
 
-            m_TransitionFilter          = c.transitionFilter;
-            m_TransitionRate            = c.transitionRate;
-            m_TransitionReverse         = c.transitionReverse;
-            m_TransitionTex             = c.transitionTex;
-            m_TransitionTexScale        = c.transitionTexScale;
-            m_TransitionTexOffset       = c.transitionTexOffset;
-            m_TransitionRotation        = c.transitionRotation;
+            m_TransitionFilter = c.transitionFilter;
+            m_TransitionRate = c.transitionRate;
+            m_TransitionReverse = c.transitionReverse;
+            m_TransitionTex = c.transitionTex;
+            m_TransitionTexScale = c.transitionTexScale;
+            m_TransitionTexOffset = c.transitionTexOffset;
+            m_TransitionRotation = c.transitionRotation;
             m_TransitionKeepAspectRatio = c.transitionKeepAspectRatio;
-            m_TransitionWidth           = c.transitionWidth;
-            m_TransitionSoftness        = c.transitionSoftness;
-            m_TransitionColorFilter     = c.transitionColorFilter;
-            m_TransitionColor           = c.transitionColor;
-            m_TransitionColorGlow       = c.transitionColorGlow;
+            m_TransitionWidth = c.transitionWidth;
+            m_TransitionSoftness = c.transitionSoftness;
+            m_TransitionColorFilter = c.transitionColorFilter;
+            m_TransitionColor = c.transitionColor;
+            m_TransitionColorGlow = c.transitionColorGlow;
 
-            m_TargetMode     = c.targetMode;
-            m_TargetColor    = c.targetColor;
-            m_TargetRange    = c.targetRange;
+            m_TargetMode = c.targetMode;
+            m_TargetColor = c.targetColor;
+            m_TargetRange = c.targetRange;
             m_TargetSoftness = c.targetSoftness;
 
             m_SrcBlendMode = c.srcBlendMode;
             m_DstBlendMode = c.dstBlendMode;
-            m_BlendType    = (m_SrcBlendMode, m_DstBlendMode).Convert();
+            m_BlendType = (m_SrcBlendMode, m_DstBlendMode).Convert();
 
-            m_ShadowMode          = c.shadowMode;
-            m_ShadowDistance      = c.shadowDistance;
-            m_ShadowIteration     = c.shadowIteration;
-            m_ShadowFade          = c.shadowFade;
-            m_ShadowMirrorScale   = c.shadowMirrorScale;
+            m_ShadowMode = c.shadowMode;
+            m_ShadowDistance = c.shadowDistance;
+            m_ShadowIteration = c.shadowIteration;
+            m_ShadowFade = c.shadowFade;
+            m_ShadowMirrorScale = c.shadowMirrorScale;
             m_ShadowBlurIntensity = c.shadowBlurIntensity;
-            m_ShadowColorFilter   = c.shadowColorFilter;
-            m_ShadowColor         = c.shadowColor;
-            m_ShadowColorGlow     = c.shadowColorGlow;
+            m_ShadowColorFilter = c.shadowColorFilter;
+            m_ShadowColor = c.shadowColor;
+            m_ShadowColorGlow = c.shadowColorGlow;
 
-            m_GradationMode     = c.gradationMode;
-            m_GradationColor1   = c.gradationColor1;
-            m_GradationColor2   = c.gradationColor2;
+            m_GradationMode = c.gradationMode;
+            m_GradationColor1 = c.gradationColor1;
+            m_GradationColor2 = c.gradationColor2;
             m_GradationGradient = c.gradationGradient;
-            m_GradationOffset   = c.gradationOffset;
-            m_GradationScale    = c.gradationScale;
+            m_GradationOffset = c.gradationOffset;
+            m_GradationScale = c.gradationScale;
             m_GradationRotation = c.gradationRotation;
 
             m_AllowToModifyMeshShape = c.allowToModifyMeshShape;
