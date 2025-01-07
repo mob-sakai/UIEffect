@@ -47,6 +47,34 @@ namespace Coffee.UIEffects
             }
         }
 
+        public static void DoHorizontalGradientFixed(List<UIVertex> verts, Gradient gradient, float offset, float scale,
+            Rect rect, Matrix4x4 m)
+        {
+            var count = verts.Count;
+            for (var i = 0; i < count; i += 3)
+            {
+                var vt0 = verts[i + 0];
+                var vt1 = verts[i + 1];
+                var vt2 = verts[i + 2];
+                var center = m.MultiplyPoint3x4((vt0.position + vt1.position + vt2.position) / 3).x;
+                vt0.color *= Evaluate(gradient, rect, center, offset, scale);
+                vt1.color *= Evaluate(gradient, rect, center, offset, scale);
+                vt2.color *= Evaluate(gradient, rect, center, offset, scale);
+                verts[i + 0] = vt0;
+                verts[i + 1] = vt1;
+                verts[i + 2] = vt2;
+            }
+
+            return;
+
+            static Color Evaluate(Gradient gradient, Rect rect, float t, float offset, float scale)
+            {
+                t = Mathf.InverseLerp(rect.xMin, rect.xMax, t); // 0-1
+                t = Mathf.Repeat((t - offset * scale - (1 - scale) / 2) / scale, 1); // Revert
+                return gradient.Evaluate(t);
+            }
+        }
+
         public static void DoHorizontalGradient(List<UIVertex> verts, Gradient gradient, float offset, float scale,
             Rect rect, Matrix4x4 m)
         {
@@ -219,7 +247,14 @@ namespace Coffee.UIEffects
             float offset, float scale, Rect rect, Matrix4x4 m)
         {
             UIVertexUtil.SplitAngle(verts, splitTimes, rect, m);
-            DoHorizontalGradient(verts, gradient, offset, scale, rect, m);
+            if (gradient.mode == GradientMode.Fixed)
+            {
+                DoHorizontalGradientFixed(verts, gradient, offset, scale, rect, m);
+            }
+            else
+            {
+                DoHorizontalGradient(verts, gradient, offset, scale, rect, m);
+            }
         }
 
         public static void GetKeyTimes(Gradient gradient, List<float> results)
