@@ -184,9 +184,6 @@ namespace Coffee.UIEffects
         public float gradationRotation;
         private List<float> _keyTimes;
 
-        public bool allowToModifyMeshShape;
-
-
         public bool willModifyMaterial => samplingFilter != SamplingFilter.None
                                           || transitionFilter != TransitionFilter.None
                                           || toneFilter != ToneFilter.None
@@ -254,8 +251,6 @@ namespace Coffee.UIEffects
             gradationOffset = preset.gradationOffset;
             gradationScale = preset.gradationScale;
             gradationRotation = preset.gradationRotation;
-
-            allowToModifyMeshShape = preset.allowToModifyMeshShape;
         }
 
         public void SetGradationDirty()
@@ -363,14 +358,14 @@ namespace Coffee.UIEffects
             }
         }
 
-        public void ModifyMesh(Graphic graphic, RectTransform transitionRoot, VertexHelper vh)
+        public void ModifyMesh(Graphic graphic, RectTransform transitionRoot, VertexHelper vh, bool canModifyShape)
         {
             var processor = ContextProcessor.FindProcessor(graphic);
             var isText = processor.IsText(graphic);
             processor.OnPreModifyMesh(graphic);
 
             var verts = s_WorkingVertices;
-            var expandSize = GetExpandSize();
+            var expandSize = GetExpandSize(canModifyShape);
             var count = vh.currentIndexCount;
 
             // Get the rectangle to calculate the normalized position.
@@ -427,7 +422,7 @@ namespace Coffee.UIEffects
             }
 
             // Apply gradation.
-            ApplyGradation(verts, transitionRoot.rect, rectMatrix);
+            ApplyGradation(verts, transitionRoot.rect, rectMatrix, canModifyShape);
 
             // Apply shadow.
             ApplyShadow(transitionRoot, verts);
@@ -436,7 +431,7 @@ namespace Coffee.UIEffects
             vh.AddUIVertexTriangleStream(verts);
         }
 
-        private void ApplyGradation(List<UIVertex> verts, Rect rect, Matrix4x4 m)
+        private void ApplyGradation(List<UIVertex> verts, Rect rect, Matrix4x4 m, bool canModifyShape)
         {
             var a = gradationColor1;
             var b = gradationColor2;
@@ -476,7 +471,7 @@ namespace Coffee.UIEffects
                         GradientUtil.GetKeyTimes(grad, _keyTimes);
                     }
 
-                    if (allowToModifyMeshShape)
+                    if (canModifyShape)
                     {
                         var splitTimes = InternalListPool<float>.Rent();
                         GradientUtil.SplitKeyTimes(_keyTimes, splitTimes, offset, scale);
@@ -498,7 +493,7 @@ namespace Coffee.UIEffects
                         GradientUtil.GetKeyTimes(grad, _keyTimes);
                     }
 
-                    if (allowToModifyMeshShape)
+                    if (canModifyShape)
                     {
                         var splitTimes = InternalListPool<float>.Rent();
                         GradientUtil.SplitKeyTimes(_keyTimes, splitTimes, offset, scale);
@@ -521,7 +516,7 @@ namespace Coffee.UIEffects
                     }
 
                     m = Matrix4x4.Rotate(Quaternion.Euler(0, 0, rot)) * m;
-                    if (allowToModifyMeshShape)
+                    if (canModifyShape)
                     {
                         var splitTimes = InternalListPool<float>.Rent();
                         GradientUtil.SplitKeyTimes(_keyTimes, splitTimes, offset, scale);
@@ -555,9 +550,9 @@ namespace Coffee.UIEffects
             }
         }
 
-        private Vector2 GetExpandSize()
+        private Vector2 GetExpandSize(bool canModifyShape)
         {
-            if (!allowToModifyMeshShape) return Vector2.zero;
+            if (!canModifyShape) return Vector2.zero;
 
             var expandSize = Vector2.zero;
             switch (samplingFilter)

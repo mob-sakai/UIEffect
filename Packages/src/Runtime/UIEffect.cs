@@ -294,6 +294,8 @@ namespace Coffee.UIEffects
             ? Mathf.Clamp(m_SamplingScale, 0.01f, 100)
             : 1;
 
+        public override bool canModifyShape => m_AllowToModifyMeshShape;
+
         /// <summary>
         /// Transition filter for rendering.
         /// </summary>
@@ -714,7 +716,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_AllowToModifyMeshShape == value) return;
-                context.allowToModifyMeshShape = m_AllowToModifyMeshShape = value;
+                m_AllowToModifyMeshShape = value;
                 SetVerticesDirty();
             }
         }
@@ -832,8 +834,6 @@ namespace Coffee.UIEffects
             c.gradationOffset = m_GradationOffset;
             c.gradationScale = m_GradationScale;
             c.gradationRotation = m_GradationRotation;
-
-            c.allowToModifyMeshShape = m_AllowToModifyMeshShape;
         }
 
         public override void ApplyContextToMaterial()
@@ -1012,8 +1012,6 @@ namespace Coffee.UIEffects
             m_GradationOffset = c.gradationOffset;
             m_GradationScale = c.gradationScale;
             m_GradationRotation = c.gradationRotation;
-
-            m_AllowToModifyMeshShape = c.allowToModifyMeshShape;
 
             UpdateContext(context);
             ApplyContextToMaterial();

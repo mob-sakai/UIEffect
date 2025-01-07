@@ -12,6 +12,9 @@ namespace Coffee.UIEffects
         [SerializeField]
         protected float m_SamplingScale = 1f;
 
+        [SerializeField]
+        protected bool m_AllowToModifyMeshShape = true;
+
         private UIEffect _currentTarget;
         private Matrix4x4 _prevTransformHash;
 
@@ -54,6 +57,8 @@ namespace Coffee.UIEffects
         public override float actualSamplingScale => target && target.samplingFilter != SamplingFilter.None
             ? Mathf.Clamp(m_SamplingScale, 0.01f, 100)
             : 1;
+
+        public override bool canModifyShape => m_AllowToModifyMeshShape;
 
         public override uint effectId => target ? target.effectId : 0;
         public override UIEffectContext context => target && target.isActiveAndEnabled ? target.context : null;

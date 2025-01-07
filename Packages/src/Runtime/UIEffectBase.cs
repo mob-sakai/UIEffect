@@ -32,6 +32,7 @@ namespace Coffee.UIEffects
         public Graphic graphic => _graphic ? _graphic : _graphic = GetComponent<Graphic>();
         public virtual uint effectId => (uint)GetInstanceID();
         public virtual float actualSamplingScale => 1;
+        public virtual bool canModifyShape => true;
 
         public virtual UIEffectContext context
         {
@@ -90,7 +91,7 @@ namespace Coffee.UIEffects
         {
             if (!isActiveAndEnabled || context == null) return;
 
-            context.ModifyMesh(graphic, transitionRoot, vh);
+            context.ModifyMesh(graphic, transitionRoot, vh, canModifyShape);
         }
 
         public virtual Material GetModifiedMaterial(Material baseMaterial)
