@@ -89,7 +89,6 @@ namespace Coffee.UIEffects.Editors
 
             _toneFilter = serializedObject.FindProperty("m_ToneFilter");
             _toneIntensity = serializedObject.FindProperty("m_ToneIntensity");
-            var toneParams = serializedObject.FindProperty("m_ToneParams");
 
             _colorFilter = serializedObject.FindProperty("m_ColorFilter");
             _color = serializedObject.FindProperty("m_Color");
