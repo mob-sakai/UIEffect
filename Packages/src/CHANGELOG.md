@@ -1,3 +1,21 @@
+# [5.2.0](https://github.com/mob-sakai/UIEffect/compare/5.1.0...5.2.0) (2025-01-07)
+
+
+### Bug Fixes
+
+* `Gradation` properties do not update when a preset is loaded ([edf6943](https://github.com/mob-sakai/UIEffect/commit/edf694313f101b66f760bca64593fb87037dcb3d)), closes [#291](https://github.com/mob-sakai/UIEffect/issues/291)
+* an error occurs when saving a preset ([894c561](https://github.com/mob-sakai/UIEffect/commit/894c5610d044f211067037b6c69f9860ac496ffc)), closes [#293](https://github.com/mob-sakai/UIEffect/issues/293)
+* fix gradation gradient edge (angle gradient) ([0ef6027](https://github.com/mob-sakai/UIEffect/commit/0ef60273714c7b68131f2f0d233b16335a5cd367))
+
+
+### Features
+
+* `Angle Gradient` gradation supports fixed mode gradient ([7cb8325](https://github.com/mob-sakai/UIEffect/commit/7cb8325e445350d2175865f736186f719e1cbe00))
+* `Angle Gradient` gradation supports RectTransform pivot ([2f63adf](https://github.com/mob-sakai/UIEffect/commit/2f63adfba057bec7f8183a5b34654cdf84163a34))
+* add `Use HDR Color Picker` option for project settings (editor) ([1be0cd4](https://github.com/mob-sakai/UIEffect/commit/1be0cd45db952d05e51d508c58f65a6541df9de0)), closes [#290](https://github.com/mob-sakai/UIEffect/issues/290)
+* the `Allow To Modify Mesh Shape` property should remain unchanged when loading a preset ([f7175c0](https://github.com/mob-sakai/UIEffect/commit/f7175c037371278eb7a0c7883cffccb5c31dba0a)), closes [#294](https://github.com/mob-sakai/UIEffect/issues/294)
+* the `Sampling Scale` property should remain unchanged when loading a preset ([238a17d](https://github.com/mob-sakai/UIEffect/commit/238a17d57ddf1f6b859ce830e80a1be6c3d739f1)), closes [#292](https://github.com/mob-sakai/UIEffect/issues/292)
+
 # [5.1.0](https://github.com/mob-sakai/UIEffect/compare/5.0.2...5.1.0) (2024-12-31)
 
 
