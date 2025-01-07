@@ -339,5 +339,41 @@ namespace Coffee.UIEffects
                 return false;
             }
         }
+
+        public static Rect RotateRectAsNormalized(Rect rect, float rot)
+        {
+            var rad = -rot * Mathf.Deg2Rad;
+            var cos = Mathf.Cos(rad);
+            var sin = Mathf.Sin(rad);
+            var dir = new Vector2(cos, sin);
+            var center = rect.center;
+
+            if (Mathf.Abs(dir.x) < 0.0001f)
+            {
+                rect.width = rect.height;
+            }
+            else if (Mathf.Abs(dir.y) < 0.0001f)
+            {
+                rect.height = rect.width;
+            }
+            else
+            {
+                var d0 = GetPointToLineDistance(new Vector2(rect.xMin, rect.yMax), center, dir, out var p0);
+                var d1 = GetPointToLineDistance(new Vector2(rect.xMin, rect.yMin), center, dir, out var p1);
+                var closest = d0 < d1 ? p0 : p1;
+                rect.width = rect.height = Vector2.Distance(center, closest) * 2;
+            }
+
+            rect.center = new Vector2(Vector2.Dot(center, dir), 0);
+            return rect;
+        }
+
+        private static float GetPointToLineDistance(Vector2 point, Vector2 origin, Vector2 dir, out Vector2 closest)
+        {
+            var dirNormalized = dir.normalized;
+            var time = Vector2.Dot(point - origin, dirNormalized);
+            closest = origin + time * dirNormalized;
+            return Vector2.Distance(point, closest);
+        }
     }
 }

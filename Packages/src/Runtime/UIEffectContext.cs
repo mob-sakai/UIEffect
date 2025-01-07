@@ -462,6 +462,7 @@ namespace Coffee.UIEffects
                     GradientUtil.DoRadialGradient(verts, a, b, offset, scale, rect, m, 12);
                     break;
                 case GradationMode.Angle:
+                    rect = GradientUtil.RotateRectAsNormalized(rect, rot);
                     m = Matrix4x4.Rotate(Quaternion.Euler(0, 0, rot)) * m;
                     GradientUtil.DoHorizontalGradient(verts, a, b, offset, scale, rect, m);
                     break;
@@ -517,6 +518,7 @@ namespace Coffee.UIEffects
                         GradientUtil.GetKeyTimes(grad, _keyTimes);
                     }
 
+                    rect = GradientUtil.RotateRectAsNormalized(rect, rot);
                     m = Matrix4x4.Rotate(Quaternion.Euler(0, 0, rot)) * m;
                     if (canModifyShape)
                     {
