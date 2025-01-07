@@ -457,7 +457,10 @@ namespace Coffee.UIEffects.Editors
             r.x += r.width;
             if (GUI.Button(r, EditorGUIUtility.TrTempContent("Save As New"), "MiniButton"))
             {
-                UIEffectProjectSettings.SaveAsNewPreset(targets.OfType<UIEffect>().FirstOrDefault());
+                EditorApplication.delayCall += () =>
+                {
+                    UIEffectProjectSettings.SaveAsNewPreset(targets.OfType<UIEffect>().FirstOrDefault());
+                };
             }
         }
     }
