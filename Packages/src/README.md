@@ -183,7 +183,7 @@ If upgrading from UIEffect v4 to v5, note the following breaking changes:
 
 ### Component: UIEffect
 
-![](https://github.com/user-attachments/assets/f1d0d8a3-a0cf-4595-bda2-78165527a99b)
+![](https://github.com/user-attachments/assets/e0ba2661-4d3b-4f55-984a-153ec3d53137)
 
 The `UIEffect` component applies visual effects to UI elements, allowing various effects to be achieved by combining multiple filters.
 
@@ -202,8 +202,6 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 
 - **Sampling Filter**: `None`, `Blur Fast`, `Blur Medium`, `Blur Detail`, `Pixelation`, `Rgb Shift`, `Edge Luminescence`, `Edge Alpha`
 - **Sampling Intensity**: 0.0 (no effect) - 1.0 (full effect).
-- **Sampling Scale**: The referencing scale during sampling.
-    - Larger values are suitable for high-resolution textures.
 
 #### Transition Filter
 
@@ -255,10 +253,13 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 > `Horizontal Gradient` and `Vertical Gradient` divide the mesh horizontally or vertically and apply a gradient.
 > This is very fast but only supports Full Rect.  
 > `Angle Gradient` divides the mesh at the specified angle and applies a gradient.  
-> It can be applied to meshes other than Full Rect because it applies the gradient according to the original mesh shape.
+> It can be applied to meshes other than Full Rect because it applies the gradient according to the original mesh shape.  
+> `Gradation Gradient` has two modes, `Blend` and `Fixed`.
 
 #### Others
 
+- **Sampling Scale**: The referencing scale during sampling.
+    - Larger values are suitable for high-resolution textures.
 - **Allow To Modify Mesh Shape**: If enabled, the mesh shape can be modified.
 
 <br><br>
@@ -288,13 +289,14 @@ You can preview the animation using the seek bar and play button.
 
 ### Component: UIEffectReplica
 
-![](https://github.com/user-attachments/assets/27d1840f-77c2-45cd-bde8-716626479c46)
+![](https://github.com/user-attachments/assets/27558d2e-ee12-4b10-bf13-103474b6c6cc)
 
 The `UIEffectReplica` component applies visual effects to UI elements by replicating the settings of another `UIEffect` component. This allows the same effect to be applied across multiple UI elements simultaneously.
 
 - **Target**: The target `UIEffect` component to replicate.
 - **Use Target Transform**: Use the target's transform for some effects.
-- **Sampling Scale**: Override the sampling scale.  
+- **Sampling Scale**: Override the sampling scale.
+- **Allow To Modify Mesh Shape**: If enabled, the mesh shape can be modified.  
   ![](https://github.com/user-attachments/assets/127e30fb-15c7-4002-ab65-e8f29e640330)
 
 <br><br>
@@ -321,6 +323,10 @@ Alternatively, you can manually import the resources by following these steps:
 4. Add the `UIEffect` component to a TextMeshProUGUI element and adjust the effect settings. The `<font>` and `<sprite>` tags are also supported.  
    ![](https://github.com/user-attachments/assets/bfd28f36-2e32-4383-8628-276b02579fd4)
 
+> [!TIP]
+> `TextMeshPro Support` may change with updates to the UIEffect package.  
+> If issues occur, try importing it again.
+
 <br><br>
 
 ### Runtime/Editor Preset for UIEffect
@@ -332,6 +338,10 @@ You can create and use presets for `UIEffect` components.
 - Click "Load" button to apply an editor preset.
 - In the [Project Settings](#project-settings), you can register saved editor presets as runtime presets.
 - Runtime presets can be loaded using the `UIEffect.LoadPreset(presetName)` method.
+
+> [!TIP]
+> Editor presets are saved in the `UIEffectPresets` directory.
+> You can also create subdirectories to customize the preset menu.
 
 <br><br>
 
@@ -362,13 +372,22 @@ UIEffectProjectSettings.shaderVariantCollection.WarmUp();
 
 ### Project Settings
 
-![](https://github.com/user-attachments/assets/54dd42cf-099d-4fb1-b699-cad29bf211b6)
+![](https://github.com/user-attachments/assets/c50ed6fc-9577-4c85-9b38-89ed8571a8b0)
 
 You can adjust the project-wide settings for UIEffect. (`Edit > Project Settings > UI > UIEffect`)
+
+#### Settings
 
 - **Transform Sensitivity**: `Low`, `Medium`, `High`
   - Set the sensitivity of the transformation when `Use Target Transform` is enabled in `UIEffectReplica` component.
 - **Runtime Presets**: A list of presets that can be loaded at runtime. Load them using `UIEffect.LoadPreset(presetName)` method.
+
+#### Editor
+
+- **Use HDR Color Picker**: If enabled, the HDR color picker will be used in the inspector.
+
+#### Shader
+
 - **Optional Shaders (UIEffect)**: A list of shaders that will be prioritized when a ui-effect shader is
   requested.
     - If the shader is included in the list, that shader will be used.
@@ -392,6 +411,8 @@ Here are the limitations of UIEffect:
 - Shader variants used at runtime must be registered in the [Project Settings](#project-settings).
 - When using UIEffect with TextMeshProUGUI, `SamplingFilter.BlurMedium` and `SamplingFilter.BlurDetail` are not supported due to performance considerations.
   - These will automatically fall back to `SamplingFilter.BlurFast`.
+- UIEffect supports default UI components (`Image`, `RawImage`, `Text`) and `TextMeshProUGUI`.
+  - If you want to use UIEffect with other components, create a issue or pull request.
 
 <br><br>
 
