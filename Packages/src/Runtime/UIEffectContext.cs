@@ -433,6 +433,8 @@ namespace Coffee.UIEffects
 
         private void ApplyGradation(List<UIVertex> verts, Rect rect, Matrix4x4 m, bool canModifyShape)
         {
+            if (gradationMode == GradationMode.None) return;
+
             var a = gradationColor1;
             var b = gradationColor2;
             var offset = gradationOffset;

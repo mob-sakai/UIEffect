@@ -283,9 +283,9 @@ namespace Coffee.UIEffects
                     time -= scale;
                 }
 
-                while (time < 1f)
+                while (time <= 1f)
                 {
-                    if (0 < time && !Contains(results, time))
+                    if (0 <= time && !Contains(results, time))
                     {
                         results.Add(time);
                     }
