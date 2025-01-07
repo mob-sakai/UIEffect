@@ -26,7 +26,6 @@ namespace Coffee.UIEffects
         [SerializeField]
         protected float m_ColorIntensity = 1;
 
-        [ColorUsage(false, true)]
         [SerializeField]
         protected Color m_Color = Color.white;
 
@@ -81,7 +80,6 @@ namespace Coffee.UIEffects
         [SerializeField]
         protected ColorFilter m_TransitionColorFilter = ColorFilter.MultiplyAdditive;
 
-        [ColorUsage(true, true)]
         [SerializeField]
         protected Color m_TransitionColor = new Color(0f, 0.5f, 1.0f, 1.0f);
 
@@ -91,7 +89,6 @@ namespace Coffee.UIEffects
         [SerializeField]
         protected TargetMode m_TargetMode = TargetMode.None;
 
-        [ColorUsage(false, false)]
         [SerializeField]
         protected Color m_TargetColor = Color.white;
 
@@ -137,7 +134,6 @@ namespace Coffee.UIEffects
         [SerializeField]
         protected ColorFilter m_ShadowColorFilter = ColorFilter.Replace;
 
-        [ColorUsage(false, true)]
         [SerializeField]
         protected Color m_ShadowColor = Color.white;
 
@@ -148,11 +144,9 @@ namespace Coffee.UIEffects
         protected GradationMode m_GradationMode = GradationMode.None;
 
         [SerializeField]
-        [ColorUsage(true, true)]
         protected Color m_GradationColor1 = Color.white;
 
         [SerializeField]
-        [ColorUsage(true, true)]
         protected Color m_GradationColor2 = Color.white;
 
         [SerializeField]

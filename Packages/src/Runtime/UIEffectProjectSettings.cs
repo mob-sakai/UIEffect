@@ -20,6 +20,10 @@ namespace Coffee.UIEffects
         [SerializeField]
         internal List<UIEffect> m_RuntimePresets = new List<UIEffect>();
 
+        [Header("Editor")]
+        [Tooltip("Use HDR color pickers on color fields.")]
+        [SerializeField] private bool m_UseHDRColorPicker = true;
+
         [HideInInspector]
         [SerializeField]
         internal ShaderVariantCollection m_ShaderVariantCollection;
@@ -36,6 +40,12 @@ namespace Coffee.UIEffects
         {
             get => instance.m_TransformSensitivity;
             set => instance.m_TransformSensitivity = value;
+        }
+
+        public static bool useHdrColorPicker
+        {
+            get => instance.m_UseHDRColorPicker;
+            set => instance.m_UseHDRColorPicker = value;
         }
 
         public static void RegisterRuntimePreset(UIEffect effect)

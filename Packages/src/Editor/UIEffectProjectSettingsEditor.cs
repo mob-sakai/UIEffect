@@ -9,6 +9,7 @@ namespace Coffee.UIEffects.Editors
     public class UIEffectProjectSettingsEditor : Editor
     {
         private ReorderableList _reorderableList;
+        private SerializedProperty _useHDRColorPicker;
         private SerializedProperty _transformSensitivity;
         private bool _isInitialized;
         private ShaderVariantRegistryEditor _shaderVariantRegistryEditor;
@@ -18,6 +19,7 @@ namespace Coffee.UIEffects.Editors
             if (_isInitialized) return;
 
             _transformSensitivity = serializedObject.FindProperty("m_TransformSensitivity");
+            _useHDRColorPicker = serializedObject.FindProperty("m_UseHDRColorPicker");
             var runtimePresets = serializedObject.FindProperty("m_RuntimePresets");
             _reorderableList = new ReorderableList(serializedObject, runtimePresets, true, true, true, true);
             _reorderableList.drawHeaderCallback = rect => EditorGUI.LabelField(rect, "Runtime Presets");
@@ -63,9 +65,17 @@ namespace Coffee.UIEffects.Editors
             InitializeIfNeeded();
 
             // Settings
+            // Transform sensitivity.
             EditorGUILayout.PropertyField(_transformSensitivity);
+
+            // Runtime Presets
             _reorderableList.DoLayoutList();
 
+            // Editor
+            // Use HDR color pickers.
+            EditorGUILayout.PropertyField(_useHDRColorPicker);
+
+            // Shader
             // Shader registry
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Shader", EditorStyles.boldLabel);

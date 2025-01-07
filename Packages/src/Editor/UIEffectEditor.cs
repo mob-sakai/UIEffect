@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Linq;
 using System;
+using System.Reflection;
 using Object = UnityEngine.Object;
 
 namespace Coffee.UIEffects.Editors
@@ -13,6 +14,17 @@ namespace Coffee.UIEffects.Editors
     [CanEditMultipleObjects]
     public class UIEffect2Editor : Editor
     {
+        private static readonly PropertyInfo s_PiGradient = typeof(SerializedProperty)
+            .GetProperty("gradientValue", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+        private static readonly Func<SerializedProperty, Gradient> s_GetGradient =
+            (Func<SerializedProperty, Gradient>)Delegate.CreateDelegate(typeof(Func<SerializedProperty, Gradient>),
+                s_PiGradient.GetMethod);
+
+        private static readonly Action<SerializedProperty, Gradient> s_SetGradient =
+            (Action<SerializedProperty, Gradient>)Delegate.CreateDelegate(typeof(Action<SerializedProperty, Gradient>),
+                s_PiGradient.SetMethod);
+
         private SerializedProperty _toneFilter;
         private SerializedProperty _toneIntensity;
 
@@ -162,7 +174,7 @@ namespace Coffee.UIEffects.Editors
             {
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(_colorIntensity);
-                DrawColor(_colorFilter, _color, prevColorFilter);
+                DrawColor(_colorFilter, _color, prevColorFilter, false);
                 EditorGUILayout.PropertyField(_colorGlow);
                 EditorGUI.indentLevel--;
             }
@@ -260,7 +272,7 @@ namespace Coffee.UIEffects.Editors
                 }
 
                 EditorGUILayout.PropertyField(_shadowColorFilter);
-                EditorGUILayout.PropertyField(_shadowColor);
+                DrawColorPickerField(_shadowColor, false);
                 EditorGUILayout.PropertyField(_shadowColorGlow);
                 EditorGUILayout.PropertyField(_shadowFade);
 
@@ -286,15 +298,16 @@ namespace Coffee.UIEffects.Editors
                     case GradationMode.HorizontalGradient:
                     case GradationMode.VerticalGradient:
                     case GradationMode.AngleGradient:
-                        EditorGUILayout.PropertyField(_gradationGradient);
+                        DrawGradientField(_gradationGradient);
                         break;
                     default:
-                        EditorGUILayout.PropertyField(_gradationColor1);
+                        DrawColorPickerField(_gradationColor1);
                         var r = EditorGUILayout.GetControlRect();
-                        r.width -= 20;
-                        EditorGUI.PropertyField(r, _gradationColor2);
+                        r.width -= 24;
+                        r.height = EditorGUIUtility.singleLineHeight;
+                        DrawColorPickerField(r, _gradationColor2);
 
-                        r.x += r.width;
+                        r.x += r.width + 4;
                         r.width = 20;
                         // Swap colors
                         if (GUI.Button(r, EditorGUIUtility.IconContent("preaudioloopoff"), "iconbutton"))
@@ -326,7 +339,48 @@ namespace Coffee.UIEffects.Editors
             }
         }
 
-        private static void DrawColor(SerializedProperty filter, SerializedProperty color, ColorFilter prevFilter)
+        private static void DrawColorPickerField(SerializedProperty color, bool showAlpha = true)
+        {
+            var r = EditorGUILayout.GetControlRect();
+            r.height = EditorGUIUtility.singleLineHeight;
+            DrawColorPickerField(r, color, showAlpha);
+        }
+
+        private static void DrawColorPickerField(Rect rect, SerializedProperty color, bool showAlpha = true)
+        {
+            var label = EditorGUIUtility.TrTempContent(color.displayName);
+            label.tooltip = color.tooltip;
+            var hdr = UIEffectProjectSettings.useHdrColorPicker;
+            EditorGUI.showMixedValue = color.hasMultipleDifferentValues;
+
+            EditorGUI.BeginChangeCheck();
+            var colorValue = EditorGUI.ColorField(rect, label, color.colorValue, true, showAlpha, hdr);
+            if (EditorGUI.EndChangeCheck())
+            {
+                color.colorValue = colorValue;
+            }
+        }
+
+        private static void DrawGradientField(SerializedProperty gradient)
+        {
+            var r = EditorGUILayout.GetControlRect();
+            r.height = EditorGUIUtility.singleLineHeight;
+
+            var label = EditorGUIUtility.TrTempContent(gradient.displayName);
+            label.tooltip = gradient.tooltip;
+            var hdr = UIEffectProjectSettings.useHdrColorPicker;
+            EditorGUI.showMixedValue = gradient.hasMultipleDifferentValues;
+
+            EditorGUI.BeginChangeCheck();
+            var gradientValue = EditorGUI.GradientField(r, label, s_GetGradient(gradient), hdr);
+            if (EditorGUI.EndChangeCheck())
+            {
+                s_SetGradient(gradient, gradientValue);
+            }
+        }
+
+        private static void DrawColor(SerializedProperty filter, SerializedProperty color, ColorFilter prevFilter,
+            bool showAlpha = true)
         {
             if (filter.intValue == (int)ColorFilter.None)
             {
@@ -361,7 +415,7 @@ namespace Coffee.UIEffects.Editors
                     color.colorValue = Color.white;
                 }
 
-                EditorGUILayout.PropertyField(color);
+                DrawColorPickerField(color, showAlpha);
             }
         }
 
