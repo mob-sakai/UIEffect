@@ -1,0 +1,12 @@
+{
+    "name": "Coffee.UIEffect.EditorTests",
+    "references": [
+        "Coffee.UIEffect"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ]
+}
