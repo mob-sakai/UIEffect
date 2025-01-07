@@ -952,6 +952,15 @@ namespace Coffee.UIEffects
             m_ShadowColor = preset.m_ShadowColor;
             m_ShadowColorGlow = preset.m_ShadowColorGlow;
 
+            m_GradationMode = preset.m_GradationMode;
+            m_GradationColor1 = preset.m_GradationColor1;
+            m_GradationColor2 = preset.m_GradationColor2;
+            m_GradationGradient = new Gradient();
+            m_GradationGradient.SetKeys(preset.m_GradationGradient.colorKeys, preset.m_GradationGradient.alphaKeys);
+            m_GradationOffset = preset.m_GradationOffset;
+            m_GradationScale = preset.m_GradationScale;
+            m_GradationRotation = preset.m_GradationRotation;
+
             UpdateContext(context);
             ApplyContextToMaterial();
             SetVerticesDirty();
@@ -1008,7 +1017,8 @@ namespace Coffee.UIEffects
             m_GradationMode = c.gradationMode;
             m_GradationColor1 = c.gradationColor1;
             m_GradationColor2 = c.gradationColor2;
-            m_GradationGradient = c.gradationGradient;
+            m_GradationGradient = new Gradient();
+            m_GradationGradient.SetKeys(c.gradationGradient.colorKeys, c.gradationGradient.alphaKeys);
             m_GradationOffset = c.gradationOffset;
             m_GradationScale = c.gradationScale;
             m_GradationRotation = c.gradationRotation;
