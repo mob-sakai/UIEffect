@@ -919,7 +919,6 @@ namespace Coffee.UIEffects
 
             m_SamplingFilter = preset.m_SamplingFilter;
             m_SamplingIntensity = preset.m_SamplingIntensity;
-            m_SamplingScale = preset.m_SamplingScale;
 
             m_TransitionFilter = preset.m_TransitionFilter;
             m_TransitionRate = preset.m_TransitionRate;

@@ -80,7 +80,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _gradationScale;
         private SerializedProperty _gradationRotation;
 
-        private bool _expandOthers;
+        private bool _expandOthers = true;
         private SerializedProperty _allowToModifyMeshShape;
 
         private void OnEnable()
@@ -186,7 +186,6 @@ namespace Coffee.UIEffects.Editors
             {
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(_samplingIntensity);
-                EditorGUILayout.PropertyField(_samplingScale);
                 EditorGUI.indentLevel--;
             }
 
@@ -334,6 +333,7 @@ namespace Coffee.UIEffects.Editors
             _expandOthers = EditorGUILayout.BeginFoldoutHeaderGroup(_expandOthers, "Others");
             if (_expandOthers)
             {
+                EditorGUILayout.PropertyField(_samplingScale);
                 EditorGUILayout.PropertyField(_allowToModifyMeshShape);
             }
         }
