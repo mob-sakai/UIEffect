@@ -21,8 +21,8 @@ namespace Coffee.UIEffects
             for (var i = 0; i < iteration; i++)
             {
                 d += distance / (i + 1);
-                a *= 0.75f;
                 ApplyShadow(verts, vectors, ref start, ref end, d, a);
+                a *= 0.75f;
             }
 
             // Mark as shadow vertices.
