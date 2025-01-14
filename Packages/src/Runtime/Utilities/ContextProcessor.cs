@@ -65,6 +65,12 @@ namespace Coffee.UIEffects
             UIVertexUtil.onLerpVertex = s_OnLerpVertex;
             ShadowUtil.onMarkAsShadow = s_OnMarkAsShadow;
             UIEffectContext.onModifyVertex = s_OnModifyVertex;
+
+            var canvas = graphic.canvas;
+            if (canvas)
+            {
+                canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord1;
+            }
         }
 
         private static readonly Func<UIVertex, UIVertex, UIVertex, float, UIVertex> s_OnLerpVertex =
@@ -121,6 +127,12 @@ namespace Coffee.UIEffects
             UIVertexUtil.onLerpVertex = s_OnLerpVertex;
             ShadowUtil.onMarkAsShadow = s_OnMarkAsShadow;
             UIEffectContext.onModifyVertex = s_OnModifyVertex;
+
+            var canvas = graphic.canvas;
+            if (canvas)
+            {
+                canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord2;
+            }
         }
 
         private static readonly Func<UIVertex, UIVertex, UIVertex, float, UIVertex> s_OnLerpVertex =

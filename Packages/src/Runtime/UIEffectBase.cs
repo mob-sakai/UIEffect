@@ -164,11 +164,6 @@ namespace Coffee.UIEffects
                 if (isActiveAndEnabled)
                 {
                     OnTMPChanged(textMeshProUGUI);
-                    var canvas = graphic.canvas;
-                    if (canvas && graphic.isActiveAndEnabled)
-                    {
-                        canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord2;
-                    }
                 }
                 else if (0 < textMeshProUGUI.textInfo?.meshInfo?.Length
                          && 0 < textMeshProUGUI.textInfo.meshInfo[0].vertexCount)
@@ -181,11 +176,6 @@ namespace Coffee.UIEffects
             if (graphic)
             {
                 graphic.SetVerticesDirty();
-                var canvas = graphic.canvas;
-                if (canvas && graphic.isActiveAndEnabled)
-                {
-                    canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord1;
-                }
             }
         }
 
