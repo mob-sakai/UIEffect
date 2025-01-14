@@ -56,7 +56,7 @@ namespace Coffee.UIEffects
             if (graphic is TextMeshProUGUI)
             {
                 _prevLossyScaleY = transform.lossyScale.y;
-                UIExtraCallbacks.onAfterCanvasRebuild += CheckSDFScaleForTMP;
+                Canvas.willRenderCanvases += CheckSDFScaleForTMP;
                 UIExtraCallbacks.onScreenSizeChanged += SetVerticesDirtyForTMP;
             }
 #endif
@@ -69,8 +69,8 @@ namespace Coffee.UIEffects
         protected override void OnDisable()
         {
 #if TMP_ENABLE
+            Canvas.willRenderCanvases -= CheckSDFScaleForTMP;
             UIExtraCallbacks.onScreenSizeChanged -= SetVerticesDirtyForTMP;
-            UIExtraCallbacks.onAfterCanvasRebuild -= CheckSDFScaleForTMP;
 #endif
 
             MaterialRepository.Release(ref _material);
