@@ -1,3 +1,12 @@
+## [5.2.1](https://github.com/mob-sakai/UIEffect/compare/5.2.0...5.2.1) (2025-01-14)
+
+
+### Bug Fixes
+
+* shadow color being transparent at maximum `Shadow Fade` ([1d849e5](https://github.com/mob-sakai/UIEffect/commit/1d849e54cb57218a67afc2f8ad36d345bfdd0f74)), closes [#296](https://github.com/mob-sakai/UIEffect/issues/296)
+* TextMeshPro is not displayed in prefab mode ([2b44837](https://github.com/mob-sakai/UIEffect/commit/2b44837bb9c93e1cc817a2c1cd112b244cd09391)), closes [#295](https://github.com/mob-sakai/UIEffect/issues/295)
+* TextMeshProUGUI disappears when the Y-axis scale is changed ([8159c09](https://github.com/mob-sakai/UIEffect/commit/8159c091e8a6805a7781046ae0f660a3be13862c)), closes [#295](https://github.com/mob-sakai/UIEffect/issues/295)
+
 # [5.2.0](https://github.com/mob-sakai/UIEffect/compare/5.1.0...5.2.0) (2025-01-07)
 
 
