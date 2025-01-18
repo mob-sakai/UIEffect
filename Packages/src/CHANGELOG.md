@@ -1,3 +1,10 @@
+## [5.2.2](https://github.com/mob-sakai/UIEffect/compare/5.2.1...5.2.2) (2025-01-18)
+
+
+### Bug Fixes
+
+* in Unity 6, `Shadow Color` has no effect on TextMeshPro ([6e4d4ab](https://github.com/mob-sakai/UIEffect/commit/6e4d4ab03db786e4c28d0f2c57d9e58655c5d029)), closes [#297](https://github.com/mob-sakai/UIEffect/issues/297)
+
 ## [5.2.1](https://github.com/mob-sakai/UIEffect/compare/5.2.0...5.2.1) (2025-01-14)
 
 
