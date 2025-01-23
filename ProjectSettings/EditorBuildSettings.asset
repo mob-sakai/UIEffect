@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Demos/PerformanceTest/PerformanceTest.unity
     guid: 3a7d90cc463ac409fa50ecb46480ebc6
+  - enabled: 1
+    path: Assets/Demos/PatternAndEdge/PatternAndEdge.unity
+    guid: 263e512bc0ad44038af0c3a4e37b6b33
   m_configObjects: {}

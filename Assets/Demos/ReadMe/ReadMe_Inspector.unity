@@ -252,6 +252,7 @@ MonoBehaviour:
   m_Target: {fileID: 1567169363}
   m_UseTargetTransform: 1
   m_SamplingScale: 1
+  m_AllowToModifyMeshShape: 1
 --- !u!114 &571623417
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -522,6 +523,7 @@ MonoBehaviour:
   m_ColorGlow: 0
   m_SamplingFilter: 5
   m_SamplingIntensity: 0.197
+  m_SamplingWidth: 1
   m_SamplingScale: 1
   m_TransitionFilter: 3
   m_TransitionRate: 0.411
@@ -533,9 +535,14 @@ MonoBehaviour:
   m_TransitionKeepAspectRatio: 1
   m_TransitionWidth: 0.071
   m_TransitionSoftness: 0.401
+  m_TransitionRange:
+    m_Min: 0
+    m_Max: 1
   m_TransitionColorFilter: 6
   m_TransitionColor: {r: 0, g: 0.5019608, b: 1.0039216, a: 1}
   m_TransitionColorGlow: 0
+  m_TransitionPatternReverse: 0
+  m_TransitionAutoPlaySpeed: 0
   m_TargetMode: 0
   m_TargetColor: {r: 0.22352943, g: 0.87843144, b: 0.9450981, a: 1}
   m_TargetRange: 0.118
@@ -586,7 +593,15 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   m_GradationOffset: -0.349
   m_GradationScale: 0.62374645
-  m_AllowExtendVertex: 1
+  m_GradationRotation: 0
+  m_AllowToModifyMeshShape: 1
+  m_EdgeMode: 0
+  m_EdgeWidth: 0.5
+  m_EdgeColorFilter: 4
+  m_EdgeColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EdgeShinyWidth: 0.5
+  m_EdgeShinySpeed: 1
+  m_PatternArea: 1
 --- !u!114 &1120943173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -706,9 +721,13 @@ MonoBehaviour:
   m_Delay: 0.5
   m_Duration: 1
   m_Interval: 0.5
-  m_PlayOnEnable: 1
+  m_PlayOnEnable: 3
+  m_ResetTimeOnEnable: 1
   m_WrapMode: 1
   m_UpdateMode: 0
+  m_OnComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1242517206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -730,6 +749,7 @@ MonoBehaviour:
   m_ColorGlow: 0
   m_SamplingFilter: 1
   m_SamplingIntensity: 1
+  m_SamplingWidth: 1
   m_SamplingScale: 1
   m_TransitionFilter: 3
   m_TransitionRate: 0.408
@@ -741,9 +761,14 @@ MonoBehaviour:
   m_TransitionKeepAspectRatio: 1
   m_TransitionWidth: 0.074
   m_TransitionSoftness: 0.27
+  m_TransitionRange:
+    m_Min: 0
+    m_Max: 1
   m_TransitionColorFilter: 6
   m_TransitionColor: {r: 0, g: 0.5019608, b: 1.0039216, a: 1}
   m_TransitionColorGlow: 1
+  m_TransitionPatternReverse: 0
+  m_TransitionAutoPlaySpeed: 0
   m_TargetMode: 1
   m_TargetColor: {r: 0.22352943, g: 0.87843144, b: 0.9450981, a: 1}
   m_TargetRange: 0.118
@@ -794,7 +819,15 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   m_GradationOffset: -0.349
   m_GradationScale: 0.62374645
-  m_AllowExtendVertex: 1
+  m_GradationRotation: 0
+  m_AllowToModifyMeshShape: 1
+  m_EdgeMode: 2
+  m_EdgeWidth: 0.5
+  m_EdgeColorFilter: 6
+  m_EdgeColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EdgeShinyWidth: 0.5
+  m_EdgeShinySpeed: 1
+  m_PatternArea: 1
 --- !u!114 &1242517207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -894,6 +927,7 @@ MonoBehaviour:
   m_ColorGlow: 0
   m_SamplingFilter: 0
   m_SamplingIntensity: 0.5
+  m_SamplingWidth: 1
   m_SamplingScale: 1
   m_TransitionFilter: 0
   m_TransitionRate: 0.5
@@ -905,9 +939,14 @@ MonoBehaviour:
   m_TransitionKeepAspectRatio: 1
   m_TransitionWidth: 0.2
   m_TransitionSoftness: 0.2
+  m_TransitionRange:
+    m_Min: 0
+    m_Max: 1
   m_TransitionColorFilter: 6
   m_TransitionColor: {r: 0, g: 0.5, b: 1, a: 1}
   m_TransitionColorGlow: 0
+  m_TransitionPatternReverse: 0
+  m_TransitionAutoPlaySpeed: 0
   m_TargetMode: 0
   m_TargetColor: {r: 1, g: 1, b: 1, a: 1}
   m_TargetRange: 0.1
@@ -958,7 +997,15 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   m_GradationOffset: 0
   m_GradationScale: 1
-  m_AllowExtendVertex: 1
+  m_GradationRotation: 0
+  m_AllowToModifyMeshShape: 1
+  m_EdgeMode: 0
+  m_EdgeWidth: 0.5
+  m_EdgeColorFilter: 4
+  m_EdgeColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EdgeShinyWidth: 0.5
+  m_EdgeShinySpeed: 1
+  m_PatternArea: 1
 --- !u!114 &1567169364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1039,5 +1086,9 @@ MonoBehaviour:
   m_Duration: 1
   m_Interval: 0.5
   m_PlayOnEnable: 1
+  m_ResetTimeOnEnable: 1
   m_WrapMode: 1
   m_UpdateMode: 0
+  m_OnComplete:
+    m_PersistentCalls:
+      m_Calls: []
