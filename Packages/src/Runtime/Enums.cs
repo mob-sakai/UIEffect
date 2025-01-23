@@ -46,7 +46,8 @@ namespace Coffee.UIEffects
         Shiny = 4,
         Mask = 5,
         Melt = 6,
-        Burn = 7
+        Burn = 7,
+        Pattern = 8
     }
 
     public enum BlendType

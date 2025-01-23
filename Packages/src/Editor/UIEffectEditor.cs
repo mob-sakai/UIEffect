@@ -48,9 +48,11 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _transitionKeepAspectRatio;
         private SerializedProperty _transitionWidth;
         private SerializedProperty _transitionSoftness;
+        private SerializedProperty _transitionRange;
         private SerializedProperty _transitionColorFilter;
         private SerializedProperty _transitionColor;
         private SerializedProperty _transitionColorGlow;
+        private SerializedProperty _transitionPatternReverse;
 
         private SerializedProperty _targetMode;
         private SerializedProperty _targetColor;
@@ -119,9 +121,11 @@ namespace Coffee.UIEffects.Editors
             _transitionKeepAspectRatio = serializedObject.FindProperty("m_TransitionKeepAspectRatio");
             _transitionWidth = serializedObject.FindProperty("m_TransitionWidth");
             _transitionSoftness = serializedObject.FindProperty("m_TransitionSoftness");
+            _transitionRange = serializedObject.FindProperty("m_TransitionRange");
             _transitionColorFilter = serializedObject.FindProperty("m_TransitionColorFilter");
             _transitionColor = serializedObject.FindProperty("m_TransitionColor");
             _transitionColorGlow = serializedObject.FindProperty("m_TransitionColorGlow");
+            _transitionPatternReverse = serializedObject.FindProperty("m_TransitionPatternReverse");
 
             _targetMode = serializedObject.FindProperty("m_TargetMode");
             _targetColor = serializedObject.FindProperty("m_TargetColor");
@@ -229,7 +233,17 @@ namespace Coffee.UIEffects.Editors
                 EditorGUILayout.PropertyField(_transitionReverse, EditorGUIUtility.TrTempContent("Reverse"));
                 EditorGUI.indentLevel--;
 
-                if (2 < _transitionFilter.intValue)
+                if (_transitionFilter.intValue == (int)TransitionFilter.Pattern)
+                {
+                    EditorGUILayout.PropertyField(_transitionWidth, EditorGUIUtility.TrTempContent("Pattern Size"));
+                    EditorGUILayout.PropertyField(_transitionRange, EditorGUIUtility.TrTempContent("Pattern Range"));
+                    EditorGUILayout.PropertyField(_transitionPatternReverse,
+                        EditorGUIUtility.TrTempContent("Pattern Reverse"));
+                    prevColorFilter = (ColorFilter)_transitionColorFilter.intValue;
+                    EditorGUILayout.PropertyField(_transitionColorFilter);
+                    DrawColor(_transitionColorFilter, _transitionColor, prevColorFilter);
+                }
+                else if (2 < _transitionFilter.intValue)
                 {
                     EditorGUILayout.PropertyField(_transitionWidth);
                     EditorGUILayout.PropertyField(_transitionSoftness);

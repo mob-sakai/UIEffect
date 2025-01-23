@@ -96,11 +96,21 @@ float inv_lerp(const float from, const float to, const float value)
 
 float transition_alpha(float2 uvLocal)
 {
+    float2 uv;
     #if TRANSITION_NONE
     return 1;
+    #elif TRANSITION_PATTERN
+    {
+        const half scale = lerp(100, 10, _TransitionWidth);
+        const half2 time = half2(-_TransitionRate * 2, 0);
+        uv = uvLocal * _TransitionTex_ST.xy * scale + _TransitionTex_ST.zw + time;
+    }
+    #else
+    {
+        uv = uvLocal * _TransitionTex_ST.xy + _TransitionTex_ST.zw;
+    }
     #endif
 
-    const float2 uv = uvLocal * _TransitionTex_ST.xy + _TransitionTex_ST.zw;
     const float alpha = tex2D(_TransitionTex, uv).a;
     return (1 - alpha) * _TransitionReverse + alpha * (1 - _TransitionReverse);
 }
@@ -430,7 +440,7 @@ float2 move_transition_filter(const float4 uvMask, const float alpha)
     return 0;
 }
 
-half4 apply_transition_filter(half4 color, const float alpha)
+half4 apply_transition_filter(half4 color, const float alpha, const float2 uvLocal, float edgeFactor)
 {
     #if TRANSITION_FADE  // Transition.Fade
     {
@@ -439,6 +449,14 @@ half4 apply_transition_filter(half4 color, const float alpha)
     #elif TRANSITION_CUTOFF  // Transition.Cutoff
     {
         color *= step(0.001, alpha - _TransitionRate);
+    }
+    #elif TRANSITION_PATTERN  // Transition.Pattern
+    {
+        const half4 patternColor = apply_transition_color_filter(half4(color.rgb, 1), half4(_TransitionColor.rgb * color.a, 1), _TransitionColor.a);
+        int isPattern = min(inv_lerp(_TransitionRange.x, _TransitionRange.y, uvLocal.x), 0.995) < (_TransitionPatternReverse ? alpha : 1 - alpha);
+        isPattern = _TransitionPatternReverse ? isPattern : 1 - isPattern;
+        const float patternFactor = _PatternArea == 0 ? 1 : _PatternArea == 1 ? 1 - edgeFactor : edgeFactor;
+        color.rgb = lerp(color.rgb, patternColor.rgb, patternFactor * isPattern);
     }
     // Transition.Dissolve/Shiny/ShinyOnly/Melt
     #elif TRANSITION_DISSOLVE || TRANSITION_SHINY || TRANSITION_MASK || TRANSITION_MELT || TRANSITION_BURN
@@ -539,7 +557,7 @@ half4 uieffect_internal(float2 uv, const float4 uvMask, const float2 uvLocal)
     uv += move_transition_filter(uvMask, alpha);
     half4 color = apply_sampling_filter(uv, uvMask, uvLocal);
     color = apply_tone_filter(color);
-    color = apply_transition_filter(color, alpha);
+    color = apply_transition_filter(color, alpha, uvLocal, edgeFactor);
 
     if (-4 <= uvLocal.x + uvLocal.y)
     {

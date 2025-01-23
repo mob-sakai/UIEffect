@@ -82,6 +82,9 @@ namespace Coffee.UIEffects
         protected float m_TransitionSoftness = 0.2f;
 
         [SerializeField]
+        protected MinMax01 m_TransitionRange = new MinMax01(0, 1);
+
+        [SerializeField]
         protected ColorFilter m_TransitionColorFilter = ColorFilter.MultiplyAdditive;
 
         [SerializeField]
@@ -89,6 +92,9 @@ namespace Coffee.UIEffects
 
         [SerializeField]
         protected bool m_TransitionColorGlow = false;
+
+        [SerializeField]
+        protected bool m_TransitionPatternReverse = false;
 
         [SerializeField]
         protected TargetMode m_TargetMode = TargetMode.None;
@@ -454,6 +460,17 @@ namespace Coffee.UIEffects
             }
         }
 
+        public MinMax01 transitionRange
+        {
+            get => m_TransitionRange;
+            set
+            {
+                if (m_TransitionRange.Approximately(value)) return;
+                context.transitionRange = m_TransitionRange = value;
+                SetMaterialDirty();
+            }
+        }
+
         public ColorFilter transitionColorFilter
         {
             get => m_TransitionColorFilter;
@@ -483,6 +500,17 @@ namespace Coffee.UIEffects
             {
                 if (m_TransitionColorGlow == value) return;
                 context.transitionColorGlow = m_TransitionColorGlow = value;
+                SetMaterialDirty();
+            }
+        }
+
+        public bool transitionPatternReverse
+        {
+            get => m_TransitionPatternReverse;
+            set
+            {
+                if (m_TransitionPatternReverse == value) return;
+                context.transitionPatternReverse = m_TransitionPatternReverse = value;
                 SetMaterialDirty();
             }
         }
@@ -924,9 +952,11 @@ namespace Coffee.UIEffects
             c.transitionKeepAspectRatio = m_TransitionKeepAspectRatio;
             c.transitionWidth = m_TransitionWidth;
             c.transitionSoftness = m_TransitionSoftness;
+            c.transitionRange = m_TransitionRange;
             c.transitionColorFilter = m_TransitionColorFilter;
             c.transitionColor = m_TransitionColor;
             c.transitionColorGlow = m_TransitionColorGlow;
+            c.transitionPatternReverse = m_TransitionPatternReverse;
 
             c.targetMode = m_TargetMode;
             c.targetColor = m_TargetColor;
@@ -1014,6 +1044,7 @@ namespace Coffee.UIEffects
                 case TransitionFilter.None:
                 case TransitionFilter.Shiny:
                 case TransitionFilter.Mask:
+                case TransitionFilter.Pattern:
                     return true;
                 default:
                     return transitionRate < 1;
@@ -1058,9 +1089,11 @@ namespace Coffee.UIEffects
             m_TransitionKeepAspectRatio = preset.m_TransitionKeepAspectRatio;
             m_TransitionWidth = preset.m_TransitionWidth;
             m_TransitionSoftness = preset.m_TransitionSoftness;
+            m_TransitionRange = preset.m_TransitionRange;
             m_TransitionColorFilter = preset.m_TransitionColorFilter;
             m_TransitionColor = preset.m_TransitionColor;
             m_TransitionColorGlow = preset.m_TransitionColorGlow;
+            m_TransitionPatternReverse = preset.m_TransitionPatternReverse;
 
             m_TargetMode = preset.m_TargetMode;
             m_TargetColor = preset.m_TargetColor;
@@ -1127,9 +1160,11 @@ namespace Coffee.UIEffects
             m_TransitionKeepAspectRatio = c.transitionKeepAspectRatio;
             m_TransitionWidth = c.transitionWidth;
             m_TransitionSoftness = c.transitionSoftness;
+            m_TransitionRange = c.transitionRange;
             m_TransitionColorFilter = c.transitionColorFilter;
             m_TransitionColor = c.transitionColor;
             m_TransitionColorGlow = c.transitionColorGlow;
+            m_TransitionPatternReverse = c.transitionPatternReverse;
 
             m_TargetMode = c.targetMode;
             m_TargetColor = c.targetColor;
