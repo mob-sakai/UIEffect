@@ -1,3 +1,12 @@
+## [5.2.3](https://github.com/mob-sakai/UIEffect/compare/5.2.2...5.2.3) (2025-01-23)
+
+
+### Bug Fixes
+
+* `SamplingFilter.None` now correctly respects the sampling scale setting ([bc1578b](https://github.com/mob-sakai/UIEffect/commit/bc1578b0ca91b830b976bf200d387d0ac6963ae6))
+* fix the shadow mode inspector in editor ([da53585](https://github.com/mob-sakai/UIEffect/commit/da535854ccbeeb98b2556423425d39058bd5f479))
+* UIEffect may not work correctly when using `FallbackAtlas` with TextMeshProUGUI ([d3779f9](https://github.com/mob-sakai/UIEffect/commit/d3779f9f57d0410fa4526527ebed30885bfbc2dd)), closes [#298](https://github.com/mob-sakai/UIEffect/issues/298)
+
 ## [5.2.2](https://github.com/mob-sakai/UIEffect/compare/5.2.1...5.2.2) (2025-01-18)
 
 
