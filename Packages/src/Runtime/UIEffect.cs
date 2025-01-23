@@ -290,9 +290,7 @@ namespace Coffee.UIEffects
             }
         }
 
-        public override float actualSamplingScale => samplingFilter != SamplingFilter.None
-            ? Mathf.Clamp(m_SamplingScale, 0.01f, 100)
-            : 1;
+        public override float actualSamplingScale => Mathf.Clamp(m_SamplingScale, 0.01f, 100);
 
         public override bool canModifyShape => m_AllowToModifyMeshShape;
 
