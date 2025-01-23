@@ -16,6 +16,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _duration;
         private SerializedProperty _interval;
         private SerializedProperty _playOnEnable;
+        private SerializedProperty _resetTimeOnEnable;
         private SerializedProperty _updateMode;
         private SerializedProperty _wrapMode;
         private SerializedProperty _onComplete;
@@ -28,6 +29,7 @@ namespace Coffee.UIEffects.Editors
             _direction = serializedObject.FindProperty("m_Direction");
             _curve = serializedObject.FindProperty("m_Curve");
             _playOnEnable = serializedObject.FindProperty("m_PlayOnEnable");
+            _resetTimeOnEnable = serializedObject.FindProperty("m_ResetTimeOnEnable");
             _delay = serializedObject.FindProperty("m_Delay");
             _duration = serializedObject.FindProperty("m_Duration");
             _interval = serializedObject.FindProperty("m_Interval");
@@ -54,6 +56,7 @@ namespace Coffee.UIEffects.Editors
             EditorGUILayout.PropertyField(_duration);
             EditorGUILayout.PropertyField(_interval);
             EditorGUILayout.PropertyField(_playOnEnable);
+            EditorGUILayout.PropertyField(_resetTimeOnEnable);
             EditorGUILayout.PropertyField(_wrapMode);
             EditorGUILayout.PropertyField(_updateMode);
             EditorGUILayout.PropertyField(_onComplete);

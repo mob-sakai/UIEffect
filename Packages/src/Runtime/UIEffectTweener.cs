@@ -81,6 +81,10 @@ namespace Coffee.UIEffects
         [SerializeField]
         private PlayOnEnable m_PlayOnEnable = PlayOnEnable.Forward;
 
+        [Tooltip("Reset the tweening time when the component is enabled.")]
+        [SerializeField]
+        private bool m_ResetTimeOnEnable = true;
+
         [Tooltip("The wrap mode of the tween.\n" +
                  "  Once: Clamp the tween value (not loop).\n" +
                  "  Loop: Loop the tween value.\n" +
@@ -220,11 +224,13 @@ namespace Coffee.UIEffects
             set => m_PlayOnEnable = value;
         }
 
-        [Obsolete("UIEffectTweener.restartOnEnable has been deprecated. Use UIEffectTweener.playOnEnable instead")]
-        public bool restartOnEnable
+        /// <summary>
+        /// Reset the tweening time when the component is enabled..
+        /// </summary>
+        public bool resetTimeOnEnable
         {
-            get => m_PlayOnEnable != PlayOnEnable.Forward;
-            set => m_PlayOnEnable = value ? PlayOnEnable.None : PlayOnEnable.Forward;
+            get => m_ResetTimeOnEnable;
+            set => m_ResetTimeOnEnable = value;
         }
 
         /// <summary>
@@ -303,13 +309,13 @@ namespace Coffee.UIEffects
             switch (playOnEnable)
             {
                 case PlayOnEnable.KeepDirection:
-                    Play();
+                    Play(resetTimeOnEnable);
                     break;
                 case PlayOnEnable.Forward:
-                    PlayForward();
+                    PlayForward(resetTimeOnEnable);
                     break;
                 case PlayOnEnable.Reverse:
-                    PlayReverse();
+                    PlayReverse(resetTimeOnEnable);
                     break;
             }
         }
@@ -339,6 +345,11 @@ namespace Coffee.UIEffects
                 ResetTime();
             }
 
+            Play();
+        }
+
+        public void Play()
+        {
             _isPaused = false;
 
             if (!isTweening)
@@ -347,15 +358,14 @@ namespace Coffee.UIEffects
             }
         }
 
-        public void Play()
+        public void PlayForward(bool resetTime)
         {
-            ResetTime();
-            _isPaused = false;
-
-            if (!isTweening)
+            if (resetTime)
             {
-                m_OnComplete.Invoke();
+                ResetTime();
             }
+
+            PlayForward();
         }
 
         public void PlayForward()
@@ -367,6 +377,16 @@ namespace Coffee.UIEffects
             {
                 m_OnComplete.Invoke();
             }
+        }
+
+        public void PlayReverse(bool resetTime)
+        {
+            if (resetTime)
+            {
+                ResetTime();
+            }
+
+            PlayReverse();
         }
 
         public void PlayReverse()
