@@ -256,6 +256,7 @@ namespace Coffee.UIEffects.Editors
                     EditorGUILayout.Slider(_shadowDistanceX, 0, 1, "Reflection");
                     EditorGUILayout.PropertyField(_shadowDistanceY, EditorGUIUtility.TrTempContent("Offset"));
                     EditorGUILayout.PropertyField(_shadowMirrorScale);
+                    EditorGUILayout.PropertyField(_shadowFade);
                 }
                 else
                 {
@@ -267,13 +268,14 @@ namespace Coffee.UIEffects.Editors
 
                     EditorGUILayout.PropertyField(_shadowDistance);
                     EditorGUILayout.PropertyField(_shadowIteration);
+                    prevColorFilter = (ColorFilter)_shadowColorFilter.intValue;
+                    EditorGUILayout.PropertyField(_shadowColorFilter);
+                    DrawColor(_shadowColorFilter, _shadowColor, prevColorFilter, false);
+                    EditorGUILayout.PropertyField(_shadowColorGlow);
+                    EditorGUILayout.PropertyField(_shadowFade);
                 }
 
-                EditorGUILayout.PropertyField(_shadowColorFilter);
-                DrawColorPickerField(_shadowColor, false);
-                EditorGUILayout.PropertyField(_shadowColorGlow);
-                EditorGUILayout.PropertyField(_shadowFade);
-
+                // Shadow blur intensity
                 switch ((SamplingFilter)_samplingFilter.intValue)
                 {
                     case SamplingFilter.BlurFast:
