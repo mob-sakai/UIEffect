@@ -258,7 +258,7 @@ namespace Coffee.UIEffects
                 }
                 else if (i - 1 < subMeshes.Count)
                 {
-                    var subMeshUI = GetSubMeshUI(subMeshes, meshInfo.material);
+                    var subMeshUI = GetSubMeshUI(subMeshes, meshInfo.material, i - 1);
                     if (!target || !subMeshUI) break;
 
                     var replica = subMeshUI.GetOrAddComponent<UIEffectReplica>();
@@ -285,11 +285,13 @@ namespace Coffee.UIEffects
             s_Mesh.Clear(false);
         }
 
-        private static TMP_SubMeshUI GetSubMeshUI(List<TMP_SubMeshUI> subMeshes, Material material)
+        private static TMP_SubMeshUI GetSubMeshUI(List<TMP_SubMeshUI> subMeshes, Material material, int start)
         {
-            for (var j = 0; j < subMeshes.Count; j++)
+            var count = subMeshes.Count;
+            for (var j = 0; j < count; j++)
             {
-                if (subMeshes[j].sharedMaterial == material) return subMeshes[j];
+                var s = subMeshes[(j + start + count) % count];
+                if (s.sharedMaterial == material) return s;
             }
 
             return null;
