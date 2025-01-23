@@ -1,28 +1,36 @@
 #ifndef UI_EFFECT_INCLUDED
 #define UI_EFFECT_INCLUDED
 
-uniform float4 _MainTex_TexelSize;
-uniform float _ToneIntensity;
-uniform half4 _ColorValue;
-uniform float _ColorIntensity;
-uniform int _ColorGlow;
-uniform float _SamplingIntensity;
-uniform float _SamplingWidth;
-uniform float _SamplingScale;
-uniform sampler2D _TransitionTex;
-uniform float4 _TransitionTex_ST;
-uniform float _TransitionRate;
-uniform int _TransitionReverse;
-uniform half4 _TransitionColor;
-uniform int _TransitionColorGlow;
-uniform float _TransitionSoftness;
-uniform float _TransitionWidth;
-uniform fixed4 _TargetColor;
-uniform float _TargetRange;
-uniform float _TargetSoftness;
-uniform float _ShadowBlurIntensity;
-uniform half4 _ShadowColor;
-uniform int _ShadowColorGlow;
+uniform const float4 _MainTex_TexelSize;
+uniform const float _ToneIntensity;
+uniform const half4 _ColorValue;
+uniform const float _ColorIntensity;
+uniform const int _ColorGlow;
+uniform const float _SamplingIntensity;
+uniform const float _SamplingWidth;
+uniform const float _SamplingScale;
+uniform const sampler2D _TransitionTex;
+uniform const float4 _TransitionTex_ST;
+uniform const float _TransitionRate;
+uniform const int _TransitionReverse;
+uniform const half4 _TransitionColor;
+uniform const int _TransitionColorGlow;
+uniform const float _TransitionSoftness;
+uniform const float2 _TransitionRange;
+uniform const float _TransitionWidth;
+uniform const int _TransitionPatternReverse;
+uniform const float _TransitionAutoPlaySpeed;
+uniform const fixed4 _TargetColor;
+uniform const float _TargetRange;
+uniform const float _TargetSoftness;
+uniform const float _ShadowBlurIntensity;
+uniform const half4 _ShadowColor;
+uniform const int _ShadowColorGlow;
+uniform const float _EdgeWidth;
+uniform const float _EdgeShinyAutoPlaySpeed;
+uniform const float _EdgeShinyWidth;
+uniform const half4 _EdgeColor;
+uniform const int _PatternArea;
 
 #pragma shader_feature_local_fragment _ TONE_GRAYSCALE TONE_SEPIA TONE_NEGATIVE TONE_RETRO TONE_POSTERIZE
 #pragma shader_feature_local_fragment _ COLOR_MULTIPLY COLOR_ADDITIVE COLOR_SUBTRACTIVE COLOR_REPLACE COLOR_MULTIPLY_LUMINANCE COLOR_MULTIPLY_ADDITIVE COLOR_HSV_MODIFIER COLOR_CONTRAST
@@ -30,6 +38,8 @@ uniform int _ShadowColorGlow;
 #pragma shader_feature_local_fragment _ TRANSITION_FADE TRANSITION_CUTOFF TRANSITION_DISSOLVE TRANSITION_SHINY TRANSITION_MASK TRANSITION_MELT TRANSITION_BURN TRANSITION_PATTERN
 #pragma shader_feature_local_fragment _ TRANSITION_COLOR_MULTIPLY TRANSITION_COLOR_ADDITIVE TRANSITION_COLOR_SUBTRACTIVE TRANSITION_COLOR_REPLACE TRANSITION_COLOR_MULTIPLY_LUMINANCE TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_COLOR_HSV_MODIFIER TRANSITION_COLOR_CONTRAST
 #pragma shader_feature_local_fragment _ SHADOW_COLOR_MULTIPLY SHADOW_COLOR_ADDITIVE SHADOW_COLOR_SUBTRACTIVE SHADOW_COLOR_REPLACE SHADOW_COLOR_MULTIPLY_LUMINANCE SHADOW_COLOR_MULTIPLY_ADDITIVE SHADOW_COLOR_HSV_MODIFIER SHADOW_COLOR_CONTRAST
+#pragma shader_feature_local_fragment _ EDGE_PLAIN EDGE_SHINY
+#pragma shader_feature_local_fragment _ EDGE_COLOR_MULTIPLY EDGE_COLOR_ADDITIVE EDGE_COLOR_SUBTRACTIVE EDGE_COLOR_REPLACE EDGE_COLOR_MULTIPLY_LUMINANCE EDGE_COLOR_MULTIPLY_ADDITIVE EDGE_COLOR_HSV_MODIFIER EDGE_COLOR_CONTRAST
 #pragma shader_feature_local_fragment _ TARGET_HUE TARGET_LUMINANCE
 
 // For performance reasons, limit the sampling of blur in TextMeshPro.
@@ -299,6 +309,57 @@ half4 apply_shadow_color_filter(half4 color, const half4 factor, const float int
     return color;
 }
 
+half4 apply_edge_color_filter(half4 color, const half4 factor, const float intensity)
+{
+    const half4 inColor = color;
+    #if EDGE_COLOR_NONE // Color.None
+    {
+        return color;
+    }
+    #elif EDGE_COLOR_MULTIPLY // Color.Multiply
+    {
+        color.rgb = color.rgb * factor.rgb;
+    }
+    #elif EDGE_COLOR_ADDITIVE // Color.Additive
+    {
+        color.rgb = color.rgb + factor.rgb * color.a;
+    }
+    #elif EDGE_COLOR_SUBTRACTIVE // Color.Subtractive
+    {
+        color.rgb = color.rgb - factor.rgb * color.a;
+    }
+    #elif EDGE_COLOR_REPLACE // Color.Replace
+    {
+        color.rgb = factor.rgb * color.a;
+    }
+    #elif EDGE_COLOR_MULTIPLY_LUMINANCE // Color.MultiplyLuminance
+    {
+        color.rgb = (1 + Luminance(color.rgb)) * factor.rgb / 2 * color.a;
+    }
+    #elif EDGE_COLOR_MULTIPLY_ADDITIVE // Color.MultiplyAdditive
+    {
+        color.rgb = color.rgb * (1 + factor.rgb);
+    }
+    #elif EDGE_COLOR_HSV_MODIFIER // Color.HsvModifier
+    {
+        const float3 hsv = rgb_to_hsv(color.rgb);
+        color.rgb = hsv_to_rgb(hsv + factor.rgb) * color.a * factor.a;
+        color.a = color.a * factor.a;
+    }
+    #elif EDGE_COLOR_CONTRAST // Color.Contrast
+    {
+        color.rgb = ((color.rgb - 0.5) * (factor.r + 1) + 0.5 + factor.g * 1.5) * color.a * factor.a;
+        color.a = color.a * factor.a;
+    }
+    #else
+    {
+        return color;
+    }
+    #endif
+    color = lerp(inColor, color, intensity);
+    return color;
+}
+
 half4 apply_sampling_filter(float2 uv, const float4 uvMask, const float2 uvLocal)
 {
     #if SAMPLING_BLUR_FAST || SAMPLING_BLUR_MEDIUM || SAMPLING_BLUR_DETAIL
@@ -435,9 +496,46 @@ half to_value(float4 c)
     return 0;
 }
 
+float edge(float2 uv, const float4 uvMask, float width)
+{
+    #if EDGE_PLAIN || EDGE_SHINY
+    const float2 d = texel_size() * lerp(1, 20, width);
+    float e = 1.0;
+
+    // Minimum alpha around the current pixel (12 neighbors)
+    e = min(e, (TEX_SAMPLE_CLAMP((uv + d * float2(1.0, 0.0)), uvMask)).a);
+    e = min(e, (TEX_SAMPLE_CLAMP((uv + d * float2(0.866025, 0.5)), uvMask)).a);
+    e = min(e, (TEX_SAMPLE_CLAMP((uv + d * float2(0.5, 0.866025)), uvMask)).a);
+    e = min(e, (TEX_SAMPLE_CLAMP((uv + d * float2(0.0, 1.0)), uvMask)).a);
+    e = min(e, (TEX_SAMPLE_CLAMP((uv + d * float2(-0.5, 0.866025)), uvMask)).a);
+    e = min(e, (TEX_SAMPLE_CLAMP((uv + d * float2(-0.866025, 0.5)), uvMask)).a);
+    e = min(e, (TEX_SAMPLE_CLAMP((uv + d * float2(-1.0, 0.0)), uvMask)).a);
+    e = min(e, (TEX_SAMPLE_CLAMP((uv + d * float2(-0.866025, -0.5)), uvMask)).a);
+    e = min(e, (TEX_SAMPLE_CLAMP((uv + d * float2(-0.5, -0.866025)), uvMask)).a);
+    e = min(e, (TEX_SAMPLE_CLAMP((uv + d * float2(0.0, -1.0)), uvMask)).a);
+    e = min(e, (TEX_SAMPLE_CLAMP((uv + d * float2(0.5, -0.866025)), uvMask)).a);
+    e = min(e, (TEX_SAMPLE_CLAMP((uv + d * float2(0.866025, -0.5)), uvMask)).a);
+    
+    return 1 - inv_lerp(0.15, 0.3, e);
+    #else
+    return 0;
+    #endif
+}
+
+int is_edge_shiny(const float2 uvLocal)
+{
+    #if EDGE_SHINY
+    const float deg = atan2(uvLocal.y - 0.5, uvLocal.x - 0.5) / UNITY_PI;
+    return frac(_Time.y * _EdgeShinyAutoPlaySpeed + deg) < _EdgeShinyWidth;
+    #else
+    return 1;
+    #endif
+}
+
 half4 uieffect_internal(float2 uv, const float4 uvMask, const float2 uvLocal)
 {
     const half alpha = transition_alpha(uvLocal);
+    const float edgeFactor = edge(uv, uvMask, _EdgeWidth);
     uv += move_transition_filter(uvMask, alpha);
     half4 color = apply_sampling_filter(uv, uvMask, uvLocal);
     color = apply_tone_filter(color);
@@ -445,14 +543,23 @@ half4 uieffect_internal(float2 uv, const float4 uvMask, const float2 uvLocal)
 
     if (-4 <= uvLocal.x + uvLocal.y)
     {
-        color = apply_color_filter(color, _ColorValue, _ColorIntensity);
+        #if EDGE_PLAIN || EDGE_SHINY
+        {
+            color = apply_color_filter(color, _ColorValue, _ColorIntensity);
+            const half4 edgeColor = apply_edge_color_filter(color, _EdgeColor, 1);
+            const int isEdgeShiny = is_edge_shiny(uvLocal);
+            return lerp(color, edgeColor, edgeFactor * isEdgeShiny);
+        }
+        #else
+        {
+            return apply_color_filter(color, _ColorValue, _ColorIntensity);
+        }
+        #endif
     }
     else
     {
-        color = apply_shadow_color_filter(color, _ShadowColor, 1);
+        return apply_shadow_color_filter(color, _ShadowColor, 1);
     }
-
-    return color;
 }
 
 half4 uieffect(float2 uv, const float4 uvMask, const float2 uvLocal)

@@ -76,6 +76,20 @@ namespace Coffee.UIEffects
         Mirror
     }
 
+    public enum EdgeMode
+    {
+        None = 0,
+        Plain,
+        Shiny
+    }
+
+    public enum PatternArea
+    {
+        All = 0,
+        Inner = 1,
+        Edge = 2
+    }
+
     public enum GradationMode
     {
         None = 0,

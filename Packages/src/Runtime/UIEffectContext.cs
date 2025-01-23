@@ -37,6 +37,11 @@ namespace Coffee.UIEffects
         private static readonly int s_ShadowColor = Shader.PropertyToID("_ShadowColor");
         private static readonly int s_ShadowBlurIntensity = Shader.PropertyToID("_ShadowBlurIntensity");
         private static readonly int s_ShadowColorGlow = Shader.PropertyToID("_ShadowColorGlow");
+        private static readonly int s_EdgeWidth = Shader.PropertyToID("_EdgeWidth");
+        private static readonly int s_EdgeColor = Shader.PropertyToID("_EdgeColor");
+        private static readonly int s_EdgeShinyAutoPlaySpeed = Shader.PropertyToID("_EdgeShinyAutoPlaySpeed");
+        private static readonly int s_EdgeShinyWidth = Shader.PropertyToID("_EdgeShinyWidth");
+        private static readonly int s_PatternArea = Shader.PropertyToID("_PatternArea");
 
         private static readonly string[] s_ToneKeywords =
         {
@@ -118,6 +123,26 @@ namespace Coffee.UIEffects
             "SHADOW_COLOR_CONTRAST"
         };
 
+        private static readonly string[] s_EdgeKeywords =
+        {
+            "",
+            "EDGE_PLAIN",
+            "EDGE_SHINY"
+        };
+
+        private static readonly string[] s_EdgeColorKeywords =
+        {
+            "",
+            "EDGE_COLOR_MULTIPLY",
+            "EDGE_COLOR_ADDITIVE",
+            "EDGE_COLOR_SUBTRACTIVE",
+            "EDGE_COLOR_REPLACE",
+            "EDGE_COLOR_MULTIPLY_LUMINANCE",
+            "EDGE_COLOR_MULTIPLY_ADDITIVE",
+            "EDGE_COLOR_HSV_MODIFIER",
+            "EDGE_COLOR_CONTRAST"
+        };
+
         private static readonly Vector2[][] s_ShadowVectors = new[]
         {
             Array.Empty<Vector2>(), // None
@@ -177,6 +202,14 @@ namespace Coffee.UIEffects
         public Color shadowColor;
         public bool shadowColorGlow;
 
+        public EdgeMode edgeMode;
+        public float edgeWidth;
+        public ColorFilter edgeColorFilter;
+        public Color edgeColor;
+        public float edgeShinyWidth;
+        public float edgeShinyAutoPlaySpeed;
+        public PatternArea patternArea;
+
         public GradationMode gradationMode;
         public Color gradationColor1;
         public Color gradationColor2;
@@ -192,7 +225,8 @@ namespace Coffee.UIEffects
                                           || colorFilter != ColorFilter.None
                                           || srcBlendMode != BlendMode.One
                                           || dstBlendMode != BlendMode.OneMinusSrcAlpha
-                                          || shadowMode != ShadowMode.None;
+                                          || shadowMode != ShadowMode.None
+                                          || edgeMode != EdgeMode.None;
 
         public void Reset()
         {
@@ -246,6 +280,14 @@ namespace Coffee.UIEffects
             shadowColorFilter = preset.shadowColorFilter;
             shadowColor = preset.shadowColor;
             shadowColorGlow = preset.shadowColorGlow;
+
+            edgeMode = preset.edgeMode;
+            edgeWidth = preset.edgeWidth;
+            edgeColorFilter = preset.edgeColorFilter;
+            edgeColor = preset.edgeColor;
+            edgeShinyAutoPlaySpeed = preset.edgeShinyAutoPlaySpeed;
+            edgeShinyWidth = preset.edgeShinyWidth;
+            patternArea = preset.patternArea;
 
             gradationMode = preset.gradationMode;
             gradationColor1 = preset.gradationColor1;
@@ -312,6 +354,12 @@ namespace Coffee.UIEffects
             material.SetColor(s_ShadowColor, shadowColor);
             material.SetInt(s_ShadowColorGlow, shadowColorGlow ? 1 : 0);
 
+            material.SetFloat(s_EdgeWidth, Mathf.Clamp01(edgeWidth));
+            material.SetColor(s_EdgeColor, edgeColor);
+            material.SetFloat(s_EdgeShinyWidth, Mathf.Clamp01(edgeShinyWidth));
+            material.SetFloat(s_EdgeShinyAutoPlaySpeed, edgeShinyAutoPlaySpeed);
+            material.SetInt(s_PatternArea, edgeMode != EdgeMode.None ? (int)patternArea : 0);
+
             SetKeyword(material, s_ToneKeywords, (int)toneFilter);
             SetKeyword(material, s_ColorKeywords, (int)colorFilter);
             SetKeyword(material, s_SamplingKeywords, (int)samplingFilter);
@@ -323,11 +371,7 @@ namespace Coffee.UIEffects
                 case TransitionFilter.Cutoff:
                     SetKeyword(material, s_TransitionColorKeywords, (int)ColorFilter.None);
                     break;
-                case TransitionFilter.Dissolve:
-                case TransitionFilter.Shiny:
-                case TransitionFilter.Mask:
-                case TransitionFilter.Melt:
-                case TransitionFilter.Burn:
+                default:
                     SetKeyword(material, s_TransitionColorKeywords, (int)transitionColorFilter);
                     break;
             }
@@ -341,6 +385,19 @@ namespace Coffee.UIEffects
                     SetKeyword(material, s_ShadowColorKeywords, (int)shadowColorFilter);
                     break;
             }
+
+            SetKeyword(material, s_EdgeKeywords, (int)edgeMode);
+
+            switch (edgeMode)
+            {
+                case EdgeMode.None:
+                    SetKeyword(material, s_EdgeColorKeywords, (int)ColorFilter.None);
+                    break;
+                default:
+                    SetKeyword(material, s_EdgeColorKeywords, (int)edgeColorFilter);
+                    break;
+            }
+
 
             SetKeyword(material, s_TargetKeywords, (int)targetMode);
 

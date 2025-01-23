@@ -171,6 +171,30 @@ namespace Coffee.UIEffects
         [SerializeField]
         protected bool m_AllowToModifyMeshShape = true;
 
+        [SerializeField]
+        protected EdgeMode m_EdgeMode = EdgeMode.None;
+
+        [Range(0, 1)]
+        [SerializeField]
+        protected float m_EdgeWidth = 0.5f;
+
+        [SerializeField]
+        protected ColorFilter m_EdgeColorFilter = ColorFilter.Replace;
+
+        [SerializeField]
+        protected Color m_EdgeColor = Color.white;
+
+        [Range(0, 1)]
+        [SerializeField]
+        protected float m_EdgeShinyWidth = 0.5f;
+
+        [Range(-5, 5)]
+        [SerializeField]
+        protected float m_EdgeShinyAutoPlaySpeed = 1f;
+
+        [SerializeField]
+        protected PatternArea m_PatternArea = PatternArea.Inner;
+
         /// <summary>
         /// Tone filter for rendering.
         /// </summary>
@@ -657,6 +681,86 @@ namespace Coffee.UIEffects
             }
         }
 
+        public EdgeMode edgeMode
+        {
+            get => m_EdgeMode;
+            set
+            {
+                if (m_EdgeMode == value) return;
+                context.edgeMode = m_EdgeMode = value;
+                SetMaterialDirty();
+            }
+        }
+
+        public float edgeWidth
+        {
+            get => m_EdgeWidth;
+            set
+            {
+                value = Mathf.Clamp(value, 0, 1);
+                if (Mathf.Approximately(m_EdgeWidth, value)) return;
+                context.edgeWidth = m_EdgeWidth = value;
+                SetMaterialDirty();
+            }
+        }
+
+        public ColorFilter edgeColorFilter
+        {
+            get => m_EdgeColorFilter;
+            set
+            {
+                if (m_EdgeColorFilter == value) return;
+                context.edgeColorFilter = m_EdgeColorFilter = value;
+                SetMaterialDirty();
+            }
+        }
+
+        public Color edgeColor
+        {
+            get => m_EdgeColor;
+            set
+            {
+                if (m_EdgeColor == value) return;
+                context.edgeColor = m_EdgeColor = value;
+                SetMaterialDirty();
+            }
+        }
+
+        public float edgeShinyWidth
+        {
+            get => m_EdgeShinyWidth;
+            set
+            {
+                value = Mathf.Clamp(value, 0, 1);
+                if (Mathf.Approximately(m_EdgeShinyWidth, value)) return;
+                context.edgeShinyWidth = m_EdgeShinyWidth = value;
+                SetMaterialDirty();
+            }
+        }
+
+        public float edgeShinyAutoPlaySpeed
+        {
+            get => m_EdgeShinyAutoPlaySpeed;
+            set
+            {
+                value = Mathf.Clamp(value, -5, 5);
+                if (Mathf.Approximately(m_EdgeShinyAutoPlaySpeed, value)) return;
+                context.edgeShinyAutoPlaySpeed = m_EdgeShinyAutoPlaySpeed = value;
+                SetMaterialDirty();
+            }
+        }
+
+        public PatternArea patternArea
+        {
+            get => m_PatternArea;
+            set
+            {
+                if (m_PatternArea == value) return;
+                context.patternArea = m_PatternArea = value;
+                SetMaterialDirty();
+            }
+        }
+
         public GradationMode gradationMode
         {
             get => m_GradationMode;
@@ -842,6 +946,14 @@ namespace Coffee.UIEffects
             c.shadowColor = m_ShadowColor;
             c.shadowColorGlow = m_ShadowColorGlow;
 
+            c.edgeMode = m_EdgeMode;
+            c.edgeWidth = m_EdgeWidth;
+            c.edgeColorFilter = m_EdgeColorFilter;
+            c.edgeColor = m_EdgeColor;
+            c.edgeShinyWidth = m_EdgeShinyWidth;
+            c.edgeShinyAutoPlaySpeed = m_EdgeShinyAutoPlaySpeed;
+            c.patternArea = m_PatternArea;
+
             c.gradationMode = m_GradationMode;
             c.gradationColor1 = m_GradationColor1;
             c.gradationColor2 = m_GradationColor2;
@@ -968,6 +1080,14 @@ namespace Coffee.UIEffects
             m_ShadowColor = preset.m_ShadowColor;
             m_ShadowColorGlow = preset.m_ShadowColorGlow;
 
+            m_EdgeMode = preset.m_EdgeMode;
+            m_EdgeWidth = preset.m_EdgeWidth;
+            m_EdgeColorFilter = preset.m_EdgeColorFilter;
+            m_EdgeColor = preset.m_EdgeColor;
+            m_EdgeShinyWidth = preset.m_EdgeShinyWidth;
+            m_EdgeShinyAutoPlaySpeed = preset.m_EdgeShinyAutoPlaySpeed;
+            m_PatternArea = preset.m_PatternArea;
+
             m_GradationMode = preset.m_GradationMode;
             m_GradationColor1 = preset.m_GradationColor1;
             m_GradationColor2 = preset.m_GradationColor2;
@@ -1029,6 +1149,14 @@ namespace Coffee.UIEffects
             m_ShadowColorFilter = c.shadowColorFilter;
             m_ShadowColor = c.shadowColor;
             m_ShadowColorGlow = c.shadowColorGlow;
+
+            m_EdgeMode = c.edgeMode;
+            m_EdgeWidth = c.edgeWidth;
+            m_EdgeColorFilter = c.edgeColorFilter;
+            m_EdgeColor = c.edgeColor;
+            m_EdgeShinyWidth = c.edgeShinyWidth;
+            m_EdgeShinyAutoPlaySpeed = c.edgeShinyAutoPlaySpeed;
+            m_PatternArea = c.patternArea;
 
             m_GradationMode = c.gradationMode;
             m_GradationColor1 = c.gradationColor1;

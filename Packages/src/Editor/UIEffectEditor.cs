@@ -81,6 +81,14 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _gradationScale;
         private SerializedProperty _gradationRotation;
 
+        private SerializedProperty _edgeMode;
+        private SerializedProperty _edgeWidth;
+        private SerializedProperty _edgeColorFilter;
+        private SerializedProperty _edgeColor;
+        private SerializedProperty _edgeShinyWidth;
+        private SerializedProperty _edgeShinyAutoPlaySpeed;
+        private SerializedProperty _patternArea;
+
         private bool _expandOthers = true;
         private SerializedProperty _allowToModifyMeshShape;
 
@@ -135,6 +143,14 @@ namespace Coffee.UIEffects.Editors
             _shadowColorFilter = serializedObject.FindProperty("m_ShadowColorFilter");
             _shadowColor = serializedObject.FindProperty("m_ShadowColor");
             _shadowColorGlow = serializedObject.FindProperty("m_ShadowColorGlow");
+
+            _edgeMode = serializedObject.FindProperty("m_EdgeMode");
+            _edgeWidth = serializedObject.FindProperty("m_EdgeWidth");
+            _edgeColorFilter = serializedObject.FindProperty("m_EdgeColorFilter");
+            _edgeColor = serializedObject.FindProperty("m_EdgeColor");
+            _edgeShinyWidth = serializedObject.FindProperty("m_EdgeShinyWidth");
+            _edgeShinyAutoPlaySpeed = serializedObject.FindProperty("m_EdgeShinyAutoPlaySpeed");
+            _patternArea = serializedObject.FindProperty("m_PatternArea");
 
             _gradationMode = serializedObject.FindProperty("m_GradationMode");
             _gradationColor1 = serializedObject.FindProperty("m_GradationColor1");
@@ -337,6 +353,32 @@ namespace Coffee.UIEffects.Editors
                 }
 
                 EditorGUI.indentLevel--;
+            }
+
+            // Edge Mode
+            DrawSeparator();
+            if (DrawHeaderPopup(_edgeMode))
+            {
+                EditorGUILayout.PropertyField(_edgeWidth);
+                prevColorFilter = (ColorFilter)_edgeColorFilter.intValue;
+                EditorGUILayout.PropertyField(_edgeColorFilter);
+                DrawColor(_edgeColorFilter, _edgeColor, prevColorFilter);
+
+                if ((EdgeMode)_edgeMode.intValue == EdgeMode.Shiny)
+                {
+                    EditorGUILayout.PropertyField(_edgeShinyWidth);
+                    EditorGUILayout.PropertyField(_edgeShinyAutoPlaySpeed);
+
+                    if (!Mathf.Approximately(0, _edgeShinyAutoPlaySpeed.floatValue))
+                    {
+                        EditorApplication.QueuePlayerLoopUpdate();
+                    }
+                }
+
+                if (_transitionFilter.intValue == (int)TransitionFilter.Pattern)
+                {
+                    EditorGUILayout.PropertyField(_patternArea);
+                }
             }
 
             DrawSeparator();
