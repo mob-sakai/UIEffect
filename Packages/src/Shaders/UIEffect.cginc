@@ -7,6 +7,7 @@ uniform half4 _ColorValue;
 uniform float _ColorIntensity;
 uniform int _ColorGlow;
 uniform float _SamplingIntensity;
+uniform float _SamplingWidth;
 uniform float _SamplingScale;
 uniform sampler2D _TransitionTex;
 uniform float4 _TransitionTex_ST;
@@ -52,6 +53,9 @@ uniform int _ShadowColorGlow;
 #define UIEFFECT_SAMPLE_CLAMP(uv, uvMask) uieffect_frag(uv) \
     * step(uvMask.x, uv.x) * step(uv.x, uvMask.z) \
     * step(uvMask.y, uv.y) * step(uv.y, uvMask.w)
+#define TEX_SAMPLE_CLAMP(uv, uvMask) tex2D(_MainTex, uv) \
+* step(uvMask.x, uv.x) * step(uv.x, uvMask.z) \
+* step(uvMask.y, uv.y) * step(uv.y, uvMask.w)
 
 float2 texel_size()
 {
@@ -475,26 +479,17 @@ half4 uieffect(float2 uv, const float4 uvMask, const float2 uvLocal)
     #elif SAMPLING_EDGE_LUMINANCE || SAMPLING_EDGE_ALPHA
     {
         // Pixel size
-        const float dx = texel_size().x;
-        const float dy = texel_size().y;
+        const float2 d = texel_size() * _SamplingWidth;
 
         // Pixel values around the current pixel (3x3, 8 neighbors)
-        const float2 uv00 = uv + half2(-dx, -dy);
-        const half v00 = to_value(UIEFFECT_SAMPLE_CLAMP(uv00, uvMask));
-        const float2 uv01 = uv + half2(-dx, 0.0);
-        const half v01 = to_value(UIEFFECT_SAMPLE_CLAMP(uv01, uvMask));
-        const float2 uv02 = uv + half2(-dx, +dy);
-        const half v02 = to_value(UIEFFECT_SAMPLE_CLAMP(uv02, uvMask));
-        const float2 uv10 = uv + half2(0.0, -dy);
-        const half v10 = to_value(UIEFFECT_SAMPLE_CLAMP(uv10, uvMask));
-        const float2 uv12 = uv + half2(0.0, +dy);
-        const half v12 = to_value(UIEFFECT_SAMPLE_CLAMP(uv12, uvMask));
-        const float2 uv20 = uv + half2(+dx, -dy);
-        const half v20 = to_value(UIEFFECT_SAMPLE_CLAMP(uv20, uvMask));
-        const float2 uv21 = uv + half2(+dx, 0.0);
-        const half v21 = to_value(UIEFFECT_SAMPLE_CLAMP(uv21, uvMask));
-        const float2 uv22 = uv + half2(+dx, +dy);
-        const half v22 = to_value(UIEFFECT_SAMPLE_CLAMP(uv22, uvMask));
+        const half v00 = to_value(TEX_SAMPLE_CLAMP((uv + half2(-d.x, -d.y)), uvMask));
+        const half v01 = to_value(TEX_SAMPLE_CLAMP((uv + half2(-d.x, 0.0)), uvMask));
+        const half v02 = to_value(TEX_SAMPLE_CLAMP((uv + half2(-d.x, +d.y)), uvMask));
+        const half v10 = to_value(TEX_SAMPLE_CLAMP((uv + half2(0.0, -d.y)), uvMask));
+        const half v12 = to_value(TEX_SAMPLE_CLAMP((uv + half2(0.0, +d.y)), uvMask));
+        const half v20 = to_value(TEX_SAMPLE_CLAMP((uv + half2(+d.x, -d.y)), uvMask));
+        const half v21 = to_value(TEX_SAMPLE_CLAMP((uv + half2(+d.x, 0.0)), uvMask));
+        const half v22 = to_value(TEX_SAMPLE_CLAMP((uv + half2(+d.x, +d.y)), uvMask));
 
         // Apply Sobel operator
         half sobel_h = v00 * -1.0 + v01 * -2.0 + v02 * -1.0 + v20 * 1.0 + v21 * 2.0 + v22 * 1.0;

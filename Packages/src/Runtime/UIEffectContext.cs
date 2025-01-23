@@ -20,6 +20,7 @@ namespace Coffee.UIEffects
         private static readonly int s_ColorIntensity = Shader.PropertyToID("_ColorIntensity");
         private static readonly int s_ColorGlow = Shader.PropertyToID("_ColorGlow");
         private static readonly int s_SamplingIntensity = Shader.PropertyToID("_SamplingIntensity");
+        private static readonly int s_SamplingWidth = Shader.PropertyToID("_SamplingWidth");
         private static readonly int s_SamplingScale = Shader.PropertyToID("_SamplingScale");
         private static readonly int s_TransitionRate = Shader.PropertyToID("_TransitionRate");
         private static readonly int s_TransitionReverse = Shader.PropertyToID("_TransitionReverse");
@@ -142,6 +143,7 @@ namespace Coffee.UIEffects
 
         public SamplingFilter samplingFilter = SamplingFilter.None;
         public float samplingIntensity = 0.5f;
+        public float samplingWidth;
 
         public TransitionFilter transitionFilter = TransitionFilter.None;
         public float transitionRate = 0.5f;
@@ -211,6 +213,7 @@ namespace Coffee.UIEffects
 
             samplingFilter = preset.samplingFilter;
             samplingIntensity = preset.samplingIntensity;
+            samplingWidth = preset.samplingWidth;
 
             transitionFilter = preset.transitionFilter;
             transitionRate = preset.transitionRate;
@@ -275,6 +278,7 @@ namespace Coffee.UIEffects
             material.SetInt(s_ColorGlow, colorGlow ? 1 : 0);
 
             material.SetFloat(s_SamplingIntensity, Mathf.Clamp01(samplingIntensity));
+            material.SetFloat(s_SamplingWidth, samplingWidth);
             material.SetFloat(s_SamplingScale, actualSamplingScale);
 
             material.SetFloat(s_TransitionRate, Mathf.Clamp01(transitionRate));

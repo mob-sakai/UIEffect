@@ -35,6 +35,7 @@ namespace Coffee.UIEffects.Editors
 
         private SerializedProperty _samplingFilter;
         private SerializedProperty _samplingIntensity;
+        private SerializedProperty _samplingWidth;
         private SerializedProperty _samplingScale;
 
         private SerializedProperty _transitionFilter;
@@ -97,6 +98,7 @@ namespace Coffee.UIEffects.Editors
 
             _samplingFilter = serializedObject.FindProperty("m_SamplingFilter");
             _samplingIntensity = serializedObject.FindProperty("m_SamplingIntensity");
+            _samplingWidth = serializedObject.FindProperty("m_SamplingWidth");
             _samplingScale = serializedObject.FindProperty("m_SamplingScale");
 
             _transitionFilter = serializedObject.FindProperty("m_TransitionFilter");
@@ -186,6 +188,12 @@ namespace Coffee.UIEffects.Editors
             {
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(_samplingIntensity);
+                if (_samplingFilter.intValue == (int)SamplingFilter.EdgeAlpha
+                    || _samplingFilter.intValue == (int)SamplingFilter.EdgeLuminance)
+                {
+                    EditorGUILayout.PropertyField(_samplingWidth);
+                }
+
                 EditorGUI.indentLevel--;
             }
 
