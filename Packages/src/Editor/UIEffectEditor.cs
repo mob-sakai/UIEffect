@@ -53,6 +53,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _transitionColor;
         private SerializedProperty _transitionColorGlow;
         private SerializedProperty _transitionPatternReverse;
+        private SerializedProperty _transitionAutoPlaySpeed;
 
         private SerializedProperty _targetMode;
         private SerializedProperty _targetColor;
@@ -126,6 +127,7 @@ namespace Coffee.UIEffects.Editors
             _transitionColor = serializedObject.FindProperty("m_TransitionColor");
             _transitionColorGlow = serializedObject.FindProperty("m_TransitionColorGlow");
             _transitionPatternReverse = serializedObject.FindProperty("m_TransitionPatternReverse");
+            _transitionAutoPlaySpeed = serializedObject.FindProperty("m_TransitionAutoPlaySpeed");
 
             _targetMode = serializedObject.FindProperty("m_TargetMode");
             _targetColor = serializedObject.FindProperty("m_TargetColor");
@@ -251,6 +253,12 @@ namespace Coffee.UIEffects.Editors
                     EditorGUILayout.PropertyField(_transitionColorFilter);
                     DrawColor(_transitionColorFilter, _transitionColor, prevColorFilter);
                     EditorGUILayout.PropertyField(_transitionColorGlow);
+                }
+
+                EditorGUILayout.PropertyField(_transitionAutoPlaySpeed);
+                if (0 < _transitionFilter.intValue && !Mathf.Approximately(0, _transitionAutoPlaySpeed.floatValue))
+                {
+                    EditorApplication.QueuePlayerLoopUpdate();
                 }
 
                 EditorGUI.indentLevel--;

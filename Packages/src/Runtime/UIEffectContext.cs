@@ -33,6 +33,7 @@ namespace Coffee.UIEffects
         private static readonly int s_TransitionColor = Shader.PropertyToID("_TransitionColor");
         private static readonly int s_TransitionColorGlow = Shader.PropertyToID("_TransitionColorGlow");
         private static readonly int s_TransitionPatternReverse = Shader.PropertyToID("_TransitionPatternReverse");
+        private static readonly int s_TransitionAutoPlaySpeed = Shader.PropertyToID("_TransitionAutoPlaySpeed");
         private static readonly int s_TargetColor = Shader.PropertyToID("_TargetColor");
         private static readonly int s_TargetRange = Shader.PropertyToID("_TargetRange");
         private static readonly int s_TargetSoftness = Shader.PropertyToID("_TargetSoftness");
@@ -188,6 +189,7 @@ namespace Coffee.UIEffects
         public Color transitionColor = new Color(0f, 0.5f, 1.0f, 1.0f);
         public bool transitionColorGlow;
         public bool transitionPatternReverse;
+        public float transitionAutoPlaySpeed;
 
         public TargetMode targetMode = TargetMode.None;
         public Color targetColor = Color.white;
@@ -269,6 +271,7 @@ namespace Coffee.UIEffects
             transitionColorFilter = preset.transitionColorFilter;
             transitionColorGlow = preset.transitionColorGlow;
             transitionPatternReverse = preset.transitionPatternReverse;
+            transitionAutoPlaySpeed = preset.transitionAutoPlaySpeed;
 
             targetMode = preset.targetMode;
             targetColor = preset.targetColor;
@@ -343,6 +346,7 @@ namespace Coffee.UIEffects
             material.SetColor(s_TransitionColor, transitionColor);
             material.SetInt(s_TransitionColorGlow, transitionColorGlow ? 1 : 0);
             material.SetInt(s_TransitionPatternReverse, transitionPatternReverse ? 1 : 0);
+            material.SetFloat(s_TransitionAutoPlaySpeed, transitionAutoPlaySpeed);
 
             material.SetColor(s_TargetColor, targetColor);
             material.SetFloat(s_TargetRange, Mathf.Clamp01(targetRange));

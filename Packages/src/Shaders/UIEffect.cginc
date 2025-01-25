@@ -72,6 +72,11 @@ float2 texel_size()
     return _MainTex_TexelSize.xy * _SamplingScale;
 }
 
+float transition_rate()
+{
+    return frac(_TransitionAutoPlaySpeed * _Time.y + _TransitionRate);
+}
+
 float3 rgb_to_hsv(float3 c)
 {
     const float4 K = float4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -101,8 +106,8 @@ float transition_alpha(float2 uvLocal)
     return 1;
     #elif TRANSITION_PATTERN
     {
-        const half scale = lerp(100, 10, _TransitionWidth);
-        const half2 time = half2(-_TransitionRate * 2, 0);
+        const half scale = lerp(100, 1, _TransitionWidth);
+        const half2 time = half2(-transition_rate() * 2, 0);
         uv = uvLocal * _TransitionTex_ST.xy * scale + _TransitionTex_ST.zw + time;
     }
     #else
@@ -112,7 +117,7 @@ float transition_alpha(float2 uvLocal)
     #endif
 
     const float alpha = tex2D(_TransitionTex, uv).a;
-    return (1 - alpha) * _TransitionReverse + alpha * (1 - _TransitionReverse);
+    return _TransitionReverse ? 1 - alpha : alpha;
 }
 
 
@@ -424,7 +429,7 @@ float2 move_transition_filter(const float4 uvMask, const float alpha)
     }
     #endif
 
-    const float factor = alpha - _TransitionRate * (1 + _TransitionWidth * 1.5) + _TransitionWidth;
+    const float factor = alpha - transition_rate() * (1 + _TransitionWidth * 1.5) + _TransitionWidth;
     const float band = max(0, _TransitionWidth - factor);
 
     #if TRANSITION_MELT
@@ -444,11 +449,11 @@ half4 apply_transition_filter(half4 color, const float alpha, const float2 uvLoc
 {
     #if TRANSITION_FADE  // Transition.Fade
     {
-        color *= saturate(alpha + 1 - _TransitionRate * 2);
+        color *= saturate(alpha + 1 - transition_rate() * 2);
     }
     #elif TRANSITION_CUTOFF  // Transition.Cutoff
     {
-        color *= step(0.001, alpha - _TransitionRate);
+        color *= step(0.001, alpha - transition_rate());
     }
     #elif TRANSITION_PATTERN  // Transition.Pattern
     {
@@ -461,7 +466,7 @@ half4 apply_transition_filter(half4 color, const float alpha, const float2 uvLoc
     // Transition.Dissolve/Shiny/ShinyOnly/Melt
     #elif TRANSITION_DISSOLVE || TRANSITION_SHINY || TRANSITION_MASK || TRANSITION_MELT || TRANSITION_BURN
     {
-        const float factor = alpha - _TransitionRate * (1 + _TransitionWidth) + _TransitionWidth;
+        const float factor = alpha - transition_rate() * (1 + _TransitionWidth) + _TransitionWidth;
         const float softness = max(0.0001, _TransitionWidth * _TransitionSoftness);
         const fixed bandLerp = saturate((_TransitionWidth - factor) * 1 / softness);
         const fixed softLerp = saturate(factor * 2 / softness);

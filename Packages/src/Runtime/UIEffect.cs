@@ -96,6 +96,10 @@ namespace Coffee.UIEffects
         [SerializeField]
         protected bool m_TransitionPatternReverse = false;
 
+        [Range(-5, 5)]
+        [SerializeField]
+        protected float m_TransitionAutoPlaySpeed = 0f;
+
         [SerializeField]
         protected TargetMode m_TargetMode = TargetMode.None;
 
@@ -511,6 +515,18 @@ namespace Coffee.UIEffects
             {
                 if (m_TransitionPatternReverse == value) return;
                 context.transitionPatternReverse = m_TransitionPatternReverse = value;
+                SetMaterialDirty();
+            }
+        }
+
+        public float transitionAutoPlaySpeed
+        {
+            get => m_TransitionAutoPlaySpeed;
+            set
+            {
+                value = Mathf.Clamp(value, -5, 5);
+                if (Mathf.Approximately(m_TransitionAutoPlaySpeed, value)) return;
+                context.transitionAutoPlaySpeed = m_TransitionAutoPlaySpeed = value;
                 SetMaterialDirty();
             }
         }
@@ -957,6 +973,7 @@ namespace Coffee.UIEffects
             c.transitionColor = m_TransitionColor;
             c.transitionColorGlow = m_TransitionColorGlow;
             c.transitionPatternReverse = m_TransitionPatternReverse;
+            c.transitionAutoPlaySpeed = m_TransitionAutoPlaySpeed;
 
             c.targetMode = m_TargetMode;
             c.targetColor = m_TargetColor;
@@ -1094,6 +1111,7 @@ namespace Coffee.UIEffects
             m_TransitionColor = preset.m_TransitionColor;
             m_TransitionColorGlow = preset.m_TransitionColorGlow;
             m_TransitionPatternReverse = preset.m_TransitionPatternReverse;
+            m_TransitionAutoPlaySpeed = preset.m_TransitionAutoPlaySpeed;
 
             m_TargetMode = preset.m_TargetMode;
             m_TargetColor = preset.m_TargetColor;
@@ -1165,6 +1183,7 @@ namespace Coffee.UIEffects
             m_TransitionColor = c.transitionColor;
             m_TransitionColorGlow = c.transitionColorGlow;
             m_TransitionPatternReverse = c.transitionPatternReverse;
+            m_TransitionAutoPlaySpeed = c.transitionAutoPlaySpeed;
 
             m_TargetMode = c.targetMode;
             m_TargetColor = c.targetColor;
