@@ -50,7 +50,7 @@ namespace Coffee.UIEffects
                 value = Mathf.Clamp(value, 0.01f, 100);
                 if (Mathf.Approximately(m_SamplingScale, value)) return;
                 m_SamplingScale = value;
-                ApplyContextToMaterial();
+                SetMaterialDirty();
             }
         }
 

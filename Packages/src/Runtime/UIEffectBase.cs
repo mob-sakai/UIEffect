@@ -153,7 +153,8 @@ namespace Coffee.UIEffects
         protected override void OnDidApplyAnimationProperties()
         {
             UpdateContext(context);
-            ApplyContextToMaterial();
+            SetVerticesDirty();
+            SetMaterialDirty();
         }
 
         public virtual void SetVerticesDirty()
@@ -176,6 +177,9 @@ namespace Coffee.UIEffects
             if (graphic)
             {
                 graphic.SetVerticesDirty();
+#if UNITY_EDITOR
+                EditorApplication.QueuePlayerLoopUpdate();
+#endif
             }
         }
 
@@ -184,6 +188,9 @@ namespace Coffee.UIEffects
             if (graphic)
             {
                 graphic.SetMaterialDirty();
+#if UNITY_EDITOR
+                EditorApplication.QueuePlayerLoopUpdate();
+#endif
             }
         }
 
