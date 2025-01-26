@@ -1,3 +1,10 @@
+## [5.2.4](https://github.com/mob-sakai/UIEffect/compare/5.2.3...5.2.4) (2025-01-26)
+
+
+### Bug Fixes
+
+* properties may not update correctly when changed via code or animation ([5994f88](https://github.com/mob-sakai/UIEffect/commit/5994f8875ed2280e5c863c30f9c7900d4dce70ed)), closes [#300](https://github.com/mob-sakai/UIEffect/issues/300)
+
 ## [5.2.3](https://github.com/mob-sakai/UIEffect/compare/5.2.2...5.2.3) (2025-01-23)
 
 
