@@ -2,7 +2,7 @@
   "name": "com.coffee.ui-effect",
   "displayName": "UI Effect",
   "description": "UIEffect is an open-source package that allows you to intuitively apply rich UI effects directly from the Inspector or via code.\nCombine various filters, such as grayscale, blur, and dissolve, to decorate your UI with a unique visual style!",
-  "version": "5.2.4",
+  "version": "5.3.0",
   "unity": "2020.3",
   "license": "MIT",
   "repository": {

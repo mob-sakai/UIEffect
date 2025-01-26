@@ -1,3 +1,14 @@
+# [5.3.0](https://github.com/mob-sakai/UIEffect/compare/5.2.4...5.3.0) (2025-01-26)
+
+
+### Features
+
+* `SamplingFilter.EdgeAlpha` and `SamplingFilter.EdgeLuminance` now support the `Sampling Width` property for edge width ([33b1177](https://github.com/mob-sakai/UIEffect/commit/33b1177815b935a887c5a8918748cbeafec32b6b))
+* add `EdgeMode` feature ([eadb477](https://github.com/mob-sakai/UIEffect/commit/eadb477bcd91f8909bfa7b8976241411363ee12c))
+* add `ResetOnEnable` option for `UIEffectTweener` ([e326bb7](https://github.com/mob-sakai/UIEffect/commit/e326bb77537b921df775646142105a490ae54851)), closes [#299](https://github.com/mob-sakai/UIEffect/issues/299)
+* add `TransitionAutoSpeed` property ([7a765c3](https://github.com/mob-sakai/UIEffect/commit/7a765c32d87f6dfbdb990d5b3a272dd80696b374))
+* add `TransitionFilter.Pattern` feature ([b57e98b](https://github.com/mob-sakai/UIEffect/commit/b57e98b64c61a7c7eb3ca97f3bd7e909956ee469))
+
 ## [5.2.4](https://github.com/mob-sakai/UIEffect/compare/5.2.3...5.2.4) (2025-01-26)
 
 
