@@ -5,7 +5,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "5d0bd14be288153555f975240608e7ee1576b091"
+      "hash": "9f5f59b492aed618d0123ce2f55d041e61c5f246"
     },
     "com.coffee.minimal-resource": {
       "version": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/MinimalResource",
