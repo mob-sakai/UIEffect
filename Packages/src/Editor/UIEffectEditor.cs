@@ -197,7 +197,7 @@ namespace Coffee.UIEffects.Editors
             {
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(_colorIntensity);
-                DrawColor(_colorFilter, _color, prevColorFilter, false);
+                DrawColor(_color, (ColorFilter)_colorFilter.intValue, prevColorFilter, false);
                 EditorGUILayout.PropertyField(_colorGlow);
                 EditorGUI.indentLevel--;
             }
@@ -241,18 +241,13 @@ namespace Coffee.UIEffects.Editors
                     EditorGUILayout.PropertyField(_transitionRange, EditorGUIUtility.TrTempContent("Pattern Range"));
                     EditorGUILayout.PropertyField(_transitionPatternReverse,
                         EditorGUIUtility.TrTempContent("Pattern Reverse"));
-                    prevColorFilter = (ColorFilter)_transitionColorFilter.intValue;
-                    EditorGUILayout.PropertyField(_transitionColorFilter);
-                    DrawColor(_transitionColorFilter, _transitionColor, prevColorFilter);
+                    DrawColor(_transitionColorFilter, _transitionColor, null);
                 }
                 else if (2 < _transitionFilter.intValue)
                 {
                     EditorGUILayout.PropertyField(_transitionWidth);
                     EditorGUILayout.PropertyField(_transitionSoftness);
-                    prevColorFilter = (ColorFilter)_transitionColorFilter.intValue;
-                    EditorGUILayout.PropertyField(_transitionColorFilter);
-                    DrawColor(_transitionColorFilter, _transitionColor, prevColorFilter);
-                    EditorGUILayout.PropertyField(_transitionColorGlow);
+                    DrawColor(_transitionColorFilter, _transitionColor, _transitionColorGlow);
                 }
 
                 EditorGUILayout.PropertyField(_transitionAutoPlaySpeed);
@@ -314,10 +309,7 @@ namespace Coffee.UIEffects.Editors
 
                     EditorGUILayout.PropertyField(_shadowDistance);
                     EditorGUILayout.PropertyField(_shadowIteration);
-                    prevColorFilter = (ColorFilter)_shadowColorFilter.intValue;
-                    EditorGUILayout.PropertyField(_shadowColorFilter);
-                    DrawColor(_shadowColorFilter, _shadowColor, prevColorFilter, false);
-                    EditorGUILayout.PropertyField(_shadowColorGlow);
+                    DrawColor(_shadowColorFilter, _shadowColor, _shadowColorGlow, false);
                     EditorGUILayout.PropertyField(_shadowFade);
                 }
 
@@ -382,9 +374,7 @@ namespace Coffee.UIEffects.Editors
             if (DrawHeaderPopup(_edgeMode))
             {
                 EditorGUILayout.PropertyField(_edgeWidth);
-                prevColorFilter = (ColorFilter)_edgeColorFilter.intValue;
-                EditorGUILayout.PropertyField(_edgeColorFilter);
-                DrawColor(_edgeColorFilter, _edgeColor, prevColorFilter);
+                DrawColor(_edgeColorFilter, _edgeColor, null);
 
                 if ((EdgeMode)_edgeMode.intValue == EdgeMode.Shiny)
                 {
@@ -452,13 +442,12 @@ namespace Coffee.UIEffects.Editors
             }
         }
 
-        private static void DrawColor(SerializedProperty filter, SerializedProperty color, ColorFilter prevFilter,
+        private static void DrawColor(SerializedProperty color, ColorFilter filter, ColorFilter prevFilter,
             bool showAlpha = true)
         {
-            if (filter.intValue == (int)ColorFilter.None)
-            {
-            }
-            else if (filter.intValue == (int)ColorFilter.HsvModifier)
+            if (filter == ColorFilter.None) return;
+
+            if (filter == ColorFilter.HsvModifier)
             {
                 if (prevFilter != ColorFilter.HsvModifier)
                 {
@@ -470,7 +459,7 @@ namespace Coffee.UIEffects.Editors
                 EditorGUILayout.Slider(color.FindPropertyRelative("b"), -1f, 1f, "Value");
                 EditorGUILayout.Slider(color.FindPropertyRelative("a"), 0, 1, "Alpha");
             }
-            else if (filter.intValue == (int)ColorFilter.Contrast)
+            else if (filter == ColorFilter.Contrast)
             {
                 if (prevFilter != ColorFilter.Contrast)
                 {
@@ -490,6 +479,24 @@ namespace Coffee.UIEffects.Editors
 
                 DrawColorPickerField(color, showAlpha);
             }
+        }
+
+        private static void DrawColor(SerializedProperty filter, SerializedProperty color, SerializedProperty glow,
+            bool showAlpha = true)
+        {
+            var prevFilter = (ColorFilter)filter.intValue;
+            EditorGUILayout.PropertyField(filter);
+            if (filter.intValue == (int)ColorFilter.None) return;
+
+            EditorGUI.indentLevel++;
+            DrawColor(color, (ColorFilter)filter.intValue, prevFilter, showAlpha);
+
+            if (glow != null)
+            {
+                EditorGUILayout.PropertyField(glow);
+            }
+
+            EditorGUI.indentLevel--;
         }
 
         private static bool DrawHeaderPopup(SerializedProperty sp)
