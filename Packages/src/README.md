@@ -73,8 +73,8 @@ Combine various filters, such as grayscale, blur, and dissolve, to decorate your
 
 ## 🎮 Demo
 
-![](https://github.com/user-attachments/assets/c52f6f40-5fae-484f-b69e-516da706ae54)  
-![](https://github.com/user-attachments/assets/02ab1686-03d4-4500-bd89-004b2c401441)
+![](https://github.com/user-attachments/assets/37a46a7e-1f15-4a52-a928-09a2ed857a47)
+![](https://github.com/user-attachments/assets/f1fa2485-e635-4923-a53f-6825d7f85873)
 
 [WebGL Demo](https://mob-sakai.github.io/UIEffect/)
 
@@ -94,7 +94,7 @@ _This package requires **Unity 2020.3 or later**._
   ```
 - To update the package, use Package Manager UI (`Window > Package Manager`) or run the following command with `@{version}`:
   ```
-  openupm add com.coffee.ui-effect@5.0.0
+  openupm add com.coffee.ui-effect@5.3.0
   ```
 
 ### Install via UPM (with Package Manager UI)
@@ -103,7 +103,7 @@ _This package requires **Unity 2020.3 or later**._
 - Click `+ > Add package from git URL...` and input the repository URL: `https://github.com/mob-sakai/UIEffect.git?path=Packages/src`  
   ![](https://github.com/user-attachments/assets/f88f47ad-c606-44bd-9e86-ee3f72eac548)
 - To update the package, change suffix `#{version}` to the target version.
-    - e.g. `https://github.com/mob-sakai/UIEffect.git?path=Packages/src#5.0.0`
+    - e.g. `https://github.com/mob-sakai/UIEffect.git?path=Packages/src#5.3.0`
 
 ### Install via UPM (Manually)
 
@@ -118,7 +118,7 @@ _This package requires **Unity 2020.3 or later**._
   ```
 
 - To update the package, change suffix `#{version}` to the target version.
-    - e.g. `"com.coffee.ui-effect": "https://github.com/mob-sakai/UIEffect.git?path=Packages/src#5.0.0",`
+    - e.g. `"com.coffee.ui-effect": "https://github.com/mob-sakai/UIEffect.git?path=Packages/src#5.3.0",`
 
 ### Install as Embedded Package
 
@@ -183,7 +183,7 @@ If upgrading from UIEffect v4 to v5, note the following breaking changes:
 
 ### Component: UIEffect
 
-![](https://github.com/user-attachments/assets/e0ba2661-4d3b-4f55-984a-153ec3d53137)
+![](https://github.com/user-attachments/assets/a1642385-ebdc-4a66-b167-10c8b15277e1)
 
 The `UIEffect` component applies visual effects to UI elements, allowing various effects to be achieved by combining multiple filters.
 
@@ -202,16 +202,21 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 
 - **Sampling Filter**: `None`, `Blur Fast`, `Blur Medium`, `Blur Detail`, `Pixelation`, `Rgb Shift`, `Edge Luminescence`, `Edge Alpha`
 - **Sampling Intensity**: 0.0 (no effect) - 1.0 (full effect).
+- **Sampling Width**: The width of the sampling effect.
 
 #### Transition Filter
 
-- **Transition Filter**: `None`, `Fade`, `Cutoff`, `Dissolve`, `Shiny`, `Mask`, `Melt`, `Burn`
+- **Transition Filter**: `None`, `Fade`, `Cutoff`, `Dissolve`, `Shiny`, `Mask`, `Melt`, `Burn`, `Pattern`
 - **Transition Rate**: 0.0 (no effect) - 1.0 (full effect).
 - **Transition Tex**: The texture used for the transition filter.- **Transition Width**: The width where the transition color is applied.
+- **Transition Width**: The width where the transition color is applied.
+- **Transition Pattern Range**: The range of the pattern.
+- **Transition Pattern Reverse**: Reverse the pattern.
 - **Transition Softness**: The softness of the boundary for the transition color.
 - **Transition Color Filter**: Specifies the transition color.
     - **Transition Color**: The color of the transition.
     - **Transition Color Glow**: Set the transition color to glow.
+- **Transition Auto Play Speed**: The speed of the transition animation. You can use this property to loop the `TransitionRate` without tweener or animation.
 
 #### Target Mode
 
@@ -241,7 +246,7 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 
 #### Gradation Mode
 
-- **Gradation Mode**: `None`, `Horizontal Gradient`, `Horizontal`, `Vertical Gradient`, `Vertical`, `Radial Fast`, `Radial Detail`, `Diagonal To Right Bottom`, `Diagonal To Right Top`, `Diagonal To Left Bottom`, `Angle`, `Angle Gradient`
+- **Gradation Mode**: `None`, `Plain`, `Shiny`
 - **Gradation Gradient**: The gradient of the gradation.
 - **Gradation Color 1**: The first color of the gradation.
 - **Gradation Color 2**: The second color of the gradation.
@@ -256,6 +261,15 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 > It can be applied to meshes other than Full Rect because it applies the gradient according to the original mesh shape.  
 > `Gradation Gradient` has two modes, `Blend` and `Fixed`.
 
+#### Edge Mode
+
+- **Edge Mode**: `None`, `Plain`, `Shiny`
+- **Edge Width**: The width of the edge.
+- **Edge Color Filter**: Specifies the edge color.
+    - **Edge Color**: The color of the edge.
+- **Edge Shiny Width**: The width of the edge shiny.
+- **Edge Shiny Auto Play Speed**: The speed of the edge shiny.
+
 #### Others
 
 - **Sampling Scale**: The referencing scale during sampling.
@@ -266,7 +280,7 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 
 ### Component: UIEffectTweener
 
-![](https://github.com/user-attachments/assets/118df4dc-3c08-4e2b-b6c8-97f15c9e5c9f)
+![](https://github.com/user-attachments/assets/1c731104-4baf-43f8-ba16-611ee9870df2)
 
 The `UIEffectTweener` component animates the effect, enabling easy control over effect animations without the need for an `AnimationClip`.
 
@@ -279,6 +293,7 @@ The `UIEffectTweener` component animates the effect, enabling easy control over 
 - **Play On Enable**: `None`, `Forward`, `Reverse`, `Keep Direction`
    - Play the animation automatically when the component is enabled.
    - If `None` is selected, the animation will not play automatically. You can play it using the `Play`, `PlayForward` or `PlayReverse`  method.
+- **Reset Time On Enable**: Reset the tweening time when the component is enabled.
 - **Wrap Mode**: `Once`, `Loop`, `PingPongOnce`, `PingPongLoop`
 - **Update Mode**: `Normal`, `UnscaledTime`, `Manual`
 - **On Complete**: A event that is triggered when the animation is completed.
