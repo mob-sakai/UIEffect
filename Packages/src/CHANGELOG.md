@@ -1,3 +1,10 @@
+## [5.3.1](https://github.com/mob-sakai/UIEffect/compare/5.3.0...5.3.1) (2025-01-27)
+
+
+### Bug Fixes
+
+* shader keywords for UIEfect are not recognized in Unity 6 ([fd39abf](https://github.com/mob-sakai/UIEffect/commit/fd39abf5a71138919f8feee587576ba187075304)), closes [#301](https://github.com/mob-sakai/UIEffect/issues/301)
+
 # [5.3.0](https://github.com/mob-sakai/UIEffect/compare/5.2.4...5.3.0) (2025-01-26)
 
 
