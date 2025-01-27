@@ -73,8 +73,9 @@ Combine various filters, such as grayscale, blur, and dissolve, to decorate your
 
 ## 🎮 Demo
 
-![](https://github.com/user-attachments/assets/37a46a7e-1f15-4a52-a928-09a2ed857a47)
-![](https://github.com/user-attachments/assets/f1fa2485-e635-4923-a53f-6825d7f85873)
+![](https://github.com/user-attachments/assets/37a46a7e-1f15-4a52-a928-09a2ed857a47)  
+![](https://github.com/user-attachments/assets/f1fa2485-e635-4923-a53f-6825d7f85873)  
+![](https://github.com/user-attachments/assets/1ed410bf-b782-433b-9429-721278c5ba1e)  
 
 [WebGL Demo](https://mob-sakai.github.io/UIEffect/)
 
