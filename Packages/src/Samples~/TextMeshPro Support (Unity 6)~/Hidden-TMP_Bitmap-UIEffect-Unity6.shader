@@ -153,6 +153,7 @@ SubShader{
 			float2 uvMove = uv - IN.texcoord0;
 			fixed4 color = tex2D(_MainTex, IN.texcoord0 + uvMove);
 			color = fixed4 (tex2D(_FaceTex, IN.texcoord1).rgb * IN.color.rgb, IN.color.a * color.a);
+			color.rgb *= color.a;
 			return color;
 		}
 		#define UIEFFECT_TEXTMESHPRO 1

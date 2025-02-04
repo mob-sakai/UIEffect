@@ -147,6 +147,7 @@ SubShader {
 			v2f IN = _fragInput;
 			float2 uvMove = uv - IN.texcoord0;
 			fixed4 color = fixed4(IN.color.rgb, IN.color.a * tex2D(_MainTex, IN.texcoord0 + uvMove).a);
+			color.rgb *= color.a;
 			return color;
 		}
 		#define UIEFFECT_TEXTMESHPRO 1

@@ -129,6 +129,9 @@ ShaderVariantCollection:
   - first: {fileID: 4800000, guid: e65241fa80a374114b3f55ed746c04d9, type: 3}
     second:
       variants:
+      - keywords: SAMPLING_RGB_SHIFT TONE_RETRO TRANSITION_COLOR_MULTIPLY_ADDITIVE
+          TRANSITION_SHINY
+        passType: 0
       - keywords: SAMPLING_RGB_SHIFT TRANSITION_CUTOFF
         passType: 0
   - first: {fileID: 4800000, guid: 935b7be1c88464d2eb87204fdfab5a38, type: 3}
@@ -176,16 +179,25 @@ ShaderVariantCollection:
         passType: 0
       - keywords: SAMPLING_PIXELATION TONE_RETRO
         passType: 0
+      - keywords: SAMPLING_RGB_SHIFT TONE_RETRO TRANSITION_COLOR_MULTIPLY_ADDITIVE
+          TRANSITION_SHINY
+        passType: 0
       - keywords: SAMPLING_RGB_SHIFT TRANSITION_CUTOFF
         passType: 0
   - first: {fileID: 4800000, guid: d1cb940e3804b4adcaf9b22083fadfad, type: 3}
     second:
       variants:
+      - keywords: SAMPLING_RGB_SHIFT TONE_RETRO TRANSITION_COLOR_MULTIPLY_ADDITIVE
+          TRANSITION_SHINY
+        passType: 0
       - keywords: SAMPLING_RGB_SHIFT TRANSITION_CUTOFF
         passType: 0
   - first: {fileID: 4800000, guid: 63a1dba10bff94661a909d63808a9a3b, type: 3}
     second:
       variants:
+      - keywords: SAMPLING_RGB_SHIFT TONE_RETRO TRANSITION_COLOR_MULTIPLY_ADDITIVE
+          TRANSITION_SHINY
+        passType: 0
       - keywords: SAMPLING_RGB_SHIFT TRANSITION_CUTOFF
         passType: 0
 --- !u!114 &11400000
