@@ -1,3 +1,10 @@
+## [5.3.2](https://github.com/mob-sakai/UIEffect/compare/5.3.1...5.3.2) (2025-02-04)
+
+
+### Bug Fixes
+
+* some effects are not working correctly for TextMeshProUGUI in Unity 6 ([63de374](https://github.com/mob-sakai/UIEffect/commit/63de3742ecd7fcdcaa8dcca8dc104c7288291211))
+
 ## [5.3.1](https://github.com/mob-sakai/UIEffect/compare/5.3.0...5.3.1) (2025-01-27)
 
 
