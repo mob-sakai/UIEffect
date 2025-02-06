@@ -434,9 +434,9 @@ namespace Coffee.UIEffects
 
         public void ModifyMesh(Graphic graphic, RectTransform transitionRoot, VertexHelper vh, bool canModifyShape)
         {
-            var processor = ContextProcessor.FindProcessor(graphic);
-            var isText = processor.IsText(graphic);
-            processor.OnPreModifyMesh(graphic);
+            var effectProxy = GraphicProxy.Find(graphic);
+            var isText = effectProxy.IsText(graphic);
+            effectProxy.OnPreModifyMesh(graphic);
 
             var verts = s_WorkingVertices;
             var expandSize = GetExpandSize(canModifyShape);
