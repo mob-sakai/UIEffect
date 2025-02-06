@@ -1,3 +1,10 @@
+## [5.3.3](https://github.com/mob-sakai/UIEffect/compare/5.3.2...5.3.3) (2025-02-06)
+
+
+### Bug Fixes
+
+* when modifying TextMeshPro vertices, element disapear ([7529a7c](https://github.com/mob-sakai/UIEffect/commit/7529a7c4cd8db27a6d3312bce0a6ed6b13e40f35)), closes [#305](https://github.com/mob-sakai/UIEffect/issues/305)
+
 ## [5.3.2](https://github.com/mob-sakai/UIEffect/compare/5.3.1...5.3.2) (2025-02-04)
 
 
