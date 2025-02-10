@@ -1,3 +1,15 @@
+# [5.4.0](https://github.com/mob-sakai/UIEffect/compare/5.3.4...5.4.0) (2025-02-10)
+
+
+### Bug Fixes
+
+* gradient color is not updated when calling the `SetGradientKeys` method ([a959fdd](https://github.com/mob-sakai/UIEffect/commit/a959fddd34a93dd0846369938b1cb6be514eee2d))
+
+
+### Features
+
+* tweener supports `EdgeMode.Shiny` ([32558d4](https://github.com/mob-sakai/UIEffect/commit/32558d4481de31ed9020c82861dc2a2d8ca7d53c)), closes [#307](https://github.com/mob-sakai/UIEffect/issues/307)
+
 ## [5.3.4](https://github.com/mob-sakai/UIEffect/compare/5.3.3...5.3.4) (2025-02-10)
 
 
