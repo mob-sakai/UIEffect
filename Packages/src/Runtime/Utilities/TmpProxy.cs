@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Object = UnityEngine.Object;
 
 namespace Coffee.UIEffects
 {
@@ -54,9 +55,9 @@ namespace Coffee.UIEffects
 
         public override void SetVerticesDirty(Graphic graphic)
         {
-            if (graphic is TextMeshProUGUI textMeshProUGUI)
+            if (graphic is TextMeshProUGUI textMeshProUGUI && textMeshProUGUI.isActiveAndEnabled)
             {
-                s_ChangedInstances.Add(textMeshProUGUI);
+                OnChangeText(textMeshProUGUI);
             }
         }
 
@@ -107,11 +108,13 @@ namespace Coffee.UIEffects
 
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
-#else
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
 #endif
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void InitializeOnLoad()
         {
+            s_ChangedInstances.Clear();
+            s_RegisteredInstances.Clear();
+            s_SdfScaleCache.Clear();
             Register(new TmpProxy());
 
             // When the text is changed, add it to the changed list
@@ -129,16 +132,15 @@ namespace Coffee.UIEffects
                 var toRemove = InternalListPool<TextMeshProUGUI>.Rent();
                 foreach (var textMeshProUGUI in s_RegisteredInstances)
                 {
-                    if (textMeshProUGUI)
+                    if (textMeshProUGUI && textMeshProUGUI.isActiveAndEnabled)
                     {
                         var id = textMeshProUGUI.GetHashCode();
                         var lossyScaleY = textMeshProUGUI.transform.lossyScale.y;
 
                         // If the scale has changed, add to the changed list
-                        if (s_SdfScaleCache.TryGetValue(id, out var prev)
-                            && !Mathf.Approximately(prev, lossyScaleY))
+                        if (s_SdfScaleCache.TryGetValue(id, out var prev) && !Mathf.Approximately(prev, lossyScaleY))
                         {
-                            s_ChangedInstances.Add(textMeshProUGUI);
+                            OnChangeText(textMeshProUGUI);
                         }
 
                         // Update the scale cache
@@ -157,6 +159,8 @@ namespace Coffee.UIEffects
                     s_SdfScaleCache.Remove(textMeshProUGUI.GetHashCode());
                     s_RegisteredInstances.Remove(textMeshProUGUI);
                 }
+
+                InternalListPool<TextMeshProUGUI>.Return(ref toRemove);
             };
 
             // Modify the changed TMP mesh
@@ -170,6 +174,14 @@ namespace Coffee.UIEffects
 
                 s_ChangedInstances.Clear();
             };
+        }
+
+        private static void OnChangeText(Object obj)
+        {
+            if (obj is TextMeshProUGUI textMeshProUGUI && textMeshProUGUI.isActiveAndEnabled)
+            {
+                s_ChangedInstances.Add(textMeshProUGUI);
+            }
         }
 
         private static void ModifyMesh(TextMeshProUGUI textMeshProUGUI)
