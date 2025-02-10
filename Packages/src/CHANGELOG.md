@@ -1,3 +1,10 @@
+## [5.3.4](https://github.com/mob-sakai/UIEffect/compare/5.3.3...5.3.4) (2025-02-10)
+
+
+### Bug Fixes
+
+* UIEffect v5.3.3 with TextMeshPro is not working in play mode in editor ([365c43e](https://github.com/mob-sakai/UIEffect/commit/365c43e21dcaaff349cf1362f9bd25b7deb163f7)), closes [#306](https://github.com/mob-sakai/UIEffect/issues/306)
+
 ## [5.3.3](https://github.com/mob-sakai/UIEffect/compare/5.3.2...5.3.3) (2025-02-06)
 
 
