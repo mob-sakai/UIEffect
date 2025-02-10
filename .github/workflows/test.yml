@@ -9,7 +9,7 @@ env:
   # MINIMUM_VERSION: The minimum version of Unity.
   MINIMUM_VERSION: 2020.3
   # EXCLUDE_FILTER: The excluded versions of Unity.
-  EXCLUDE_FILTER: "(2020.2.0|2021.1|2023.3)"
+  EXCLUDE_FILTER: "(2020.2.0|2021.1|2023.2|2023.3)"
 
 on:
   workflow_dispatch:
