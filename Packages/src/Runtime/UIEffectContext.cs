@@ -43,6 +43,7 @@ namespace Coffee.UIEffects
         private static readonly int s_EdgeWidth = Shader.PropertyToID("_EdgeWidth");
         private static readonly int s_EdgeColor = Shader.PropertyToID("_EdgeColor");
         private static readonly int s_EdgeShinyAutoPlaySpeed = Shader.PropertyToID("_EdgeShinyAutoPlaySpeed");
+        private static readonly int s_EdgeShinyRate = Shader.PropertyToID("_EdgeShinyRate");
         private static readonly int s_EdgeShinyWidth = Shader.PropertyToID("_EdgeShinyWidth");
         private static readonly int s_PatternArea = Shader.PropertyToID("_PatternArea");
 
@@ -210,6 +211,7 @@ namespace Coffee.UIEffects
         public bool shadowColorGlow;
 
         public EdgeMode edgeMode;
+        public float edgeShinyRate;
         public float edgeWidth;
         public ColorFilter edgeColorFilter;
         public Color edgeColor;
@@ -292,6 +294,7 @@ namespace Coffee.UIEffects
             shadowColorGlow = preset.shadowColorGlow;
 
             edgeMode = preset.edgeMode;
+            edgeShinyRate = preset.edgeShinyRate;
             edgeWidth = preset.edgeWidth;
             edgeColorFilter = preset.edgeColorFilter;
             edgeColor = preset.edgeColor;
@@ -369,6 +372,7 @@ namespace Coffee.UIEffects
 
             material.SetFloat(s_EdgeWidth, Mathf.Clamp01(edgeWidth));
             material.SetColor(s_EdgeColor, edgeColor);
+            material.SetFloat(s_EdgeShinyRate, Mathf.Clamp01(edgeShinyRate));
             material.SetFloat(s_EdgeShinyWidth, Mathf.Clamp01(edgeShinyWidth));
             material.SetFloat(s_EdgeShinyAutoPlaySpeed, edgeShinyAutoPlaySpeed);
             material.SetInt(s_PatternArea, edgeMode != EdgeMode.None ? (int)patternArea : 0);

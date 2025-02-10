@@ -196,6 +196,10 @@ namespace Coffee.UIEffects
 
         [Range(0, 1)]
         [SerializeField]
+        protected float m_EdgeShinyRate = 0.5f;
+
+        [Range(0, 1)]
+        [SerializeField]
         protected float m_EdgeShinyWidth = 0.5f;
 
         [Range(-5, 5)]
@@ -736,6 +740,18 @@ namespace Coffee.UIEffects
             }
         }
 
+        public float edgeShinyRate
+        {
+            get => m_EdgeShinyRate;
+            set
+            {
+                value = Mathf.Clamp(value, 0, 1);
+                if (Mathf.Approximately(m_EdgeShinyRate, value)) return;
+                context.edgeShinyRate = m_EdgeShinyRate = value;
+                SetMaterialDirty();
+            }
+        }
+
         public float edgeWidth
         {
             get => m_EdgeWidth;
@@ -994,6 +1010,7 @@ namespace Coffee.UIEffects
             c.shadowColorGlow = m_ShadowColorGlow;
 
             c.edgeMode = m_EdgeMode;
+            c.edgeShinyRate = m_EdgeShinyRate;
             c.edgeWidth = m_EdgeWidth;
             c.edgeColorFilter = m_EdgeColorFilter;
             c.edgeColor = m_EdgeColor;
@@ -1051,6 +1068,11 @@ namespace Coffee.UIEffects
                 && 0 < (mask & UIEffectTweener.CullingMask.GradiationRotation))
             {
                 gradationRotation = Mathf.Lerp(0f, 360f, rate);
+            }
+
+            if (edgeMode == EdgeMode.Shiny && 0 < (mask & UIEffectTweener.CullingMask.EdgeShiny))
+            {
+                edgeShinyRate = rate;
             }
         }
 
@@ -1132,6 +1154,7 @@ namespace Coffee.UIEffects
             m_ShadowColorGlow = preset.m_ShadowColorGlow;
 
             m_EdgeMode = preset.m_EdgeMode;
+            m_EdgeShinyRate = preset.m_EdgeShinyRate;
             m_EdgeWidth = preset.m_EdgeWidth;
             m_EdgeColorFilter = preset.m_EdgeColorFilter;
             m_EdgeColor = preset.m_EdgeColor;
@@ -1205,6 +1228,7 @@ namespace Coffee.UIEffects
             m_ShadowColorGlow = c.shadowColorGlow;
 
             m_EdgeMode = c.edgeMode;
+            m_EdgeShinyRate = c.edgeShinyRate;
             m_EdgeWidth = c.edgeWidth;
             m_EdgeColorFilter = c.edgeColorFilter;
             m_EdgeColor = c.edgeColor;

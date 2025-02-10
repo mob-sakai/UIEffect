@@ -17,7 +17,8 @@ namespace Coffee.UIEffects
             Sampling = 1 << 2,
             Transition = 1 << 3,
             GradiationOffset = 1 << 5,
-            GradiationRotation = 1 << 6
+            GradiationRotation = 1 << 6,
+            EdgeShiny = 1 << 8
         }
 
         public enum UpdateMode

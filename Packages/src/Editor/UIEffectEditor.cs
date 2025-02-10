@@ -88,6 +88,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _edgeWidth;
         private SerializedProperty _edgeColorFilter;
         private SerializedProperty _edgeColor;
+        private SerializedProperty _edgeShinyRate;
         private SerializedProperty _edgeShinyWidth;
         private SerializedProperty _edgeShinyAutoPlaySpeed;
         private SerializedProperty _patternArea;
@@ -154,6 +155,7 @@ namespace Coffee.UIEffects.Editors
             _edgeWidth = serializedObject.FindProperty("m_EdgeWidth");
             _edgeColorFilter = serializedObject.FindProperty("m_EdgeColorFilter");
             _edgeColor = serializedObject.FindProperty("m_EdgeColor");
+            _edgeShinyRate = serializedObject.FindProperty("m_EdgeShinyRate");
             _edgeShinyWidth = serializedObject.FindProperty("m_EdgeShinyWidth");
             _edgeShinyAutoPlaySpeed = serializedObject.FindProperty("m_EdgeShinyAutoPlaySpeed");
             _patternArea = serializedObject.FindProperty("m_PatternArea");
@@ -378,6 +380,7 @@ namespace Coffee.UIEffects.Editors
 
                 if ((EdgeMode)_edgeMode.intValue == EdgeMode.Shiny)
                 {
+                    EditorGUILayout.PropertyField(_edgeShinyRate);
                     EditorGUILayout.PropertyField(_edgeShinyWidth);
                     EditorGUILayout.PropertyField(_edgeShinyAutoPlaySpeed);
 

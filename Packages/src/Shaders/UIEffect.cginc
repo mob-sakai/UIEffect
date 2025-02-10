@@ -27,6 +27,7 @@ uniform const float _ShadowBlurIntensity;
 uniform const half4 _ShadowColor;
 uniform const int _ShadowColorGlow;
 uniform const float _EdgeWidth;
+uniform const float _EdgeShinyRate;
 uniform const float _EdgeShinyAutoPlaySpeed;
 uniform const float _EdgeShinyWidth;
 uniform const half4 _EdgeColor;
@@ -539,7 +540,7 @@ int is_edge_shiny(const float2 uvLocal)
 {
     #if EDGE_SHINY
     const float deg = atan2(uvLocal.y - 0.5, uvLocal.x - 0.5) / UNITY_PI;
-    return frac(_Time.y * _EdgeShinyAutoPlaySpeed + deg) < _EdgeShinyWidth;
+    return frac(_EdgeShinyRate + _Time.y * _EdgeShinyAutoPlaySpeed + deg) < _EdgeShinyWidth;
     #else
     return 1;
     #endif
