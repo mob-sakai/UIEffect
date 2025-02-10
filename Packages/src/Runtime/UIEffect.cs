@@ -952,11 +952,14 @@ namespace Coffee.UIEffects
         /// <summary>
         /// Set gradation gradient's keys.
         /// </summary>
-        public void SetGradientKeys(GradientColorKey[] colorKeys, GradientAlphaKey[] alphaKeys)
+        public void SetGradientKeys(GradientColorKey[] colorKeys, GradientAlphaKey[] alphaKeys,
+            GradientMode mode = GradientMode.Blend)
         {
             m_GradationGradient ??= new Gradient();
             m_GradationGradient.SetKeys(colorKeys, alphaKeys);
+            m_GradationGradient.mode = mode;
             context?.SetGradationDirty();
+            SetVerticesDirty();
         }
 
         protected override void UpdateContext(UIEffectContext c)
