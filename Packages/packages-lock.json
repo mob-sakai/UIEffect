@@ -5,14 +5,14 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "9f5f59b492aed618d0123ce2f55d041e61c5f246"
+      "hash": "2045eaab5b485827cef8bf0bb9e1552dce4f8d6d"
     },
     "com.coffee.minimal-resource": {
       "version": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/MinimalResource",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "52987fb6e66e7fc48498d8d164c3c8808de4de6b"
+      "hash": "2045eaab5b485827cef8bf0bb9e1552dce4f8d6d"
     },
     "com.coffee.nano-monitor": {
       "version": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/NanoMonitor",
@@ -21,7 +21,7 @@
       "dependencies": {
         "com.unity.ugui": "1.0.0"
       },
-      "hash": "5d0bd14be288153555f975240608e7ee1576b091"
+      "hash": "2045eaab5b485827cef8bf0bb9e1552dce4f8d6d"
     },
     "com.coffee.ui-effect": {
       "version": "file:src",
