@@ -1,3 +1,11 @@
+# [5.5.0](https://github.com/mob-sakai/UIEffect/compare/5.4.0...5.5.0) (2025-02-12)
+
+
+### Features
+
+* add `GradationMode.Diagonal` with 4 colors ([b72a1c0](https://github.com/mob-sakai/UIEffect/commit/b72a1c05c6d1d7b3c0aa11582d4a97da80d7fce9)), closes [#308](https://github.com/mob-sakai/UIEffect/issues/308)
+* add built-in presets ([8930b56](https://github.com/mob-sakai/UIEffect/commit/8930b563cb580463e2265483ccd3a42cb84e644b))
+
 # [5.4.0](https://github.com/mob-sakai/UIEffect/compare/5.3.4...5.4.0) (2025-02-10)
 
 
