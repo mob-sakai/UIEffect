@@ -164,6 +164,12 @@ namespace Coffee.UIEffects
         protected Color m_GradationColor2 = Color.white;
 
         [SerializeField]
+        protected Color m_GradationColor3 = Color.white;
+
+        [SerializeField]
+        protected Color m_GradationColor4 = Color.white;
+
+        [SerializeField]
         private Gradient m_GradationGradient = new Gradient();
 
         [Range(-1, 1)]
@@ -854,6 +860,28 @@ namespace Coffee.UIEffects
             }
         }
 
+        public Color gradationColor3
+        {
+            get => m_GradationColor3;
+            set
+            {
+                if (m_GradationColor3 == value) return;
+                context.gradationColor3 = m_GradationColor3 = value;
+                SetVerticesDirty();
+            }
+        }
+
+        public Color gradationColor4
+        {
+            get => m_GradationColor4;
+            set
+            {
+                if (m_GradationColor4 == value) return;
+                context.gradationColor4 = m_GradationColor4 = value;
+                SetVerticesDirty();
+            }
+        }
+
         public float gradationOffset
         {
             get => m_GradationOffset;
@@ -1024,6 +1052,8 @@ namespace Coffee.UIEffects
             c.gradationMode = m_GradationMode;
             c.gradationColor1 = m_GradationColor1;
             c.gradationColor2 = m_GradationColor2;
+            c.gradationColor3 = m_GradationColor3;
+            c.gradationColor4 = m_GradationColor4;
             c.gradationGradient = m_GradationGradient;
             c.gradationOffset = m_GradationOffset;
             c.gradationScale = m_GradationScale;
@@ -1168,8 +1198,11 @@ namespace Coffee.UIEffects
             m_GradationMode = preset.m_GradationMode;
             m_GradationColor1 = preset.m_GradationColor1;
             m_GradationColor2 = preset.m_GradationColor2;
+            m_GradationColor3 = preset.m_GradationColor3;
+            m_GradationColor4 = preset.m_GradationColor4;
             m_GradationGradient = new Gradient();
             m_GradationGradient.SetKeys(preset.m_GradationGradient.colorKeys, preset.m_GradationGradient.alphaKeys);
+            m_GradationGradient.mode = preset.m_GradationGradient.mode;
             m_GradationOffset = preset.m_GradationOffset;
             m_GradationScale = preset.m_GradationScale;
             m_GradationRotation = preset.m_GradationRotation;
@@ -1242,8 +1275,11 @@ namespace Coffee.UIEffects
             m_GradationMode = c.gradationMode;
             m_GradationColor1 = c.gradationColor1;
             m_GradationColor2 = c.gradationColor2;
+            m_GradationColor3 = c.gradationColor3;
+            m_GradationColor4 = c.gradationColor4;
             m_GradationGradient = new Gradient();
             m_GradationGradient.SetKeys(c.gradationGradient.colorKeys, c.gradationGradient.alphaKeys);
+            m_GradationGradient.mode = c.gradationGradient.mode;
             m_GradationOffset = c.gradationOffset;
             m_GradationScale = c.gradationScale;
             m_GradationRotation = c.gradationRotation;

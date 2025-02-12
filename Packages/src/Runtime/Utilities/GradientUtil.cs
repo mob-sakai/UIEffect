@@ -159,6 +159,21 @@ namespace Coffee.UIEffects
             }
         }
 
+        public static void DoDiagonal(List<UIVertex> verts, Color a, Color b, Color c, Color d, float offset,
+            float scale, Rect rect, Matrix4x4 m)
+        {
+            for (var i = 0; i < verts.Count; i++)
+            {
+                var vt = verts[i];
+                var x = Mathf.InverseLerp(rect.xMin, rect.xMax, m.MultiplyPoint3x4(vt.position).x);
+                var y = Mathf.InverseLerp(rect.yMin, rect.yMax, m.MultiplyPoint3x4(vt.position).y);
+                var tx = Mathf.Clamp01(offset + (x - 0.5f) * scale + 0.5f);
+                var ty = Mathf.Clamp01(offset + (0.5f - y) * scale + 0.5f);
+                vt.color *= Color.Lerp(Color.Lerp(a, b, tx), Color.Lerp(c, d, tx), ty);
+                verts[i] = vt;
+            }
+        }
+
         public static void DoDiagonalGradientToRightBottom(List<UIVertex> verts, Color a, Color b, float offset,
             float scale, Rect rect, Matrix4x4 m)
         {

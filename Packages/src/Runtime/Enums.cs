@@ -94,16 +94,17 @@ namespace Coffee.UIEffects
     public enum GradationMode
     {
         None = 0,
-        Horizontal,
-        HorizontalGradient,
-        Vertical,
-        VerticalGradient,
-        RadialFast,
-        RadialDetail,
-        DiagonalToRightBottom,
-        DiagonalToLeftBottom,
-        Angle,
-        AngleGradient
+        Horizontal = 1,
+        HorizontalGradient = 2,
+        Vertical = 3,
+        VerticalGradient = 4,
+        RadialFast = 5,
+        RadialDetail = 6,
+        Diagonal = 11,
+        DiagonalToRightBottom = 7,
+        DiagonalToLeftBottom = 8,
+        Angle = 9,
+        AngleGradient = 10
     }
 
     internal static class BlendTypeConverter

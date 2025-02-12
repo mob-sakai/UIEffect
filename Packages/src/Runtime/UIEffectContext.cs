@@ -222,6 +222,8 @@ namespace Coffee.UIEffects
         public GradationMode gradationMode;
         public Color gradationColor1;
         public Color gradationColor2;
+        public Color gradationColor3;
+        public Color gradationColor4;
         public Gradient gradationGradient;
         public float gradationOffset;
         public float gradationScale;
@@ -305,6 +307,8 @@ namespace Coffee.UIEffects
             gradationMode = preset.gradationMode;
             gradationColor1 = preset.gradationColor1;
             gradationColor2 = preset.gradationColor2;
+            gradationColor3 = preset.gradationColor3;
+            gradationColor4 = preset.gradationColor4;
             gradationGradient = preset.gradationGradient;
             gradationOffset = preset.gradationOffset;
             gradationScale = preset.gradationScale;
@@ -526,6 +530,9 @@ namespace Coffee.UIEffects
                     break;
                 case GradationMode.Vertical:
                     GradientUtil.DoVerticalGradient(verts, a, b, offset, scale, rect, m);
+                    break;
+                case GradationMode.Diagonal:
+                    GradientUtil.DoDiagonal(verts, a, b, gradationColor3, gradationColor4, offset, scale, rect, m);
                     break;
                 case GradationMode.DiagonalToRightBottom:
                     GradientUtil.DoDiagonalGradientToRightBottom(verts, a, b, offset, scale, rect, m);

@@ -79,6 +79,8 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _gradationMode;
         private SerializedProperty _gradationColor1;
         private SerializedProperty _gradationColor2;
+        private SerializedProperty _gradationColor3;
+        private SerializedProperty _gradationColor4;
         private SerializedProperty _gradationGradient;
         private SerializedProperty _gradationOffset;
         private SerializedProperty _gradationScale;
@@ -163,6 +165,8 @@ namespace Coffee.UIEffects.Editors
             _gradationMode = serializedObject.FindProperty("m_GradationMode");
             _gradationColor1 = serializedObject.FindProperty("m_GradationColor1");
             _gradationColor2 = serializedObject.FindProperty("m_GradationColor2");
+            _gradationColor3 = serializedObject.FindProperty("m_GradationColor3");
+            _gradationColor4 = serializedObject.FindProperty("m_GradationColor4");
             _gradationGradient = serializedObject.FindProperty("m_GradationGradient");
             _gradationOffset = serializedObject.FindProperty("m_GradationOffset");
             _gradationScale = serializedObject.FindProperty("m_GradationScale");
@@ -340,22 +344,19 @@ namespace Coffee.UIEffects.Editors
                     case GradationMode.AngleGradient:
                         DrawGradientField(_gradationGradient);
                         break;
+                    case GradationMode.Diagonal:
+                        DrawColorPickerField("Top", _gradationColor1, _gradationColor2);
+                        DrawColorPickerField("Bottom", _gradationColor3, _gradationColor4);
+                        break;
                     default:
-                        DrawColorPickerField(_gradationColor1);
+                        DrawColorPickerField(EditorGUILayout.GetControlRect(), _gradationColor1, true);
                         var r = EditorGUILayout.GetControlRect();
                         r.width -= 24;
-                        r.height = EditorGUIUtility.singleLineHeight;
-                        DrawColorPickerField(r, _gradationColor2);
+                        DrawColorPickerField(r, _gradationColor2, true);
 
                         r.x += r.width + 4;
                         r.width = 20;
-                        // Swap colors
-                        if (GUI.Button(r, EditorGUIUtility.IconContent("preaudioloopoff"), "iconbutton"))
-                        {
-                            (_gradationColor1.colorValue, _gradationColor2.colorValue)
-                                = (_gradationColor2.colorValue, _gradationColor1.colorValue);
-                        }
-
+                        SwapColorsButton(r, _gradationColor1, _gradationColor2);
                         break;
                 }
 
@@ -405,17 +406,35 @@ namespace Coffee.UIEffects.Editors
             }
         }
 
-        private static void DrawColorPickerField(SerializedProperty color, bool showAlpha = true)
+        private static void DrawColorPickerField(string label, SerializedProperty color1, SerializedProperty color2)
         {
+            var labelWidth = EditorGUIUtility.labelWidth;
             var r = EditorGUILayout.GetControlRect();
-            r.height = EditorGUIUtility.singleLineHeight;
-            DrawColorPickerField(r, color, showAlpha);
+            r.width -= 24;
+            EditorGUI.PrefixLabel(new Rect(r.x, r.y, labelWidth, r.height), EditorGUIUtility.TrTempContent(label));
+
+            var indentLevel = EditorGUI.indentLevel;
+            EditorGUI.indentLevel = 0;
+            var rPos = new Rect(r.x + labelWidth, r.y, (r.width - labelWidth) / 2, r.height);
+            DrawColorPickerField(rPos, GUIContent.none, color1, true);
+
+            rPos.x += rPos.width;
+            DrawColorPickerField(rPos, GUIContent.none, color2, true);
+
+            // Swap colors button
+            SwapColorsButton(new Rect(r.x + r.width + 4, r.y, 20, 20), color1, color2);
+            EditorGUI.indentLevel = indentLevel;
         }
 
-        private static void DrawColorPickerField(Rect rect, SerializedProperty color, bool showAlpha = true)
+        private static void DrawColorPickerField(Rect rect, SerializedProperty color, bool showAlpha)
         {
             var label = EditorGUIUtility.TrTempContent(color.displayName);
             label.tooltip = color.tooltip;
+            DrawColorPickerField(rect, label, color, showAlpha);
+        }
+
+        private static void DrawColorPickerField(Rect rect, GUIContent label, SerializedProperty color, bool showAlpha)
+        {
             var hdr = UIEffectProjectSettings.useHdrColorPicker;
             EditorGUI.showMixedValue = color.hasMultipleDifferentValues;
 
@@ -430,8 +449,6 @@ namespace Coffee.UIEffects.Editors
         private static void DrawGradientField(SerializedProperty gradient)
         {
             var r = EditorGUILayout.GetControlRect();
-            r.height = EditorGUIUtility.singleLineHeight;
-
             var label = EditorGUIUtility.TrTempContent(gradient.displayName);
             label.tooltip = gradient.tooltip;
             var hdr = UIEffectProjectSettings.useHdrColorPicker;
@@ -480,7 +497,7 @@ namespace Coffee.UIEffects.Editors
                     color.colorValue = Color.white;
                 }
 
-                DrawColorPickerField(color, showAlpha);
+                DrawColorPickerField(EditorGUILayout.GetControlRect(), color, showAlpha);
             }
         }
 
@@ -500,6 +517,14 @@ namespace Coffee.UIEffects.Editors
             }
 
             EditorGUI.indentLevel--;
+        }
+
+        private static void SwapColorsButton(Rect rect, SerializedProperty color1, SerializedProperty color2)
+        {
+            if (GUI.Button(rect, EditorGUIUtility.IconContent("preaudioloopoff"), "iconbutton"))
+            {
+                (color1.colorValue, color2.colorValue) = (color2.colorValue, color1.colorValue);
+            }
         }
 
         private static bool DrawHeaderPopup(SerializedProperty sp)
