@@ -107,11 +107,11 @@ namespace Coffee.UIEffects
         {
         }
 
-        public override void ApplyContextToMaterial()
+        public override void ApplyContextToMaterial(Material material)
         {
             if (!isActiveAndEnabled || !target || !target.isActiveAndEnabled) return;
 
-            base.ApplyContextToMaterial();
+            base.ApplyContextToMaterial(material);
         }
 
         public override void SetRate(float rate, UIEffectTweener.CullingMask mask)

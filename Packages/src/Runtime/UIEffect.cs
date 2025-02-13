@@ -1060,13 +1060,13 @@ namespace Coffee.UIEffects
             c.gradationRotation = m_GradationRotation;
         }
 
-        public override void ApplyContextToMaterial()
+        public override void ApplyContextToMaterial(Material material)
         {
-            base.ApplyContextToMaterial();
+            base.ApplyContextToMaterial(material);
             replicas.ForEach(c =>
             {
                 if (!c) return;
-                c.ApplyContextToMaterial();
+                c.ApplyContextToMaterial(material);
             });
         }
 

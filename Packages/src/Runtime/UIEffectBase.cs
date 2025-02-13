@@ -98,7 +98,7 @@ namespace Coffee.UIEffects
                 Profiler.EndSample();
             }
 
-            ApplyContextToMaterial();
+            ApplyContextToMaterial(_material);
             Profiler.EndSample();
             return _material;
         }
@@ -107,7 +107,7 @@ namespace Coffee.UIEffects
         protected override void OnValidate()
         {
             UpdateContext(context);
-            ApplyContextToMaterial();
+            ApplyContextToMaterial(graphic ? graphic.canvasRenderer.GetMaterial() : _material);
             SetVerticesDirty();
             SetMaterialDirty();
 
@@ -141,7 +141,7 @@ namespace Coffee.UIEffects
             if (graphic)
             {
                 graphic.SetVerticesDirty();
-                GraphicProxy.Find(graphic).SetVerticesDirty(graphic);
+                GraphicProxy.Find(graphic).SetVerticesDirty(graphic, false);
 #if UNITY_EDITOR
                 EditorApplication.QueuePlayerLoopUpdate();
 #endif
@@ -161,14 +161,14 @@ namespace Coffee.UIEffects
 
         protected abstract void UpdateContext(UIEffectContext c);
 
-        public virtual void ApplyContextToMaterial()
+        public virtual void ApplyContextToMaterial(Material material)
         {
-            if (!isActiveAndEnabled || context == null) return;
+            if (!isActiveAndEnabled || context == null || !material) return;
 
-            context.ApplyToMaterial(_material, actualSamplingScale);
+            context.ApplyToMaterial(material, actualSamplingScale);
 
 #if UNITY_EDITOR
-            UIEffectProjectSettings.shaderRegistry.RegisterVariant(_material, "UI > UIEffect");
+            UIEffectProjectSettings.shaderRegistry.RegisterVariant(material, "UI > UIEffect");
             if (!EditorApplication.isPlaying)
             {
                 EditorApplication.QueuePlayerLoopUpdate();

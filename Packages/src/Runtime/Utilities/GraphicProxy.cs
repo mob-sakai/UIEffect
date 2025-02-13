@@ -68,7 +68,7 @@ namespace Coffee.UIEffects
             }
         }
 
-        public virtual　void SetVerticesDirty(Graphic graphic)
+        public virtual　void SetVerticesDirty(Graphic graphic, bool enabled)
         {
         }
 

@@ -53,11 +53,19 @@ namespace Coffee.UIEffects
             }
         }
 
-        public override void SetVerticesDirty(Graphic graphic)
+        public override void SetVerticesDirty(Graphic graphic, bool enabled)
         {
             if (graphic is TextMeshProUGUI textMeshProUGUI && textMeshProUGUI.isActiveAndEnabled)
             {
-                OnChangeText(textMeshProUGUI);
+                if (enabled)
+                {
+                    OnChangeText(textMeshProUGUI);
+                }
+                else if (0 < textMeshProUGUI.textInfo?.meshInfo?.Length
+                         && 0 < textMeshProUGUI.textInfo.meshInfo[0].vertexCount)
+                {
+                    textMeshProUGUI.UpdateVertexData();
+                }
             }
         }
 
@@ -174,6 +182,20 @@ namespace Coffee.UIEffects
 
                 s_ChangedInstances.Clear();
             };
+
+#if UNITY_EDITOR
+            UnityEditor.SceneManagement.EditorSceneManager.sceneSaved += _ =>
+            {
+                foreach (var textMeshProUGUI in s_RegisteredInstances)
+                {
+                    if (!textMeshProUGUI || !textMeshProUGUI.isActiveAndEnabled) continue;
+                    if (textMeshProUGUI.TryGetComponent<UIEffect>(out var effect) && effect.isActiveAndEnabled)
+                    {
+                        effect.SetMaterialDirty();
+                    }
+                }
+            };
+#endif
         }
 
         private static void OnChangeText(Object obj)
@@ -236,7 +258,6 @@ namespace Coffee.UIEffects
                     }
 
                     s_VertexHelper.FillMesh(s_Mesh);
-                    replica.ApplyContextToMaterial();
                     subMeshUI.canvasRenderer.SetMesh(s_Mesh);
                 }
                 else
