@@ -54,7 +54,7 @@ namespace Coffee.UIEffects
 
                 m_EffectFactor = value;
                 UpdateContext(context);
-                ApplyContextToMaterial();
+                SetMaterialDirty();
             }
         }
 
@@ -71,7 +71,7 @@ namespace Coffee.UIEffects
 
                 m_Width = value;
                 UpdateContext(context);
-                ApplyContextToMaterial();
+                SetMaterialDirty();
             }
         }
 
@@ -88,7 +88,7 @@ namespace Coffee.UIEffects
 
                 m_Softness = value;
                 UpdateContext(context);
-                ApplyContextToMaterial();
+                SetMaterialDirty();
             }
         }
 
@@ -105,7 +105,7 @@ namespace Coffee.UIEffects
 
                 m_Brightness = value;
                 UpdateContext(context);
-                ApplyContextToMaterial();
+                SetMaterialDirty();
             }
         }
 
@@ -122,7 +122,7 @@ namespace Coffee.UIEffects
 
                 m_Gloss = value;
                 UpdateContext(context);
-                ApplyContextToMaterial();
+                SetMaterialDirty();
             }
         }
 

@@ -48,7 +48,7 @@ namespace Coffee.UIEffects
 
                 m_TargetColor = value;
                 UpdateContext(context);
-                ApplyContextToMaterial();
+                SetMaterialDirty();
             }
         }
 
@@ -65,7 +65,7 @@ namespace Coffee.UIEffects
 
                 m_Range = value;
                 UpdateContext(context);
-                ApplyContextToMaterial();
+                SetMaterialDirty();
             }
         }
 
@@ -82,7 +82,7 @@ namespace Coffee.UIEffects
 
                 m_Saturation = value;
                 UpdateContext(context);
-                ApplyContextToMaterial();
+                SetMaterialDirty();
             }
         }
 
@@ -99,7 +99,7 @@ namespace Coffee.UIEffects
 
                 m_Value = value;
                 UpdateContext(context);
-                ApplyContextToMaterial();
+                SetMaterialDirty();
             }
         }
 
@@ -116,7 +116,7 @@ namespace Coffee.UIEffects
 
                 m_Hue = value;
                 UpdateContext(context);
-                ApplyContextToMaterial();
+                SetMaterialDirty();
             }
         }
 
