@@ -65,7 +65,7 @@ float2 texel_size()
 
 float transition_rate()
 {
-    return frac(_TransitionAutoPlaySpeed * _Time.y + _TransitionRate);
+    return frac(_TransitionAutoPlaySpeed * _Time.y + _TransitionRate * 0.9999);
 }
 
 float3 rgb_to_hsv(float3 c)
