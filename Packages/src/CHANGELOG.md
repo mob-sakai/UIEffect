@@ -1,3 +1,12 @@
+## [5.5.1](https://github.com/mob-sakai/UIEffect/compare/5.5.0...5.5.1) (2025-02-14)
+
+
+### Bug Fixes
+
+* fix v4 compatible components ([6f6a8c9](https://github.com/mob-sakai/UIEffect/commit/6f6a8c95f878a290b1c4238cd0519f14febc04b6))
+* fully visible when the transition rate is set to 1 ([0a99bb7](https://github.com/mob-sakai/UIEffect/commit/0a99bb7765443a84070e19c9ea0096808442932e)), closes [#309](https://github.com/mob-sakai/UIEffect/issues/309)
+* UIEffect with TextMeshPro appears black in the editor when saving scene ([8cbcd76](https://github.com/mob-sakai/UIEffect/commit/8cbcd765ed9e11c38e3257191c2fc7dcd2c9916e))
+
 # [5.5.0](https://github.com/mob-sakai/UIEffect/compare/5.4.0...5.5.0) (2025-02-12)
 
 
