@@ -462,8 +462,12 @@ namespace Coffee.UIEffects
             if (transitionRoot)
             {
                 rect = transitionRoot.rect;
-                rectMatrix = transitionRoot.worldToLocalMatrix
-                             * graphic.transform.localToWorldMatrix;
+                if (transitionRoot != graphic.transform)
+                {
+                    rectMatrix = transitionRoot.worldToLocalMatrix
+                                 * graphic.transform.localToWorldMatrix;
+                }
+
                 rot *= Matrix4x4.Scale(new Vector3(1 / multiplier, 1 / multiplier, 1))
                        * rectMatrix;
             }

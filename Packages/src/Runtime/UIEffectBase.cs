@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.CompilerServices;
 using Coffee.UIEffectInternal;
 using UnityEngine;
@@ -21,6 +22,7 @@ namespace Coffee.UIEffects
         private Graphic _graphic;
         private Material _material;
         private UIEffectContext _context;
+        private Action _setVerticesDirtyIfVisible;
 
         public Graphic graphic => _graphic ? _graphic : _graphic = GetComponent<Graphic>();
         public virtual uint effectId => (uint)GetInstanceID();
@@ -52,6 +54,11 @@ namespace Coffee.UIEffects
 
         protected override void OnDisable()
         {
+            if (_setVerticesDirtyIfVisible != null)
+            {
+                UIExtraCallbacks.onBeforeCanvasRebuild -= _setVerticesDirtyIfVisible;
+            }
+
             MaterialRepository.Release(ref _material);
             SetMaterialDirty();
             SetVerticesDirty();
@@ -59,6 +66,8 @@ namespace Coffee.UIEffects
 
         protected override void OnDestroy()
         {
+            _setVerticesDirtyIfVisible = null;
+            _graphic = null;
             s_ContextPool.Return(ref _context);
         }
 
@@ -70,7 +79,27 @@ namespace Coffee.UIEffects
         {
             if (!isActiveAndEnabled || context == null) return;
 
-            context.ModifyMesh(graphic, transitionRoot, vh, canModifyShape);
+            if (CanModifyMesh())
+            {
+                context.ModifyMesh(graphic, transitionRoot, vh, canModifyShape);
+            }
+            // If you can't modify the mesh, retry next frame.
+            else
+            {
+                UIExtraCallbacks.onBeforeCanvasRebuild += _setVerticesDirtyIfVisible ??= SetVerticesDirtyIfVisible;
+            }
+        }
+
+        private bool CanModifyMesh()
+        {
+            // The transitionRoot is same as the transform => true.
+            var root = transitionRoot;
+            if (transform == root) return true;
+
+            // The transitionRoot is not visible => false.
+            var scale1 = root.lossyScale;
+            var scale2 = transform.lossyScale;
+            return !Mathf.Approximately(scale1.x * scale1.y * scale2.x * scale2.y, 0);
         }
 
         public virtual Material GetModifiedMaterial(Material baseMaterial)
@@ -145,6 +174,15 @@ namespace Coffee.UIEffects
 #if UNITY_EDITOR
                 EditorApplication.QueuePlayerLoopUpdate();
 #endif
+            }
+        }
+
+        private void SetVerticesDirtyIfVisible()
+        {
+            if (CanModifyMesh())
+            {
+                UIExtraCallbacks.onBeforeCanvasRebuild -= _setVerticesDirtyIfVisible ??= SetVerticesDirtyIfVisible;
+                SetVerticesDirty();
             }
         }
 
