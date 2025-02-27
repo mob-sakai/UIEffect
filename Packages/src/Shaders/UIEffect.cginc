@@ -1,6 +1,8 @@
 #ifndef UI_EFFECT_INCLUDED
 #define UI_EFFECT_INCLUDED
 
+uniform const int _SrcBlend;
+uniform const int _DstBlend;
 uniform const float4 _MainTex_TexelSize;
 uniform const float _ToneIntensity;
 uniform const half4 _ColorValue;

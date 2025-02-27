@@ -40,6 +40,7 @@ Combine various filters, such as grayscale, blur, and dissolve, to decorate your
   - [Component: UIEffectTweener](#component-uieffecttweener)
   - [Component: UIEffectReplica](#component-uieffectreplica)
   - [Usage with TextMeshPro](#usage-with-textmeshpro)
+  - [Usage with SoftMaskForUGUI](#usage-with-softmaskforugui)
   - [Runtime/Editor Preset for UIEffect](#runtimeeditor-preset-for-uieffect)
   - [Usage with Code](#usage-with-code)
   - [Project Settings](#project-settings)
@@ -345,6 +346,18 @@ Alternatively, you can manually import the resources by following these steps:
 
 <br><br>
 
+### Usage with SoftMaskForUGUI
+
+![](https://github.com/user-attachments/assets/7701e765-896a-49a8-b1ed-22adb0ecce12)
+
+[SoftMaskForUGUI](https://github.com/mob-sakai/SoftMaskForUGUI) is a package that allows you to create soft masks for UI elements.
+
+`SoftMaskForUGUI (v3.3.0+)` supports `UIEffect (v5.6.0+)`.  
+When a shader included in the samples is requested, an import dialog will automatically appear.  
+Click the `Import` button.
+
+<br><br>
+
 ### Runtime/Editor Preset for UIEffect
 
 ![](https://github.com/user-attachments/assets/4244d162-a768-463e-8aad-8cafbdf3a5b3)
@@ -417,6 +430,10 @@ You can adjust the project-wide settings for UIEffect. (`Edit > Project Settings
 - **Unregistered Variants**: A list of shader variants that are not registered. Use "+" button to add variants.
 - **Error On Unregistered Variant**: If enabled, an error will be displayed when an unregistered shader variant is used.
     - The shader variant will be automatically added to the `Unregistered Variants` list.
+
+> [!IMPORTANT]
+> - The setting file is usually saved in `Assets/ProjectSettings/UIEffectProjectSettings.asset`. Include this file in your version control system.
+> - The setting file is automatically added as a preloaded asset in `ProjectSettings/ProjectSettings.asset`.
 
 <br><br>
 

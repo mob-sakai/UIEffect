@@ -124,6 +124,7 @@ namespace Coffee.UIEffects
                         "Hidden/UI/Default (UIEffect)"),
                     hideFlags = HideFlags.HideAndDontSave
                 }, baseMaterial);
+                _material.CopyPropertiesFromMaterial(baseMaterial);
                 Profiler.EndSample();
             }
 

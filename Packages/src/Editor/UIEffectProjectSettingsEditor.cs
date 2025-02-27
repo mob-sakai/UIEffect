@@ -82,7 +82,12 @@ namespace Coffee.UIEffects.Editors
             if (_shaderVariantRegistryEditor == null)
             {
                 var property = serializedObject.FindProperty("m_ShaderVariantRegistry");
-                _shaderVariantRegistryEditor = new ShaderVariantRegistryEditor(property, "(UIEffect)");
+                _shaderVariantRegistryEditor = new ShaderVariantRegistryEditor(property, "(UIEffect)",
+                    () =>
+                    {
+                        UIEffectProjectSettings.shaderRegistry
+                            .RegisterOptionalShaders(UIEffectProjectSettings.instance);
+                    });
             }
 
             _shaderVariantRegistryEditor.Draw();
