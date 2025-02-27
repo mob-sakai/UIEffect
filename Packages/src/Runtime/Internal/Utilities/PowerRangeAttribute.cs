@@ -1,10 +1,12 @@
 using System;
+using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
 
 namespace Coffee.UIEffectInternal
 {
     [AttributeUsage(AttributeTargets.Field)]
+    [Conditional("UNITY_EDITOR")]
     public sealed class PowerRangeAttribute : PropertyAttribute
     {
         public readonly float min;

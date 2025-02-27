@@ -204,7 +204,7 @@ namespace Coffee.UIEffectInternal
             target.enabled = false;
 
             // Find MonoScript of the specified component.
-            foreach (var script in Resources.FindObjectsOfTypeAll<MonoScript>())
+            foreach (var script in MonoImporter.GetAllRuntimeMonoScripts())
             {
                 if (script.GetClass() != typeof(T))
                 {

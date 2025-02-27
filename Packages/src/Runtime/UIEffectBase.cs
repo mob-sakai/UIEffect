@@ -136,14 +136,8 @@ namespace Coffee.UIEffects
         protected override void OnValidate()
         {
             UpdateContext(context);
-            ApplyContextToMaterial(graphic ? graphic.canvasRenderer.GetMaterial() : _material);
             SetVerticesDirty();
             SetMaterialDirty();
-
-            if (!EditorApplication.isPlaying)
-            {
-                EditorApplication.QueuePlayerLoopUpdate();
-            }
         }
 
         protected override void Reset()
@@ -170,7 +164,7 @@ namespace Coffee.UIEffects
             if (graphic)
             {
                 graphic.SetVerticesDirty();
-                GraphicProxy.Find(graphic).SetVerticesDirty(graphic, false);
+                GraphicProxy.Find(graphic).SetVerticesDirty(graphic, enabled);
 #if UNITY_EDITOR
                 EditorApplication.QueuePlayerLoopUpdate();
 #endif
