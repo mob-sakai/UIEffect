@@ -1,10 +1,12 @@
 ﻿using System;
+using Coffee.UIEffectInternal;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 
 namespace Coffee.UIEffects
 {
+    [Icon("Packages/com.coffee.ui-effect/Editor/UIEffectIconIcon.png")]
     [ExecuteAlways]
     [RequireComponent(typeof(UIEffectBase))]
     public class UIEffectTweener : MonoBehaviour
