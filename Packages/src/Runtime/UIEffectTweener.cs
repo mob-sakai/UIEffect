@@ -345,7 +345,7 @@ namespace Coffee.UIEffects
         {
             if (resetTime)
             {
-                ResetTime();
+                ResetTime(direction);
             }
 
             Play();
@@ -365,7 +365,7 @@ namespace Coffee.UIEffects
         {
             if (resetTime)
             {
-                ResetTime();
+                ResetTime(Direction.Forward);
             }
 
             PlayForward();
@@ -386,7 +386,7 @@ namespace Coffee.UIEffects
         {
             if (resetTime)
             {
-                ResetTime();
+                ResetTime(Direction.Reverse);
             }
 
             PlayReverse();
@@ -417,6 +417,18 @@ namespace Coffee.UIEffects
         public void ResetTime()
         {
             SetTime(0);
+        }
+
+        public void ResetTime(Direction dir)
+        {
+            if (dir == Direction.Forward)
+            {
+                SetTime(0);
+            }
+            else
+            {
+                SetTime(totalTime - 0.0001f);
+            }
         }
 
         [Obsolete(
