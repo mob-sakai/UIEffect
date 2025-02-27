@@ -73,62 +73,69 @@ namespace Coffee.UIEffects
             return null;
         }
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-#if UNITY_EDITOR
-            SetupSamplesForShaderVariantRegistry();
-            m_ShaderVariantRegistry.ClearCache();
-#endif
-        }
-
 #if UNITY_EDITOR
         private const string k_PresetDir = "UIEffectPresets";
         private const string k_PresetSaveDir = "Assets/ProjectSettings/" + k_PresetDir;
         private const string k_PresetPathPattern = "/" + k_PresetDir + "/(.*).prefab$";
 
+        [InitializeOnLoadMethod]
+        private static void InitializeOnLoadMethod()
+        {
+#if UNITY_2023_2_OR_NEWER
+            const string tmpSupport = "TextMeshPro Support (Unity 6)";
+            const string version = "v5.6.0 (Unity 6)";
+#else
+            const string tmpSupport = "TextMeshPro Support";
+            const string version = "v5.6.0";
+#endif
+            ShaderSampleImporter.RegisterShaderSamples(new[]
+            {
+                // TextMeshPro Support/TextMeshPro Support (Unity 6)
+                ("Hidden/TextMeshPro/Bitmap (UIEffect)", tmpSupport, version),
+                ("Hidden/TextMeshPro/Mobile/Bitmap (UIEffect)", tmpSupport, version),
+                ("Hidden/TextMeshPro/Distance Field (UIEffect)", tmpSupport, version),
+                ("Hidden/TextMeshPro/Mobile/Distance Field (UIEffect)", tmpSupport, version)
+            });
+            ShaderSampleImporter.RegisterShaderAliases(new[]
+            {
+                ("Hidden/Hidden/TextMeshPro/Bitmap (SoftMaskable) (UIEffect)", "Hidden/TextMeshPro/Bitmap (UIEffect)"),
+                ("Hidden/Hidden/TextMeshPro/Mobile/Bitmap (SoftMaskable) (UIEffect)", "Hidden/TextMeshPro/Mobile/Bitmap (UIEffect)"),
+                ("Hidden/Hidden/TextMeshPro/Distance Field (SoftMaskable) (UIEffect)", "Hidden/TextMeshPro/Distance Field (UIEffect)"),
+                ("Hidden/Hidden/TextMeshPro/Mobile/Distance Field (SoftMaskable) (UIEffect)", "Hidden/TextMeshPro/Mobile/Distance Field (UIEffect)")
+            });
+            ShaderSampleImporter.RegisterDeprecatedShaders(new[]
+            {
+                // Old shaders.
+                ("367310b4ca95c4b00a2215568f1af735", "Hidden-TMP_Bitmap-Mobile-UIEffect-Unity6.shader"),
+                ("490fe6c46146140cca8766a31c9dfc0c", "Hidden-TMP_Bitmap-UIEffect-Unity6.shader"),
+                ("b875fa74fa43a4c48a44634d5f3e6d3d", "Hidden-TMP_SDF-Mobile-UIEffect-Unity6.shader"),
+                ("c67f821adbb6348a3a21573a25b55de0", "Hidden-TMP_SDF-UIEffect-Unity6.shader")
+            });
+            EditorApplication.update += ShaderSampleImporter.Update;
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            m_ShaderVariantRegistry.onShaderRequested = ShaderSampleImporter.ImportShaderIfSelected;
+            m_ShaderVariantRegistry.ClearCache();
+        }
+
         protected override void OnCreateAsset()
         {
-            m_ShaderVariantRegistry.InitializeIfNeeded(this, "(UIEffect)");
+            m_ShaderVariantRegistry.InitializeIfNeeded(this);
+            m_ShaderVariantRegistry.RegisterOptionalShaders(this);
         }
 
         protected override void OnInitialize()
         {
-            m_ShaderVariantRegistry.InitializeIfNeeded(this, "(UIEffect)");
+            m_ShaderVariantRegistry.InitializeIfNeeded(this);
         }
 
         private void Reset()
         {
-            m_ShaderVariantRegistry.InitializeIfNeeded(this, "(UIEffect)");
-        }
-
-        private void SetupSamplesForShaderVariantRegistry()
-        {
-#if UNITY_2023_2_OR_NEWER
-            const string tmpSupport = "TextMeshPro Support (Unity 6)";
-#else
-            const string tmpSupport = "TextMeshPro Support";
-#endif
-            m_ShaderVariantRegistry.RegisterSamples(new[]
-            {
-                ("Hidden/TextMeshPro/Bitmap (UIEffect)", tmpSupport),
-                ("Hidden/TextMeshPro/Mobile/Bitmap (UIEffect)", tmpSupport),
-                ("Hidden/TextMeshPro/Distance Field (UIEffect)", tmpSupport),
-                ("Hidden/TextMeshPro/Mobile/Distance Field (UIEffect)", tmpSupport)
-            });
-        }
-
-        private void Refresh()
-        {
-            m_ShaderVariantRegistry.ClearCache();
-            MaterialRepository.Clear();
-            foreach (var c in Misc.FindObjectsOfType<UIEffectBase>()
-                         .Concat(Misc.GetAllComponentsInPrefabStage<UIEffectBase>()))
-            {
-                c.SetMaterialDirty();
-            }
-
-            EditorApplication.QueuePlayerLoopUpdate();
+            m_ShaderVariantRegistry.InitializeIfNeeded(this);
+            m_ShaderVariantRegistry.RegisterOptionalShaders(this);
         }
 
         internal static UIEffect[] LoadEditorPresets()
@@ -180,11 +187,30 @@ namespace Coffee.UIEffects
 
         private class Postprocessor : AssetPostprocessor
         {
-            private static void OnPostprocessAllAssets(string[] _, string[] __, string[] ___, string[] ____)
+            private static void OnPostprocessAllAssets(string[] imported, string[] deleted, string[] ___, string[] ____)
             {
                 if (Misc.isBatchOrBuilding) return;
 
-                instance.Refresh();
+                // Register optional shaders when shaders are imported.
+                if (imported.Concat(deleted).Any(path => path.EndsWith(".shader")))
+                {
+                    MaterialRepository.Clear();
+
+                    // Refresh
+                    if (hasInstance)
+                    {
+                        shaderRegistry.ClearCache();
+                        shaderRegistry.RegisterOptionalShaders(instance);
+                    }
+
+                    // Refresh all UIEffect instances.
+                    foreach (var c in Misc.FindObjectsOfType<UIEffectBase>()
+                                 .Concat(Misc.GetAllComponentsInPrefabStage<UIEffectBase>()))
+                    {
+                        c.ReleaseMaterial();
+                        c.SetMaterialDirty();
+                    }
+                }
             }
         }
 #endif

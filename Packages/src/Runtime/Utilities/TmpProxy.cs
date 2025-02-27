@@ -189,11 +189,14 @@ namespace Coffee.UIEffects
                 foreach (var textMeshProUGUI in s_RegisteredInstances)
                 {
                     if (!textMeshProUGUI || !textMeshProUGUI.isActiveAndEnabled) continue;
-                    if (textMeshProUGUI.TryGetComponent<UIEffect>(out var effect) && effect.isActiveAndEnabled)
+                    if (textMeshProUGUI.TryGetComponent<UIEffectBase>(out var effect) && effect.isActiveAndEnabled)
                     {
+                        effect.ReleaseMaterial();
                         effect.SetMaterialDirty();
                     }
                 }
+
+                Misc.QueuePlayerLoopUpdate();
             };
 #endif
         }

@@ -1,4 +1,6 @@
-﻿Shader "Hidden/UI/Default (UIEffect)"
+﻿// [OptionalShader] com.coffee.softmask-for-ugui: Hidden/UI/Default (UIEffect)
+// [OptionalShader] com.coffee.ui-effect: Hidden/UI/Default (SoftMaskable)
+Shader "Hidden/UI/Default (UIEffect)"
 {
     Properties
     {
@@ -53,8 +55,8 @@
 
             #include "UnityCG.cginc"
             #include "UnityUI.cginc"
-            #pragma multi_compile_local_fragment _ UNITY_UI_CLIP_RECT
-            #pragma multi_compile_local_fragment _ UNITY_UI_ALPHACLIP
+            #pragma multi_compile _ UNITY_UI_CLIP_RECT
+            #pragma multi_compile _ UNITY_UI_ALPHACLIP
 
             // ==== UIEFFECT START ====
             #pragma shader_feature_local_fragment _ TONE_GRAYSCALE TONE_SEPIA TONE_NEGATIVE TONE_RETRO TONE_POSTERIZE
@@ -67,6 +69,14 @@
             #pragma shader_feature_local_fragment _ EDGE_COLOR_MULTIPLY EDGE_COLOR_ADDITIVE EDGE_COLOR_SUBTRACTIVE EDGE_COLOR_REPLACE EDGE_COLOR_MULTIPLY_LUMINANCE EDGE_COLOR_MULTIPLY_ADDITIVE EDGE_COLOR_HSV_MODIFIER EDGE_COLOR_CONTRAST
             #pragma shader_feature_local_fragment _ TARGET_HUE TARGET_LUMINANCE
             // ==== UIEFFECT END ====
+
+            // ==== SOFTMASKABLE START ====
+            #pragma shader_feature _ SOFTMASK_EDITOR
+            #pragma shader_feature_local_fragment _ SOFTMASKABLE
+            #if SOFTMASKABLE
+            #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc"
+            #endif
+            // ==== SOFTMASKABLE END ====
 
             struct appdata_t
             {
@@ -143,13 +153,6 @@
             fixed4 uieffect_frag(float2 uv)
             {
                 v2f IN = _fragInput;
-                //Round up the alpha color coming from the interpolator (to 1.0/256.0 steps)
-                //The incoming alpha could have numerical instability, which makes it very sensible to
-                //HDR color transparency blend, when it blends with the world's texture.
-                const half alphaPrecision = half(0xff);
-                const half invAlphaPrecision = half(1.0 / alphaPrecision);
-                IN.color.a = round(IN.color.a * alphaPrecision) * invAlphaPrecision;
-
                 half4 color = IN.color * (tex2D(_MainTex, uv) + _TextureSampleAdd);
                 color.rgb *= color.a;
                 return color;
@@ -160,6 +163,13 @@
 
             half4 frag(v2f IN) : SV_Target
             {
+                //Round up the alpha color coming from the interpolator (to 1.0/256.0 steps)
+                //The incoming alpha could have numerical instability, which makes it very sensible to
+                //HDR color transparency blend, when it blends with the world's texture.
+                const half alphaPrecision = half(0xff);
+                const half invAlphaPrecision = half(1.0 / alphaPrecision);
+                IN.color.a = round(IN.color.a * alphaPrecision) * invAlphaPrecision;
+
                 _fragInput = IN;
                 half4 c = uieffect(_fragInput.texcoord, _fragInput.uvMask, _fragInput.uvLocal);
 
@@ -167,6 +177,12 @@
                 half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(IN.mask.xy)) * IN.mask.zw);
                 c *= m.x * m.y;
                 #endif
+
+                // ==== SOFTMASKABLE START ====
+                #if SOFTMASKABLE
+                c *= SoftMask(IN.vertex, IN.worldPosition, c.a);
+                #endif
+                // ==== SOFTMASKABLE END ====
 
                 #ifdef UNITY_UI_ALPHACLIP
                 clip (c.a - 0.001);

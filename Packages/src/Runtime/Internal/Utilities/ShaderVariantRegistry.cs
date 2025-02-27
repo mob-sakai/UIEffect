@@ -8,7 +8,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using UnityEditor;
-using UnityEditor.PackageManager.UI;
 using UnityEditorInternal;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 using Object = UnityEngine.Object;
@@ -63,6 +62,7 @@ namespace Coffee.UIEffectInternal
 #endif
 
         public ShaderVariantCollection shaderVariantCollection => m_Asset;
+        public Func<string, bool> onShaderRequested;
 
         public Shader FindOptionalShader(Shader shader,
             string requiredName,
@@ -78,16 +78,16 @@ namespace Coffee.UIEffectInternal
                 return Shader.Find(optionalShaderName);
             }
 
-            // The shader has
-            if (shader.name.Contains(requiredName))
+            // The shader has required name.
+            var shaderName = shader.name;
+            if (shaderName.Contains(requiredName))
             {
-                _cachedOptionalShaders[id] = shader.name;
+                _cachedOptionalShaders[id] = shaderName;
                 return shader;
             }
 
             // Find optional shader.
             Shader optionalShader;
-            var shaderName = shader.name;
             foreach (var pair in m_OptionalShaders)
             {
                 if (pair.key != shaderName) continue;
@@ -100,7 +100,7 @@ namespace Coffee.UIEffectInternal
             }
 
             // Find optional shader by format.
-            optionalShaderName = string.Format(format, shader.name);
+            optionalShaderName = string.Format(format, shaderName);
             optionalShader = Shader.Find(optionalShaderName);
             if (optionalShader)
             {
@@ -109,7 +109,10 @@ namespace Coffee.UIEffectInternal
             }
 
 #if UNITY_EDITOR
-            ImportFromSample(optionalShaderName);
+            if (onShaderRequested?.Invoke(optionalShaderName) ?? false)
+            {
+                return Shader.Find(defaultOptionalShaderName);
+            }
 #endif
 
             // Find default optional shader.
@@ -119,83 +122,67 @@ namespace Coffee.UIEffectInternal
 
 #if UNITY_EDITOR
         private readonly HashSet<StringPair> _logVariants = new HashSet<StringPair>();
-        private readonly Dictionary<string, string> _sampleNames = new Dictionary<string, string>();
-
-        /// <summary>
-        /// Import the sample containing the requested shader.
-        /// If choice 'Import' is selected, the sample is imported.
-        /// If choice 'Skip in this session' is selected, the sample is skipped in this session.
-        /// </summary>
-        public void ImportFromSample(string shaderName)
-        {
-            if (Misc.isBatchOrBuilding) return;
-
-            // Find sample name.
-            if (_sampleNames.TryGetValue(shaderName, out var sampleName))
-            {
-                // Find package info.
-                var pInfo = PackageInfo.FindForAssembly(typeof(ShaderVariantRegistry).Assembly);
-                if (pInfo == null) return;
-
-                // Find sample. If not found (resolvedPath == null), skip.
-                var sample = Sample.FindByPackage(pInfo.name, pInfo.version)
-                    .FirstOrDefault(x => x.displayName == sampleName);
-                if (sample.resolvedPath == null) return;
-
-                // Import the sample if selected.
-                var importSelected = EditorUtility.DisplayDialog($"Import {sampleName}",
-                    $"Import '{sampleName}' to use the shader '{shaderName}'", "Import", "Cancel");
-                if (importSelected)
-                {
-                    EditorApplication.delayCall += () =>
-                    {
-                        sample.Import();
-                    };
-                }
-            }
-        }
 
         public void ClearCache()
         {
             _cachedOptionalShaders.Clear();
         }
 
-        public void RegisterSamples((string shaderName, string sampleName)[] samples)
+        /// <summary>
+        /// Register all optional shaders associated with the package.
+        /// If the shader file has a comment "// [OptionalShader] {packageName}: {shaderName}", it will be registered.
+        /// </summary>
+        public void RegisterOptionalShaders(Object owner)
         {
-            foreach (var (shaderName, sampleName) in samples)
+            var shaderPaths = ShaderUtil.GetAllShaderInfo()
+                .Select(s => AssetDatabase.GetAssetPath(Shader.Find(s.name)))
+                .Where(path => !string.IsNullOrEmpty(path) && path.EndsWith(".shader"))
+                .ToArray();
+            foreach (var path in shaderPaths)
             {
-                _sampleNames[shaderName] = sampleName;
+                RegisterOptionalShaders(owner, path);
             }
         }
 
-        public void InitializeIfNeeded(Object owner, string optionalName)
+        /// <summary>
+        /// Register optional shaders associated with the package.
+        /// If the shader file has a comment "// [OptionalShader] {packageName}: {shaderName}", it will be registered.
+        /// </summary>
+        private void RegisterOptionalShaders(Object owner, string path)
         {
-            Profiler.BeginSample("(EDITOR/COF)[ShaderVariantRegistry] InitializeIfNeeded");
+            if (!File.Exists(path) || !path.EndsWith(".shader")) return;
+
+            var packageName = PackageInfo.FindForAssembly(typeof(ShaderVariantRegistry).Assembly)?.name;
+            if (string.IsNullOrEmpty(packageName)) return;
 
             // Register optional shader names by shader comment.
-            if (!string.IsNullOrEmpty(optionalName))
+            var pattern = $"// \\[OptionalShader\\] {packageName}: (.*)$";
+            var registeredKeys = new HashSet<string>(m_OptionalShaders.Select(x => x.key));
+            var keys = File.ReadLines(path)
+                .Take(10)
+                .Select(line => Regex.Match(line, pattern))
+                .Where(match => match.Success && registeredKeys.Add(match.Groups[1].Value))
+                .Select(match => match.Groups[1].Value)
+                .ToArray();
+            if (0 < keys.Length)
             {
-                var optionalShaders = ShaderUtil.GetAllShaderInfo()
-                    .Where(s => s.name.Contains(optionalName))
-                    .Select(s => (s.name, path: AssetDatabase.GetAssetPath(Shader.Find(s.name))))
-                    .Where(x => !string.IsNullOrEmpty(x.path))
-                    .SelectMany(x =>
-                    {
-                        return File.ReadLines(x.path)
-                            .Take(10)
-                            .Where(line => line.Contains($"OptionalShader@{optionalName}"))
-                            .Select(line => Regex.Match(line, @":\s*(.*)$"))
-                            .Where(match => match.Success)
-                            .Select(match => new StringPair() { key = match.Groups[1].Value, value = x.name });
-                    })
-                    .Where(pair => m_OptionalShaders.All(x => x.key != pair.key))
-                    .ToArray();
-                if (0 < optionalShaders.Length)
+                // Find shader.
+                var shader = AssetDatabase.LoadAssetAtPath<Shader>(path);
+                if (!shader) return;
+
+                var shaderName = shader.name;
+                foreach (var key in keys)
                 {
-                    m_OptionalShaders.AddRange(optionalShaders);
-                    EditorUtility.SetDirty(owner);
+                    m_OptionalShaders.Add(new StringPair() { key = key, value = shaderName });
                 }
+
+                EditorUtility.SetDirty(owner);
             }
+        }
+
+        public void InitializeIfNeeded(Object owner)
+        {
+            Profiler.BeginSample("(EDITOR/COF)[ShaderVariantRegistry] InitializeIfNeeded");
 
             if (!m_Asset && AssetDatabase.IsMainAsset(owner))
             {
@@ -286,7 +273,7 @@ namespace Coffee.UIEffectInternal
         private Editor _editor;
         private bool _expand;
 
-        public ShaderVariantRegistryEditor(SerializedProperty property, string optionName)
+        public ShaderVariantRegistryEditor(SerializedProperty property, string optionName, Action onFindOptions)
         {
             var so = property.serializedObject;
             var optionalShaders = property.FindPropertyRelative("m_OptionalShaders");
@@ -302,8 +289,14 @@ namespace Coffee.UIEffectInternal
                     EditorGUIUtility.TrTextContent($"Optional Shaders {optionName}",
                         "Specify optional shaders explicitly."));
 
-                var rButton = new Rect(rect.x + rect.width - 80, rect.y, 80, rect.height - 4);
-                if (GUI.Button(rButton, "Clear All", EditorStyles.miniButton))
+                var rButton1 = new Rect(rect.x + rect.width - 150, rect.y, 90, rect.height - 4);
+                if (GUI.Button(rButton1, "Find Options", EditorStyles.miniButton))
+                {
+                    onFindOptions?.Invoke();
+                }
+
+                var rButton2 = new Rect(rect.x + rect.width - 60, rect.y, 60, rect.height - 4);
+                if (GUI.Button(rButton2, "Clear All", EditorStyles.miniButton))
                 {
                     optionalShaders.ClearArray();
                 }
@@ -346,7 +339,7 @@ namespace Coffee.UIEffectInternal
                 var rLabel = new Rect(rect.x + 20, rect.y, 200, rect.height);
                 EditorGUI.LabelField(rLabel, "Unregistered Shader Variants");
 
-                var rButton = new Rect(rect.x + rect.width - 80, rect.y, 80, rect.height - 4);
+                var rButton = new Rect(rect.x + rect.width - 60, rect.y, 60, rect.height - 4);
                 if (GUI.Button(rButton, "Clear All", EditorStyles.miniButton))
                 {
                     unregisteredVariants.ClearArray();
@@ -438,9 +431,10 @@ namespace Coffee.UIEffectInternal
                 Editor.CreateCachedEditor(collection, null, ref editor);
                 editor.serializedObject.Update();
                 var shaders = editor.serializedObject.FindProperty("m_Shaders");
+                var drawShaderEntry = s_MiDrawShaderEntry?.CreateDelegate(typeof(Action<int>), editor) as Action<int>;
                 for (var i = 0; i < shaders.arraySize; i++)
                 {
-                    s_MiDrawShaderEntry.Invoke(editor, new object[] { i });
+                    drawShaderEntry?.Invoke(i);
                 }
 
                 EditorGUILayout.EndVertical();

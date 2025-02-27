@@ -127,6 +127,7 @@ namespace Coffee.UIEffects
                 Profiler.EndSample();
             }
 
+            _material.CopyPropertiesFromMaterial(baseMaterial);
             ApplyContextToMaterial(_material);
             Profiler.EndSample();
             return _material;
@@ -165,9 +166,7 @@ namespace Coffee.UIEffects
             {
                 graphic.SetVerticesDirty();
                 GraphicProxy.Find(graphic).SetVerticesDirty(graphic, enabled);
-#if UNITY_EDITOR
-                EditorApplication.QueuePlayerLoopUpdate();
-#endif
+                Misc.QueuePlayerLoopUpdate();
             }
         }
 
@@ -185,10 +184,13 @@ namespace Coffee.UIEffects
             if (graphic)
             {
                 graphic.SetMaterialDirty();
-#if UNITY_EDITOR
-                EditorApplication.QueuePlayerLoopUpdate();
-#endif
+                Misc.QueuePlayerLoopUpdate();
             }
+        }
+
+        internal void ReleaseMaterial()
+        {
+            MaterialRepository.Release(ref _material);
         }
 
         protected abstract void UpdateContext(UIEffectContext c);
@@ -198,13 +200,10 @@ namespace Coffee.UIEffects
             if (!isActiveAndEnabled || context == null || !material) return;
 
             context.ApplyToMaterial(material, actualSamplingScale);
+            Misc.QueuePlayerLoopUpdate();
 
 #if UNITY_EDITOR
             UIEffectProjectSettings.shaderRegistry.RegisterVariant(material, "UI > UIEffect");
-            if (!EditorApplication.isPlaying)
-            {
-                EditorApplication.QueuePlayerLoopUpdate();
-            }
 #endif
         }
 

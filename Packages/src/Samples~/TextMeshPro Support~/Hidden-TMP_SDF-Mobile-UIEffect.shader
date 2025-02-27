@@ -1,8 +1,5 @@
-// Simplified SDF shader:
-// - No Shading Option (bevel / bump / env map)
-// - No Glow Option
-// - Softness is applied on both side of the outline
-
+// [OptionalShader] com.coffee.softmask-for-ugui: Hidden/TextMeshPro/Mobile/Distance Field (UIEffect)
+// [OptionalShader] com.coffee.ui-effect: Hidden/TextMeshPro/Mobile/Distance Field (SoftMaskable)
 Shader "Hidden/TextMeshPro/Mobile/Distance Field (UIEffect)" {
 
 Properties {
@@ -103,6 +100,14 @@ SubShader {
         #pragma shader_feature_local_fragment _ TARGET_HUE TARGET_LUMINANCE
         // ==== UIEFFECT END ====
 
+        // ==== SOFTMASKABLE START ====
+        #pragma shader_feature _ SOFTMASK_EDITOR
+        #pragma shader_feature_local_fragment _ SOFTMASKABLE
+        #if SOFTMASKABLE
+        #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc"
+        #endif
+        // ==== SOFTMASKABLE END ====
+
 		#include "UnityCG.cginc"
 		#include "UnityUI.cginc"
 		#include "Assets/TextMesh Pro/Shaders/TMPro_Properties.cginc"
@@ -137,8 +142,15 @@ SubShader {
 		    float4 uvMask			: TEXCOORD5;
 		    float2 uvLocal			: TEXCOORD6;
 			// ==== UIEFFECT END ====
+			// ==== SOFTMASKABLE START ====
+			#if SOFTMASK_EDITOR
+			float4 worldPosition : TEXCOORD7;
+			#endif
+			// ==== SOFTMASKABLE END ====
 		};
 
+		float _UIMaskSoftnessX;
+        float _UIMaskSoftnessY;
 
 		pixel_t VertShader(vertex_t input)
 		{
@@ -204,7 +216,8 @@ SubShader {
 			output.outlineColor = outlineColor;
 			output.texcoord0 = float4(input.texcoord0.x, input.texcoord0.y, maskUV.x, maskUV.y);
 			output.param = half4(scale, bias - outline, bias + outline, bias);
-			output.mask = half4(vert.xy * 2 - clampedRect.xy - clampedRect.zw, 0.25 / (0.25 * half2(_MaskSoftnessX, _MaskSoftnessY) + pixelSize.xy));
+			const half2 maskSoftness = half2(max(_UIMaskSoftnessX, _MaskSoftnessX), max(_UIMaskSoftnessY, _MaskSoftnessY));
+			output.mask = half4(vert.xy * 2 - clampedRect.xy - clampedRect.zw, 0.25 / (0.25 * maskSoftness + pixelSize.xy));
 			#if (UNDERLAY_ON || UNDERLAY_INNER)
 			output.texcoord1 = float4(input.texcoord0 + layerOffset, input.color.a, 0);
 			output.underlayParam = half2(layerScale, layerBias);
@@ -214,6 +227,11 @@ SubShader {
 			output.uvLocal = input.texcoord1.zw;
 			output.uvMask = input.texcoord2;
 			// ==== UIEFFECT END ====
+			// ==== SOFTMASKABLE START ====
+			#if SOFTMASK_EDITOR
+			output.worldPosition = input.vertex;
+			#endif
+			// ==== SOFTMASKABLE END ====
 
 			return output;
 		}
@@ -265,7 +283,13 @@ SubShader {
 			half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(input.mask.xy)) * input.mask.zw);
 			c *= m.x * m.y;
 			#endif
-			
+
+			// ==== SOFTMASKABLE START ====
+			#if SOFTMASKABLE
+			c *= SoftMask(input.vertex, input.worldPosition, c.a);
+			#endif
+			// ==== SOFTMASKABLE END ====
+
 			#if UNITY_UI_ALPHACLIP
 			clip(c.a - 0.001);
 			#endif

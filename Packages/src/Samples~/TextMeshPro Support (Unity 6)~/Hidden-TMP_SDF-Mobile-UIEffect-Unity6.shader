@@ -1,8 +1,5 @@
-﻿// Simplified SDF shader:
-// - No Shading Option (bevel / bump / env map)
-// - No Glow Option
-// - Softness is applied on both side of the outline
-
+﻿// [OptionalShader] com.coffee.softmask-for-ugui: Hidden/TextMeshPro/Mobile/Distance Field (UIEffect)
+// [OptionalShader] com.coffee.ui-effect: Hidden/TextMeshPro/Mobile/Distance Field (SoftMaskable)
 Shader "Hidden/TextMeshPro/Mobile/Distance Field (UIEffect)" {
 
 Properties {
@@ -104,10 +101,17 @@ SubShader {
         #pragma shader_feature_local_fragment _ TARGET_HUE TARGET_LUMINANCE
         // ==== UIEFFECT END ====
 
+        // ==== SOFTMASKABLE START ====
+        #pragma shader_feature _ SOFTMASK_EDITOR
+        #pragma shader_feature_local_fragment _ SOFTMASKABLE
+        #if SOFTMASKABLE
+        #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc"
+        #endif
+        // ==== SOFTMASKABLE END ====
+
 		#include "UnityCG.cginc"
 		#include "UnityUI.cginc"
 		#include "Assets/TextMesh Pro/Shaders/TMPro_Properties.cginc"
-		#include "Assets/TextMesh Pro/Shaders/TMPro.cginc"
 
 		struct vertex_t {
 			UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -138,6 +142,11 @@ SubShader {
 		    float4 uvMask			: TEXCOORD5;
 		    float2 uvLocal			: TEXCOORD6;
 			// ==== UIEFFECT END ====
+			// ==== SOFTMASKABLE START ====
+			#if SOFTMASK_EDITOR
+			float4 worldPosition : TEXCOORD7;
+			#endif
+			// ==== SOFTMASKABLE END ====
 		};
 
 		float _UIMaskSoftnessX;
@@ -186,11 +195,11 @@ SubShader {
 			#endif
 
 			fixed4 faceColor = fixed4(input.color.rgb, opacity) * _FaceColor;
-			faceColor.rgb *= faceColor.a;
+			//faceColor.rgb *= faceColor.a;
 
 			fixed4 outlineColor = _OutlineColor;
 			outlineColor.a *= opacity;
-			outlineColor.rgb *= outlineColor.a;
+			//outlineColor.rgb *= outlineColor.a;
 			outlineColor = lerp(faceColor, outlineColor, sqrt(min(1.0, (outline * 2))));
 
 			#if (UNDERLAY_ON | UNDERLAY_INNER)
@@ -224,6 +233,11 @@ SubShader {
 			output.uvLocal = input.texcoord1.zw;
 			output.uvMask = input.texcoord2;
 			// ==== UIEFFECT END ====
+			// ==== SOFTMASKABLE START ====
+			#if SOFTMASK_EDITOR
+			output.worldPosition = input.vertex;
+			#endif
+			// ==== SOFTMASKABLE END ====
 
 			return output;
 		}
@@ -234,6 +248,7 @@ SubShader {
 		{
 			pixel_t input = _fragInput;
 			float2 uvMove = uv - input.texcoord0.xy;
+
 			half d = tex2D(_MainTex, input.texcoord0.xy + uvMove).a * input.param.x;
 			half4 c = input.faceColor * saturate(d - input.param.w);
 
@@ -276,6 +291,12 @@ SubShader {
 			half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(input.mask.xy)) * input.mask.zw);
 			c *= m.x * m.y;
 			#endif
+
+			// ==== SOFTMASKABLE START ====
+			#if SOFTMASKABLE
+			c *= SoftMask(input.vertex, input.worldPosition, c.a);
+			#endif
+			// ==== SOFTMASKABLE END ====
 
 			#if UNITY_UI_ALPHACLIP
 			clip(c.a - 0.001);

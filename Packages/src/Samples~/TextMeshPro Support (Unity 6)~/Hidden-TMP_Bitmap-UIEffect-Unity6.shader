@@ -1,3 +1,5 @@
+// [OptionalShader] com.coffee.softmask-for-ugui: Hidden/TextMeshPro/Bitmap (UIEffect)
+// [OptionalShader] com.coffee.ui-effect: Hidden/TextMeshPro/Bitmap (SoftMaskable)
 Shader "Hidden/TextMeshPro/Bitmap (UIEffect)" {
 
 Properties {
@@ -66,6 +68,14 @@ SubShader{
         #pragma shader_feature_local_fragment _ TARGET_HUE TARGET_LUMINANCE
         // ==== UIEFFECT END ====
 
+        // ==== SOFTMASKABLE START ====
+        #pragma shader_feature _ SOFTMASK_EDITOR
+        #pragma shader_feature_local_fragment _ SOFTMASKABLE
+        #if SOFTMASKABLE
+        #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc"
+        #endif
+        // ==== SOFTMASKABLE END ====
+
 		#include "UnityCG.cginc"
 		#include "UnityUI.cginc"
 
@@ -91,6 +101,11 @@ SubShader{
 		    float4 uvMask			: TEXCOORD3;
 		    float2 uvLocal			: TEXCOORD4;
 			// ==== UIEFFECT END ====
+			// ==== SOFTMASKABLE START ====
+			#if SOFTMASK_EDITOR
+			float4 worldPosition : TEXCOORD5;
+			#endif
+			// ==== SOFTMASKABLE END ====
 		};
 
 		uniform	sampler2D 	_MainTex;
@@ -141,11 +156,16 @@ SubShader{
 			OUT.uvLocal = v.texcoord1.zw;
 			OUT.uvMask = v.texcoord2;
 			// ==== UIEFFECT END ====
+			// ==== SOFTMASKABLE START ====
+			#if SOFTMASK_EDITOR
+			OUT.worldPosition = v.vertex;
+			#endif
+			// ==== SOFTMASKABLE END ====
 
 			return OUT;
 		}
 
-		// ==== UIEFFECT ====
+		// ==== UIEFFECT START ====
 		v2f _fragInput;
 		fixed4 uieffect_frag(float2 uv)
 		{
@@ -170,6 +190,12 @@ SubShader{
 				half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(IN.mask.xy)) * IN.mask.zw);
 				color *= m.x * m.y;
 			#endif
+
+			// ==== SOFTMASKABLE START ====
+			#if SOFTMASKABLE
+			color *= SoftMask(IN.vertex, IN.worldPosition, color.a);
+			#endif
+			// ==== SOFTMASKABLE END ====
 
 			#if UNITY_UI_ALPHACLIP
 				clip(color.a - 0.001);

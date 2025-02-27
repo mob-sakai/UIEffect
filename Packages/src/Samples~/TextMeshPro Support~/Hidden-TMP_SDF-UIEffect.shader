@@ -1,3 +1,5 @@
+// [OptionalShader] com.coffee.softmask-for-ugui: Hidden/TextMeshPro/Distance Field (UIEffect)
+// [OptionalShader] com.coffee.ui-effect: Hidden/TextMeshPro/Distance Field (SoftMaskable)
 Shader "Hidden/TextMeshPro/Distance Field (UIEffect)" {
 
 Properties {
@@ -136,6 +138,14 @@ SubShader {
         #pragma shader_feature_local_fragment _ TARGET_HUE TARGET_LUMINANCE
         // ==== UIEFFECT END ====
 
+        // ==== SOFTMASKABLE START ====
+        #pragma shader_feature _ SOFTMASK_EDITOR
+        #pragma shader_feature_local_fragment _ SOFTMASKABLE
+        #if SOFTMASKABLE
+        #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc"
+        #endif
+        // ==== SOFTMASKABLE END ====
+
 		#include "UnityCG.cginc"
 		#include "UnityUI.cginc"
 		#include "Assets/TextMesh Pro/Shaders/TMPro_Properties.cginc"
@@ -173,6 +183,11 @@ SubShader {
 		    float4 uvMask			: TEXCOORD6;
 		    float2 uvLocal			: TEXCOORD7;
 			// ==== UIEFFECT END ====
+			// ==== SOFTMASKABLE START ====
+			#if SOFTMASK_EDITOR
+			float4 worldPosition : TEXCOORD8;
+			#endif
+			// ==== SOFTMASKABLE END ====
 		};
 
 		// Used by Unity internally to handle Texture Tiling and Offset.
@@ -257,11 +272,16 @@ SubShader {
 			output.uvLocal = input.texcoord1.zw;
 			output.uvMask = input.texcoord2;
 			// ==== UIEFFECT END ====
+			// ==== SOFTMASKABLE START ====
+			#if SOFTMASK_EDITOR
+			output.worldPosition = input.position;
+			#endif
+			// ==== SOFTMASKABLE END ====
 
 			return output;
 		}
 
-		// ==== UIEFFECT ====
+		// ==== UIEFFECT START ====
 		pixel_t _fragInput;
 		fixed4 uieffect_frag(float2 uv)
 		{
@@ -342,6 +362,12 @@ SubShader {
 			half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(input.mask.xy)) * input.mask.zw);
 			faceColor *= m.x * m.y;
 		#endif
+
+		// ==== SOFTMASKABLE START ====
+		#if SOFTMASKABLE
+			faceColor *= SoftMask(input.position, input.worldPosition, faceColor.a);
+		#endif
+		// ==== SOFTMASKABLE END ====
 
 		#if UNITY_UI_ALPHACLIP
 			clip(faceColor.a - 0.001);
