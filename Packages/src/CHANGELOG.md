@@ -1,3 +1,14 @@
+## [5.5.2](https://github.com/mob-sakai/UIEffect/compare/5.5.1...5.5.2) (2025-02-28)
+
+
+### Bug Fixes
+
+* `PlayOnEnable.Reverse` in UIEffectTweener does not work ([3f5a7dc](https://github.com/mob-sakai/UIEffect/commit/3f5a7dcd2d8248b9e47fb9d38c083f26b798e063)), closes [#310](https://github.com/mob-sakai/UIEffect/issues/310)
+* `TransitionFilter` and `GradationMode` do not work correctly when the initial scale is 0 ([bdbf293](https://github.com/mob-sakai/UIEffect/commit/bdbf293c1489c0b248078969b37ec66890620d44)), closes [#311](https://github.com/mob-sakai/UIEffect/issues/311)
+* component icons will no longer be displayed in the scene view (Unity 2021.2 or later) ([40ff828](https://github.com/mob-sakai/UIEffect/commit/40ff828ff0697dc8f6597cfcf094cc63532a19dd))
+* fix potential issues ([a748adf](https://github.com/mob-sakai/UIEffect/commit/a748adf1bde5e400fcc84ec902a1438867105f75))
+* reset time button does not work correctly in the inspector when `UIEffectTweener.direction=Reverse` in the editor ([8513970](https://github.com/mob-sakai/UIEffect/commit/8513970e6f71d393430a573bfb0207428998bee1)), closes [#310](https://github.com/mob-sakai/UIEffect/issues/310)
+
 ## [5.5.1](https://github.com/mob-sakai/UIEffect/compare/5.5.0...5.5.1) (2025-02-14)
 
 
