@@ -77,7 +77,7 @@ namespace Coffee.UIEffects.Editors
             var rResetTimeButton = new Rect(r.x, r.y, 20, r.height);
             if (GUI.Button(rResetTimeButton, EditorGUIUtility.IconContent("animation.firstkey"), "IconButton"))
             {
-                SetTime(0);
+                ResetTime();
             }
 
             var rPlayButton = new Rect(r.x + 20, r.y, 20, r.height);
@@ -146,6 +146,14 @@ namespace Coffee.UIEffects.Editors
             foreach (var tweener in targets.OfType<UIEffectTweener>())
             {
                 tweener.SetTime(time);
+            }
+        }
+
+        private void ResetTime()
+        {
+            foreach (var tweener in targets.OfType<UIEffectTweener>())
+            {
+                tweener.ResetTime(tweener.direction);
             }
         }
 
