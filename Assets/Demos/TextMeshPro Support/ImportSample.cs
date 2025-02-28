@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
@@ -31,17 +32,23 @@ internal static class ImportSample
 
     private static void Run(string sample)
     {
+#if UNITY_EDITOR_WIN
+        var bash = @"C:\Program Files\Git\bin\bash.exe";
+        if (!File.Exists(bash))
+        {
+            bash = @"C:\Program Files (x86)\Git\bin\bash.exe";
+        }
+#else
+        var bash = "/bin/bash";
+#endif
+
         var p = new Process()
         {
             StartInfo = new ProcessStartInfo()
             {
                 Arguments = $"import-tmp-support.sh '{sample}'",
                 CreateNoWindow = true,
-#if UNITY_EDITOR_WIN
-                FileName = @"C:\Program Files (x86)\Git\bin\bash.exe",
-#else
-                FileName = "/bin/bash",
-#endif
+                FileName = bash,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
                 WorkingDirectory = $"{Application.dataPath}/..",
