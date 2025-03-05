@@ -91,6 +91,10 @@ namespace Coffee.UIEffects
             ShaderSampleImporter.RegisterShaderSamples(new[]
             {
                 // TextMeshPro Support/TextMeshPro Support (Unity 6)
+                ("Hidden/TextMeshPro/Distance Field SSD (UIEffect)", tmpSupport, version),
+                ("Hidden/TextMeshPro/Mobile/Distance Field SSD (UIEffect)", tmpSupport, version),
+                ("Hidden/TextMeshPro/Distance Field Overlay (UIEffect)", tmpSupport, version),
+                ("Hidden/TextMeshPro/Mobile/Distance Field Overlay (UIEffect)", tmpSupport, version),
                 ("Hidden/TextMeshPro/Bitmap (UIEffect)", tmpSupport, version),
                 ("Hidden/TextMeshPro/Mobile/Bitmap (UIEffect)", tmpSupport, version),
                 ("Hidden/TextMeshPro/Distance Field (UIEffect)", tmpSupport, version),
@@ -98,10 +102,22 @@ namespace Coffee.UIEffects
             });
             ShaderSampleImporter.RegisterShaderAliases(new[]
             {
-                ("Hidden/Hidden/TextMeshPro/Bitmap (SoftMaskable) (UIEffect)", "Hidden/TextMeshPro/Bitmap (UIEffect)"),
-                ("Hidden/Hidden/TextMeshPro/Mobile/Bitmap (SoftMaskable) (UIEffect)", "Hidden/TextMeshPro/Mobile/Bitmap (UIEffect)"),
-                ("Hidden/Hidden/TextMeshPro/Distance Field (SoftMaskable) (UIEffect)", "Hidden/TextMeshPro/Distance Field (UIEffect)"),
-                ("Hidden/Hidden/TextMeshPro/Mobile/Distance Field (SoftMaskable) (UIEffect)", "Hidden/TextMeshPro/Mobile/Distance Field (UIEffect)")
+                ("Hidden/Hidden/TextMeshPro/Distance Field SSD (SoftMaskable) (UIEffect)",
+                    "Hidden/TextMeshPro/Distance Field SSD (UIEffect)"),
+                ("Hidden/Hidden/TextMeshPro/Mobile/Distance Field SSD (SoftMaskable) (UIEffect)",
+                    "Hidden/TextMeshPro/Mobile/Distance Field SSD (UIEffect)"),
+                ("Hidden/Hidden/TextMeshPro/Distance Field Overlay (SoftMaskable) (UIEffect)",
+                    "Hidden/TextMeshPro/Distance Field Overlay (UIEffect)"),
+                ("Hidden/Hidden/TextMeshPro/Mobile/Distance Field Overlay (SoftMaskable) (UIEffect)",
+                    "Hidden/TextMeshPro/Mobile/Distance Field Overlay (UIEffect)"),
+                ("Hidden/Hidden/TextMeshPro/Bitmap (SoftMaskable) (UIEffect)",
+                    "Hidden/TextMeshPro/Bitmap (UIEffect)"),
+                ("Hidden/Hidden/TextMeshPro/Mobile/Bitmap (SoftMaskable) (UIEffect)",
+                    "Hidden/TextMeshPro/Mobile/Bitmap (UIEffect)"),
+                ("Hidden/Hidden/TextMeshPro/Distance Field (SoftMaskable) (UIEffect)",
+                    "Hidden/TextMeshPro/Distance Field (UIEffect)"),
+                ("Hidden/Hidden/TextMeshPro/Mobile/Distance Field (SoftMaskable) (UIEffect)",
+                    "Hidden/TextMeshPro/Mobile/Distance Field (UIEffect)")
             });
             ShaderSampleImporter.RegisterDeprecatedShaders(new[]
             {
