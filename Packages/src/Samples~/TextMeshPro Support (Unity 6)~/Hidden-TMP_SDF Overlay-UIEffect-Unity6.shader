@@ -1,6 +1,6 @@
-﻿// [OptionalShader] com.coffee.softmask-for-ugui: Hidden/TextMeshPro/Distance Field (UIEffect)
-// [OptionalShader] com.coffee.ui-effect: Hidden/TextMeshPro/Distance Field (SoftMaskable)
-Shader "Hidden/TextMeshPro/Distance Field (UIEffect)" {
+﻿// [OptionalShader] com.coffee.softmask-for-ugui: Hidden/TextMeshPro/Distance Field Overlay (UIEffect)
+// [OptionalShader] com.coffee.ui-effect: Hidden/TextMeshPro/Distance Field Overlay (SoftMaskable)
+Shader "Hidden/TextMeshPro/Distance Field Overlay (UIEffect)" {
 
 Properties {
 	_FaceTex			("Face Texture", 2D) = "white" {}
@@ -89,8 +89,8 @@ Properties {
 SubShader {
 
 	Tags
-	{
-		"Queue"="Transparent"
+  {
+		"Queue"="Overlay"
 		"IgnoreProjector"="True"
 		"RenderType"="Transparent"
 	}
@@ -108,7 +108,7 @@ SubShader {
 	ZWrite Off
 	Lighting Off
 	Fog { Mode Off }
-	ZTest [unity_GUIZTestMode]
+	ZTest Always
 	// ==== UIEFFECT START ====
 	Blend [_SrcBlend] [_DstBlend]
 	// ==== UIEFFECT END ====
@@ -179,7 +179,6 @@ SubShader {
 			float4	texcoord2		: TEXCOORD4;		// u,v, scale, bias
 			fixed4	underlayColor	: COLOR1;
 		    #endif
-
 		    float4 textures			: TEXCOORD5;
 			// ==== UIEFFECT START ====
 		    float4 uvMask			: TEXCOORD6;
@@ -193,11 +192,11 @@ SubShader {
 		};
 
 		// Used by Unity internally to handle Texture Tiling and Offset.
-		float4 _FaceTex_ST;
-		float4 _OutlineTex_ST;
-		float _UIMaskSoftnessX;
-        float _UIMaskSoftnessY;
-        int _UIVertexColorAlwaysGammaSpace;
+		uniform float4	_FaceTex_ST;
+		uniform float4	_OutlineTex_ST;
+		uniform float	_UIMaskSoftnessX;
+        uniform float	_UIMaskSoftnessY;
+        uniform int     _UIVertexColorAlwaysGammaSpace;
 
 		pixel_t VertShader(vertex_t input)
 		{
@@ -227,7 +226,7 @@ SubShader {
 
 			float bias =(.5 - weight) + (.5 / scale);
 
-			float alphaClip = (1.0 - _OutlineWidth * _ScaleRatioA - _OutlineSoftness * _ScaleRatioA);
+			float alphaClip = (1.0 - _OutlineWidth*_ScaleRatioA - _OutlineSoftness*_ScaleRatioA);
 
 		    #if GLOW_ON
 			alphaClip = min(alphaClip, 1.0 - _GlowOffset * _ScaleRatioB - _GlowOuter * _ScaleRatioB);
@@ -287,7 +286,6 @@ SubShader {
 
 			return output;
 		}
-
 
 		// ==== UIEFFECT START ====
 		pixel_t _fragInput;
@@ -355,10 +353,11 @@ SubShader {
 
   		    return faceColor * input.color.a;
 		}
+
 		#define UIEFFECT_TEXTMESHPRO 1
 		#include "Packages/com.coffee.ui-effect/Shaders/UIEffect.cginc"
 		// ==== UIEFFECT END ====
-		
+
 		fixed4 PixShader(pixel_t input) : SV_Target
 		{
 			UNITY_SETUP_INSTANCE_ID(input);
@@ -370,11 +369,11 @@ SubShader {
 			faceColor *= m.x * m.y;
 		    #endif
 
-		    // ==== SOFTMASKABLE START ====
-		    #if SOFTMASKABLE
+		// ==== SOFTMASKABLE START ====
+		#if SOFTMASKABLE
 			faceColor *= SoftMask(input.position, input.worldPosition, faceColor.a);
-		    #endif
-		    // ==== SOFTMASKABLE END ====
+		#endif
+		// ==== SOFTMASKABLE END ====
 
 		    #if UNITY_UI_ALPHACLIP
 			clip(faceColor.a - 0.001);

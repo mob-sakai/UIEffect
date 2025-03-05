@@ -1,4 +1,4 @@
-// [OptionalShader] com.coffee.softmask-for-ugui: Hidden/TextMeshPro/Distance Field (UIEffect)
+﻿// [OptionalShader] com.coffee.softmask-for-ugui: Hidden/TextMeshPro/Distance Field (UIEffect)
 // [OptionalShader] com.coffee.ui-effect: Hidden/TextMeshPro/Distance Field (SoftMaskable)
 Shader "Hidden/TextMeshPro/Distance Field (UIEffect)" {
 
