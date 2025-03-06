@@ -1,3 +1,11 @@
+## [5.5.3](https://github.com/mob-sakai/UIEffect/compare/5.5.2...5.5.3) (2025-03-06)
+
+
+### Bug Fixes
+
+* blur with 'Filled' Image type may cause error ([f0a7642](https://github.com/mob-sakai/UIEffect/commit/f0a76424e690355c101cc2e12183d1a7e77b16c3)), closes [#313](https://github.com/mob-sakai/UIEffect/issues/313)
+* IL2CPP build fails on older versions of Unity ([1af89af](https://github.com/mob-sakai/UIEffect/commit/1af89af2c58320f67b8d753767b3b4cf905f844d)), closes [#315](https://github.com/mob-sakai/UIEffect/issues/315)
+
 ## [5.5.2](https://github.com/mob-sakai/UIEffect/compare/5.5.1...5.5.2) (2025-02-28)
 
 
