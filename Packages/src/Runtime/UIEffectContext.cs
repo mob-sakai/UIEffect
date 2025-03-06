@@ -447,7 +447,7 @@ namespace Coffee.UIEffects
             effectProxy.OnPreModifyMesh(graphic);
 
             var verts = s_WorkingVertices;
-            var expandSize = GetExpandSize(canModifyShape);
+            var expandSize = effectProxy.ModifyExpandSize(graphic, GetExpandSize(canModifyShape));
             var count = vh.currentIndexCount;
 
             // Get the rectangle to calculate the normalized position.

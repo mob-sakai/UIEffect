@@ -18,56 +18,62 @@ namespace Coffee.UIEffects
             }
         }
 
-        public static void Expand(List<UIVertex> verts, int start, int bundleSize, Vector2 expandSize, Rect bounds)
+        public static void Expand(List<UIVertex> verts, int start, int bundleSize, Vector4 expandSize, Rect bounds)
         {
-            if (expandSize == Vector2.zero) return;
+            if (expandSize == Vector4.zero) return;
 
-            // Quad (6 vertices)
-            for (var j = 0; j < bundleSize; j += 6)
+            for (var j = 0; j < bundleSize; j += 3)
             {
-                var size = default(Vector3);
-                var extendPos = default(Vector3);
-                var extendUV = default(Vector3);
-                var posLB = verts[start + j + 1].position;
-                var posRT = verts[start + j + 4].position;
-                var willExpand = bundleSize == 6 // Text or simple quad
-                                 || !bounds.Contains(posLB)
-                                 || !bounds.Contains(posRT); // Outer 9-sliced quad
-                if (willExpand)
+                if (bounds.Contains(verts[start + j + 0].position)
+                    && bounds.Contains(verts[start + j + 1].position)
+                    && bounds.Contains(verts[start + j + 2].position))
                 {
-                    var uvLB = verts[start + j + 1].uv0;
-                    var uvRT = verts[start + j + 4].uv0;
-                    var posCenter = (posLB + posRT) / 2;
-                    var uvCenter = (uvLB + uvRT) / 2;
-                    size = posLB - posRT;
-                    size.x = 1 + expandSize.x / Mathf.Abs(size.x);
-                    size.y = 1 + expandSize.y / Mathf.Abs(size.y);
-                    size.z = 1;
-                    extendPos = posCenter - Vector3.Scale(size, posCenter);
-                    extendUV = uvCenter - Vector4.Scale(size, uvCenter);
+                    continue;
                 }
 
+                GetBounds(verts, start + j, 3, out var posBounds, out var uvBounds);
+                var posCenter = (Vector4)posBounds.center;
+                posCenter.z = posCenter.x;
+                posCenter.w = posCenter.y;
+                var uvCenter = (Vector4)uvBounds.center;
+                uvCenter.z = uvCenter.x;
+                uvCenter.w = uvCenter.y;
+                var size = (Vector4)posBounds.size;
+                size.z = 1 + expandSize.z / Mathf.Abs(size.x);
+                size.w = 1 + expandSize.w / Mathf.Abs(size.y);
+                size.x = 1 + expandSize.x / Mathf.Abs(size.x);
+                size.y = 1 + expandSize.y / Mathf.Abs(size.y);
+                var extendPos = posCenter - Vector4.Scale(size, posCenter);
+                var extendUV = uvCenter - Vector4.Scale(size, uvCenter);
+
                 // Set vertex position, uv, uvMask and local normalized position.
-                for (var k = 0; k < 6; k++)
+                for (var k = 0; k < 3; k++)
                 {
                     var vt = verts[start + j + k];
                     var pos = vt.position;
                     var uv0 = vt.uv0;
 
                     // Expand edge vertex
-                    if (willExpand)
+                    if (pos.x < bounds.xMin)
                     {
-                        if (pos.x < bounds.xMin || bounds.xMax < pos.x)
-                        {
-                            pos.x = pos.x * size.x + extendPos.x;
-                            uv0.x = uv0.x * size.x + extendUV.x;
-                        }
+                        pos.x = pos.x * size.x + extendPos.x;
+                        uv0.x = uv0.x * size.x + extendUV.x;
+                    }
+                    else if (bounds.xMax < pos.x)
+                    {
+                        pos.x = pos.x * size.z + extendPos.z;
+                        uv0.x = uv0.x * size.z + extendUV.z;
+                    }
 
-                        if (pos.y < bounds.yMin || bounds.yMax < pos.y)
-                        {
-                            pos.y = pos.y * size.y + extendPos.y;
-                            uv0.y = uv0.y * size.y + extendUV.y;
-                        }
+                    if (pos.y < bounds.yMin)
+                    {
+                        pos.y = pos.y * size.y + extendPos.y;
+                        uv0.y = uv0.y * size.y + extendUV.y;
+                    }
+                    else if (bounds.yMax < pos.y)
+                    {
+                        pos.y = pos.y * size.w + extendPos.w;
+                        uv0.y = uv0.y * size.w + extendUV.w;
                     }
 
                     vt.position = pos;
