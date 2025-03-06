@@ -12,7 +12,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "2045eaab5b485827cef8bf0bb9e1552dce4f8d6d"
+      "hash": "2bd2bf356dd692a39de9db2ff11faaf79fbfaea3"
     },
     "com.coffee.nano-monitor": {
       "version": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/NanoMonitor",
