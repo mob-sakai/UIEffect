@@ -6,7 +6,7 @@ SpriteAtlas:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PatternAndEdge
+  m_Name: UIEffect_Demo
   m_EditorData:
     serializedVersion: 2
     textureSettings:
@@ -44,21 +44,27 @@ SpriteAtlas:
     secondaryTextureSettings: {}
     variantMultiplier: 1
     packables:
-    - {fileID: 102900000, guid: bb16138913ad1451aa438c3edd486c67, type: 3}
+    - {fileID: 102900000, guid: 4cf1917f21f7940b3973d424c9049152, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: 2ee815c0807434e9091770d1c6cdc70b, type: 3}
   - {fileID: 21300000, guid: 098475820cf634867a339bb9af940722, type: 3}
+  - {fileID: 21300000, guid: 03b5a015427324a419a5ddbd5d5a6551, type: 3}
+  - {fileID: 21300000, guid: e822d767ed19641dcaf9831e1c8a742a, type: 3}
   - {fileID: 21300000, guid: 9617fea85692e4f5fb65fb2ddd4496ce, type: 3}
   - {fileID: 21300000, guid: 1851730bef7524e58b285a364983e21e, type: 3}
   - {fileID: 21300000, guid: be1fa55f69843fb4aaf4d0ff56004fba, type: 3}
   m_PackedSpriteNamesToIndex:
-  - Badge_Checked
-  - Badge_Police
-  - Badge_Level
-  - FlatCornered_64
+  - UIEffect_I_am_Unity-Chan-256
+  - UIEffect_Badge_Checked
+  - UIEffect_Showcase_Art
+  - UIEffect_I_am_Unity-Chan-512
+  - UIEffect_Badge_Police
+  - UIEffect_Badge_Level
+  - UIEffect_FlatCornered_64
   m_RenderDataMap: {}
-  m_Tag: PatternAndEdge
+  m_Tag: UIEffect_Demo
   m_IsVariant: 0

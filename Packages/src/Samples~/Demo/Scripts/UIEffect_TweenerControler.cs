@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(UIEffectTweener))]
-public class UIEffectTweenerControl : MonoBehaviour
+public class UIEffect_TweenerControler : MonoBehaviour
 {
     [SerializeField]
     private Text m_Info;

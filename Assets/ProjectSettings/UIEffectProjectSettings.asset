@@ -8,6 +8,47 @@ ShaderVariantCollection:
   m_PrefabAsset: {fileID: 0}
   m_Name: UIEffectShaderVariants
   m_Shaders:
+  - first: {fileID: 4800000, guid: 935b7be1c88464d2eb87204fdfab5a38, type: 3}
+    second:
+      variants:
+      - keywords: COLOR_HSV_MODIFIER GLOW_ON UNDERLAY_ON
+        passType: 0
+      - keywords: COLOR_MULTIPLY GLOW_ON UNDERLAY_ON
+        passType: 0
+      - keywords: EDGE_COLOR_REPLACE EDGE_PLAIN GLOW_ON UNDERLAY_ON
+        passType: 0
+      - keywords: GLOW_ON SAMPLING_BLUR_DETAIL UNDERLAY_ON
+        passType: 0
+      - keywords: GLOW_ON SAMPLING_EDGE_LUMINANCE UNDERLAY_ON
+        passType: 0
+      - keywords: GLOW_ON SAMPLING_PIXELATION TONE_RETRO UNDERLAY_ON
+        passType: 0
+      - keywords: GLOW_ON SAMPLING_PIXELATION UNDERLAY_ON
+        passType: 0
+      - keywords: GLOW_ON SAMPLING_RGB_SHIFT UNDERLAY_ON
+        passType: 0
+      - keywords: GLOW_ON SHADOW_COLOR_REPLACE TRANSITION_BURN TRANSITION_COLOR_MULTIPLY_ADDITIVE
+          UNDERLAY_ON
+        passType: 0
+      - keywords: GLOW_ON SHADOW_COLOR_REPLACE UNDERLAY_ON
+        passType: 0
+      - keywords: GLOW_ON TONE_RETRO UNDERLAY_ON
+        passType: 0
+      - keywords: GLOW_ON TRANSITION_BURN TRANSITION_COLOR_MULTIPLY_ADDITIVE UNDERLAY_ON
+        passType: 0
+      - keywords: GLOW_ON TRANSITION_COLOR_MULTIPLY TRANSITION_PATTERN UNDERLAY_ON
+        passType: 0
+      - keywords: GLOW_ON TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_DISSOLVE
+          UNDERLAY_ON
+        passType: 0
+      - keywords: GLOW_ON TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_MELT UNDERLAY_ON
+        passType: 0
+      - keywords: GLOW_ON TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_PATTERN UNDERLAY_ON
+        passType: 0
+      - keywords: GLOW_ON TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_SHINY UNDERLAY_ON
+        passType: 0
+      - keywords: GLOW_ON TRANSITION_COLOR_REPLACE TRANSITION_MELT UNDERLAY_ON
+        passType: 0
   - first: {fileID: 4800000, guid: 96246b1ead49a4c5a996fd477bc5a117, type: 3}
     second:
       variants:
@@ -38,6 +79,18 @@ ShaderVariantCollection:
         passType: 0
       - keywords: COLOR_SUBTRACTIVE
         passType: 0
+      - keywords: DETAIL_ADDITIVE
+        passType: 0
+      - keywords: DETAIL_MASKING
+        passType: 0
+      - keywords: DETAIL_MULTIPLY
+        passType: 0
+      - keywords: DETAIL_MULTIPLY EDGE_COLOR_MULTIPLY_ADDITIVE EDGE_SHINY
+        passType: 0
+      - keywords: DETAIL_MULTIPLY_ADDITIVE
+        passType: 0
+      - keywords: DETAIL_REPLACE
+        passType: 0
       - keywords: EDGE_COLOR_MULTIPLY_ADDITIVE EDGE_PLAIN
         passType: 0
       - keywords: EDGE_COLOR_MULTIPLY_ADDITIVE EDGE_PLAIN SHADOW_COLOR_MULTIPLY_ADDITIVE
@@ -62,13 +115,9 @@ ShaderVariantCollection:
         passType: 0
       - keywords: SAMPLING_BLUR_FAST
         passType: 0
-      - keywords: SAMPLING_BLUR_FAST SHADOW_COLOR_MULTIPLY_ADDITIVE
-        passType: 0
-      - keywords: SAMPLING_BLUR_FAST SHADOW_COLOR_MULTIPLY_ADDITIVE UNITY_UI_CLIP_RECT
+      - keywords: SAMPLING_BLUR_FAST SHADOW_COLOR_MULTIPLY_ADDITIVE TONE_GRAYSCALE
         passType: 0
       - keywords: SAMPLING_BLUR_FAST SHADOW_COLOR_REPLACE
-        passType: 0
-      - keywords: SAMPLING_BLUR_FAST SHADOW_COLOR_REPLACE TONE_GRAYSCALE
         passType: 0
       - keywords: SAMPLING_BLUR_MEDIUM
         passType: 0
@@ -104,6 +153,8 @@ ShaderVariantCollection:
         passType: 0
       - keywords: TRANSITION_COLOR_MULTIPLY TRANSITION_PATTERN
         passType: 0
+      - keywords: TRANSITION_COLOR_MULTIPLY TRANSITION_PATTERN UNITY_UI_CLIP_RECT
+        passType: 0
       - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_DISSOLVE
         passType: 0
       - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_DISSOLVE UNITY_UI_CLIP_RECT
@@ -126,80 +177,6 @@ ShaderVariantCollection:
         passType: 0
       - keywords: TRANSITION_FADE
         passType: 0
-  - first: {fileID: 4800000, guid: e65241fa80a374114b3f55ed746c04d9, type: 3}
-    second:
-      variants:
-      - keywords: SAMPLING_RGB_SHIFT TONE_RETRO TRANSITION_COLOR_MULTIPLY_ADDITIVE
-          TRANSITION_SHINY
-        passType: 0
-      - keywords: SAMPLING_RGB_SHIFT TRANSITION_CUTOFF
-        passType: 0
-  - first: {fileID: 4800000, guid: 935b7be1c88464d2eb87204fdfab5a38, type: 3}
-    second:
-      variants:
-      - keywords: COLOR_HSV_MODIFIER GLOW_ON UNDERLAY_ON
-        passType: 0
-      - keywords: EDGE_COLOR_REPLACE EDGE_PLAIN GLOW_ON UNDERLAY_ON
-        passType: 0
-      - keywords: EDGE_COLOR_REPLACE EDGE_SHINY GLOW_ON UNDERLAY_ON
-        passType: 0
-      - keywords: GLOW_ON SAMPLING_BLUR_DETAIL UNDERLAY_ON
-        passType: 0
-      - keywords: GLOW_ON SAMPLING_BLUR_FAST SHADOW_COLOR_MULTIPLY_ADDITIVE UNDERLAY_ON
-        passType: 0
-      - keywords: GLOW_ON SAMPLING_EDGE_LUMINANCE UNDERLAY_ON
-        passType: 0
-      - keywords: GLOW_ON SAMPLING_PIXELATION UNDERLAY_ON
-        passType: 0
-      - keywords: GLOW_ON SAMPLING_RGB_SHIFT UNDERLAY_ON
-        passType: 0
-      - keywords: GLOW_ON SHADOW_COLOR_REPLACE TRANSITION_BURN TRANSITION_COLOR_MULTIPLY_ADDITIVE
-          UNDERLAY_ON
-        passType: 0
-      - keywords: GLOW_ON SHADOW_COLOR_REPLACE UNDERLAY_ON
-        passType: 0
-      - keywords: GLOW_ON TONE_RETRO UNDERLAY_ON
-        passType: 0
-      - keywords: GLOW_ON TRANSITION_BURN TRANSITION_COLOR_MULTIPLY_ADDITIVE UNDERLAY_ON
-        passType: 0
-      - keywords: GLOW_ON TRANSITION_COLOR_MULTIPLY TRANSITION_PATTERN UNDERLAY_ON
-        passType: 0
-      - keywords: GLOW_ON TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_DISSOLVE
-          UNDERLAY_ON
-        passType: 0
-      - keywords: GLOW_ON TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_MELT UNDERLAY_ON
-        passType: 0
-      - keywords: GLOW_ON TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_PATTERN UNDERLAY_ON
-        passType: 0
-      - keywords: GLOW_ON TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_SHINY UNDERLAY_ON
-        passType: 0
-      - keywords: GLOW_ON TRANSITION_COLOR_REPLACE TRANSITION_MELT UNDERLAY_ON
-        passType: 0
-      - keywords: GLOW_ON UNDERLAY_ON
-        passType: 0
-      - keywords: SAMPLING_PIXELATION TONE_RETRO
-        passType: 0
-      - keywords: SAMPLING_RGB_SHIFT TONE_RETRO TRANSITION_COLOR_MULTIPLY_ADDITIVE
-          TRANSITION_SHINY
-        passType: 0
-      - keywords: SAMPLING_RGB_SHIFT TRANSITION_CUTOFF
-        passType: 0
-  - first: {fileID: 4800000, guid: d1cb940e3804b4adcaf9b22083fadfad, type: 3}
-    second:
-      variants:
-      - keywords: SAMPLING_RGB_SHIFT TONE_RETRO TRANSITION_COLOR_MULTIPLY_ADDITIVE
-          TRANSITION_SHINY
-        passType: 0
-      - keywords: SAMPLING_RGB_SHIFT TRANSITION_CUTOFF
-        passType: 0
-  - first: {fileID: 4800000, guid: 63a1dba10bff94661a909d63808a9a3b, type: 3}
-    second:
-      variants:
-      - keywords: SAMPLING_RGB_SHIFT TONE_RETRO TRANSITION_COLOR_MULTIPLY_ADDITIVE
-          TRANSITION_SHINY
-        passType: 0
-      - keywords: SAMPLING_RGB_SHIFT TRANSITION_CUTOFF
-        passType: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,7 +196,25 @@ MonoBehaviour:
   m_UseHDRColorPicker: 1
   m_ShaderVariantCollection: {fileID: -8740588384831342173}
   m_ShaderVariantRegistry:
-    m_OptionalShaders: []
+    m_OptionalShaders:
+    - key: Hidden/TextMeshPro/Bitmap (SoftMaskable)
+      value: Hidden/TextMeshPro/Bitmap (UIEffect)
+    - key: Hidden/TextMeshPro/Distance Field (SoftMaskable)
+      value: Hidden/TextMeshPro/Distance Field (UIEffect)
+    - key: Hidden/TextMeshPro/Distance Field Overlay (SoftMaskable)
+      value: Hidden/TextMeshPro/Distance Field Overlay (UIEffect)
+    - key: Hidden/TextMeshPro/Distance Field SSD (SoftMaskable)
+      value: Hidden/TextMeshPro/Distance Field SSD (UIEffect)
+    - key: Hidden/TextMeshPro/Mobile/Bitmap (SoftMaskable)
+      value: Hidden/TextMeshPro/Mobile/Bitmap (UIEffect)
+    - key: Hidden/TextMeshPro/Mobile/Distance Field (SoftMaskable)
+      value: Hidden/TextMeshPro/Mobile/Distance Field (UIEffect)
+    - key: Hidden/TextMeshPro/Mobile/Distance Field Overlay (SoftMaskable)
+      value: Hidden/TextMeshPro/Mobile/Distance Field Overlay (UIEffect)
+    - key: Hidden/TextMeshPro/Mobile/Distance Field SSD (SoftMaskable)
+      value: Hidden/TextMeshPro/Mobile/Distance Field SSD (UIEffect)
+    - key: Hidden/UI/Default (SoftMaskable)
+      value: Hidden/UI/Default (UIEffect)
     m_Asset: {fileID: -8740588384831342173}
     m_ErrorOnUnregisteredVariant: 0
     m_UnregisteredVariants: []

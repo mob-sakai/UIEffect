@@ -12,13 +12,16 @@ EditorBuildSettings:
     path: Assets/Samples/Demo/UIEffect_Showcase.unity
     guid: 96317674ad83b4b38b0b7c9e3402bfd3
   - enabled: 1
-    path: Assets/Demos/UIEffectTweenerControl/UIEffectTweenerControl.unity
+    path: Assets/Samples/Demo/UIEffect_Tweener.unity
     guid: dda1700a67f894a5cafc5d16748cf4fb
   - enabled: 1
-    path: Assets/Demos/TextMeshPro Support/TextMeshProSupport.unity
+    path: Assets/Samples/Demo/UIEffect_TextMeshProSupport.unity
     guid: b29fc66cd80684c2d903f2d65255b59b
   - enabled: 1
-    path: Assets/Demos/ReadMe/ReadMe.unity
+    path: Assets/Samples/Demo/UIEffect_PatternAndEdge.unity
+    guid: 263e512bc0ad44038af0c3a4e37b6b33
+  - enabled: 1
+    path: Assets/Samples/Demo/UIEffect_TitleV5.unity
     guid: 423d95626aa6c4e4d9cc46aada552a2c
   - enabled: 0
     path: Assets/Demos/AllocTest/AllocTest.unity
@@ -26,10 +29,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Demos/PerformanceTest/PerformanceTest.unity
     guid: 3a7d90cc463ac409fa50ecb46480ebc6
-  - enabled: 1
-    path: Assets/Demos/PatternAndEdge/PatternAndEdge.unity
-    guid: 263e512bc0ad44038af0c3a4e37b6b33
-  - enabled: 1
+  - enabled: 0
     path: Assets/Demos/GradationTest/4ColorGradation.unity
     guid: d9fda278a556f4bd6bf27213319aaf06
   m_configObjects: {}

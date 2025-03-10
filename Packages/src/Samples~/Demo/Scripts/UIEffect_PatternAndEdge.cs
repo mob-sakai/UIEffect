@@ -1,7 +1,7 @@
 using Coffee.UIEffects;
 using UnityEngine;
 
-public class PatternAndEdge : MonoBehaviour
+public class UIEffect_PatternAndEdge : MonoBehaviour
 {
     private UIEffect[] _effects;
 
