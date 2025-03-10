@@ -605,14 +605,14 @@ half4 uieffect(float2 uv, const float4 uvMask, const float2 uvLocal)
         const float2 d = texel_size() * _SamplingWidth;
 
         // Pixel values around the current pixel (3x3, 8 neighbors)
-        const half v00 = to_value(TEX_SAMPLE_CLAMP((uv + half2(-d.x, -d.y)), uvMask));
-        const half v01 = to_value(TEX_SAMPLE_CLAMP((uv + half2(-d.x, 0.0)), uvMask));
-        const half v02 = to_value(TEX_SAMPLE_CLAMP((uv + half2(-d.x, +d.y)), uvMask));
-        const half v10 = to_value(TEX_SAMPLE_CLAMP((uv + half2(0.0, -d.y)), uvMask));
-        const half v12 = to_value(TEX_SAMPLE_CLAMP((uv + half2(0.0, +d.y)), uvMask));
-        const half v20 = to_value(TEX_SAMPLE_CLAMP((uv + half2(+d.x, -d.y)), uvMask));
-        const half v21 = to_value(TEX_SAMPLE_CLAMP((uv + half2(+d.x, 0.0)), uvMask));
-        const half v22 = to_value(TEX_SAMPLE_CLAMP((uv + half2(+d.x, +d.y)), uvMask));
+        const half v00 = to_value(UIEFFECT_SAMPLE_CLAMP((uv + half2(-d.x, -d.y)), uvMask));
+        const half v01 = to_value(UIEFFECT_SAMPLE_CLAMP((uv + half2(-d.x, 0.0)), uvMask));
+        const half v02 = to_value(UIEFFECT_SAMPLE_CLAMP((uv + half2(-d.x, +d.y)), uvMask));
+        const half v10 = to_value(UIEFFECT_SAMPLE_CLAMP((uv + half2(0.0, -d.y)), uvMask));
+        const half v12 = to_value(UIEFFECT_SAMPLE_CLAMP((uv + half2(0.0, +d.y)), uvMask));
+        const half v20 = to_value(UIEFFECT_SAMPLE_CLAMP((uv + half2(+d.x, -d.y)), uvMask));
+        const half v21 = to_value(UIEFFECT_SAMPLE_CLAMP((uv + half2(+d.x, 0.0)), uvMask));
+        const half v22 = to_value(UIEFFECT_SAMPLE_CLAMP((uv + half2(+d.x, +d.y)), uvMask));
 
         // Apply Sobel operator
         half sobel_h = v00 * -1.0 + v01 * -2.0 + v02 * -1.0 + v20 * 1.0 + v21 * 2.0 + v22 * 1.0;
