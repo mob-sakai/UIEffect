@@ -226,9 +226,19 @@ namespace Coffee.UIEffects
                                  .Concat(Misc.GetAllComponentsInPrefabStage<UIEffectBase>()))
                     {
                         c.ReleaseMaterial();
-                        c.SetMaterialDirty();
                     }
                 }
+
+                // Refresh all UIEffect instances.
+                EditorApplication.delayCall += () =>
+                {
+                    foreach (var c in Misc.FindObjectsOfType<UIEffectBase>()
+                                 .Concat(Misc.GetAllComponentsInPrefabStage<UIEffectBase>()))
+                    {
+                        c.SetMaterialDirty();
+                        c.SetVerticesDirty();
+                    }
+                };
             }
         }
 #endif
