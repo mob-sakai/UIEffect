@@ -26,6 +26,7 @@ namespace Coffee.UIEffects
         private static readonly int s_TransitionReverse = Shader.PropertyToID("_TransitionReverse");
         private static readonly int s_TransitionTex = Shader.PropertyToID("_TransitionTex");
         private static readonly int s_TransitionTex_ST = Shader.PropertyToID("_TransitionTex_ST");
+        private static readonly int s_TransitionTex_Speed = Shader.PropertyToID("_TransitionTex_Speed");
         private static readonly int s_TransitionWidth = Shader.PropertyToID("_TransitionWidth");
         private static readonly int s_TransitionSoftness = Shader.PropertyToID("_TransitionSoftness");
         private static readonly int s_TransitionRange = Shader.PropertyToID("_TransitionRange");
@@ -181,6 +182,7 @@ namespace Coffee.UIEffects
         public Texture transitionTex;
         public Vector2 transitionTexScale = new Vector2(1, 1);
         public Vector2 transitionTexOffset = new Vector2(0, 0);
+        public Vector2 transitionTexSpeed = new Vector2(0, 0);
         public float transitionRotation = 0;
         public bool transitionKeepAspectRatio = true;
         public float transitionWidth = 0.2f;
@@ -266,6 +268,7 @@ namespace Coffee.UIEffects
             transitionTex = preset.transitionTex;
             transitionTexScale = preset.transitionTexScale;
             transitionTexOffset = preset.transitionTexOffset;
+            transitionTexSpeed = preset.transitionTexSpeed;
             transitionKeepAspectRatio = preset.transitionKeepAspectRatio;
             transitionRotation = preset.transitionRotation;
             transitionWidth = preset.transitionWidth;
@@ -346,6 +349,7 @@ namespace Coffee.UIEffects
             material.SetVector(s_TransitionTex_ST,
                 new Vector4(transitionTexScale.x, transitionTexScale.y,
                     transitionTexOffset.x, transitionTexOffset.y));
+            material.SetVector(s_TransitionTex_Speed, transitionTexSpeed);
             material.SetFloat(s_TransitionWidth, Mathf.Clamp01(transitionWidth));
             material.SetFloat(s_TransitionSoftness, Mathf.Clamp01(transitionSoftness));
             material.SetVector(s_TransitionRange, new Vector2(transitionRange.min, transitionRange.max));

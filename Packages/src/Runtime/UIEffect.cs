@@ -68,6 +68,9 @@ namespace Coffee.UIEffects
         protected Vector2 m_TransitionTexOffset = new Vector2(0, 0);
 
         [SerializeField]
+        protected Vector2 m_TransitionTexSpeed = new Vector2(0, 0);
+
+        [SerializeField]
         [Range(0, 360)]
         private float m_TransitionRotation = 0;
 
@@ -428,6 +431,17 @@ namespace Coffee.UIEffects
             {
                 if (m_TransitionTexOffset == value) return;
                 context.transitionTexOffset = m_TransitionTexOffset = value;
+                SetMaterialDirty();
+            }
+        }
+
+        public Vector2 transitionTextureSpeed
+        {
+            get => m_TransitionTexSpeed;
+            set
+            {
+                if (m_TransitionTexSpeed == value) return;
+                context.transitionTexSpeed = m_TransitionTexSpeed = value;
                 SetMaterialDirty();
             }
         }
@@ -1039,6 +1053,7 @@ namespace Coffee.UIEffects
             c.transitionTex = m_TransitionTex;
             c.transitionTexScale = m_TransitionTexScale;
             c.transitionTexOffset = m_TransitionTexOffset;
+            c.transitionTexSpeed = m_TransitionTexSpeed;
             c.transitionRotation = m_TransitionRotation;
             c.transitionKeepAspectRatio = m_TransitionKeepAspectRatio;
             c.transitionWidth = m_TransitionWidth;
@@ -1212,6 +1227,7 @@ namespace Coffee.UIEffects
                 m_TransitionTex = preset.m_TransitionTex;
                 m_TransitionTexScale = preset.m_TransitionTexScale;
                 m_TransitionTexOffset = preset.m_TransitionTexOffset;
+                m_TransitionTexSpeed = preset.m_TransitionTexSpeed;
                 m_TransitionRotation = preset.m_TransitionRotation;
                 m_TransitionKeepAspectRatio = preset.m_TransitionKeepAspectRatio;
                 m_TransitionWidth = preset.m_TransitionWidth;
@@ -1306,6 +1322,7 @@ namespace Coffee.UIEffects
             m_TransitionTex = c.transitionTex;
             m_TransitionTexScale = c.transitionTexScale;
             m_TransitionTexOffset = c.transitionTexOffset;
+            m_TransitionTexSpeed = c.transitionTexSpeed;
             m_TransitionRotation = c.transitionRotation;
             m_TransitionKeepAspectRatio = c.transitionKeepAspectRatio;
             m_TransitionWidth = c.transitionWidth;

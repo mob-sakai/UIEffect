@@ -48,6 +48,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _transitionTex;
         private SerializedProperty _transitionTexScale;
         private SerializedProperty _transitionTexOffset;
+        private SerializedProperty _transitionTexSpeed;
         private SerializedProperty _transitionReverse;
         private SerializedProperty _transitionRotation;
         private SerializedProperty _transitionKeepAspectRatio;
@@ -131,6 +132,7 @@ namespace Coffee.UIEffects.Editors
             _transitionTex = serializedObject.FindProperty("m_TransitionTex");
             _transitionTexScale = serializedObject.FindProperty("m_TransitionTexScale");
             _transitionTexOffset = serializedObject.FindProperty("m_TransitionTexOffset");
+            _transitionTexSpeed = serializedObject.FindProperty("m_TransitionTexSpeed");
             _transitionReverse = serializedObject.FindProperty("m_TransitionReverse");
             _transitionRotation = serializedObject.FindProperty("m_TransitionRotation");
             _transitionKeepAspectRatio = serializedObject.FindProperty("m_TransitionKeepAspectRatio");
@@ -247,6 +249,12 @@ namespace Coffee.UIEffects.Editors
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(_transitionTexScale, EditorGUIUtility.TrTempContent("Scale"));
                 EditorGUILayout.PropertyField(_transitionTexOffset, EditorGUIUtility.TrTempContent("Offset"));
+                EditorGUILayout.PropertyField(_transitionTexSpeed, EditorGUIUtility.TrTempContent("Speed"));
+                if (_transitionTexSpeed.vector2Value != Vector2.zero)
+                {
+                    EditorApplication.QueuePlayerLoopUpdate();
+                }
+
                 EditorGUILayout.PropertyField(_transitionRotation, EditorGUIUtility.TrTempContent("Rotation"));
                 EditorGUILayout.PropertyField(_transitionKeepAspectRatio,
                     EditorGUIUtility.TrTempContent("Keep Aspect Ratio"));

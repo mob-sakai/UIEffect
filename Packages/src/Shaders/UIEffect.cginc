@@ -13,6 +13,7 @@ uniform const float _SamplingWidth;
 uniform const float _SamplingScale;
 uniform const sampler2D _TransitionTex;
 uniform const float4 _TransitionTex_ST;
+uniform const float2 _TransitionTex_Speed;
 uniform const float _TransitionRate;
 uniform const int _TransitionReverse;
 uniform const half4 _TransitionColor;
@@ -109,7 +110,7 @@ float transition_alpha(float2 uvLocal)
     }
     #endif
 
-    const float alpha = tex2D(_TransitionTex, uv).a;
+    const float alpha = tex2D(_TransitionTex, uv + _Time.y * _TransitionTex_Speed).a;
     return _TransitionReverse ? 1 - alpha : alpha;
 }
 
