@@ -36,19 +36,9 @@ namespace Coffee.UIEffects.Editors
             };
             _reorderableList.onAddDropdownCallback = (rect, list) =>
             {
-                var menu = new GenericMenu();
-                foreach (var preset in UIEffectProjectSettings.LoadEditorPresets())
-                {
-                    if (UIEffectProjectSettings.instance.m_RuntimePresets.Contains(preset)) continue;
-
-                    var path = UIEffectProjectSettings.GetPresetPath(preset);
-                    menu.AddItem(new GUIContent(path), false, x =>
-                    {
-                        UIEffectProjectSettings.RegisterRuntimePreset(x as UIEffect);
-                    }, preset);
-                }
-
-                menu.DropDown(rect);
+                UIEffectEditor.DropDownPreset(rect,
+                    x => !x.builtin && !UIEffectProjectSettings.instance.m_RuntimePresets.Contains(x.preset),
+                    UIEffectProjectSettings.RegisterRuntimePreset);
             };
 
             _isInitialized = true;

@@ -159,6 +159,7 @@ namespace Coffee.UIEffects
             var dirs = AssetDatabase.FindAssets(k_PresetDir + " t:folder")
                 .Select(AssetDatabase.GUIDToAssetPath)
                 .Where(x => Path.GetFileName(x) == k_PresetDir)
+                .OrderBy(x => x.StartsWith("Packages/com.coffee.ui-effect/"))
                 .ToArray();
             return AssetDatabase.FindAssets("t:prefab", dirs)
                 .Select(AssetDatabase.GUIDToAssetPath)
@@ -194,11 +195,12 @@ namespace Coffee.UIEffects
             return new PreloadedProjectSettingsProvider("Project/UI/UI Effect");
         }
 
-        internal static string GetPresetPath(UIEffect preset)
+        internal static (string path, bool builtin) GetPresetPath(UIEffect preset)
         {
             var assetPath = AssetDatabase.GetAssetPath(preset);
+            var builtin = assetPath.StartsWith("Packages/com.coffee.ui-effect/");
             var m = Regex.Match(assetPath, k_PresetPathPattern);
-            return m.Success ? m.Groups[1].Value : Path.GetFileNameWithoutExtension(assetPath);
+            return (m.Success ? m.Groups[1].Value : Path.GetFileNameWithoutExtension(assetPath), builtin);
         }
 
         private class Postprocessor : AssetPostprocessor

@@ -1129,7 +1129,15 @@ namespace Coffee.UIEffects
         /// </summary>
         public void LoadPreset(string presetName)
         {
-            LoadPreset(UIEffectProjectSettings.LoadRuntimePreset(presetName));
+            LoadPreset(presetName, false);
+        }
+
+        /// <summary>
+        /// Load preset settings.
+        /// </summary>
+        public void LoadPreset(string presetName, bool append)
+        {
+            LoadPreset(UIEffectProjectSettings.LoadRuntimePreset(presetName), append);
         }
 
         /// <summary>
@@ -1137,76 +1145,113 @@ namespace Coffee.UIEffects
         /// </summary>
         public void LoadPreset(UIEffect preset)
         {
+            LoadPreset(preset, false);
+        }
+
+        /// <summary>
+        /// Load preset settings.
+        /// </summary>
+        public void LoadPreset(UIEffect preset, bool append)
+        {
             if (!preset) return;
 
-            m_ToneFilter = preset.m_ToneFilter;
-            m_ToneIntensity = preset.m_ToneIntensity;
-            m_ToneParams = preset.m_ToneParams;
+            if (!append || preset.m_ToneFilter != ToneFilter.None)
+            {
+                m_ToneFilter = preset.m_ToneFilter;
+                m_ToneIntensity = preset.m_ToneIntensity;
+                m_ToneParams = preset.m_ToneParams;
+            }
 
-            m_ColorFilter = preset.m_ColorFilter;
-            m_Color = preset.m_Color;
-            m_ColorIntensity = preset.m_ColorIntensity;
-            m_ColorGlow = preset.m_ColorGlow;
+            if (!append || preset.m_ColorFilter != ColorFilter.None)
+            {
+                m_ColorFilter = preset.m_ColorFilter;
+                m_Color = preset.m_Color;
+                m_ColorIntensity = preset.m_ColorIntensity;
+                m_ColorGlow = preset.m_ColorGlow;
+            }
 
-            m_SamplingFilter = preset.m_SamplingFilter;
-            m_SamplingIntensity = preset.m_SamplingIntensity;
-            m_SamplingWidth = preset.m_SamplingWidth;
+            if (!append || preset.m_SamplingFilter != SamplingFilter.None)
+            {
+                m_SamplingFilter = preset.m_SamplingFilter;
+                m_SamplingIntensity = preset.m_SamplingIntensity;
+                m_SamplingWidth = preset.m_SamplingWidth;
+            }
 
-            m_TransitionFilter = preset.m_TransitionFilter;
-            m_TransitionRate = preset.m_TransitionRate;
-            m_TransitionReverse = preset.m_TransitionReverse;
-            m_TransitionTex = preset.m_TransitionTex;
-            m_TransitionTexScale = preset.m_TransitionTexScale;
-            m_TransitionTexOffset = preset.m_TransitionTexOffset;
-            m_TransitionRotation = preset.m_TransitionRotation;
-            m_TransitionKeepAspectRatio = preset.m_TransitionKeepAspectRatio;
-            m_TransitionWidth = preset.m_TransitionWidth;
-            m_TransitionSoftness = preset.m_TransitionSoftness;
-            m_TransitionRange = preset.m_TransitionRange;
-            m_TransitionColorFilter = preset.m_TransitionColorFilter;
-            m_TransitionColor = preset.m_TransitionColor;
-            m_TransitionColorGlow = preset.m_TransitionColorGlow;
-            m_TransitionPatternReverse = preset.m_TransitionPatternReverse;
-            m_TransitionAutoPlaySpeed = preset.m_TransitionAutoPlaySpeed;
+            if (!append || preset.m_TransitionFilter != TransitionFilter.None)
+            {
+                m_TransitionFilter = preset.m_TransitionFilter;
+                m_TransitionRate = preset.m_TransitionRate;
+                m_TransitionReverse = preset.m_TransitionReverse;
+                m_TransitionTex = preset.m_TransitionTex;
+                m_TransitionTexScale = preset.m_TransitionTexScale;
+                m_TransitionTexOffset = preset.m_TransitionTexOffset;
+                m_TransitionRotation = preset.m_TransitionRotation;
+                m_TransitionKeepAspectRatio = preset.m_TransitionKeepAspectRatio;
+                m_TransitionWidth = preset.m_TransitionWidth;
+                m_TransitionSoftness = preset.m_TransitionSoftness;
+                m_TransitionRange = preset.m_TransitionRange;
+                m_TransitionColorFilter = preset.m_TransitionColorFilter;
+                m_TransitionColor = preset.m_TransitionColor;
+                m_TransitionColorGlow = preset.m_TransitionColorGlow;
+                m_TransitionPatternReverse = preset.m_TransitionPatternReverse;
+                m_TransitionAutoPlaySpeed = preset.m_TransitionAutoPlaySpeed;
+            }
 
-            m_TargetMode = preset.m_TargetMode;
-            m_TargetColor = preset.m_TargetColor;
-            m_TargetRange = preset.m_TargetRange;
-            m_TargetSoftness = preset.m_TargetSoftness;
+            if (!append || preset.m_TargetMode != TargetMode.None)
+            {
+                m_TargetMode = preset.m_TargetMode;
+                m_TargetColor = preset.m_TargetColor;
+                m_TargetRange = preset.m_TargetRange;
+                m_TargetSoftness = preset.m_TargetSoftness;
+            }
 
-            m_BlendType = preset.m_BlendType;
-            (m_SrcBlendMode, m_DstBlendMode) = (m_BlendType, preset.m_SrcBlendMode, preset.m_DstBlendMode).Convert();
 
-            m_ShadowMode = preset.m_ShadowMode;
-            m_ShadowDistance = preset.m_ShadowDistance;
-            m_ShadowIteration = preset.m_ShadowIteration;
-            m_ShadowFade = preset.m_ShadowFade;
-            m_ShadowMirrorScale = preset.m_ShadowMirrorScale;
-            m_ShadowBlurIntensity = preset.m_ShadowBlurIntensity;
-            m_ShadowColorFilter = preset.m_ShadowColorFilter;
-            m_ShadowColor = preset.m_ShadowColor;
-            m_ShadowColorGlow = preset.m_ShadowColorGlow;
+            if (!append || preset.m_BlendType != BlendType.AlphaBlend)
+            {
+                m_BlendType = preset.m_BlendType;
+                (m_SrcBlendMode, m_DstBlendMode) =
+                    (m_BlendType, preset.m_SrcBlendMode, preset.m_DstBlendMode).Convert();
+            }
 
-            m_EdgeMode = preset.m_EdgeMode;
-            m_EdgeShinyRate = preset.m_EdgeShinyRate;
-            m_EdgeWidth = preset.m_EdgeWidth;
-            m_EdgeColorFilter = preset.m_EdgeColorFilter;
-            m_EdgeColor = preset.m_EdgeColor;
-            m_EdgeShinyWidth = preset.m_EdgeShinyWidth;
-            m_EdgeShinyAutoPlaySpeed = preset.m_EdgeShinyAutoPlaySpeed;
-            m_PatternArea = preset.m_PatternArea;
+            if (!append || preset.m_ShadowMode != ShadowMode.None)
+            {
+                m_ShadowMode = preset.m_ShadowMode;
+                m_ShadowDistance = preset.m_ShadowDistance;
+                m_ShadowIteration = preset.m_ShadowIteration;
+                m_ShadowFade = preset.m_ShadowFade;
+                m_ShadowMirrorScale = preset.m_ShadowMirrorScale;
+                m_ShadowBlurIntensity = preset.m_ShadowBlurIntensity;
+                m_ShadowColorFilter = preset.m_ShadowColorFilter;
+                m_ShadowColor = preset.m_ShadowColor;
+                m_ShadowColorGlow = preset.m_ShadowColorGlow;
+            }
 
-            m_GradationMode = preset.m_GradationMode;
-            m_GradationColor1 = preset.m_GradationColor1;
-            m_GradationColor2 = preset.m_GradationColor2;
-            m_GradationColor3 = preset.m_GradationColor3;
-            m_GradationColor4 = preset.m_GradationColor4;
-            m_GradationGradient = new Gradient();
-            m_GradationGradient.SetKeys(preset.m_GradationGradient.colorKeys, preset.m_GradationGradient.alphaKeys);
-            m_GradationGradient.mode = preset.m_GradationGradient.mode;
-            m_GradationOffset = preset.m_GradationOffset;
-            m_GradationScale = preset.m_GradationScale;
-            m_GradationRotation = preset.m_GradationRotation;
+            if (!append || preset.m_EdgeMode != EdgeMode.None)
+            {
+                m_EdgeMode = preset.m_EdgeMode;
+                m_EdgeShinyRate = preset.m_EdgeShinyRate;
+                m_EdgeWidth = preset.m_EdgeWidth;
+                m_EdgeColorFilter = preset.m_EdgeColorFilter;
+                m_EdgeColor = preset.m_EdgeColor;
+                m_EdgeShinyWidth = preset.m_EdgeShinyWidth;
+                m_EdgeShinyAutoPlaySpeed = preset.m_EdgeShinyAutoPlaySpeed;
+                m_PatternArea = preset.m_PatternArea;
+            }
+
+            if (!append || preset.m_GradationMode != GradationMode.None)
+            {
+                m_GradationMode = preset.m_GradationMode;
+                m_GradationColor1 = preset.m_GradationColor1;
+                m_GradationColor2 = preset.m_GradationColor2;
+                m_GradationColor3 = preset.m_GradationColor3;
+                m_GradationColor4 = preset.m_GradationColor4;
+                m_GradationGradient = new Gradient();
+                m_GradationGradient.SetKeys(preset.m_GradationGradient.colorKeys, preset.m_GradationGradient.alphaKeys);
+                m_GradationGradient.mode = preset.m_GradationGradient.mode;
+                m_GradationOffset = preset.m_GradationOffset;
+                m_GradationScale = preset.m_GradationScale;
+                m_GradationRotation = preset.m_GradationRotation;
+            }
 
             UpdateContext(context);
             SetVerticesDirty();

@@ -36,7 +36,7 @@ namespace Coffee.UIEffects.Editors
                 EditorGUI.BeginDisabledGroup(true);
                 CreateCachedEditor(_target.objectReferenceValue, null, ref _uiEffectEditor);
                 EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-                (_uiEffectEditor as UIEffect2Editor)?.DrawProperties();
+                (_uiEffectEditor as UIEffectEditor)?.DrawProperties();
                 EditorGUILayout.EndVertical();
                 EditorGUI.EndDisabledGroup();
             }

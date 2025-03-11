@@ -12,8 +12,13 @@ namespace Coffee.UIEffects.Editors
     /// </summary>
     [CustomEditor(typeof(UIEffect), true)]
     [CanEditMultipleObjects]
-    public class UIEffect2Editor : Editor
+    public class UIEffectEditor : Editor
     {
+        private class UIEffectEditorSettings : ScriptableSingleton<UIEffectEditorSettings>
+        {
+            public bool m_ExpandOthers = true;
+        }
+
         private static readonly PropertyInfo s_PiGradient = typeof(SerializedProperty)
             .GetProperty("gradientValue", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -95,8 +100,13 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _edgeShinyAutoPlaySpeed;
         private SerializedProperty _patternArea;
 
-        private bool _expandOthers = true;
         private SerializedProperty _allowToModifyMeshShape;
+
+        private static bool expandOthers
+        {
+            set => UIEffectEditorSettings.instance.m_ExpandOthers = value;
+            get => UIEffectEditorSettings.instance.m_ExpandOthers;
+        }
 
         private void OnEnable()
         {
@@ -398,8 +408,8 @@ namespace Coffee.UIEffects.Editors
             }
 
             DrawSeparator();
-            _expandOthers = EditorGUILayout.BeginFoldoutHeaderGroup(_expandOthers, "Others");
-            if (_expandOthers)
+            expandOthers = EditorGUILayout.BeginFoldoutHeaderGroup(expandOthers, "Others");
+            if (expandOthers)
             {
                 EditorGUILayout.PropertyField(_samplingScale);
                 EditorGUILayout.PropertyField(_allowToModifyMeshShape);
@@ -544,26 +554,38 @@ namespace Coffee.UIEffects.Editors
         private static void DrawPresetMenu(Object[] targets)
         {
             var r = EditorGUILayout.GetControlRect();
-            r.width /= 2;
+            r.width = (r.width - 185) / 2;
             if (GUI.Button(r, EditorGUIUtility.TrTempContent("Load"), "MiniPopup"))
             {
-                var menu = new GenericMenu();
-                foreach (var preset in UIEffectProjectSettings.LoadEditorPresets())
+                DropDownPreset(r, null, p =>
                 {
-                    var path = UIEffectProjectSettings.GetPresetPath(preset);
-                    menu.AddItem(new GUIContent(path), false, () =>
+                    Undo.RecordObjects(targets, "Load UIEffect Preset");
+                    Array.ForEach(targets.OfType<UIEffect>().ToArray(), t =>
                     {
-                        Array.ForEach(targets.OfType<UIEffect>().ToArray(), t =>
-                        {
-                            t.LoadPreset(preset);
-                        });
+                        t.LoadPreset(p, false);
                     });
-                }
-
-                menu.DropDown(r);
+                });
             }
 
             r.x += r.width;
+            if (GUI.Button(r, EditorGUIUtility.TrTempContent("Append"), "MiniPopup"))
+            {
+                DropDownPreset(r, null, p =>
+                {
+                    Undo.RecordObjects(targets, "Append UIEffect Preset");
+                    Array.ForEach(targets.OfType<UIEffect>().ToArray(), t =>
+                    {
+                        t.LoadPreset(p, true);
+                    });
+                });
+            }
+
+            r.x += r.width;
+            r.width = 15;
+            GUI.Label(r, GUIContent.none, "BreadcrumbsSeparator");
+
+            r.x += r.width;
+            r.width = 100;
             if (GUI.Button(r, EditorGUIUtility.TrTempContent("Save As New"), "MiniButton"))
             {
                 EditorApplication.delayCall += () =>
@@ -571,6 +593,44 @@ namespace Coffee.UIEffects.Editors
                     UIEffectProjectSettings.SaveAsNewPreset(targets.OfType<UIEffect>().FirstOrDefault());
                 };
             }
+
+            r.x += r.width;
+            r.width = 15;
+            GUI.Label(r, GUIContent.none, "BreadcrumbsSeparator");
+
+            r.x += r.width;
+            r.width = 55;
+            if (GUI.Button(r, EditorGUIUtility.TrTempContent("Clear"), "MiniButton"))
+            {
+                Array.ForEach(targets.OfType<UIEffect>().ToArray(), Unsupported.SmartReset);
+            }
+        }
+
+        public static void DropDownPreset(Rect r, Predicate<(string path, bool builtin, UIEffect preset)> valid,
+            Action<UIEffect> callback)
+        {
+            var menu = new GenericMenu();
+            var separatorAdded = false;
+            foreach (var preset in UIEffectProjectSettings.LoadEditorPresets())
+            {
+                var (path, builtin) = UIEffectProjectSettings.GetPresetPath(preset);
+                if (valid != null && valid.Invoke((path, builtin, preset)) == false) continue;
+
+                if (builtin)
+                {
+                    if (!separatorAdded)
+                    {
+                        separatorAdded = true;
+                        menu.AddSeparator(string.Empty);
+                    }
+
+                    path = path.Substring(6).Replace(" - ", "/");
+                }
+
+                menu.AddItem(new GUIContent(path), false, x => callback(x as UIEffect), preset);
+            }
+
+            menu.DropDown(r);
         }
     }
 }
