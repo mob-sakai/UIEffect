@@ -17,7 +17,6 @@ namespace Coffee.UIEffects
         protected bool m_AllowToModifyMeshShape = true;
 
         private UIEffect _currentTarget;
-        private Matrix4x4 _prevTransformHash;
 
         public UIEffect target
         {
@@ -69,16 +68,19 @@ namespace Coffee.UIEffects
         protected override void OnEnable()
         {
             RefreshTarget(target);
-            UIExtraCallbacks.onBeforeCanvasRebuild += SetVerticesDirtyIfTransformChanged;
-            CheckTransform();
             base.OnEnable();
         }
 
         protected override void OnDisable()
         {
             RefreshTarget(null);
-            UIExtraCallbacks.onBeforeCanvasRebuild -= SetVerticesDirtyIfTransformChanged;
             base.OnDisable();
+        }
+
+        protected override void OnDestroy()
+        {
+            _currentTarget = null;
+            base.OnDestroy();
         }
 
 #if UNITY_EDITOR
@@ -104,6 +106,16 @@ namespace Coffee.UIEffects
             }
         }
 
+        protected override void OnBeforeCanvasRebuild()
+        {
+            base.OnBeforeCanvasRebuild();
+
+            if (useTargetTransform && target && CheckTransformChangedWith(target.transform))
+            {
+                SetVerticesDirty();
+            }
+        }
+
         protected override void UpdateContext(UIEffectContext c)
         {
         }
@@ -122,22 +134,6 @@ namespace Coffee.UIEffects
         public override bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
         {
             return !target || target.IsRaycastLocationValid(sp, eventCamera);
-        }
-
-        private bool CheckTransform()
-        {
-            return useTargetTransform
-                   && target
-                   && transform.HasChanged(target.transform, ref _prevTransformHash,
-                       UIEffectProjectSettings.transformSensitivity);
-        }
-
-        private void SetVerticesDirtyIfTransformChanged()
-        {
-            if (CheckTransform())
-            {
-                SetVerticesDirty();
-            }
         }
     }
 }

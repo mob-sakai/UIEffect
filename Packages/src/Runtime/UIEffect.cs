@@ -216,6 +216,9 @@ namespace Coffee.UIEffects
         [SerializeField]
         protected PatternArea m_PatternArea = PatternArea.Inner;
 
+        [SerializeField]
+        protected RectTransform m_CustomRoot = null;
+
         /// <summary>
         /// Tone filter for rendering.
         /// </summary>
@@ -928,6 +931,21 @@ namespace Coffee.UIEffects
             }
         }
 
+        public RectTransform customRoot
+        {
+            get => m_CustomRoot;
+            set
+            {
+                if (m_CustomRoot == value) return;
+                m_CustomRoot = value;
+                SetVerticesDirty();
+            }
+        }
+
+        public override RectTransform transitionRoot => m_CustomRoot
+            ? m_CustomRoot
+            : transform as RectTransform;
+
         public List<UIEffectReplica> replicas => _replicas ??= InternalListPool<UIEffectReplica>.Rent();
         private List<UIEffectReplica> _replicas;
 
@@ -957,6 +975,15 @@ namespace Coffee.UIEffects
             base.OnValidate();
         }
 #endif
+
+        protected override void OnBeforeCanvasRebuild()
+        {
+            base.OnBeforeCanvasRebuild();
+            if (CheckTransformChangedWith(customRoot))
+            {
+                SetVerticesDirty();
+            }
+        }
 
         public override void SetVerticesDirty()
         {

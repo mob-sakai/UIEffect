@@ -101,6 +101,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _patternArea;
 
         private SerializedProperty _allowToModifyMeshShape;
+        private SerializedProperty _customRoot;
 
         private static bool expandOthers
         {
@@ -183,6 +184,7 @@ namespace Coffee.UIEffects.Editors
             _gradationRotation = serializedObject.FindProperty("m_GradationRotation");
 
             _allowToModifyMeshShape = serializedObject.FindProperty("m_AllowToModifyMeshShape");
+            _customRoot = serializedObject.FindProperty("m_CustomRoot");
         }
 
         public override void OnInspectorGUI()
@@ -413,6 +415,7 @@ namespace Coffee.UIEffects.Editors
             {
                 EditorGUILayout.PropertyField(_samplingScale);
                 EditorGUILayout.PropertyField(_allowToModifyMeshShape);
+                EditorGUILayout.PropertyField(_customRoot);
             }
         }
 

@@ -22,7 +22,9 @@ namespace Coffee.UIEffects
         private Graphic _graphic;
         private Material _material;
         private UIEffectContext _context;
-        private Action _setVerticesDirtyIfVisible;
+        private Action _onBeforeCanvasRebuild;
+        private bool _canModifyMesh;
+        private Matrix4x4 _prevTransformHash;
 
         public Graphic graphic => _graphic ? _graphic : _graphic = GetComponent<Graphic>();
         public virtual uint effectId => (uint)GetInstanceID();
@@ -47,6 +49,8 @@ namespace Coffee.UIEffects
 
         protected override void OnEnable()
         {
+            _onBeforeCanvasRebuild ??= OnBeforeCanvasRebuild;
+            UIExtraCallbacks.onBeforeCanvasRebuild += _onBeforeCanvasRebuild;
             UpdateContext(context);
             SetMaterialDirty();
             SetVerticesDirty();
@@ -54,9 +58,9 @@ namespace Coffee.UIEffects
 
         protected override void OnDisable()
         {
-            if (_setVerticesDirtyIfVisible != null)
+            if (_onBeforeCanvasRebuild != null)
             {
-                UIExtraCallbacks.onBeforeCanvasRebuild -= _setVerticesDirtyIfVisible;
+                UIExtraCallbacks.onBeforeCanvasRebuild -= _onBeforeCanvasRebuild;
             }
 
             MaterialRepository.Release(ref _material);
@@ -66,9 +70,17 @@ namespace Coffee.UIEffects
 
         protected override void OnDestroy()
         {
-            _setVerticesDirtyIfVisible = null;
+            _onBeforeCanvasRebuild = null;
             _graphic = null;
             s_ContextPool.Return(ref _context);
+        }
+
+        protected virtual void OnBeforeCanvasRebuild()
+        {
+            if (!_canModifyMesh && CanModifyMesh())
+            {
+                SetVerticesDirty();
+            }
         }
 
         public void ModifyMesh(Mesh mesh)
@@ -79,14 +91,10 @@ namespace Coffee.UIEffects
         {
             if (!isActiveAndEnabled || context == null) return;
 
-            if (CanModifyMesh())
+            _canModifyMesh = CanModifyMesh();
+            if (_canModifyMesh)
             {
                 context.ModifyMesh(graphic, transitionRoot, vh, canModifyShape);
-            }
-            // If you can't modify the mesh, retry next frame.
-            else
-            {
-                UIExtraCallbacks.onBeforeCanvasRebuild += _setVerticesDirtyIfVisible ??= SetVerticesDirtyIfVisible;
             }
         }
 
@@ -170,15 +178,6 @@ namespace Coffee.UIEffects
             }
         }
 
-        private void SetVerticesDirtyIfVisible()
-        {
-            if (CanModifyMesh())
-            {
-                UIExtraCallbacks.onBeforeCanvasRebuild -= _setVerticesDirtyIfVisible ??= SetVerticesDirtyIfVisible;
-                SetVerticesDirty();
-            }
-        }
-
         public virtual void SetMaterialDirty()
         {
             if (graphic)
@@ -186,6 +185,14 @@ namespace Coffee.UIEffects
                 graphic.SetMaterialDirty();
                 Misc.QueuePlayerLoopUpdate();
             }
+        }
+
+        protected bool CheckTransformChangedWith(Transform root)
+        {
+            var sensitivity = UIEffectProjectSettings.transformSensitivity;
+            return root
+                   && root != transform
+                   && transform.HasChanged(root, ref _prevTransformHash, sensitivity);
         }
 
         internal void ReleaseMaterial()
