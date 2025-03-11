@@ -74,9 +74,10 @@ Combine various filters, such as grayscale, blur, and dissolve, to decorate your
 
 ## 🎮 Demo
 
-![](https://github.com/user-attachments/assets/37a46a7e-1f15-4a52-a928-09a2ed857a47)  
-![](https://github.com/user-attachments/assets/f1fa2485-e635-4923-a53f-6825d7f85873)  
+![](https://github.com/user-attachments/assets/ed38d668-4963-46c5-a1a1-cff33ab278ed)  
+![](https://github.com/user-attachments/assets/9cf575ad-88e2-4bcc-9a44-9931a4d5c589)  
 ![](https://github.com/user-attachments/assets/1ed410bf-b782-433b-9429-721278c5ba1e)  
+![](https://github.com/user-attachments/assets/f9271346-fc4e-4c05-a1a8-88cf36110c05)    
 
 [WebGL Demo](https://mob-sakai.github.io/UIEffect/)
 
@@ -96,7 +97,7 @@ _This package requires **Unity 2020.3 or later**._
   ```
 - To update the package, use Package Manager UI (`Window > Package Manager`) or run the following command with `@{version}`:
   ```
-  openupm add com.coffee.ui-effect@5.3.0
+  openupm add com.coffee.ui-effect@5.6.0
   ```
 
 ### Install via UPM (with Package Manager UI)
@@ -105,7 +106,7 @@ _This package requires **Unity 2020.3 or later**._
 - Click `+ > Add package from git URL...` and input the repository URL: `https://github.com/mob-sakai/UIEffect.git?path=Packages/src`  
   ![](https://github.com/user-attachments/assets/f88f47ad-c606-44bd-9e86-ee3f72eac548)
 - To update the package, change suffix `#{version}` to the target version.
-    - e.g. `https://github.com/mob-sakai/UIEffect.git?path=Packages/src#5.3.0`
+    - e.g. `https://github.com/mob-sakai/UIEffect.git?path=Packages/src#5.6.0`
 
 ### Install via UPM (Manually)
 
@@ -120,7 +121,7 @@ _This package requires **Unity 2020.3 or later**._
   ```
 
 - To update the package, change suffix `#{version}` to the target version.
-    - e.g. `"com.coffee.ui-effect": "https://github.com/mob-sakai/UIEffect.git?path=Packages/src#5.3.0",`
+    - e.g. `"com.coffee.ui-effect": "https://github.com/mob-sakai/UIEffect.git?path=Packages/src#5.6.0",`
 
 ### Install as Embedded Package
 
@@ -153,6 +154,7 @@ If upgrading from UIEffect v4 to v5, note the following breaking changes:
    
    // v5
    "com.coffee.ui-effect": "https://github.com/mob-sakai/UIEffect.git?path=Packages/src",
+   "com.coffee.ui-effect": "https://github.com/mob-sakai/UIEffect.git?path=Packages/src#main",
    ```
 
 2. Import the `v4 Compatible Components` sample from the Package Manager window.  
@@ -161,7 +163,7 @@ If upgrading from UIEffect v4 to v5, note the following breaking changes:
 3. All v4 components are obsolete.  
 - v4 `UIEffect` component is now `UIEffectV4` component. Change the reference in the code.
 - The `effectArea` property in some components are not supported in v5.
-- `UIShadow`, `UIGradient`, `UIFlip` components are not supported in v5.
+- `UIShadow`, `UIGradient` components are not supported in v5.
 - v4 components can be converted to v5 `UIEffect` component by selecting `Convert To UIEffect` from the context menu.  
   ![](https://github.com/user-attachments/assets/4911f06d-4749-4aa8-a72e-deb0fa06bc5d)
 
@@ -185,32 +187,58 @@ If upgrading from UIEffect v4 to v5, note the following breaking changes:
 
 ### Component: UIEffect
 
-![](https://github.com/user-attachments/assets/a1642385-ebdc-4a66-b167-10c8b15277e1)
-
 The `UIEffect` component applies visual effects to UI elements, allowing various effects to be achieved by combining multiple filters.
+
+![](https://github.com/user-attachments/assets/f32f4735-5d49-4f12-a79d-1b05e819868e)
+
+> [!TIP]  
+> From the top menu, you can load and save the editor presets or clear settings.  
+> For details, refer to the [Runtime/Editor Preset for UIEffect](#runtimeeditor-preset-for-uieffect).
+
+<br>
 
 #### Tone Filter
 
-- **Tone Filter**: `None`, `Grayscale`, `Sepia`, `Nega`, `Retro`, `Posterize`
+![](https://github.com/user-attachments/assets/152f7bd2-f3d6-4dcc-8c34-58f94b1a1f47)
+
+- **Tone Filter**: `None`, `Grayscale`, `Sepia`, `Nega`, `Retro`, `Posterize`  
+  ![](https://github.com/user-attachments/assets/e80d9047-f9c9-45b4-90d9-03cd33e2a0ec)
 - **Tone Intensity**: 0.0 (no effect) - 1.0 (full effect).
+
+<br>
 
 #### Color Filter
 
-- **Color Filter**: `None`, `Multiply`, `Additive`, `Subtractive`, `Replace`, `Multiply Luminance`, `Multiply Additive`, `Hsv Modifier`, `Contrast`
+![](https://github.com/user-attachments/assets/b2bde449-f45d-4174-917f-bab8ea8bdf12)
+
+- **Color Filter**: `None`, `Multiply`, `Additive`, `Subtractive`, `Replace`, `Multiply Luminance`, `Multiply Additive`, `Hsv Modifier`, `Contrast`  
+  ![](https://github.com/user-attachments/assets/4685581d-ec0a-4ce3-9627-919fb7ffdca6)
 - **Color Intensity**: 0.0 (no effect) - 1.0 (full effect).
 - **Color Glow**: Set the color to glow.
 
+<br>
+
 #### Sampling Filter
 
-- **Sampling Filter**: `None`, `Blur Fast`, `Blur Medium`, `Blur Detail`, `Pixelation`, `Rgb Shift`, `Edge Luminescence`, `Edge Alpha`
+![](https://github.com/user-attachments/assets/fb4fa1d2-cf29-43de-9321-96f6355f45e9)
+
+- **Sampling Filter**: `None`, `Blur Fast`, `Blur Medium`, `Blur Detail`, `Pixelation`, `Rgb Shift`, `Edge Luminescence`, `Edge Alpha`  
+  ![](https://github.com/user-attachments/assets/d2a07673-8fd5-489d-94d4-49907122623f)
 - **Sampling Intensity**: 0.0 (no effect) - 1.0 (full effect).
 - **Sampling Width**: The width of the sampling effect.
 
+<br>
+
 #### Transition Filter
 
-- **Transition Filter**: `None`, `Fade`, `Cutoff`, `Dissolve`, `Shiny`, `Mask`, `Melt`, `Burn`, `Pattern`
+![](https://github.com/user-attachments/assets/9e75421a-c7cc-4be9-b38e-3a5914c02ef8)
+
+- **Transition Filter**: `None`, `Fade`, `Cutoff`, `Dissolve`, `Shiny`, `Mask`, `Melt`, `Burn`, `Pattern`  
+  ![](https://github.com/user-attachments/assets/26942df8-47fa-4961-8949-c3290bd4f442)
 - **Transition Rate**: 0.0 (no effect) - 1.0 (full effect).
-- **Transition Tex**: The texture used for the transition filter.- **Transition Width**: The width where the transition color is applied.
+- **Transition Tex**: The texture used for the transition filter.
+    - **Scale**, **Offset**, **Speed**, **Rotation**, **Keep Aspect Ratio**, **Reverse**: Additional properties for the texture.
+    - NOTE: `Rotation` and `Keep Aspect Ratio` are shared with `Detail Filter`.
 - **Transition Width**: The width where the transition color is applied.
 - **Transition Pattern Range**: The range of the pattern.
 - **Transition Pattern Reverse**: Reverse the pattern.
@@ -218,23 +246,44 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 - **Transition Color Filter**: Specifies the transition color.
     - **Transition Color**: The color of the transition.
     - **Transition Color Glow**: Set the transition color to glow.
-- **Transition Auto Play Speed**: The speed of the transition animation. You can use this property to loop the `TransitionRate` without tweener or animation.
+- **Transition Auto Play Speed**: The speed of the transition animation (using shader side `_Time`). You can use this property to loop the `TransitionRate` without tweener or animation.
+
+> [!TIP]  
+> **Transition Tex** applies transitions using its alpha channel.  
+> If you use `Scale`, `Offset`, or `Speed`, set `Wrap Mode = Repeat` in the texture import settings.  
+> For details, refer to the textures included in the built-in presets.  
+> ![](https://github.com/user-attachments/assets/e70ec77d-5417-4ee9-b055-a7f870b06e23)
+
+<br>
 
 #### Target Mode
 
-- **Target Mode**: `None`, `Hue`, `Luminance`
+![](https://github.com/user-attachments/assets/19cf9641-42c8-423e-84f7-e6b24243c2f3)
+
+- **Target Mode**: `None`, `Hue`, `Luminance`  
+  ![](https://github.com/user-attachments/assets/7493ed9c-f1f5-4532-8266-067a3a316f5d)
   - Restricts the effect application area based on hue or luminance.
 - **Target Range**: The range of target hue or luminance.
 - **Target Softness**: The softness of the target boundary.
 
+<br>
+
 #### Blend Type
 
-- **Blend Type**: `Alpha Blend`, `Multiply`, `Additive`, `Soft Additive`, `Multiply Additive`, `Custom`
+![](https://github.com/user-attachments/assets/5ffcf33e-4c54-450f-a8e1-db0cf3353dda)
+
+- **Blend Type**: `Alpha Blend`, `Multiply`, `Additive`, `Soft Additive`, `Multiply Additive`, `Custom`  
+  ![](https://github.com/user-attachments/assets/406e3aa7-0afa-48e5-aac2-73c0f3483c5c)
   - `Custom` blend type can be set using the `SrcBlend` and `DstBlend` properties. 
+
+<br>
 
 #### Shadow Mode
 
-- **Shadow Mode**: `None`, `Shadow`, `Shadow3`, `Outline`, `Outline8`, `Mirror`
+![](https://github.com/user-attachments/assets/f6b78a66-5944-465a-b716-be19cb1aa140)
+
+- **Shadow Mode**: `None`, `Shadow`, `Shadow3`, `Outline`, `Outline8`, `Mirror`  
+  ![](https://github.com/user-attachments/assets/fc8d0fb1-63ce-4a6b-b278-353a7a210369)
 - **Shadow Distance**: Distance of the shadow or outline.
 - **Shadow Iteration**: Number of times the shadow or outline is applied.
 - **Shadow Color Filter**: Specifies the shadow color.
@@ -246,15 +295,20 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 - **Mirror Offset**: Offset for the mirrored image.
 - **Mirror Scale**: Scale of the mirrored image.
 
+<br>
+
 #### Gradation Mode
 
-- **Gradation Mode**: `None`, `Plain`, `Shiny`
+![](https://github.com/user-attachments/assets/1ce4a90e-90e2-4674-8c2b-9cfda33acb84)
+
+- **Gradation Mode**: `None`, `Horizontal`, `HorizontalGradient`, `Vertical`, `VerticalGradient`, `RadialFast`, `RadialDetail`, `Diagonal`, `DiagonalToRightBottom`, `DiagonalToLeftBottom`, `Angle`, `AngleGradient`  
+  ![](https://github.com/user-attachments/assets/fd2791db-5740-4030-aec0-4bae90fc2b30)
 - **Gradation Gradient**: The gradient of the gradation.
 - **Gradation Color 1**: The first color of the gradation.
 - **Gradation Color 2**: The second color of the gradation.
 - **Gradation Offset**: The offset of the gradation range.
 - **Gradation Scale**: The scale of the gradation range.
-- **Gradation Rotation**: The rotation of the gradation range.
+- **Gradation Rotation**: The rotation of the gradation range (`Angle` or `AngleGradient`).
 
 > [!TIP]
 > `Horizontal Gradient` and `Vertical Gradient` divide the mesh horizontally or vertically and apply a gradient.
@@ -263,32 +317,72 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 > It can be applied to meshes other than Full Rect because it applies the gradient according to the original mesh shape.  
 > `Gradation Gradient` has two modes, `Blend` and `Fixed`.
 
+<br>
+
 #### Edge Mode
 
-- **Edge Mode**: `None`, `Plain`, `Shiny`
+![](https://github.com/user-attachments/assets/361a650d-18a4-4fc7-966d-4c87b765be54)
+
+- **Edge Mode**: `None`, `Plain`, `Shiny`  
+  ![](https://github.com/user-attachments/assets/ec7b0e25-f89a-4b3d-8e97-eca88d26b5e2)
 - **Edge Width**: The width of the edge.
 - **Edge Color Filter**: Specifies the edge color.
     - **Edge Color**: The color of the edge.
+    - **Edge Color Glow**: Set the shadow color to glow.
 - **Edge Shiny Width**: The width of the edge shiny.
-- **Edge Shiny Auto Play Speed**: The speed of the edge shiny.
+- **Edge Shiny Auto Play Speed**: The speed of the edge shiny (using shader side `_Time`).
+
+<br>
+
+#### Detail Filter
+
+![](https://github.com/user-attachments/assets/295d7d2d-be6e-4104-9ea3-e5208902a3d2)
+
+- **Detail Filter**: `None`, `Masking`, `Multiply`, `Additive`, `Replace`, `MuliplyAdditive`  
+  ![](https://github.com/user-attachments/assets/73933788-4179-4d8d-9b07-446d0a998227)
+- **Detail Intensity**: 0.0 (no effect) - 1.0 (full effect).
+- **Detail Threshold** (`Masking` only): The minimum and maximum alpha values used for masking. The larger the gap
+    between these values, the stronger the softness effect.
+- **Detail Tex**: The texture used for the transition filter.
+  - **Scale**, **Offset**, **Speed**, **Rotation**, **Keep Aspect Ratio**: Additional properties for the texture.
+  - NOTE: `Rotation` and `Keep Aspect Ratio` are shared with `Transition Filter`.
+
+<br>
 
 #### Others
+
+![](https://github.com/user-attachments/assets/d0394c3b-34a0-4998-987a-192f9a848cdc)
 
 - **Sampling Scale**: The referencing scale during sampling.
     - Larger values are suitable for high-resolution textures.
 - **Allow To Modify Mesh Shape**: If enabled, the mesh shape can be modified.
+- **Custom Root**: Use the custom transform for some effects.
+- **Flip**:
+    - `Nothing`
+    - `Horizontal`
+    - `Vertical`
+    - `Effect`: Flip with the effect.
+    - `Shadow`: Flip with the shadow.
+
+> [!TIP]  
+> `Transition Filter`, `Gradation Filter`, and `Detail Filter` usually refer to their own `RectTransform` when applying effects.  
+> For example, if the mesh shape exceeds the `RectTransform` boundaries, the effect may not be applied correctly.  
+> By specifying `Custom Root`, you can refer to the specified transform.
 
 <br><br>
 
 ### Component: UIEffectTweener
 
-![](https://github.com/user-attachments/assets/1c731104-4baf-43f8-ba16-611ee9870df2)
+![](https://github.com/user-attachments/assets/64ff1e78-d06e-461f-80a5-3b3e9f615496)
 
 The `UIEffectTweener` component animates the effect, enabling easy control over effect animations without the need for an `AnimationClip`.
 
-- **Culling Mask**: `Tone`, `Color`, `Sampling`, `Transition`
+- **Culling Mask**: `Tone`, `Color`, `Sampling`, `Transition`, `GradiationOffset`, `GradiationRotation`, `EdgeShiny`, `Event`
+- **OnChangeRate** (`Event` only): A event that is triggered when the tweening rate changes.
 - **Direction**: `Forward (0.0 -> 1.0)`, `Reverse (1.0 -> 0.0)`
 - **Curve**: The curve of the animation.
+- **Separate Reverse Curve**: If enabled, `Reverse Curve` will be used for the reverse direction.
+- **Reverse Curve**: The curve of the reverse animation.
 - **Delay**: The delay time before starting the animation.
 - **Duration**: The duration of the animation.
 - **Interval**: The interval time between the animation.
@@ -296,7 +390,11 @@ The `UIEffectTweener` component animates the effect, enabling easy control over 
    - Play the animation automatically when the component is enabled.
    - If `None` is selected, the animation will not play automatically. You can play it using the `Play`, `PlayForward` or `PlayReverse`  method.
 - **Reset Time On Enable**: Reset the tweening time when the component is enabled.
-- **Wrap Mode**: `Once`, `Loop`, `PingPongOnce`, `PingPongLoop`
+- **Wrap Mode**:
+   - `Once`: delay -> duration(0-1) -> onComplete
+   - `Loop`: delay -> duration(0-1) -> interval -> ...
+   - `PingPongOnce`: delay -> duration(0-1) -> interval -> duration(1-0) -> onComplete
+   - `PingPongLoop`: delay -> duration(0-1) -> interval -> duration(1-0) -> interval -> ...
 - **Update Mode**: `Normal`, `UnscaledTime`, `Manual`
 - **On Complete**: A event that is triggered when the animation is completed.
 
@@ -306,15 +404,24 @@ You can preview the animation using the seek bar and play button.
 
 ### Component: UIEffectReplica
 
-![](https://github.com/user-attachments/assets/27558d2e-ee12-4b10-bf13-103474b6c6cc)
+![](https://github.com/user-attachments/assets/458ab704-90b1-473d-8bda-80c325e1654e)
 
 The `UIEffectReplica` component applies visual effects to UI elements by replicating the settings of another `UIEffect` component. This allows the same effect to be applied across multiple UI elements simultaneously.
 
 - **Target**: The target `UIEffect` component to replicate.
-- **Use Target Transform**: Use the target's transform for some effects.
+  > [!TIP]
+  > You can specify a preset as well as an instance as the target for `UIEffectReplica`.
+- **Use Target Transform**: Use the target's transform for some effects.  
+  ![](https://github.com/user-attachments/assets/127e30fb-15c7-4002-ab65-e8f29e640330)
+- **Custom Root**: Use the custom transform for some effects.
 - **Sampling Scale**: Override the sampling scale.
 - **Allow To Modify Mesh Shape**: If enabled, the mesh shape can be modified.  
-  ![](https://github.com/user-attachments/assets/127e30fb-15c7-4002-ab65-e8f29e640330)
+- **Flip**:
+  - `Nothing`
+  - `Horizontal`
+  - `Vertical`
+  - `Effect`: Flip the effect.
+  - `Shadow`: Flip the shadow.
 
 <br><br>
 
@@ -365,11 +472,13 @@ Click the `Import` button.
 
 ### Runtime/Editor Preset for UIEffect
 
-![](https://github.com/user-attachments/assets/4244d162-a768-463e-8aad-8cafbdf3a5b3)
+![](https://github.com/user-attachments/assets/f32f4735-5d49-4f12-a79d-1b05e819868e)
 
 You can create and use presets for `UIEffect` components.
-- In the `UIEffect` component inspector, click "Save As" button to save the current settings as an editor preset.
-- Click "Load" button to apply an editor preset.
+
+- Click the `Load` button to apply an editor preset.
+> Click the `Append` button to load only non-default settings from the editor preset.
+- Click the `Save As New` button to save the current settings as an editor preset.
 - In the [Project Settings](#project-settings), you can register saved editor presets as runtime presets.
 - Runtime presets can be loaded using the `UIEffect.LoadPreset(presetName)` method.
 
