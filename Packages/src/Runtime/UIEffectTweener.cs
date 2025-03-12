@@ -64,6 +64,13 @@ namespace Coffee.UIEffects
         [SerializeField]
         private AnimationCurve m_Curve = AnimationCurve.Linear(0, 0, 1, 1);
 
+        [SerializeField]
+        private bool m_SeparateReverseCurve;
+
+        [Tooltip("The curve to tween the properties.")]
+        [SerializeField]
+        private AnimationCurve m_ReverseCurve = AnimationCurve.Linear(0, 0, 1, 1);
+
         [Tooltip("The delay in seconds before the tween starts.")]
         [SerializeField]
         [Range(0f, 10)]
@@ -149,7 +156,32 @@ namespace Coffee.UIEffects
                 _rate = value;
 
                 if (!target || cullingMask == 0) return;
-                var evaluatedRate = m_Curve.Evaluate(_rate);
+
+                var currentCurve = curve;
+                if (separateReverseCurve)
+                {
+                    switch (wrapMode)
+                    {
+                        case WrapMode.Once:
+                        case WrapMode.Loop:
+                            if (direction == Direction.Reverse)
+                            {
+                                currentCurve = reverseCurve;
+                            }
+
+                            break;
+                        case WrapMode.PingPongOnce:
+                        case WrapMode.PingPongLoop:
+                            if (delay + duration + interval <= _time)
+                            {
+                                currentCurve = reverseCurve;
+                            }
+
+                            break;
+                    }
+                }
+
+                var evaluatedRate = currentCurve.Evaluate(_rate);
                 target.SetRate(evaluatedRate, cullingMask);
             }
         }
@@ -268,6 +300,18 @@ namespace Coffee.UIEffects
         {
             get => m_Curve;
             set => m_Curve = value;
+        }
+
+        public bool separateReverseCurve
+        {
+            get => m_SeparateReverseCurve;
+            set => m_SeparateReverseCurve = value;
+        }
+
+        public AnimationCurve reverseCurve
+        {
+            get => m_ReverseCurve;
+            set => m_ReverseCurve = value;
         }
 
         /// <summary>

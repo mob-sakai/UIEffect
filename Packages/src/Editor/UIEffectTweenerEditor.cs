@@ -12,6 +12,8 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _cullingMask;
         private SerializedProperty _direction;
         private SerializedProperty _curve;
+        private SerializedProperty _separateReverseCurve;
+        private SerializedProperty _reverseCurve;
         private SerializedProperty _delay;
         private SerializedProperty _duration;
         private SerializedProperty _interval;
@@ -28,6 +30,8 @@ namespace Coffee.UIEffects.Editors
             _cullingMask = serializedObject.FindProperty("m_CullingMask");
             _direction = serializedObject.FindProperty("m_Direction");
             _curve = serializedObject.FindProperty("m_Curve");
+            _separateReverseCurve = serializedObject.FindProperty("m_SeparateReverseCurve");
+            _reverseCurve = serializedObject.FindProperty("m_ReverseCurve");
             _playOnEnable = serializedObject.FindProperty("m_PlayOnEnable");
             _resetTimeOnEnable = serializedObject.FindProperty("m_ResetTimeOnEnable");
             _delay = serializedObject.FindProperty("m_Delay");
@@ -52,6 +56,17 @@ namespace Coffee.UIEffects.Editors
             EditorGUILayout.PropertyField(_cullingMask);
             EditorGUILayout.PropertyField(_direction);
             EditorGUILayout.PropertyField(_curve);
+
+            var pos = EditorGUILayout.GetControlRect();
+            var rect = new Rect(pos.x, pos.y, EditorGUIUtility.labelWidth + 20, pos.height);
+            EditorGUI.PropertyField(rect, _separateReverseCurve);
+            if (_separateReverseCurve.boolValue)
+            {
+                rect.x += rect.width;
+                rect.width = pos.width - rect.width;
+                EditorGUI.PropertyField(rect, _reverseCurve, GUIContent.none);
+            }
+
             EditorGUILayout.PropertyField(_delay);
             EditorGUILayout.PropertyField(_duration);
             EditorGUILayout.PropertyField(_interval);
