@@ -96,6 +96,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _edgeWidth;
         private SerializedProperty _edgeColorFilter;
         private SerializedProperty _edgeColor;
+        private SerializedProperty _edgeColorGlow;
         private SerializedProperty _edgeShinyRate;
         private SerializedProperty _edgeShinyWidth;
         private SerializedProperty _edgeShinyAutoPlaySpeed;
@@ -170,6 +171,7 @@ namespace Coffee.UIEffects.Editors
             _edgeWidth = serializedObject.FindProperty("m_EdgeWidth");
             _edgeColorFilter = serializedObject.FindProperty("m_EdgeColorFilter");
             _edgeColor = serializedObject.FindProperty("m_EdgeColor");
+            _edgeColorGlow = serializedObject.FindProperty("m_EdgeColorGlow");
             _edgeShinyRate = serializedObject.FindProperty("m_EdgeShinyRate");
             _edgeShinyWidth = serializedObject.FindProperty("m_EdgeShinyWidth");
             _edgeShinyAutoPlaySpeed = serializedObject.FindProperty("m_EdgeShinyAutoPlaySpeed");
@@ -397,7 +399,7 @@ namespace Coffee.UIEffects.Editors
             if (DrawHeaderPopup(_edgeMode))
             {
                 EditorGUILayout.PropertyField(_edgeWidth);
-                DrawColor(_edgeColorFilter, _edgeColor, null);
+                DrawColor(_edgeColorFilter, _edgeColor, _edgeColorGlow);
 
                 if ((EdgeMode)_edgeMode.intValue == EdgeMode.Shiny)
                 {

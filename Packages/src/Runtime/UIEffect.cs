@@ -205,6 +205,9 @@ namespace Coffee.UIEffects
         [SerializeField]
         protected Color m_EdgeColor = Color.white;
 
+        [SerializeField]
+        protected bool m_EdgeColorGlow = false;
+
         [Range(0, 1)]
         [SerializeField]
         protected float m_EdgeShinyRate = 0.5f;
@@ -1075,6 +1078,17 @@ namespace Coffee.UIEffects
             }
         }
 
+        public bool edgeColorGlow
+        {
+            get => m_EdgeColorGlow;
+            set
+            {
+                if (m_EdgeColorGlow == value) return;
+                context.edgeColorGlow = m_EdgeColorGlow = value;
+                SetMaterialDirty();
+            }
+        }
+
         public float edgeShinyWidth
         {
             get => m_EdgeShinyWidth;
@@ -1367,6 +1381,7 @@ namespace Coffee.UIEffects
             c.edgeWidth = m_EdgeWidth;
             c.edgeColorFilter = m_EdgeColorFilter;
             c.edgeColor = m_EdgeColor;
+            c.edgeColorGlow = m_EdgeColorGlow;
             c.edgeShinyWidth = m_EdgeShinyWidth;
             c.edgeShinyAutoPlaySpeed = m_EdgeShinyAutoPlaySpeed;
             c.patternArea = m_PatternArea;
@@ -1555,6 +1570,7 @@ namespace Coffee.UIEffects
                 m_EdgeWidth = preset.m_EdgeWidth;
                 m_EdgeColorFilter = preset.m_EdgeColorFilter;
                 m_EdgeColor = preset.m_EdgeColor;
+                m_EdgeColorGlow = preset.m_EdgeColorGlow;
                 m_EdgeShinyWidth = preset.m_EdgeShinyWidth;
                 m_EdgeShinyAutoPlaySpeed = preset.m_EdgeShinyAutoPlaySpeed;
                 m_PatternArea = preset.m_PatternArea;
@@ -1637,6 +1653,7 @@ namespace Coffee.UIEffects
             m_EdgeWidth = c.edgeWidth;
             m_EdgeColorFilter = c.edgeColorFilter;
             m_EdgeColor = c.edgeColor;
+            m_EdgeColorGlow = c.edgeColorGlow;
             m_EdgeShinyWidth = c.edgeShinyWidth;
             m_EdgeShinyAutoPlaySpeed = c.edgeShinyAutoPlaySpeed;
             m_PatternArea = c.patternArea;

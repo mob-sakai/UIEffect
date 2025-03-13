@@ -34,6 +34,7 @@ uniform const float _EdgeShinyRate;
 uniform const float _EdgeShinyAutoPlaySpeed;
 uniform const float _EdgeShinyWidth;
 uniform const half4 _EdgeColor;
+uniform const int _EdgeColorGlow;
 uniform const int _PatternArea;
 
 // For performance reasons, limit the sampling of blur in TextMeshPro.
@@ -366,6 +367,7 @@ half4 apply_edge_color_filter(half4 color, const half4 factor, const float inten
     }
     #endif
     color = lerp(inColor, color, intensity);
+    color.a *= 1 - _EdgeColorGlow * intensity;
     return color;
 }
 
