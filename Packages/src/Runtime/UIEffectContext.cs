@@ -232,14 +232,17 @@ namespace Coffee.UIEffects
         public float gradationRotation;
         private List<float> _keyTimes;
 
-        public bool willModifyMaterial => samplingFilter != SamplingFilter.None
-                                          || transitionFilter != TransitionFilter.None
-                                          || toneFilter != ToneFilter.None
+        public bool willModifyMaterial => toneFilter != ToneFilter.None
                                           || colorFilter != ColorFilter.None
+                                          || samplingFilter != SamplingFilter.None
+                                          || transitionFilter != TransitionFilter.None
                                           || srcBlendMode != BlendMode.One
                                           || dstBlendMode != BlendMode.OneMinusSrcAlpha
                                           || shadowMode != ShadowMode.None
                                           || edgeMode != EdgeMode.None;
+
+        public bool willModifyVertex => willModifyMaterial
+                                        || gradationMode != GradationMode.None;
 
         public void Reset()
         {
@@ -454,13 +457,15 @@ namespace Coffee.UIEffects
 
         public void ModifyMesh(Graphic graphic, RectTransform transitionRoot, VertexHelper vh, bool canModifyShape)
         {
+            var count = vh.currentIndexCount;
+            if (!willModifyVertex || count == 0) return;
+
             var effectProxy = GraphicProxy.Find(graphic);
             var isText = effectProxy.IsText(graphic);
             effectProxy.OnPreModifyMesh(graphic);
 
             var verts = s_WorkingVertices;
             var expandSize = effectProxy.ModifyExpandSize(graphic, GetExpandSize(canModifyShape));
-            var count = vh.currentIndexCount;
 
             // Get the rectangle to calculate the normalized position.
             vh.GetUIVertexStream(verts);

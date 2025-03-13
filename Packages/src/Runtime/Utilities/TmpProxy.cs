@@ -128,7 +128,7 @@ namespace Coffee.UIEffects
             // When the text is changed, add it to the changed list
             TMPro_EventManager.TEXT_CHANGED_EVENT.Add(obj =>
             {
-                if (obj is TextMeshProUGUI textMeshProUGUI)
+                if (obj is TextMeshProUGUI textMeshProUGUI && textMeshProUGUI.isActiveAndEnabled)
                 {
                     s_ChangedInstances.Add(textMeshProUGUI);
                 }
@@ -211,17 +211,14 @@ namespace Coffee.UIEffects
 
         private static void ModifyMesh(TextMeshProUGUI textMeshProUGUI)
         {
-            if (!textMeshProUGUI.TryGetComponent<UIEffectBase>(out var effect)) return;
-            if (!effect || !effect.isActiveAndEnabled) return;
-
-            s_RegisteredInstances.Add(textMeshProUGUI);
-
             if (!s_Mesh)
             {
                 s_Mesh = new Mesh();
                 s_Mesh.MarkDynamic();
             }
 
+            s_RegisteredInstances.Add(textMeshProUGUI);
+            var effect = textMeshProUGUI.GetComponent<UIEffectBase>();
             var target = effect is UIEffect uiEffect
                 ? uiEffect
                 : effect is UIEffectReplica parentReplica
@@ -229,7 +226,10 @@ namespace Coffee.UIEffects
                     : null;
             var subMeshes = InternalListPool<TMP_SubMeshUI>.Rent();
             var modifiers = InternalListPool<IMeshModifier>.Rent();
+            var subModifiers = InternalListPool<IMeshModifier>.Rent();
             textMeshProUGUI.GetComponentsInChildren(subMeshes, 1);
+            textMeshProUGUI.GetComponents(modifiers);
+
             for (var i = 0; i < textMeshProUGUI.textInfo.meshInfo.Length; i++)
             {
                 var meshInfo = textMeshProUGUI.textInfo.meshInfo[i];
@@ -237,7 +237,6 @@ namespace Coffee.UIEffects
                 meshInfo.mesh.CopyTo(s_VertexHelper, meshInfo.vertexCount, meshInfo.vertexCount * 6 / 4);
                 if (i == 0)
                 {
-                    textMeshProUGUI.GetComponents(modifiers);
                     foreach (var modifier in modifiers)
                     {
                         modifier.ModifyMesh(s_VertexHelper);
@@ -248,16 +247,25 @@ namespace Coffee.UIEffects
                 }
                 else if (i - 1 < subMeshes.Count)
                 {
-                    var subMeshUI = GetSubMeshUI(subMeshes, meshInfo.material, i - 1);
-                    if (!target || !subMeshUI) break;
-
-                    var replica = subMeshUI.GetOrAddComponent<UIEffectReplica>();
-                    replica.target = target;
-
-                    subMeshUI.GetComponents(modifiers);
                     foreach (var modifier in modifiers)
                     {
+                        if (modifier is UIEffectBase) continue;
                         modifier.ModifyMesh(s_VertexHelper);
+                    }
+
+                    var subMeshUI = GetSubMeshUI(subMeshes, meshInfo.material, i - 1);
+                    if (!subMeshUI) break;
+
+                    if (target)
+                    {
+                        var replica = subMeshUI.GetOrAddComponent<UIEffectReplica>();
+                        replica.target = target;
+
+                        subMeshUI.GetComponents(subModifiers);
+                        foreach (var modifier in subModifiers)
+                        {
+                            modifier.ModifyMesh(s_VertexHelper);
+                        }
                     }
 
                     s_VertexHelper.FillMesh(s_Mesh);
@@ -269,8 +277,9 @@ namespace Coffee.UIEffects
                 }
             }
 
-            InternalListPool<IMeshModifier>.Return(ref modifiers);
             InternalListPool<TMP_SubMeshUI>.Return(ref subMeshes);
+            InternalListPool<IMeshModifier>.Return(ref modifiers);
+            InternalListPool<IMeshModifier>.Return(ref subModifiers);
             s_Mesh.Clear(false);
         }
 
