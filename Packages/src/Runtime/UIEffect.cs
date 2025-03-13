@@ -293,6 +293,72 @@ namespace Coffee.UIEffects
             }
         }
 
+        public float colorHueShift
+        {
+            get => color.r;
+            set
+            {
+                var c = color;
+                c.r = Mathf.Clamp(value, -0.5f, 0.5f);
+                color = c;
+            }
+        }
+
+        public float colorSaturationShift
+        {
+            get => color.g;
+            set
+            {
+                var c = color;
+                c.g = Mathf.Clamp(value, -1, 1);
+                color = c;
+            }
+        }
+
+        public float colorValueShift
+        {
+            get => color.b;
+            set
+            {
+                var c = color;
+                c.b = Mathf.Clamp(value, -1, 1);
+                color = c;
+            }
+        }
+
+        public float colorContrastShift
+        {
+            get => color.r;
+            set
+            {
+                var c = color;
+                c.r = Mathf.Clamp(value, -1, 1);
+                color = c;
+            }
+        }
+
+        public float colorBrightnessShift
+        {
+            get => color.g;
+            set
+            {
+                var c = color;
+                c.g = Mathf.Clamp(value, -1, 1);
+                color = c;
+            }
+        }
+
+        public float colorAlpha
+        {
+            get => color.a;
+            set
+            {
+                var c = color;
+                c.a = value;
+                color = c;
+            }
+        }
+
         public bool colorGlow
         {
             get => m_ColorGlow;
@@ -526,6 +592,72 @@ namespace Coffee.UIEffects
             }
         }
 
+        public float transitionColorHueShift
+        {
+            get => transitionColor.r;
+            set
+            {
+                var c = transitionColor;
+                c.r = Mathf.Clamp(value, -0.5f, 0.5f);
+                transitionColor = c;
+            }
+        }
+
+        public float transitionColorSaturationShift
+        {
+            get => transitionColor.g;
+            set
+            {
+                var c = transitionColor;
+                c.g = Mathf.Clamp(value, -1, 1);
+                transitionColor = c;
+            }
+        }
+
+        public float transitionColorValueShift
+        {
+            get => transitionColor.b;
+            set
+            {
+                var c = transitionColor;
+                c.b = Mathf.Clamp(value, -1, 1);
+                transitionColor = c;
+            }
+        }
+
+        public float transitionColorContrastShift
+        {
+            get => transitionColor.r;
+            set
+            {
+                var c = transitionColor;
+                c.r = Mathf.Clamp(value, -1, 1);
+                transitionColor = c;
+            }
+        }
+
+        public float transitionColorBrightnessShift
+        {
+            get => transitionColor.g;
+            set
+            {
+                var c = transitionColor;
+                c.g = Mathf.Clamp(value, -1, 1);
+                transitionColor = c;
+            }
+        }
+
+        public float transitionColorAlpha
+        {
+            get => transitionColor.a;
+            set
+            {
+                var c = transitionColor;
+                c.a = value;
+                transitionColor = c;
+            }
+        }
+
         public bool transitionColorGlow
         {
             get => m_TransitionColorGlow;
@@ -743,6 +875,72 @@ namespace Coffee.UIEffects
             }
         }
 
+        public float shadowColorHueShift
+        {
+            get => shadowColor.r;
+            set
+            {
+                var c = shadowColor;
+                c.r = Mathf.Clamp(value, -0.5f, 0.5f);
+                shadowColor = c;
+            }
+        }
+
+        public float shadowColorSaturationShift
+        {
+            get => shadowColor.g;
+            set
+            {
+                var c = shadowColor;
+                c.g = Mathf.Clamp(value, -1, 1);
+                shadowColor = c;
+            }
+        }
+
+        public float shadowColorValueShift
+        {
+            get => shadowColor.b;
+            set
+            {
+                var c = shadowColor;
+                c.b = Mathf.Clamp(value, -1, 1);
+                shadowColor = c;
+            }
+        }
+
+        public float shadowColorContrastShift
+        {
+            get => shadowColor.r;
+            set
+            {
+                var c = shadowColor;
+                c.r = Mathf.Clamp(value, -1, 1);
+                shadowColor = c;
+            }
+        }
+
+        public float shadowColorBrightnessShift
+        {
+            get => shadowColor.g;
+            set
+            {
+                var c = shadowColor;
+                c.g = Mathf.Clamp(value, -1, 1);
+                shadowColor = c;
+            }
+        }
+
+        public float shadowColorAlpha
+        {
+            get => shadowColor.a;
+            set
+            {
+                var c = shadowColor;
+                c.a = value;
+                shadowColor = c;
+            }
+        }
+
         public bool shadowGlow
         {
             get => m_ShadowColorGlow;
@@ -808,6 +1006,72 @@ namespace Coffee.UIEffects
                 if (m_EdgeColor == value) return;
                 context.edgeColor = m_EdgeColor = value;
                 SetMaterialDirty();
+            }
+        }
+
+        public float edgeColorHueShift
+        {
+            get => edgeColor.r;
+            set
+            {
+                var c = edgeColor;
+                c.r = Mathf.Clamp(value, -0.5f, 0.5f);
+                edgeColor = c;
+            }
+        }
+
+        public float edgeColorSaturationShift
+        {
+            get => edgeColor.g;
+            set
+            {
+                var c = edgeColor;
+                c.g = Mathf.Clamp(value, -1, 1);
+                edgeColor = c;
+            }
+        }
+
+        public float edgeColorValueShift
+        {
+            get => edgeColor.b;
+            set
+            {
+                var c = edgeColor;
+                c.b = Mathf.Clamp(value, -1, 1);
+                edgeColor = c;
+            }
+        }
+
+        public float edgeColorContrastShift
+        {
+            get => edgeColor.r;
+            set
+            {
+                var c = edgeColor;
+                c.r = Mathf.Clamp(value, -1, 1);
+                edgeColor = c;
+            }
+        }
+
+        public float edgeColorBrightnessShift
+        {
+            get => edgeColor.g;
+            set
+            {
+                var c = edgeColor;
+                c.g = Mathf.Clamp(value, -1, 1);
+                edgeColor = c;
+            }
+        }
+
+        public float edgeColorAlpha
+        {
+            get => edgeColor.a;
+            set
+            {
+                var c = edgeColor;
+                c.a = value;
+                edgeColor = c;
             }
         }
 
