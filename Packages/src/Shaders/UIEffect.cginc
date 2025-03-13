@@ -214,7 +214,7 @@ half4 apply_color_filter(half4 color, const half4 factor, const float intensity)
     }
     #endif
     color = lerp(inColor, color, intensity);
-    color.a *= 1 - _ColorGlow;
+    color.a *= 1 - _ColorGlow * intensity;
     return color;
 }
 
@@ -262,7 +262,7 @@ half4 apply_transition_color_filter(half4 color, const half4 factor, const float
     }
     #endif
     color = lerp(inColor, color, intensity);
-    color.a *= 1 - _TransitionColorGlow;
+    color.a *= 1 - _TransitionColorGlow * intensity;
     return color;
 }
 
@@ -314,7 +314,7 @@ half4 apply_shadow_color_filter(half4 color, const half4 factor, const float int
     }
     #endif
     color = lerp(inColor, color, intensity);
-    color.a *= 1 - _ShadowColorGlow;
+    color.a *= 1 - _ShadowColorGlow * intensity;
     return color;
 }
 
