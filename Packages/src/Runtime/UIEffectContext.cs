@@ -429,6 +429,14 @@ namespace Coffee.UIEffects
             Profiler.EndSample();
         }
 
+        public void SetEnablePreview(bool enable, Material material)
+        {
+            if (!material) return;
+            material.SetVector(s_TransitionTex_Speed, enable ? (Vector4)transitionTexSpeed : Vector4.zero);
+            material.SetFloat(s_TransitionAutoPlaySpeed, enable ? transitionAutoPlaySpeed : 0);
+            material.SetFloat(s_EdgeShinyAutoPlaySpeed, enable ? edgeShinyAutoPlaySpeed : 0);
+        }
+
         private static void SetKeyword(Material material, string[] keywords, int index)
         {
             for (var i = 0; i < keywords.Length; i++)

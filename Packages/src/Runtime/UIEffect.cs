@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Coffee.UIEffectInternal;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -987,6 +988,20 @@ namespace Coffee.UIEffects
             (m_SrcBlendMode, m_DstBlendMode) = (m_BlendType, m_SrcBlendMode, m_DstBlendMode).Convert();
             context?.SetGradationDirty();
             base.OnValidate();
+        }
+
+        internal override void SetEnablePreviewIfSelected(GameObject[] selection)
+        {
+            var selected = 0 < selection.Length
+                           && (selection.Contains(gameObject)
+                               || replicas.Any(x => x && selection.Contains(x.gameObject)));
+
+            context.SetEnablePreview(selected, effectMaterial);
+            foreach (var r in replicas)
+            {
+                if (!r || !r.isActiveAndEnabled || r.context == null) continue;
+                r.context.SetEnablePreview(selected, r.effectMaterial);
+            }
         }
 #endif
 

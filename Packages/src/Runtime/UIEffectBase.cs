@@ -26,6 +26,7 @@ namespace Coffee.UIEffects
         private bool _canModifyMesh;
         private Matrix4x4 _prevTransformHash;
 
+        public Material effectMaterial => _material;
         public Graphic graphic => _graphic ? _graphic : _graphic = GetComponent<Graphic>();
         public virtual uint effectId => (uint)GetInstanceID();
         public virtual float actualSamplingScale => 1;
@@ -153,6 +154,10 @@ namespace Coffee.UIEffects
         {
             OnValidate();
         }
+
+        internal virtual void SetEnablePreviewIfSelected(GameObject[] selection)
+        {
+        }
 #endif
 
         protected override void OnRectTransformDimensionsChange()
@@ -207,10 +212,17 @@ namespace Coffee.UIEffects
             if (!isActiveAndEnabled || context == null || !material) return;
 
             context.ApplyToMaterial(material, actualSamplingScale);
-            Misc.QueuePlayerLoopUpdate();
 
 #if UNITY_EDITOR
+            Profiler.BeginSample("(Editor/UIE)[UIEffect] ApplyContextToMaterial Post Process");
+            if (!Application.isPlaying)
+            {
+                SetEnablePreviewIfSelected(Selection.gameObjects);
+                Misc.QueuePlayerLoopUpdate();
+            }
+
             UIEffectProjectSettings.shaderRegistry.RegisterVariant(material, "UI > UIEffect");
+            Profiler.EndSample();
 #endif
         }
 

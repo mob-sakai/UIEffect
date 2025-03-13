@@ -128,6 +128,24 @@ namespace Coffee.UIEffects
                 ("c67f821adbb6348a3a21573a25b55de0", "Hidden-TMP_SDF-UIEffect-Unity6.shader")
             });
             EditorApplication.update += ShaderSampleImporter.Update;
+
+            Selection.selectionChanged += () =>
+            {
+                if (Application.isPlaying || Misc.isBatchOrBuilding) return;
+
+                var selection = Selection.gameObjects;
+                foreach (var c in FindAll())
+                {
+                    if (!c || !c.isActiveAndEnabled) continue;
+                    c.SetEnablePreviewIfSelected(selection);
+                }
+            };
+        }
+
+        private static IEnumerable<UIEffectBase> FindAll()
+        {
+            return Misc.FindObjectsOfType<UIEffectBase>()
+                .Concat(Misc.GetAllComponentsInPrefabStage<UIEffectBase>());
         }
 
         protected override void OnEnable()
@@ -222,8 +240,7 @@ namespace Coffee.UIEffects
                     }
 
                     // Refresh all UIEffect instances.
-                    foreach (var c in Misc.FindObjectsOfType<UIEffectBase>()
-                                 .Concat(Misc.GetAllComponentsInPrefabStage<UIEffectBase>()))
+                    foreach (var c in FindAll())
                     {
                         c.ReleaseMaterial();
                     }
@@ -232,8 +249,7 @@ namespace Coffee.UIEffects
                 // Refresh all UIEffect instances.
                 EditorApplication.delayCall += () =>
                 {
-                    foreach (var c in Misc.FindObjectsOfType<UIEffectBase>()
-                                 .Concat(Misc.GetAllComponentsInPrefabStage<UIEffectBase>()))
+                    foreach (var c in FindAll())
                     {
                         c.SetMaterialDirty();
                         c.SetVerticesDirty();

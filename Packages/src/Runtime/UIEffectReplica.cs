@@ -89,6 +89,12 @@ namespace Coffee.UIEffects
             RefreshTarget(target);
             base.OnValidate();
         }
+
+        internal override void SetEnablePreviewIfSelected(GameObject[] selection)
+        {
+            if (!target) return;
+            target.SetEnablePreviewIfSelected(selection);
+        }
 #endif
 
         private void RefreshTarget(UIEffect newTarget)
