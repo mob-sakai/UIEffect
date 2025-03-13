@@ -22,6 +22,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _updateMode;
         private SerializedProperty _wrapMode;
         private SerializedProperty _onComplete;
+        private SerializedProperty _onChangedRate;
         private bool _isPlaying = false;
         private double _lastTime;
 
@@ -40,6 +41,7 @@ namespace Coffee.UIEffects.Editors
             _wrapMode = serializedObject.FindProperty("m_WrapMode");
             _updateMode = serializedObject.FindProperty("m_UpdateMode");
             _onComplete = serializedObject.FindProperty("m_OnComplete");
+            _onChangedRate = serializedObject.FindProperty("m_OnChangedRate");
 
             EditorApplication.update += UpdateTweeners;
         }
@@ -54,6 +56,12 @@ namespace Coffee.UIEffects.Editors
             Profiler.BeginSample("(UIE)[UIEffectTweener] OnInspectorGUI");
             serializedObject.UpdateIfRequiredOrScript();
             EditorGUILayout.PropertyField(_cullingMask);
+
+            if (0 != (_cullingMask.intValue & (int)UIEffectTweener.CullingMask.Event))
+            {
+                EditorGUILayout.PropertyField(_onChangedRate);
+            }
+
             EditorGUILayout.PropertyField(_direction);
             EditorGUILayout.PropertyField(_curve);
 

@@ -11,6 +11,11 @@ namespace Coffee.UIEffects
     [RequireComponent(typeof(UIEffectBase))]
     public class UIEffectTweener : MonoBehaviour
     {
+        [Serializable]
+        public class TweenerEvent : UnityEvent<float>
+        {
+        }
+
         [Flags]
         public enum CullingMask
         {
@@ -20,7 +25,8 @@ namespace Coffee.UIEffects
             Transition = 1 << 3,
             GradiationOffset = 1 << 5,
             GradiationRotation = 1 << 6,
-            EdgeShiny = 1 << 8
+            EdgeShiny = 1 << 8,
+            Event = 1 << 31
         }
 
         public enum UpdateMode
@@ -54,7 +60,9 @@ namespace Coffee.UIEffects
 
         [Tooltip("The culling mask of the tween.")]
         [SerializeField]
-        private CullingMask m_CullingMask = (CullingMask)(-1);
+        private CullingMask m_CullingMask = CullingMask.Tone | CullingMask.Color | CullingMask.Sampling |
+                                            CullingMask.Transition | CullingMask.GradiationOffset |
+                                            CullingMask.GradiationRotation | CullingMask.EdgeShiny;
 
         [Tooltip("The direction of the tween.")]
         [SerializeField]
@@ -113,6 +121,10 @@ namespace Coffee.UIEffects
         [Tooltip("Event to invoke when the tween has completed.")]
         [SerializeField]
         private UnityEvent m_OnComplete = new UnityEvent();
+
+        [Tooltip("Event to invoke when the rate was changed.")]
+        [SerializeField]
+        private TweenerEvent m_OnChangedRate = new TweenerEvent();
 
         private bool _isPaused;
         private float _rate = -1;
@@ -183,6 +195,11 @@ namespace Coffee.UIEffects
 
                 var evaluatedRate = currentCurve.Evaluate(_rate);
                 target.SetRate(evaluatedRate, cullingMask);
+
+                if (0 != (cullingMask & CullingMask.Event))
+                {
+                    onChangedRate.Invoke(evaluatedRate);
+                }
             }
         }
 
@@ -318,6 +335,11 @@ namespace Coffee.UIEffects
         /// Event to invoke when the tween has completed.
         /// </summary>
         public UnityEvent onComplete => m_OnComplete;
+
+        /// <summary>
+        /// Event to invoke when the rate was changed.
+        /// </summary>
+        public TweenerEvent onChangedRate => m_OnChangedRate;
 
         /// <summary>
         /// Is the tween playing?
