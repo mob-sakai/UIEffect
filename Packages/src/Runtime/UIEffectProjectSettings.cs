@@ -128,6 +128,20 @@ namespace Coffee.UIEffects
             });
             EditorApplication.update += ShaderSampleImporter.Update;
 
+            CgincPathSync.RegisterShaders("/(TMPro|TMPro_Properties).cginc", new[]
+            {
+                "Hidden/TextMeshPro/Distance Field (UIEffect)",
+                "Hidden/TextMeshPro/Mobile/Distance Field (UIEffect)",
+                "Hidden/TextMeshPro/Distance Field SSD (UIEffect)",
+                "Hidden/TextMeshPro/Mobile/Distance Field SSD (UIEffect)",
+                "Hidden/TextMeshPro/Distance Field Overlay (UIEffect)",
+                "Hidden/TextMeshPro/Mobile/Distance Field Overlay (UIEffect)",
+                "Hidden/TextMeshPro/Bitmap (UIEffect)",
+                "Hidden/TextMeshPro/Mobile/Bitmap (UIEffect)",
+                "Hidden/TextMeshPro/Distance Field (UIEffect)",
+                "Hidden/TextMeshPro/Mobile/Distance Field (UIEffect)"
+            });
+
             Selection.selectionChanged += () =>
             {
                 if (Application.isPlaying || Misc.isBatchOrBuilding) return;
