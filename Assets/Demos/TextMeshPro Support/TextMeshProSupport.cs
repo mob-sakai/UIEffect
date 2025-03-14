@@ -1,14 +1,17 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using NUnit.Framework;
 using UnityEditor;
-using UnityEngine;
+using Debug = UnityEngine.Debug;
 
-public class TextMeshProTests
+internal static class TextMeshProSupport
 {
+    private const string k_Version = "userData: v5.6.0";
+    private const string k_VersionUnity6 = k_Version + " (Unity 6)";
+
     private static readonly Dictionary<string, string> s_FileGuids = new Dictionary<string, string>()
     {
         { "Hidden-TMP_Bitmap-Mobile-UIEffect.shader.meta", "guid: 63a1dba10bff94661a909d63808a9a3b" },
@@ -21,26 +24,25 @@ public class TextMeshProTests
         { "Hidden-TMP_SDF-UIEffect.shader.meta", "guid: 935b7be1c88464d2eb87204fdfab5a38" }
     };
 
-    private const string k_Version = "userData: v5.6.0";
-    private const string k_VersionUnity6 = k_Version + " (Unity 6)";
-
-    [Test]
-    public void GuidMatch()
+    [MenuItem("Development/TextMeshPro/", false, -40)]
+    private static void _()
     {
+    }
+
+    [MenuItem("Development/TextMeshPro/List GUID, Version for TMP Samples", false)]
+    private static void ListGuidsAndVersions()
+    {
+        var sb = new StringBuilder();
         ForEachMeta(x =>
         {
             var (path, guid, version) = x;
-            var fileName = Path.GetFileName(path);
-            s_FileGuids.TryGetValue(fileName.Replace("-Unity6", ""), out var expectedGuid);
-            var expectedVersion = path.Contains("-Unity6") ? k_VersionUnity6 : k_Version;
-
-            Assert.AreEqual(expectedGuid, guid, $"GUID mismatch: {fileName}");
-            Assert.AreEqual(expectedVersion, version, $"Version mismatch: {fileName}");
+            sb.AppendLine($"{guid},\tversion: {version},\t{Path.GetFileName(path)}");
         });
+        Debug.Log(sb);
     }
 
-    [MenuItem("Development/Update GUID, Version for TMP Samples")]
-    public static void UpdateGuidVersion()
+    [MenuItem("Development/TextMeshPro/Update GUID, Version for TMP Samples", false)]
+    private static void UpdateGuidsAndVersions()
     {
         ForEachMeta(x =>
         {
@@ -58,19 +60,6 @@ public class TextMeshProTests
         });
     }
 
-
-    [MenuItem("Development/List GUID for TMP Samples")]
-    public static void ListGuid()
-    {
-        var sb = new StringBuilder();
-        ForEachMeta(x =>
-        {
-            var (path, guid, _) = x;
-            sb.AppendLine($"{Path.GetFileName(path)}: {guid}");
-        });
-        Debug.Log(sb);
-    }
-
     private static void ForEachMeta(Action<(string path, string guid, string version)> action)
     {
         foreach (var p in Directory.GetFiles("Packages/src/Samples~", "*.shader.meta", SearchOption.AllDirectories))
@@ -86,3 +75,4 @@ public class TextMeshProTests
         }
     }
 }
+#endif

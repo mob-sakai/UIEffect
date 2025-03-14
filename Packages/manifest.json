@@ -3,6 +3,7 @@
     "com.coffee.development": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/Development",
     "com.coffee.minimal-resource": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/MinimalResource",
     "com.coffee.nano-monitor": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/NanoMonitor",
+    "com.coffee.symbolic-linker": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/SymbolicLinker",
     "com.unity.ide.rider": "3.0.34",
     "com.unity.test-framework": "1.1.33",
     "com.unity.textmeshpro": "3.0.9",

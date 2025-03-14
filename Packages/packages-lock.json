@@ -23,6 +23,13 @@
       },
       "hash": "2045eaab5b485827cef8bf0bb9e1552dce4f8d6d"
     },
+    "com.coffee.symbolic-linker": {
+      "version": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/SymbolicLinker",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "3c280f1a8f4db5038b881ff07f270efd9638fa31"
+    },
     "com.coffee.ui-effect": {
       "version": "file:src",
       "depth": 0,
