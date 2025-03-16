@@ -16,6 +16,9 @@ namespace Coffee.UIEffects
         [SerializeField]
         protected bool m_AllowToModifyMeshShape = true;
 
+        [SerializeField]
+        protected Flip m_Flip = 0;
+
         private UIEffect _currentTarget;
 
         public UIEffect target
@@ -51,6 +54,28 @@ namespace Coffee.UIEffects
                 if (Mathf.Approximately(m_SamplingScale, value)) return;
                 m_SamplingScale = value;
                 SetMaterialDirty();
+            }
+        }
+
+        public bool allowToModifyMeshShape
+        {
+            get => m_AllowToModifyMeshShape;
+            set
+            {
+                if (m_AllowToModifyMeshShape == value) return;
+                m_AllowToModifyMeshShape = value;
+                SetVerticesDirty();
+            }
+        }
+
+        public override Flip flip
+        {
+            get => m_Flip;
+            set
+            {
+                if (m_Flip == value) return;
+                m_Flip = value;
+                SetVerticesDirty();
             }
         }
 

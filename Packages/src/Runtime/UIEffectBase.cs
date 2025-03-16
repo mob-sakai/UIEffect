@@ -48,6 +48,12 @@ namespace Coffee.UIEffects
 
         public virtual RectTransform transitionRoot => transform as RectTransform;
 
+        public virtual Flip flip
+        {
+            get => 0;
+            set { }
+        }
+
         protected override void OnEnable()
         {
             _onBeforeCanvasRebuild ??= OnBeforeCanvasRebuild;
@@ -95,7 +101,7 @@ namespace Coffee.UIEffects
             _canModifyMesh = CanModifyMesh();
             if (_canModifyMesh)
             {
-                context.ModifyMesh(graphic, transitionRoot, vh, canModifyShape);
+                context.ModifyMesh(graphic, transitionRoot, vh, canModifyShape, flip);
             }
         }
 

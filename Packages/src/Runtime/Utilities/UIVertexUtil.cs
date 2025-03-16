@@ -2,12 +2,38 @@ using System;
 using System.Collections.Generic;
 using Coffee.UIEffectInternal;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Coffee.UIEffects
 {
     internal static class UIVertexUtil
     {
         public static Func<UIVertex, UIVertex, UIVertex, float, UIVertex> onLerpVertex;
+
+        public static void Flip(List<UIVertex> verts, bool horizontal, bool vertical)
+        {
+            var count = verts.Count;
+            for (var i = 0; i < count; i++)
+            {
+                var vt = verts[i];
+                var pos = vt.position;
+                vt.position = new Vector3(horizontal ? -pos.x : pos.x, vertical ? -pos.y : pos.y);
+                verts[i] = vt;
+            }
+        }
+
+        public static void Flip(VertexHelper vh, bool horizontal, bool vertical)
+        {
+            var count = vh.currentVertCount;
+            var vt = default(UIVertex);
+            for (var i = 0; i < count; i++)
+            {
+                vh.PopulateUIVertex(ref vt, i);
+                var pos = vt.position;
+                vt.position = new Vector3(horizontal ? -pos.x : pos.x, vertical ? -pos.y : pos.y);
+                vh.SetUIVertex(vt, i);
+            }
+        }
 
         public static void ExpandCapacity(List<UIVertex> verts, int multiplier)
         {

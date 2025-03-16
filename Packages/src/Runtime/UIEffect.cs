@@ -226,6 +226,9 @@ namespace Coffee.UIEffects
         [SerializeField]
         protected RectTransform m_CustomRoot = null;
 
+        [SerializeField]
+        protected Flip m_Flip = 0;
+
         /// <summary>
         /// Tone filter for rendering.
         /// </summary>
@@ -1231,6 +1234,17 @@ namespace Coffee.UIEffects
             {
                 if (m_CustomRoot == value) return;
                 m_CustomRoot = value;
+                SetVerticesDirty();
+            }
+        }
+
+        public override Flip flip
+        {
+            get => m_Flip;
+            set
+            {
+                if (m_Flip == value) return;
+                m_Flip = value;
                 SetVerticesDirty();
             }
         }

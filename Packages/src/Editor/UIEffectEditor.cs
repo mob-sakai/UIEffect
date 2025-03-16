@@ -104,6 +104,7 @@ namespace Coffee.UIEffects.Editors
 
         private SerializedProperty _allowToModifyMeshShape;
         private SerializedProperty _customRoot;
+        private SerializedProperty _flip;
 
         private static bool expandOthers
         {
@@ -189,6 +190,7 @@ namespace Coffee.UIEffects.Editors
 
             _allowToModifyMeshShape = serializedObject.FindProperty("m_AllowToModifyMeshShape");
             _customRoot = serializedObject.FindProperty("m_CustomRoot");
+            _flip = serializedObject.FindProperty("m_Flip");
         }
 
         public override void OnInspectorGUI()
@@ -426,6 +428,7 @@ namespace Coffee.UIEffects.Editors
                 EditorGUILayout.PropertyField(_samplingScale);
                 EditorGUILayout.PropertyField(_allowToModifyMeshShape);
                 EditorGUILayout.PropertyField(_customRoot);
+                EditorGUILayout.PropertyField(_flip);
             }
         }
 

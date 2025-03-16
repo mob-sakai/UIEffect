@@ -13,6 +13,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _useTargetTransform;
         private SerializedProperty _samplingScale;
         private SerializedProperty _allowToModifyMeshShape;
+        private SerializedProperty _flip;
         private Editor _uiEffectEditor;
 
         private void OnEnable()
@@ -21,6 +22,7 @@ namespace Coffee.UIEffects.Editors
             _useTargetTransform = serializedObject.FindProperty("m_UseTargetTransform");
             _samplingScale = serializedObject.FindProperty("m_SamplingScale");
             _allowToModifyMeshShape = serializedObject.FindProperty("m_AllowToModifyMeshShape");
+            _flip = serializedObject.FindProperty("m_Flip");
         }
 
         public override void OnInspectorGUI()
@@ -30,6 +32,7 @@ namespace Coffee.UIEffects.Editors
             EditorGUILayout.PropertyField(_useTargetTransform);
             EditorGUILayout.PropertyField(_samplingScale);
             EditorGUILayout.PropertyField(_allowToModifyMeshShape);
+            EditorGUILayout.PropertyField(_flip);
 
             if (_target.objectReferenceValue)
             {

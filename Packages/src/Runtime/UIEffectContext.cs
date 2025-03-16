@@ -459,8 +459,12 @@ namespace Coffee.UIEffects
             }
         }
 
-        public void ModifyMesh(Graphic graphic, RectTransform transitionRoot, VertexHelper vh, bool canModifyShape)
+        public void ModifyMesh(Graphic graphic, RectTransform transitionRoot, VertexHelper vh,
+            bool canModifyShape, Flip flip)
         {
+            // Apply flip (without effect).
+            ApplyFlipWithoutEffect(vh, flip);
+
             var count = vh.currentIndexCount;
             if (!willModifyVertex || count == 0) return;
 
@@ -531,8 +535,11 @@ namespace Coffee.UIEffects
             // Apply gradation.
             ApplyGradation(verts, transitionRoot.rect, rectMatrix, canModifyShape);
 
+            // Apply flip (with effect).
+            ApplyFlipWithEffect(verts, flip);
+
             // Apply shadow.
-            ApplyShadow(transitionRoot, verts);
+            ApplyShadow(verts, transitionRoot, flip);
 
             vh.Clear();
             vh.AddUIVertexTriangleStream(verts);
@@ -647,21 +654,52 @@ namespace Coffee.UIEffects
             }
         }
 
-        private void ApplyShadow(RectTransform transitionRoot, List<UIVertex> verts)
+        private void ApplyShadow(List<UIVertex> verts, RectTransform transitionRoot, Flip flip)
         {
+            var distance = shadowDistance;
+            if (distance == Vector2.zero) return;
+
+            if ((flip & Flip.Shadow) != 0)
+            {
+                distance.x = (flip & Flip.Horizontal) != 0 ? -distance.x : distance.x;
+                distance.y = (flip & Flip.Vertical) != 0 ? -distance.y : distance.y;
+            }
+
             switch (shadowMode)
             {
                 case ShadowMode.Shadow:
                 case ShadowMode.Shadow3:
                 case ShadowMode.Outline:
                 case ShadowMode.Outline8:
-                    ShadowUtil.DoShadow(verts, s_ShadowVectors[(int)shadowMode], shadowDistance, shadowIteration,
+                    ShadowUtil.DoShadow(verts, s_ShadowVectors[(int)shadowMode], distance, shadowIteration,
                         shadowFade);
                     break;
                 case ShadowMode.Mirror:
-                    ShadowUtil.DoMirror(verts, shadowDistance, shadowMirrorScale, shadowFade, transitionRoot);
+                    ShadowUtil.DoMirror(verts, distance, shadowMirrorScale, shadowFade, transitionRoot);
                     break;
             }
+        }
+
+        private static void ApplyFlipWithoutEffect(VertexHelper vh, Flip flip)
+        {
+            if ((flip & Flip.Effect) != 0) return;
+
+            var flipHorizontal = 0 != (flip & Flip.Horizontal);
+            var flipVertical = 0 != (flip & Flip.Vertical);
+            if (!flipHorizontal && !flipVertical) return;
+
+            UIVertexUtil.Flip(vh, flipHorizontal, flipVertical);
+        }
+
+        private static void ApplyFlipWithEffect(List<UIVertex> verts, Flip flip)
+        {
+            if ((flip & Flip.Effect) == 0) return;
+
+            var flipHorizontal = 0 != (flip & Flip.Horizontal);
+            var flipVertical = 0 != (flip & Flip.Vertical);
+            if (!flipHorizontal && !flipVertical) return;
+
+            UIVertexUtil.Flip(verts, flipHorizontal, flipVertical);
         }
 
         private Vector2 GetExpandSize(bool canModifyShape)

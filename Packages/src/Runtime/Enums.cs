@@ -1,4 +1,5 @@
-﻿using UnityEngine.Rendering;
+﻿using System;
+using UnityEngine.Rendering;
 
 namespace Coffee.UIEffects
 {
@@ -105,6 +106,15 @@ namespace Coffee.UIEffects
         DiagonalToLeftBottom = 8,
         Angle = 9,
         AngleGradient = 10
+    }
+
+    [Flags]
+    public enum Flip
+    {
+        Horizontal = 1 << 0,
+        Vertical = 1 << 1,
+        Effect = 1 << 2,
+        Shadow = 1 << 3
     }
 
     internal static class BlendTypeConverter
