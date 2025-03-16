@@ -224,6 +224,28 @@ namespace Coffee.UIEffects
         protected PatternArea m_PatternArea = PatternArea.Inner;
 
         [SerializeField]
+        protected DetailFilter m_DetailFilter = DetailFilter.None;
+
+        [Range(0, 1)]
+        [SerializeField]
+        protected float m_DetailIntensity = 1;
+
+        [SerializeField]
+        protected MinMax01 m_DetailThreshold = new MinMax01(0, 1);
+
+        [SerializeField]
+        protected Texture m_DetailTex;
+
+        [SerializeField]
+        protected Vector2 m_DetailTexScale = new Vector2(1, 1);
+
+        [SerializeField]
+        protected Vector2 m_DetailTexOffset = new Vector2(0, 0);
+
+        [SerializeField]
+        protected Vector2 m_DetailTexSpeed = new Vector2(0, 0);
+
+        [SerializeField]
         protected RectTransform m_CustomRoot = null;
 
         [SerializeField]
@@ -1216,6 +1238,84 @@ namespace Coffee.UIEffects
             }
         }
 
+        public DetailFilter detailFilter
+        {
+            get => m_DetailFilter;
+            set
+            {
+                if (m_DetailFilter == value) return;
+                context.detailFilter = m_DetailFilter = value;
+                SetMaterialDirty();
+            }
+        }
+
+        public float detailIntensity
+        {
+            get => m_DetailIntensity;
+            set
+            {
+                value = Mathf.Clamp(value, 0, 1);
+                if (Mathf.Approximately(m_DetailIntensity, value)) return;
+                context.detailIntensity = m_DetailIntensity = value;
+                SetMaterialDirty();
+            }
+        }
+
+        public MinMax01 detailThreshold
+        {
+            get => m_DetailThreshold;
+            set
+            {
+                if (m_DetailThreshold.Approximately(value)) return;
+                context.detailThreshold = m_DetailThreshold = value;
+                SetMaterialDirty();
+            }
+        }
+
+        public Texture detailTexture
+        {
+            get => m_DetailTex;
+            set
+            {
+                if (m_DetailTex == value) return;
+                context.detailTex = m_DetailTex = value;
+                SetMaterialDirty();
+            }
+        }
+
+        public Vector2 detailTextureScale
+        {
+            get => m_DetailTexScale;
+            set
+            {
+                if (m_DetailTexScale == value) return;
+                context.detailTexScale = m_DetailTexScale = value;
+                SetMaterialDirty();
+            }
+        }
+
+        public Vector2 detailTextureOffset
+        {
+            get => m_DetailTexOffset;
+            set
+            {
+                if (m_DetailTexOffset == value) return;
+                context.detailTexOffset = m_DetailTexOffset = value;
+                SetMaterialDirty();
+            }
+        }
+
+        public Vector2 detailTextureSpeed
+        {
+            get => m_DetailTexSpeed;
+            set
+            {
+                if (m_DetailTexSpeed == value) return;
+                context.detailTexSpeed = m_DetailTexSpeed = value;
+                SetMaterialDirty();
+            }
+        }
+
         public bool allowToModifyMeshShape
         {
             get => m_AllowToModifyMeshShape;
@@ -1409,6 +1509,14 @@ namespace Coffee.UIEffects
             c.gradationOffset = m_GradationOffset;
             c.gradationScale = m_GradationScale;
             c.gradationRotation = m_GradationRotation;
+
+            c.detailFilter = m_DetailFilter;
+            c.detailIntensity = m_DetailIntensity;
+            c.detailThreshold = m_DetailThreshold;
+            c.detailTex = m_DetailTex;
+            c.detailTexScale = m_DetailTexScale;
+            c.detailTexOffset = m_DetailTexOffset;
+            c.detailTexSpeed = m_DetailTexSpeed;
         }
 
         public override void ApplyContextToMaterial(Material material)
@@ -1605,6 +1713,17 @@ namespace Coffee.UIEffects
                 m_GradationRotation = preset.m_GradationRotation;
             }
 
+            if (!append || preset.m_DetailFilter != DetailFilter.None)
+            {
+                m_DetailFilter = preset.m_DetailFilter;
+                m_DetailIntensity = preset.m_DetailIntensity;
+                m_DetailThreshold = preset.m_DetailThreshold;
+                m_DetailTex = preset.m_DetailTex;
+                m_DetailTexScale = preset.m_DetailTexScale;
+                m_DetailTexOffset = preset.m_DetailTexOffset;
+                m_DetailTexSpeed = preset.m_DetailTexSpeed;
+            }
+
             UpdateContext(context);
             SetVerticesDirty();
             SetMaterialDirty();
@@ -1683,6 +1802,14 @@ namespace Coffee.UIEffects
             m_GradationOffset = c.gradationOffset;
             m_GradationScale = c.gradationScale;
             m_GradationRotation = c.gradationRotation;
+
+            m_DetailFilter = c.detailFilter;
+            m_DetailIntensity = c.detailIntensity;
+            m_DetailThreshold = c.detailThreshold;
+            m_DetailTex = c.detailTex;
+            m_DetailTexScale = c.detailTexScale;
+            m_DetailTexOffset = c.detailTexOffset;
+            m_DetailTexSpeed = c.detailTexSpeed;
 
             UpdateContext(context);
             SetVerticesDirty();

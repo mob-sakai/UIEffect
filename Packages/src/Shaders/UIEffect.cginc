@@ -36,6 +36,11 @@ uniform const float _EdgeShinyWidth;
 uniform const half4 _EdgeColor;
 uniform const int _EdgeColorGlow;
 uniform const int _PatternArea;
+uniform const float _DetailIntensity;
+uniform const float2 _DetailThreshold;
+uniform const sampler2D _DetailTex;
+uniform const float4 _DetailTex_ST;
+uniform const float2 _DetailTex_Speed;
 
 // For performance reasons, limit the sampling of blur in TextMeshPro.
 #ifdef UIEFFECT_TEXTMESHPRO
@@ -505,6 +510,48 @@ half4 apply_transition_filter(half4 color, const float alpha, const float2 uvLoc
     return color;
 }
 
+half4 apply_detail_filter(half4 color, float2 uvLocal)
+{
+    const half4 inColor = color;
+    const float2 uv = uvLocal * _DetailTex_ST.xy + _DetailTex_ST.zw + _Time.y * _DetailTex_Speed;
+    const half4 detail = tex2D(_DetailTex, uv);
+    #if DETAIL_MASKING // Detail.Masking
+    {
+        color *= inv_lerp(_DetailThreshold.x, _DetailThreshold.y, detail.a);
+    }
+    #elif DETAIL_MULTIPLY // Detail.Multiply
+    {
+        color.rgb *= detail.rgb;
+        color = lerp(inColor, color * detail.a, _DetailIntensity);
+
+    }
+    #elif DETAIL_ADDITIVE // Detail.Additive
+    {
+        color.rgb += detail.rgb * detail.a * color.a;
+        color = lerp(inColor, color, _DetailIntensity);
+
+    }
+    #elif DETAIL_REPLACE // Detail.Replace
+    {
+        color.rgb = detail.rgb * color.a;
+        color = lerp(inColor, color, _DetailIntensity * detail.a);
+
+    }
+    #elif DETAIL_MULTIPLY_ADDITIVE // Detail.MultiplyAdditive
+    {
+        color.rgb *= (1 + detail.rgb * detail.a);
+        color = lerp(inColor, color, _DetailIntensity);
+
+    }
+    #else
+    {
+        return color;
+    }
+    #endif
+
+    return color;
+}
+
 half to_value(float4 c)
 {
     #if SAMPLING_EDGE_LUMINANCE
@@ -559,6 +606,7 @@ half4 uieffect_internal(float2 uv, const float4 uvMask, const float2 uvLocal)
     half4 color = apply_sampling_filter(uv, uvMask, uvLocal);
     color = apply_tone_filter(color);
     color = apply_transition_filter(color, alpha, uvLocal, edgeFactor);
+    color = apply_detail_filter(color, uvLocal);
 
     if (-4 <= uvLocal.x + uvLocal.y)
     {

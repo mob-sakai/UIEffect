@@ -102,6 +102,14 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _edgeShinyAutoPlaySpeed;
         private SerializedProperty _patternArea;
 
+        private SerializedProperty _detailFilter;
+        private SerializedProperty _detailIntensity;
+        private SerializedProperty _detailThreshold;
+        private SerializedProperty _detailTex;
+        private SerializedProperty _detailTexScale;
+        private SerializedProperty _detailTexOffset;
+        private SerializedProperty _detailTexSpeed;
+
         private SerializedProperty _allowToModifyMeshShape;
         private SerializedProperty _customRoot;
         private SerializedProperty _flip;
@@ -187,6 +195,14 @@ namespace Coffee.UIEffects.Editors
             _gradationOffset = serializedObject.FindProperty("m_GradationOffset");
             _gradationScale = serializedObject.FindProperty("m_GradationScale");
             _gradationRotation = serializedObject.FindProperty("m_GradationRotation");
+
+            _detailFilter = serializedObject.FindProperty("m_DetailFilter");
+            _detailIntensity = serializedObject.FindProperty("m_DetailIntensity");
+            _detailThreshold = serializedObject.FindProperty("m_DetailThreshold");
+            _detailTex = serializedObject.FindProperty("m_DetailTex");
+            _detailTexScale = serializedObject.FindProperty("m_DetailTexScale");
+            _detailTexOffset = serializedObject.FindProperty("m_DetailTexOffset");
+            _detailTexSpeed = serializedObject.FindProperty("m_DetailTexSpeed");
 
             _allowToModifyMeshShape = serializedObject.FindProperty("m_AllowToModifyMeshShape");
             _customRoot = serializedObject.FindProperty("m_CustomRoot");
@@ -419,6 +435,37 @@ namespace Coffee.UIEffects.Editors
                 {
                     EditorGUILayout.PropertyField(_patternArea);
                 }
+            }
+
+            // Detail filter
+            DrawSeparator();
+            if (DrawHeaderPopup(_detailFilter))
+            {
+                EditorGUI.indentLevel++;
+                if ((DetailFilter)_detailFilter.intValue == DetailFilter.Masking)
+                {
+                    EditorGUILayout.PropertyField(_detailThreshold);
+                }
+                else
+                {
+                    EditorGUILayout.PropertyField(_detailIntensity);
+                }
+
+                EditorGUILayout.PropertyField(_detailTex);
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(_detailTexScale, EditorGUIUtility.TrTempContent("Scale"));
+                EditorGUILayout.PropertyField(_detailTexOffset, EditorGUIUtility.TrTempContent("Offset"));
+                EditorGUILayout.PropertyField(_detailTexSpeed, EditorGUIUtility.TrTempContent("Speed"));
+                if (_detailTexSpeed.vector2Value != Vector2.zero)
+                {
+                    EditorApplication.QueuePlayerLoopUpdate();
+                }
+
+                EditorGUILayout.PropertyField(_transitionRotation, EditorGUIUtility.TrTempContent("Rotation"));
+                EditorGUILayout.PropertyField(_transitionKeepAspectRatio,
+                    EditorGUIUtility.TrTempContent("Keep Aspect Ratio"));
+                EditorGUI.indentLevel--;
+                EditorGUI.indentLevel--;
             }
 
             DrawSeparator();

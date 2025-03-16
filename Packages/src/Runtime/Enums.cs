@@ -108,6 +108,16 @@ namespace Coffee.UIEffects
         AngleGradient = 10
     }
 
+    public enum DetailFilter
+    {
+        None = 0,
+        Masking = 1,
+        Multiply = 2,
+        Additive = 3,
+        Replace = 4,
+        MultiplyAdditive = 5
+    }
+
     [Flags]
     public enum Flip
     {

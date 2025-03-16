@@ -48,6 +48,11 @@ namespace Coffee.UIEffects
         private static readonly int s_EdgeShinyRate = Shader.PropertyToID("_EdgeShinyRate");
         private static readonly int s_EdgeShinyWidth = Shader.PropertyToID("_EdgeShinyWidth");
         private static readonly int s_PatternArea = Shader.PropertyToID("_PatternArea");
+        private static readonly int s_DetailIntensity = Shader.PropertyToID("_DetailIntensity");
+        private static readonly int s_DetailThreshold = Shader.PropertyToID("_DetailThreshold");
+        private static readonly int s_DetailTex = Shader.PropertyToID("_DetailTex");
+        private static readonly int s_DetailTex_ST = Shader.PropertyToID("_DetailTex_ST");
+        private static readonly int s_DetailTex_Speed = Shader.PropertyToID("_DetailTex_Speed");
 
         private static readonly string[] s_ToneKeywords =
         {
@@ -150,6 +155,16 @@ namespace Coffee.UIEffects
             "EDGE_COLOR_CONTRAST"
         };
 
+        private static readonly string[] s_DetailKeywords =
+        {
+            "",
+            "DETAIL_MASKING",
+            "DETAIL_MULTIPLY",
+            "DETAIL_ADDITIVE",
+            "DETAIL_REPLACE",
+            "DETAIL_MULTIPLY_ADDITIVE"
+        };
+
         private static readonly Vector2[][] s_ShadowVectors = new[]
         {
             Array.Empty<Vector2>(), // None
@@ -234,6 +249,14 @@ namespace Coffee.UIEffects
         public float gradationRotation;
         private List<float> _keyTimes;
 
+        public DetailFilter detailFilter;
+        public float detailIntensity;
+        public MinMax01 detailThreshold;
+        public Texture detailTex;
+        public Vector2 detailTexScale = new Vector2(1, 1);
+        public Vector2 detailTexOffset = new Vector2(0, 0);
+        public Vector2 detailTexSpeed = new Vector2(0, 0);
+
         public bool willModifyMaterial => toneFilter != ToneFilter.None
                                           || colorFilter != ColorFilter.None
                                           || samplingFilter != SamplingFilter.None
@@ -241,7 +264,8 @@ namespace Coffee.UIEffects
                                           || srcBlendMode != BlendMode.One
                                           || dstBlendMode != BlendMode.OneMinusSrcAlpha
                                           || shadowMode != ShadowMode.None
-                                          || edgeMode != EdgeMode.None;
+                                          || edgeMode != EdgeMode.None
+                                          || detailFilter != DetailFilter.None;
 
         public bool willModifyVertex => willModifyMaterial
                                         || gradationMode != GradationMode.None;
@@ -322,6 +346,14 @@ namespace Coffee.UIEffects
             gradationOffset = preset.gradationOffset;
             gradationScale = preset.gradationScale;
             gradationRotation = preset.gradationRotation;
+
+            detailFilter = preset.detailFilter;
+            detailIntensity = preset.detailIntensity;
+            detailThreshold = preset.detailThreshold;
+            detailTex = preset.detailTex;
+            detailTexScale = preset.detailTexScale;
+            detailTexOffset = preset.detailTexOffset;
+            detailTexSpeed = preset.detailTexSpeed;
         }
 
         public void SetGradationDirty()
@@ -351,7 +383,7 @@ namespace Coffee.UIEffects
 
             material.SetFloat(s_TransitionRate, Mathf.Clamp01(transitionRate));
             material.SetInt(s_TransitionReverse, transitionReverse ? 1 : 0);
-            material.SetTexture(s_TransitionTex, transitionTex);
+            material.SetTexture(s_TransitionTex, transitionFilter != 0 ? transitionTex : null);
             material.SetVector(s_TransitionTex_ST,
                 new Vector4(transitionTexScale.x, transitionTexScale.y,
                     transitionTexOffset.x, transitionTexOffset.y));
@@ -392,6 +424,14 @@ namespace Coffee.UIEffects
             material.SetFloat(s_EdgeShinyAutoPlaySpeed, edgeShinyAutoPlaySpeed);
             material.SetInt(s_PatternArea, edgeMode != EdgeMode.None ? (int)patternArea : 0);
 
+            material.SetFloat(s_DetailIntensity, Mathf.Clamp01(detailIntensity));
+            material.SetVector(s_DetailThreshold, new Vector2(detailThreshold.min, detailThreshold.max));
+            material.SetTexture(s_DetailTex, detailFilter != 0 ? detailTex : null);
+            material.SetVector(s_DetailTex_ST,
+                new Vector4(detailTexScale.x, detailTexScale.y,
+                    detailTexOffset.x, detailTexOffset.y));
+            material.SetVector(s_DetailTex_Speed, detailTexSpeed);
+
             SetKeyword(material, s_ToneKeywords, (int)toneFilter);
             SetKeyword(material, s_ColorKeywords, (int)colorFilter);
             SetKeyword(material, s_SamplingKeywords, (int)samplingFilter);
@@ -430,6 +470,7 @@ namespace Coffee.UIEffects
                     break;
             }
 
+            SetKeyword(material, s_DetailKeywords, (int)detailFilter);
 
             SetKeyword(material, s_TargetKeywords, (int)targetMode);
 
@@ -440,6 +481,7 @@ namespace Coffee.UIEffects
         {
             if (!material) return;
             material.SetVector(s_TransitionTex_Speed, enable ? (Vector4)transitionTexSpeed : Vector4.zero);
+            material.SetVector(s_DetailTex_Speed, enable ? (Vector4)detailTexSpeed : Vector4.zero);
             material.SetFloat(s_TransitionAutoPlaySpeed, enable ? transitionAutoPlaySpeed : 0);
             material.SetFloat(s_EdgeShinyAutoPlaySpeed, enable ? edgeShinyAutoPlaySpeed : 0);
         }
@@ -502,10 +544,15 @@ namespace Coffee.UIEffects
                 rot *= Matrix4x4.Scale(new Vector3(multiplier, multiplier, 1));
             }
 
-            if (transitionKeepAspectRatio && transitionTex)
+            var normalizeTex = transitionTex
+                ? transitionTex
+                : detailTex
+                    ? detailTex
+                    : null;
+            if (transitionKeepAspectRatio && normalizeTex)
             {
                 var center = rect.center;
-                var aspectRatio = (float)transitionTex.width / transitionTex.height;
+                var aspectRatio = (float)normalizeTex.width / normalizeTex.height;
                 if (rect.width < rect.height)
                 {
                     rect.width = rect.height * aspectRatio;
