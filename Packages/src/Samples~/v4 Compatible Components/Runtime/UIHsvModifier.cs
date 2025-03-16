@@ -130,7 +130,7 @@ namespace Coffee.UIEffects
             return true;
         }
 
-        protected override void UpdateContext(UIEffectContext c)
+        internal override void UpdateContext(UIEffectContext c)
         {
             c.colorFilter = ColorFilter.HsvModifier;
             c.colorIntensity = 1;

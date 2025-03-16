@@ -166,7 +166,7 @@ namespace Coffee.UIEffects
             effectPlayer.Stop(reset);
         }
 
-        protected override void UpdateContext(UIEffectContext c)
+        internal override void UpdateContext(UIEffectContext c)
         {
             c.transitionFilter = TransitionFilter.Shiny;
             c.transitionRate = m_EffectFactor;

@@ -211,7 +211,7 @@ namespace Coffee.UIEffects
             effectPlayer.OnDisable();
         }
 
-        protected override void UpdateContext(UIEffectContext c)
+        internal override void UpdateContext(UIEffectContext c)
         {
             c.transitionFilter = TransitionFilter.Dissolve;
             c.transitionRate = m_EffectFactor;

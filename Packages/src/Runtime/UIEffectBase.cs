@@ -211,7 +211,7 @@ namespace Coffee.UIEffects
             MaterialRepository.Release(ref _material);
         }
 
-        protected abstract void UpdateContext(UIEffectContext c);
+        internal abstract void UpdateContext(UIEffectContext c);
 
         public virtual void ApplyContextToMaterial(Material material)
         {

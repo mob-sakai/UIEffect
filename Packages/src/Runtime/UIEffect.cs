@@ -1339,7 +1339,7 @@ namespace Coffee.UIEffects
             SetVerticesDirty();
         }
 
-        protected override void UpdateContext(UIEffectContext c)
+        internal override void UpdateContext(UIEffectContext c)
         {
             c.toneFilter = m_ToneFilter;
             c.toneIntensity = m_ToneIntensity;

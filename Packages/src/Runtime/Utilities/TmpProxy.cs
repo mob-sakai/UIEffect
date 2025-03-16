@@ -219,11 +219,6 @@ namespace Coffee.UIEffects
 
             s_RegisteredInstances.Add(textMeshProUGUI);
             var effect = textMeshProUGUI.GetComponent<UIEffectBase>();
-            var target = effect is UIEffect uiEffect
-                ? uiEffect
-                : effect is UIEffectReplica parentReplica
-                    ? parentReplica.target
-                    : null;
             var subMeshes = InternalListPool<TMP_SubMeshUI>.Rent();
             var modifiers = InternalListPool<IMeshModifier>.Rent();
             var subModifiers = InternalListPool<IMeshModifier>.Rent();
@@ -256,16 +251,31 @@ namespace Coffee.UIEffects
                     var subMeshUI = GetSubMeshUI(subMeshes, meshInfo.material, i - 1);
                     if (!subMeshUI) break;
 
-                    if (target)
+                    var replica = subMeshUI.GetOrAddComponent<UIEffectReplica>();
+                    if (effect is UIEffect pEffect && pEffect.isActiveAndEnabled)
                     {
-                        var replica = subMeshUI.GetOrAddComponent<UIEffectReplica>();
-                        replica.target = target;
+                        replica.target = pEffect;
+                        replica.useTargetTransform = true;
+                        replica.customRoot = null;
+                        replica.flip = pEffect.flip;
+                    }
+                    else if (effect is UIEffectReplica pReplica && pReplica.isActiveAndEnabled)
+                    {
+                        replica.target = pReplica.target;
+                        replica.useTargetTransform = pReplica.useTargetTransform;
+                        replica.customRoot = pReplica.customRoot;
+                        replica.flip = pReplica.flip;
+                    }
+                    else
+                    {
+                        replica.target = null;
+                        replica.customRoot = null;
+                    }
 
-                        subMeshUI.GetComponents(subModifiers);
-                        foreach (var modifier in subModifiers)
-                        {
-                            modifier.ModifyMesh(s_VertexHelper);
-                        }
+                    subMeshUI.GetComponents(subModifiers);
+                    foreach (var modifier in subModifiers)
+                    {
+                        modifier.ModifyMesh(s_VertexHelper);
                     }
 
                     s_VertexHelper.FillMesh(s_Mesh);

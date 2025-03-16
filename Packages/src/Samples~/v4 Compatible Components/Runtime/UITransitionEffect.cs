@@ -237,7 +237,7 @@ namespace Coffee.UIEffects
             return !passRayOnHidden || effectFactor < 1;
         }
 
-        protected override void UpdateContext(UIEffectContext c)
+        internal override void UpdateContext(UIEffectContext c)
         {
             c.transitionFilter = m_EffectMode.Convert();
             c.transitionRate = m_EffectFactor;

@@ -181,7 +181,7 @@ namespace Coffee.UIEffects
         }
 #endif
 
-        protected override void UpdateContext(UIEffectContext c)
+        internal override void UpdateContext(UIEffectContext c)
         {
             (c.toneFilter, c.samplingFilter) = (m_EffectMode, m_BlurMode).Convert();
             if (context.samplingFilter == SamplingFilter.Pixelation)

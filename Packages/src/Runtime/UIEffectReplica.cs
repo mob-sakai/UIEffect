@@ -17,6 +17,9 @@ namespace Coffee.UIEffects
         protected bool m_AllowToModifyMeshShape = true;
 
         [SerializeField]
+        protected RectTransform m_CustomRoot = null;
+
+        [SerializeField]
         protected Flip m_Flip = 0;
 
         private UIEffect _currentTarget;
@@ -41,6 +44,17 @@ namespace Coffee.UIEffects
             {
                 if (m_UseTargetTransform == value) return;
                 m_UseTargetTransform = value;
+                SetVerticesDirty();
+            }
+        }
+
+        public RectTransform customRoot
+        {
+            get => m_CustomRoot;
+            set
+            {
+                if (m_CustomRoot == value) return;
+                m_CustomRoot = value;
                 SetVerticesDirty();
             }
         }
@@ -84,11 +98,25 @@ namespace Coffee.UIEffects
         public override bool canModifyShape => m_AllowToModifyMeshShape;
 
         public override uint effectId => target ? target.effectId : 0;
-        public override UIEffectContext context => target && target.isActiveAndEnabled ? target.context : null;
 
-        public override RectTransform transitionRoot => useTargetTransform && target
+        public override UIEffectContext context
+        {
+            get
+            {
+                if (!target) return null;
+                if (!isTargetInScene) return base.context;
+
+                return target.isActiveAndEnabled ? target.context : null;
+            }
+        }
+
+        public override RectTransform transitionRoot => useTargetTransform && isTargetInScene
             ? target.transitionRoot
-            : transform as RectTransform;
+            : m_CustomRoot
+                ? m_CustomRoot
+                : transform as RectTransform;
+
+        private bool isTargetInScene => target && target.gameObject.scene.IsValid();
 
         protected override void OnEnable()
         {
@@ -117,7 +145,7 @@ namespace Coffee.UIEffects
 
         internal override void SetEnablePreviewIfSelected(GameObject[] selection)
         {
-            if (!target) return;
+            if (!isTargetInScene) return;
             target.SetEnablePreviewIfSelected(selection);
         }
 #endif
@@ -130,10 +158,17 @@ namespace Coffee.UIEffects
                 _currentTarget.replicas.Remove(this);
             }
 
-            _currentTarget = newTarget;
-            if (_currentTarget)
+            if (newTarget)
             {
-                _currentTarget.replicas.Add(this);
+                _currentTarget = newTarget;
+                if (isTargetInScene)
+                {
+                    _currentTarget.replicas.Add(this);
+                }
+            }
+            else
+            {
+                _currentTarget = null;
             }
         }
 
@@ -141,19 +176,24 @@ namespace Coffee.UIEffects
         {
             base.OnBeforeCanvasRebuild();
 
-            if (useTargetTransform && target && CheckTransformChangedWith(target.transform))
+            if (useTargetTransform && isTargetInScene && CheckTransformChangedWith(target.transform))
             {
                 SetVerticesDirty();
             }
         }
 
-        protected override void UpdateContext(UIEffectContext c)
+        internal override void UpdateContext(UIEffectContext c)
         {
+            if (target && !isTargetInScene)
+            {
+                target.UpdateContext(c);
+            }
         }
 
         public override void ApplyContextToMaterial(Material material)
         {
-            if (!isActiveAndEnabled || !target || !target.isActiveAndEnabled) return;
+            if (!isActiveAndEnabled || !target) return;
+            if (isTargetInScene && !target.isActiveAndEnabled) return;
 
             base.ApplyContextToMaterial(material);
         }
@@ -164,7 +204,9 @@ namespace Coffee.UIEffects
 
         public override bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
         {
-            return !target || target.IsRaycastLocationValid(sp, eventCamera);
+            if (!isActiveAndEnabled || !isTargetInScene) return true;
+
+            return target.IsRaycastLocationValid(sp, eventCamera);
         }
     }
 }
