@@ -1724,6 +1724,7 @@ namespace Coffee.UIEffects
                 m_DetailTexSpeed = preset.m_DetailTexSpeed;
             }
 
+            Misc.SetDirty(this);
             UpdateContext(context);
             SetVerticesDirty();
             SetMaterialDirty();
@@ -1811,6 +1812,7 @@ namespace Coffee.UIEffects
             m_DetailTexOffset = c.detailTexOffset;
             m_DetailTexSpeed = c.detailTexSpeed;
 
+            Misc.SetDirty(this);
             UpdateContext(context);
             SetVerticesDirty();
             SetMaterialDirty();
