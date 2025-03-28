@@ -133,7 +133,13 @@ ShaderVariantCollection:
         passType: 0
       - keywords: SAMPLING_PIXELATION TONE_RETRO UNITY_UI_CLIP_RECT
         passType: 0
+      - keywords: SAMPLING_PIXELATION TRANSITION_COLOR_MULTIPLY TRANSITION_PATTERN
+        passType: 0
+      - keywords: SAMPLING_PIXELATION TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_DISSOLVE
+        passType: 0
       - keywords: SAMPLING_RGB_SHIFT
+        passType: 0
+      - keywords: SAMPLING_RGB_SHIFT TRANSITION_COLOR_MULTIPLY TRANSITION_PATTERN
         passType: 0
       - keywords: SHADOW_COLOR_REPLACE
         passType: 0

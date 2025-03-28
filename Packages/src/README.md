@@ -69,6 +69,7 @@ Combine various filters, such as grayscale, blur, and dissolve, to decorate your
 - **UIEffectTweener Component**: A simple tweener component to play, stop, pause, and resume effects.
 - **AnimationClip support**: Allows control of effect animations using `AnimationClips`.
 - **v4 compatible components (optional)**: For easy upgrading with minimal changes, compatible v4 components are available optionally.
+- **SoftMaskForUGUI support (optional)**: Compatible with SoftMaskForUGUI for creating soft masks for UI elements. See for more details [here](#usage-with-softmaskforugui).
 
 <br><br>
 
@@ -339,7 +340,7 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 ![](https://github.com/user-attachments/assets/295d7d2d-be6e-4104-9ea3-e5208902a3d2)
 
 - **Detail Filter**: `None`, `Masking`, `Multiply`, `Additive`, `Replace`, `MuliplyAdditive`  
-  ![](https://github.com/user-attachments/assets/73933788-4179-4d8d-9b07-446d0a998227)
+  ![](https://github.com/user-attachments/assets/7011459b-a090-4044-be1e-acfe8981ea01)
 - **Detail Intensity**: 0.0 (no effect) - 1.0 (full effect).
 - **Detail Threshold** (`Masking` only): The minimum and maximum alpha values used for masking. The larger the gap
     between these values, the stronger the softness effect.
@@ -362,7 +363,8 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
     - `Horizontal`
     - `Vertical`
     - `Effect`: Flip with the effect.
-    - `Shadow`: Flip with the shadow.
+    - `Shadow`: Flip with the shadow.  
+    ![](https://github.com/user-attachments/assets/dbc2440b-81f1-4f24-8c0c-b298689ced86)
 
 > [!TIP]  
 > `Transition Filter`, `Gradation Filter`, and `Detail Filter` usually refer to their own `RectTransform` when applying effects.  
