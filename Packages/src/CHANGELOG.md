@@ -1,3 +1,10 @@
+## [5.6.1](https://github.com/mob-sakai/UIEffect/compare/5.6.0...5.6.1) (2025-03-28)
+
+
+### Bug Fixes
+
+* changes were not correctly marked as dirty when loading presets ([76be0fc](https://github.com/mob-sakai/UIEffect/commit/76be0fc860c27b89235b7fb9a766dcc38b3d9924))
+
 # [5.6.0](https://github.com/mob-sakai/UIEffect/compare/5.5.3...5.6.0) (2025-03-28)
 
 
