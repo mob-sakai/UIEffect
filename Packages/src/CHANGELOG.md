@@ -1,3 +1,34 @@
+# [5.6.0](https://github.com/mob-sakai/UIEffect/compare/5.5.3...5.6.0) (2025-03-28)
+
+
+### Bug Fixes
+
+* fix edge detection ([9462170](https://github.com/mob-sakai/UIEffect/commit/946217069f10714798070481d8576f5470e243db))
+* fix project settings icon ([202601c](https://github.com/mob-sakai/UIEffect/commit/202601c96d6fb564ee5d6b8868b0ff0a8dba0ba1))
+* the strength of ColorGlow, TransitionColorGlow, and ShadowColorGlow now changes according to intensity ([aa4ec8d](https://github.com/mob-sakai/UIEffect/commit/aa4ec8d9c449bfe361aa277e25cbb389e0daa983)), closes [#316](https://github.com/mob-sakai/UIEffect/issues/316)
+* UIEffect with TextMeshPro SubMeshUI appears black in the editor when saving assets ([de91871](https://github.com/mob-sakai/UIEffect/commit/de918718d062979c8e9b4202b6b2ae389ae10bab))
+
+
+### Features
+
+* `TransitionAutoPlaySpeed`, `TransitionTexSpeed`, and `EdgeShinyAutoPlaySpeed` are previewed only when the object is selected in edit mode ([952a94f](https://github.com/mob-sakai/UIEffect/commit/952a94f50b3ae4279a48b03d019f341e46b2f5b7)), closes [#319](https://github.com/mob-sakai/UIEffect/issues/319)
+* add 'Flip' feature ([def49c3](https://github.com/mob-sakai/UIEffect/commit/def49c34f5b963c8b0cce6fb8cace3f7d93b5a1e))
+* add `Detail Filter` feature ([3e2c5c1](https://github.com/mob-sakai/UIEffect/commit/3e2c5c1613d9a2c08487d94c4eef28f066f2eb7b))
+* add `EdgeColorGlow` option ([53db1e6](https://github.com/mob-sakai/UIEffect/commit/53db1e62546384f04b9c526df2623c4598dd34bf))
+* add `onChangeRate` event for UIEffectTweener ([8ad57c8](https://github.com/mob-sakai/UIEffect/commit/8ad57c828ef4f1d7df6dd22c1edb7af3efa04d75)), closes [#321](https://github.com/mob-sakai/UIEffect/issues/321)
+* add `TransitionTexSpeed` option ([6b8dc5e](https://github.com/mob-sakai/UIEffect/commit/6b8dc5ec338590d909511eba3bb1b2e0ec6627f3))
+* add a tool that automatically fixes shaders when 'TextMeshPro Essential Resources' are located in a non-default path ([8388d59](https://github.com/mob-sakai/UIEffect/commit/8388d590457755cda0699835b37b5bf0673c4386))
+* add built-in presets ([3db94e0](https://github.com/mob-sakai/UIEffect/commit/3db94e00f83195ff90d26ee270c7984825fa22b7))
+* add shaders for TextMeshPro Overlay/SSD ([51cd6d8](https://github.com/mob-sakai/UIEffect/commit/51cd6d8525a12581c8afd4ab5d16e5968e15c8fe))
+* Allow specifying a preset as the target for `UIEffectReplica` ([cb0e8d2](https://github.com/mob-sakai/UIEffect/commit/cb0e8d283bb8f9085d4910051b5ae0b77368db76))
+* custom transform for transition and gradation ([045db9c](https://github.com/mob-sakai/UIEffect/commit/045db9c3b79234cd12bdfb4ea52898b7d86240af))
+* expose color subfields as float-type public properties ([396d06f](https://github.com/mob-sakai/UIEffect/commit/396d06f774e10adee84d06156a7fc8723d986bbd)), closes [#321](https://github.com/mob-sakai/UIEffect/issues/321)
+* load presets partially and append to existing instance ([6542543](https://github.com/mob-sakai/UIEffect/commit/654254342265fc239804e60a64d01b80076e5e8e))
+* separate reverse curve for UIEffectTweener ([2540b75](https://github.com/mob-sakai/UIEffect/commit/2540b75349af92f1359433e73ffa3b5400479b02)), closes [#312](https://github.com/mob-sakai/UIEffect/issues/312)
+* support `SoftMaskForUGUI ` package with `UIEffect` ([65457e2](https://github.com/mob-sakai/UIEffect/commit/65457e263644c36cd772ad1f42fb9fb3f84ab753)), closes [#270](https://github.com/mob-sakai/UIEffect/issues/270)
+* support UIFlip as v4 compatible component ([e965b9e](https://github.com/mob-sakai/UIEffect/commit/e965b9e9ab33dcfab067542abf2f19bc1d5243fc)), closes [#322](https://github.com/mob-sakai/UIEffect/issues/322)
+* update demo sample ([abc9a41](https://github.com/mob-sakai/UIEffect/commit/abc9a4184c4aeac85287a882d174f9cdc2c28c04)), closes [#318](https://github.com/mob-sakai/UIEffect/issues/318) [#320](https://github.com/mob-sakai/UIEffect/issues/320)
+
 ## [5.5.3](https://github.com/mob-sakai/UIEffect/compare/5.5.2...5.5.3) (2025-03-06)
 
 
