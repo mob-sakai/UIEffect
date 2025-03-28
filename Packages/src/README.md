@@ -364,7 +364,7 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
     - `Vertical`
     - `Effect`: Flip with the effect.
     - `Shadow`: Flip with the shadow.  
-    ![](https://github.com/user-attachments/assets/dbc2440b-81f1-4f24-8c0c-b298689ced86)
+    ![](https://github.com/user-attachments/assets/c3b3d475-75d3-4c8d-a329-db4f124fec45)
 
 > [!TIP]  
 > `Transition Filter`, `Gradation Filter`, and `Detail Filter` usually refer to their own `RectTransform` when applying effects.  

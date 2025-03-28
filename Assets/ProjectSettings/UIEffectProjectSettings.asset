@@ -8,6 +8,24 @@ ShaderVariantCollection:
   m_PrefabAsset: {fileID: 0}
   m_Name: UIEffectShaderVariants
   m_Shaders:
+  - first: {fileID: 4800000, guid: d1cb940e3804b4adcaf9b22083fadfad, type: 3}
+    second:
+      variants:
+      - keywords: SAMPLING_RGB_SHIFT TONE_RETRO TRANSITION_COLOR_MULTIPLY_ADDITIVE
+          TRANSITION_SHINY
+        passType: 0
+  - first: {fileID: 4800000, guid: 63a1dba10bff94661a909d63808a9a3b, type: 3}
+    second:
+      variants:
+      - keywords: SAMPLING_RGB_SHIFT TONE_RETRO TRANSITION_COLOR_MULTIPLY_ADDITIVE
+          TRANSITION_SHINY
+        passType: 0
+  - first: {fileID: 4800000, guid: e65241fa80a374114b3f55ed746c04d9, type: 3}
+    second:
+      variants:
+      - keywords: SAMPLING_RGB_SHIFT TONE_RETRO TRANSITION_COLOR_MULTIPLY_ADDITIVE
+          TRANSITION_SHINY
+        passType: 0
   - first: {fileID: 4800000, guid: 935b7be1c88464d2eb87204fdfab5a38, type: 3}
     second:
       variants:
@@ -49,6 +67,9 @@ ShaderVariantCollection:
         passType: 0
       - keywords: GLOW_ON TRANSITION_COLOR_REPLACE TRANSITION_MELT UNDERLAY_ON
         passType: 0
+      - keywords: SAMPLING_RGB_SHIFT TONE_RETRO TRANSITION_COLOR_MULTIPLY_ADDITIVE
+          TRANSITION_SHINY
+        passType: 0
   - first: {fileID: 4800000, guid: 96246b1ead49a4c5a996fd477bc5a117, type: 3}
     second:
       variants:
@@ -65,6 +86,10 @@ ShaderVariantCollection:
       - keywords: COLOR_HSV_MODIFIER TARGET_LUMINANCE
         passType: 0
       - keywords: COLOR_MULTIPLY
+        passType: 0
+      - keywords: COLOR_MULTIPLY DETAIL_MASKING EDGE_COLOR_MULTIPLY_ADDITIVE EDGE_SHINY
+          SAMPLING_BLUR_FAST SHADOW_COLOR_REPLACE TARGET_HUE TONE_GRAYSCALE TRANSITION_COLOR_MULTIPLY_ADDITIVE
+          TRANSITION_DISSOLVE
         passType: 0
       - keywords: COLOR_MULTIPLY SHADOW_COLOR_REPLACE
         passType: 0
@@ -143,6 +168,8 @@ ShaderVariantCollection:
         passType: 0
       - keywords: SHADOW_COLOR_REPLACE
         passType: 0
+      - keywords: SHADOW_COLOR_REPLACE TRANSITION_COLOR_REPLACE TRANSITION_MELT
+        passType: 0
       - keywords: TONE_GRAYSCALE
         passType: 0
       - keywords: TONE_NEGATIVE
@@ -182,6 +209,30 @@ ShaderVariantCollection:
       - keywords: TRANSITION_CUTOFF
         passType: 0
       - keywords: TRANSITION_FADE
+        passType: 0
+  - first: {fileID: 4800000, guid: 03ea49e29b5ad4fbe8e340af208fe8e7, type: 3}
+    second:
+      variants:
+      - keywords: SAMPLING_RGB_SHIFT TONE_RETRO TRANSITION_COLOR_MULTIPLY_ADDITIVE
+          TRANSITION_SHINY
+        passType: 0
+  - first: {fileID: 4800000, guid: 16f26337621974eaf998b9857bac39c6, type: 3}
+    second:
+      variants:
+      - keywords: SAMPLING_RGB_SHIFT TONE_RETRO TRANSITION_COLOR_MULTIPLY_ADDITIVE
+          TRANSITION_SHINY
+        passType: 0
+  - first: {fileID: 4800000, guid: 2c69b4dabb5c24ae99889f581c8b556a, type: 3}
+    second:
+      variants:
+      - keywords: SAMPLING_RGB_SHIFT TONE_RETRO TRANSITION_COLOR_MULTIPLY_ADDITIVE
+          TRANSITION_SHINY
+        passType: 0
+  - first: {fileID: 4800000, guid: 26b66f9b09b8d4ac6a2790c3fa8b21c1, type: 3}
+    second:
+      variants:
+      - keywords: SAMPLING_RGB_SHIFT TONE_RETRO TRANSITION_COLOR_MULTIPLY_ADDITIVE
+          TRANSITION_SHINY
         passType: 0
 --- !u!114 &11400000
 MonoBehaviour:
