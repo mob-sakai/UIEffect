@@ -99,10 +99,12 @@ SubShader {
         #pragma shader_feature_local_fragment _ EDGE_COLOR_MULTIPLY EDGE_COLOR_ADDITIVE EDGE_COLOR_SUBTRACTIVE EDGE_COLOR_REPLACE EDGE_COLOR_MULTIPLY_LUMINANCE EDGE_COLOR_MULTIPLY_ADDITIVE EDGE_COLOR_HSV_MODIFIER EDGE_COLOR_CONTRAST
         #pragma shader_feature_local_fragment _ DETAIL_MASKING DETAIL_MULTIPLY DETAIL_ADDITIVE DETAIL_REPLACE DETAIL_MULTIPLY_ADDITIVE
         #pragma shader_feature_local_fragment _ TARGET_HUE TARGET_LUMINANCE
+        #pragma shader_feature_local_fragment _ GRADATION_GRADIENT GRADATION_RADIAL GRADATION_COLOR2 GRADATION_COLOR4
+        #pragma shader_feature_fragment _ UIEFFECT_EDITOR
         // ==== UIEFFECT END ====
 
         // ==== SOFTMASKABLE START ====
-        #pragma shader_feature _ SOFTMASK_EDITOR
+        #pragma shader_feature_fragment _ SOFTMASK_EDITOR
         #pragma shader_feature_local_fragment _ SOFTMASKABLE
         #if SOFTMASKABLE
         #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc"
@@ -121,7 +123,7 @@ SubShader {
 			fixed4	color			: COLOR;
 			float4	texcoord0		: TEXCOORD0;
 			// ==== UIEFFECT START ====
-			float4	texcoord1		: TEXCOORD1;
+			float2	texcoord1		: TEXCOORD1;
 			float4	texcoord2		: TEXCOORD2;
 			// ==== UIEFFECT END ====
 		};
@@ -143,13 +145,8 @@ SubShader {
 		    #endif
 			// ==== UIEFFECT START ====
 		    float4 uvMask			: TEXCOORD5;
-		    float2 uvLocal			: TEXCOORD6;
+		    float4 worldPosition	: TEXCOORD6;
 			// ==== UIEFFECT END ====
-			// ==== SOFTMASKABLE START ====
-			#if SOFTMASK_EDITOR
-			float4 worldPosition : TEXCOORD7;
-			#endif
-			// ==== SOFTMASKABLE END ====
 		};
 
 		float _UIMaskSoftnessX;
@@ -232,14 +229,9 @@ SubShader {
 			#endif
 
 			// ==== UIEFFECT START ====
-			output.uvLocal = input.texcoord1.zw;
 			output.uvMask = input.texcoord2;
-			// ==== UIEFFECT END ====
-			// ==== SOFTMASKABLE START ====
-			#if SOFTMASK_EDITOR
 			output.worldPosition = input.vertex;
-			#endif
-			// ==== SOFTMASKABLE END ====
+			// ==== UIEFFECT END ====
 
 			return output;
 		}
@@ -284,7 +276,7 @@ SubShader {
 		{
 			UNITY_SETUP_INSTANCE_ID(input);
 			_fragInput = input;
-			half4 c = uieffect(_fragInput.texcoord0.xy, _fragInput.uvMask, _fragInput.uvLocal);
+			half4 c = uieffect(input.texcoord0.xy, input.uvMask, input.worldPosition);
 			
 		    // Alternative implementation to UnityGet2DClipping with support for softness.
 		    #if UNITY_UI_CLIP_RECT

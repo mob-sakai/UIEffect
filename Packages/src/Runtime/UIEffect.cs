@@ -548,7 +548,6 @@ namespace Coffee.UIEffects
             {
                 if (Mathf.Approximately(m_TransitionRotation, value)) return;
                 context.transitionRotation = m_TransitionRotation = value;
-                SetVerticesDirty();
             }
         }
 
@@ -559,7 +558,6 @@ namespace Coffee.UIEffects
             {
                 if (m_TransitionKeepAspectRatio == value) return;
                 context.transitionKeepAspectRatio = m_TransitionKeepAspectRatio = value;
-                SetVerticesDirty();
             }
         }
 
@@ -1156,7 +1154,7 @@ namespace Coffee.UIEffects
             {
                 if (m_GradationMode == value) return;
                 context.gradationMode = m_GradationMode = value;
-                SetVerticesDirty();
+                SetMaterialDirty();
             }
         }
 
@@ -1167,7 +1165,7 @@ namespace Coffee.UIEffects
             {
                 if (m_GradationColor1 == value) return;
                 context.gradationColor1 = m_GradationColor1 = value;
-                SetVerticesDirty();
+                SetMaterialDirty();
             }
         }
 
@@ -1178,7 +1176,7 @@ namespace Coffee.UIEffects
             {
                 if (m_GradationColor2 == value) return;
                 context.gradationColor2 = m_GradationColor2 = value;
-                SetVerticesDirty();
+                SetMaterialDirty();
             }
         }
 
@@ -1189,7 +1187,7 @@ namespace Coffee.UIEffects
             {
                 if (m_GradationColor3 == value) return;
                 context.gradationColor3 = m_GradationColor3 = value;
-                SetVerticesDirty();
+                SetMaterialDirty();
             }
         }
 
@@ -1200,7 +1198,7 @@ namespace Coffee.UIEffects
             {
                 if (m_GradationColor4 == value) return;
                 context.gradationColor4 = m_GradationColor4 = value;
-                SetVerticesDirty();
+                SetMaterialDirty();
             }
         }
 
@@ -1211,7 +1209,7 @@ namespace Coffee.UIEffects
             {
                 if (Mathf.Approximately(m_GradationOffset, value)) return;
                 context.gradationOffset = m_GradationOffset = value;
-                SetVerticesDirty();
+                SetMaterialDirty();
             }
         }
 
@@ -1222,7 +1220,7 @@ namespace Coffee.UIEffects
             {
                 if (Mathf.Approximately(m_GradationScale, value)) return;
                 context.gradationScale = m_GradationScale = value;
-                SetVerticesDirty();
+                SetMaterialDirty();
             }
         }
 
@@ -1234,7 +1232,6 @@ namespace Coffee.UIEffects
                 value = Mathf.Repeat(value, 360);
                 if (Mathf.Approximately(m_GradationRotation, value)) return;
                 context.gradationRotation = m_GradationRotation = value;
-                SetVerticesDirty();
             }
         }
 
@@ -1334,7 +1331,6 @@ namespace Coffee.UIEffects
             {
                 if (m_CustomRoot == value) return;
                 m_CustomRoot = value;
-                SetVerticesDirty();
             }
         }
 
@@ -1353,11 +1349,58 @@ namespace Coffee.UIEffects
             ? m_CustomRoot
             : transform as RectTransform;
 
+        private Texture2D _gradationRampTex;
+        private bool _isGradientDirty = true;
+
+        private static readonly Color32[] s_Colors = new Color32[256];
+
+        private static readonly InternalObjectPool<Texture2D> s_TexturePool = new InternalObjectPool<Texture2D>(
+            () =>
+            {
+                var w = 256;
+                var texture = new Texture2D(w, 1, TextureFormat.RGBA32, false, false)
+                {
+                    name = "GradationRamp",
+                    hideFlags = HideFlags.DontSave,
+                    wrapMode = TextureWrapMode.Repeat,
+                    anisoLevel = 0
+                };
+
+                return texture;
+            },
+            texture => texture,
+            texture => { });
+
+        private Texture2D gradationRampTex
+        {
+            get
+            {
+                if (!_gradationRampTex) _gradationRampTex = s_TexturePool.Rent();
+                if (!_isGradientDirty) return _gradationRampTex;
+                _isGradientDirty = false;
+
+                var w = _gradationRampTex.width;
+                for (var i = 0; i < w; i++)
+                {
+                    s_Colors[i] = m_GradationGradient.Evaluate((float)i / (w - 1));
+                }
+
+                _gradationRampTex.filterMode = m_GradationGradient.mode == GradientMode.Blend
+                    ? FilterMode.Bilinear
+                    : FilterMode.Point;
+
+                _gradationRampTex.SetPixels32(s_Colors);
+                _gradationRampTex.Apply();
+                return _gradationRampTex;
+            }
+        }
+
         public List<UIEffectReplica> replicas => _replicas ??= InternalListPool<UIEffectReplica>.Rent();
         private List<UIEffectReplica> _replicas;
 
         protected override void OnEnable()
         {
+            _isGradientDirty = true;
             (m_SrcBlendMode, m_DstBlendMode) = (m_BlendType, m_SrcBlendMode, m_DstBlendMode).Convert();
             base.OnEnable();
             SetMaterialDirty();
@@ -1372,6 +1415,7 @@ namespace Coffee.UIEffects
         protected override void OnDestroy()
         {
             InternalListPool<UIEffectReplica>.Return(ref _replicas);
+            s_TexturePool.Return(ref _gradationRampTex);
         }
 
 #if UNITY_EDITOR
@@ -1380,6 +1424,7 @@ namespace Coffee.UIEffects
             (m_SrcBlendMode, m_DstBlendMode) = (m_BlendType, m_SrcBlendMode, m_DstBlendMode).Convert();
             context?.SetGradationDirty();
             base.OnValidate();
+            _isGradientDirty = true;
         }
 
         internal override void SetEnablePreviewIfSelected(GameObject[] selection)
@@ -1396,15 +1441,6 @@ namespace Coffee.UIEffects
             }
         }
 #endif
-
-        protected override void OnBeforeCanvasRebuild()
-        {
-            base.OnBeforeCanvasRebuild();
-            if (CheckTransformChangedWith(customRoot))
-            {
-                SetVerticesDirty();
-            }
-        }
 
         public override void SetVerticesDirty()
         {
@@ -1429,14 +1465,23 @@ namespace Coffee.UIEffects
         /// <summary>
         /// Set gradation gradient's keys.
         /// </summary>
+        public void SetGradientKeys(Gradient gradient)
+        {
+            SetGradientKeys(gradient.colorKeys, gradient.alphaKeys, gradient.mode);
+        }
+
+        /// <summary>
+        /// Set gradation gradient's keys.
+        /// </summary>
         public void SetGradientKeys(GradientColorKey[] colorKeys, GradientAlphaKey[] alphaKeys,
             GradientMode mode = GradientMode.Blend)
         {
+            _isGradientDirty = true;
             m_GradationGradient ??= new Gradient();
             m_GradationGradient.SetKeys(colorKeys, alphaKeys);
             m_GradationGradient.mode = mode;
             context?.SetGradationDirty();
-            SetVerticesDirty();
+            SetMaterialDirty();
         }
 
         internal override void UpdateContext(UIEffectContext c)
@@ -1505,7 +1550,7 @@ namespace Coffee.UIEffects
             c.gradationColor2 = m_GradationColor2;
             c.gradationColor3 = m_GradationColor3;
             c.gradationColor4 = m_GradationColor4;
-            c.gradationGradient = m_GradationGradient;
+            c.gradationTex = gradationRampTex;
             c.gradationOffset = m_GradationOffset;
             c.gradationScale = m_GradationScale;
             c.gradationRotation = m_GradationRotation;
@@ -1706,9 +1751,7 @@ namespace Coffee.UIEffects
                 m_GradationColor2 = preset.m_GradationColor2;
                 m_GradationColor3 = preset.m_GradationColor3;
                 m_GradationColor4 = preset.m_GradationColor4;
-                m_GradationGradient = new Gradient();
-                m_GradationGradient.SetKeys(preset.m_GradationGradient.colorKeys, preset.m_GradationGradient.alphaKeys);
-                m_GradationGradient.mode = preset.m_GradationGradient.mode;
+                SetGradientKeys(preset.m_GradationGradient);
                 m_GradationOffset = preset.m_GradationOffset;
                 m_GradationScale = preset.m_GradationScale;
                 m_GradationRotation = preset.m_GradationRotation;
@@ -1798,9 +1841,6 @@ namespace Coffee.UIEffects
             m_GradationColor2 = c.gradationColor2;
             m_GradationColor3 = c.gradationColor3;
             m_GradationColor4 = c.gradationColor4;
-            m_GradationGradient = new Gradient();
-            m_GradationGradient.SetKeys(c.gradationGradient.colorKeys, c.gradationGradient.alphaKeys);
-            m_GradationGradient.mode = c.gradationGradient.mode;
             m_GradationOffset = c.gradationOffset;
             m_GradationScale = c.gradationScale;
             m_GradationRotation = c.gradationRotation;

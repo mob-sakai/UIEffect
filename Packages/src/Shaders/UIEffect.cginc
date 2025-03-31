@@ -41,6 +41,15 @@ uniform const float2 _DetailThreshold;
 uniform const sampler2D _DetailTex;
 uniform const float4 _DetailTex_ST;
 uniform const float2 _DetailTex_Speed;
+uniform const half4 _GradationColor1;
+uniform const half4 _GradationColor2;
+uniform const half4 _GradationColor3;
+uniform const half4 _GradationColor4;
+uniform const sampler2D _GradationTex;
+uniform const float4 _GradationTex_ST;
+uniform const matrix _RootViewMatrix;
+uniform const matrix _GradViewMatrix;
+uniform const matrix _CanvasToWorldMatrix;
 
 // For performance reasons, limit the sampling of blur in TextMeshPro.
 #ifdef UIEFFECT_TEXTMESHPRO
@@ -66,6 +75,15 @@ uniform const float2 _DetailTex_Speed;
 #define TEX_SAMPLE_CLAMP(uv, uvMask) tex2D(_MainTex, uv) \
 * step(uvMask.x, uv.x) * step(uv.x, uvMask.z) \
 * step(uvMask.y, uv.y) * step(uv.y, uvMask.w)
+
+float4 object_to_world(float4 pos)
+{
+    #if UIEFFECT_EDITOR
+    return mul(unity_ObjectToWorld, pos);
+    #else
+    return mul(_CanvasToWorldMatrix, mul(unity_ObjectToWorld, pos));
+    #endif
+}
 
 float2 texel_size()
 {
@@ -376,11 +394,11 @@ half4 apply_edge_color_filter(half4 color, const half4 factor, const float inten
     return color;
 }
 
-half4 apply_sampling_filter(float2 uv, const float4 uvMask, const float2 uvLocal)
+half4 apply_sampling_filter(float2 uv, const float4 uvMask, const float2 uvLocal, const float isShadow)
 {
     #if SAMPLING_BLUR_FAST || SAMPLING_BLUR_MEDIUM || SAMPLING_BLUR_DETAIL
     {
-        float intensity = -4 < uvLocal.x + uvLocal.y ? _SamplingIntensity : _ShadowBlurIntensity;
+        float intensity = 0 < isShadow ? _ShadowBlurIntensity : _SamplingIntensity;
         if (0 < intensity)
         {
     #if SAMPLING_BLUR_FAST
@@ -510,6 +528,35 @@ half4 apply_transition_filter(half4 color, const float alpha, const float2 uvLoc
     return color;
 }
 
+half4 apply_gradation_filter(half4 color, float2 uvGrad)
+{
+    const float2 uv = uvGrad * _GradationTex_ST.x + _GradationTex_ST.z;
+
+    #if GRADATION_GRADIENT // Gradation.Gradient
+    {
+        return color * tex2D(_GradationTex, uv);
+    }
+    #elif GRADATION_RADIAL // Gradation.Radial
+    {
+        float t = saturate(length((uvGrad - float2(0.5, 0.5)) * 2 * _GradationTex_ST.x) + _GradationTex_ST.z);
+        return color * lerp(_GradationColor1, _GradationColor2, t);
+    }
+    #elif GRADATION_COLOR2 // Gradation.Color2
+    {
+        return color * lerp(_GradationColor1, _GradationColor2, saturate(uv.x));
+    }
+    #elif GRADATION_COLOR4 // Gradation.Color4
+    {
+        return color * lerp(
+            lerp(_GradationColor3, _GradationColor4, saturate(uv.x)),
+            lerp(_GradationColor1, _GradationColor2, saturate(uv.x)),
+            saturate(uv.y));
+    }
+    #endif
+
+    return color;
+}
+
 half4 apply_detail_filter(half4 color, float2 uvLocal)
 {
     const half4 inColor = color;
@@ -598,17 +645,22 @@ int is_edge_shiny(const float2 uvLocal)
     #endif
 }
 
-half4 uieffect_internal(float2 uv, const float4 uvMask, const float2 uvLocal)
+half4 uieffect_internal(float2 uv, float4 uvMask, const float2 uvLocal, const float2 uvGrad, const int isShadow)
 {
     const half alpha = transition_alpha(uvLocal);
     const float edgeFactor = edge(uv, uvMask, _EdgeWidth);
     uv += move_transition_filter(uvMask, alpha);
-    half4 color = apply_sampling_filter(uv, uvMask, uvLocal);
+    half4 color = apply_sampling_filter(uv, uvMask, uvLocal, isShadow);
+    color = apply_gradation_filter(color, uvGrad);
     color = apply_tone_filter(color);
     color = apply_transition_filter(color, alpha, uvLocal, edgeFactor);
     color = apply_detail_filter(color, uvLocal);
 
-    if (-4 <= uvLocal.x + uvLocal.y)
+    if (isShadow)
+    {
+        return apply_shadow_color_filter(color, _ShadowColor, 1);
+    }
+    else
     {
         #if EDGE_PLAIN || EDGE_SHINY
         {
@@ -623,16 +675,17 @@ half4 uieffect_internal(float2 uv, const float4 uvMask, const float2 uvLocal)
         }
         #endif
     }
-    else
-    {
-        return apply_shadow_color_filter(color, _ShadowColor, 1);
-    }
 }
 
-half4 uieffect(float2 uv, const float4 uvMask, const float2 uvLocal)
+half4 uieffect(float2 uv, float4 uvMask, const float4 pos)
 {
     const fixed4 origin = UIEFFECT_SAMPLE_CLAMP(uv, uvMask);
     const half rate = get_target_rate(origin);
+    const float4 wpos = object_to_world(pos);
+    const float2 uvLocal = saturate(mul(_RootViewMatrix, wpos));
+    const float2 uvGrad = mul(_GradViewMatrix, wpos);
+    const int isShadow = uvMask.x < 0 ? 1 : 0;
+    uvMask.x += isShadow * 2;
 
     // Sampling.Pixelation
     #if SAMPLING_PIXELATION
@@ -644,9 +697,9 @@ half4 uieffect(float2 uv, const float4 uvMask, const float2 uvLocal)
     #elif SAMPLING_RGB_SHIFT
     {
         const half2 offset = half2(_SamplingIntensity * texel_size().x * 20, 0);
-        const half2 r = uieffect_internal(uv + offset, uvMask, uvLocal).ra;
-        const half2 g = uieffect_internal(uv, uvMask, uvLocal).ga;
-        const half2 b = uieffect_internal(uv - offset, uvMask, uvLocal).ba;
+        const half2 r = uieffect_internal(uv + offset, uvMask, uvLocal, uvGrad, isShadow).ra;
+        const half2 g = uieffect_internal(uv, uvMask, uvLocal, uvGrad, isShadow).ga;
+        const half2 b = uieffect_internal(uv - offset, uvMask, uvLocal, uvGrad, isShadow).ba;
         return half4(r.x * r.y, g.x * g.y, b.x * b.y, (r.y + g.y + b.y) / 3);
     }
     // Sampling.EdgeLuminance/EdgeAlpha
@@ -670,11 +723,11 @@ half4 uieffect(float2 uv, const float4 uvMask, const float2 uvLocal)
         half sobel_v = v00 * -1.0 + v10 * -2.0 + v20 * -1.0 + v02 * 1.0 + v12 * 2.0 + v22 * 1.0;
 
         const half sobel = sqrt(sobel_h * sobel_h + sobel_v * sobel_v) * _SamplingIntensity;
-        return lerp(0, uieffect_internal(uv, uvMask, uvLocal), inv_lerp(0.5, 1, sobel));
+        return lerp(0, uieffect_internal(uv, uvMask, uvLocal, uvGrad, isShadow), inv_lerp(0.5, 1, sobel));
     }
     #endif
 
-    return lerp(origin, uieffect_internal(uv, uvMask, uvLocal), rate);
+    return lerp(origin, uieffect_internal(uv, uvMask, uvLocal, uvGrad, isShadow), rate);
 }
 
 #endif // UI_EFFECT_INCLUDED

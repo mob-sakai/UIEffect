@@ -23,6 +23,7 @@ namespace Coffee.UIEffects
         private Material _material;
         private UIEffectContext _context;
         private Action _onBeforeCanvasRebuild;
+        private Action _onAfterCanvasRebuild;
         private bool _canModifyMesh;
         private Matrix4x4 _prevTransformHash;
 
@@ -46,6 +47,19 @@ namespace Coffee.UIEffects
             }
         }
 
+        protected Material GetCurrentMaterial()
+        {
+            if (!isActiveAndEnabled) return null;
+
+            var g = graphic;
+            if (!g) return null;
+
+            var canvasRenderer = g.canvasRenderer;
+            if (!canvasRenderer || canvasRenderer.materialCount == 0) return null;
+
+            return canvasRenderer.GetMaterial();
+        }
+
         public virtual RectTransform transitionRoot => transform as RectTransform;
 
         public virtual Flip flip
@@ -57,7 +71,9 @@ namespace Coffee.UIEffects
         protected override void OnEnable()
         {
             _onBeforeCanvasRebuild ??= OnBeforeCanvasRebuild;
+            _onAfterCanvasRebuild ??= OnAfterCanvasRebuild;
             UIExtraCallbacks.onBeforeCanvasRebuild += _onBeforeCanvasRebuild;
+            UIExtraCallbacks.onAfterCanvasRebuild += _onAfterCanvasRebuild;
             UpdateContext(context);
             SetMaterialDirty();
             SetVerticesDirty();
@@ -68,6 +84,11 @@ namespace Coffee.UIEffects
             if (_onBeforeCanvasRebuild != null)
             {
                 UIExtraCallbacks.onBeforeCanvasRebuild -= _onBeforeCanvasRebuild;
+            }
+
+            if (_onAfterCanvasRebuild != null)
+            {
+                UIExtraCallbacks.onAfterCanvasRebuild -= _onAfterCanvasRebuild;
             }
 
             MaterialRepository.Release(ref _material);
@@ -88,6 +109,13 @@ namespace Coffee.UIEffects
             {
                 SetVerticesDirty();
             }
+        }
+
+        protected virtual void OnAfterCanvasRebuild()
+        {
+            if (!_material || !graphic || context == null) return;
+
+            context.UpdateViewMatrix(GetCurrentMaterial(), transitionRoot, graphic.canvas.rootCanvas, flip);
         }
 
         public void ModifyMesh(Mesh mesh)
@@ -127,7 +155,8 @@ namespace Coffee.UIEffects
 
             Profiler.BeginSample("(UIE)[UIEffect] GetModifiedMaterial");
             var samplingScaleId = (uint)(Mathf.InverseLerp(0.01f, 100, actualSamplingScale) * uint.MaxValue);
-            var hash = new Hash128((uint)baseMaterial.GetInstanceID(), effectId, samplingScaleId, 0);
+            var rootId = (uint)(transitionRoot ? transitionRoot.GetInstanceID() : 0);
+            var hash = new Hash128((uint)baseMaterial.GetInstanceID(), effectId, samplingScaleId, rootId);
             if (!MaterialRepository.Valid(hash, _material))
             {
                 Profiler.BeginSample("(UIE)[UIEffect] GetModifiedMaterial > Get or create material");
@@ -196,14 +225,6 @@ namespace Coffee.UIEffects
                 graphic.SetMaterialDirty();
                 Misc.QueuePlayerLoopUpdate();
             }
-        }
-
-        protected bool CheckTransformChangedWith(Transform root)
-        {
-            var sensitivity = UIEffectProjectSettings.transformSensitivity;
-            return root
-                   && root != transform
-                   && transform.HasChanged(root, ref _prevTransformHash, sensitivity);
         }
 
         internal void ReleaseMaterial()

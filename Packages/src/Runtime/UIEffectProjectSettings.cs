@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using Coffee.UIEffectInternal;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Coffee.UIEffects
 {
@@ -82,10 +83,10 @@ namespace Coffee.UIEffects
         {
 #if UNITY_2023_2_OR_NEWER
             const string tmpSupport = "TextMeshPro Support (Unity 6)";
-            const string version = "v5.6.0 (Unity 6)";
+            const string version = "v5.7.0 (Unity 6)";
 #else
             const string tmpSupport = "TextMeshPro Support";
-            const string version = "v5.6.0";
+            const string version = "v5.7.0";
 #endif
             ShaderSampleImporter.RegisterShaderSamples(new[]
             {
@@ -153,6 +154,30 @@ namespace Coffee.UIEffects
                     c.SetEnablePreviewIfSelected(selection);
                 }
             };
+
+            if (!Misc.isBatchOrBuilding)
+            {
+                // Enable the 'UIEFFECT_EDITOR' keyword only when drawing in the scene view camera.
+                RenderPipelineManager.beginCameraRendering += (_, c) => EnableEditorMode(true, c);
+                RenderPipelineManager.endCameraRendering += (_, c) => EnableEditorMode(false, c);
+                Camera.onPreRender += c => EnableEditorMode(true, c);
+                Camera.onPostRender += c => EnableEditorMode(false, c);
+
+                void EnableEditorMode(bool begin, Camera cam)
+                {
+                    if (cam.cameraType == CameraType.SceneView)
+                    {
+                        if (begin)
+                        {
+                            Shader.EnableKeyword("UIEFFECT_EDITOR");
+                        }
+                        else
+                        {
+                            Shader.DisableKeyword("UIEFFECT_EDITOR");
+                        }
+                    }
+                }
+            }
         }
 
         private static IEnumerable<UIEffectBase> FindAll()

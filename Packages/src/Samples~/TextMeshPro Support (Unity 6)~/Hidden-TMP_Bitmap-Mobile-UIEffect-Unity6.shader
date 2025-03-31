@@ -68,10 +68,12 @@ SubShader {
         #pragma shader_feature_local_fragment _ EDGE_COLOR_MULTIPLY EDGE_COLOR_ADDITIVE EDGE_COLOR_SUBTRACTIVE EDGE_COLOR_REPLACE EDGE_COLOR_MULTIPLY_LUMINANCE EDGE_COLOR_MULTIPLY_ADDITIVE EDGE_COLOR_HSV_MODIFIER EDGE_COLOR_CONTRAST
         #pragma shader_feature_local_fragment _ DETAIL_MASKING DETAIL_MULTIPLY DETAIL_ADDITIVE DETAIL_REPLACE DETAIL_MULTIPLY_ADDITIVE
         #pragma shader_feature_local_fragment _ TARGET_HUE TARGET_LUMINANCE
+        #pragma shader_feature_local_fragment _ GRADATION_GRADIENT GRADATION_RADIAL GRADATION_COLOR2 GRADATION_COLOR4
+        #pragma shader_feature_fragment _ UIEFFECT_EDITOR
         // ==== UIEFFECT END ====
 
         // ==== SOFTMASKABLE START ====
-        #pragma shader_feature _ SOFTMASK_EDITOR
+        #pragma shader_feature_fragment _ SOFTMASK_EDITOR
         #pragma shader_feature_local_fragment _ SOFTMASKABLE
         #if SOFTMASKABLE
         #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc"
@@ -87,7 +89,7 @@ SubShader {
 			fixed4 color : COLOR;
 			float2 texcoord0 : TEXCOORD0;
 			// ==== UIEFFECT START ====
-			float4	texcoord1		: TEXCOORD1;
+			float2	texcoord1		: TEXCOORD1;
 			float4	texcoord2		: TEXCOORD2;
 			// ==== UIEFFECT END ====
 		};
@@ -100,13 +102,8 @@ SubShader {
 			float4 mask			: TEXCOORD2;
 			// ==== UIEFFECT START ====
 		    float4 uvMask			: TEXCOORD3;
-		    float2 uvLocal			: TEXCOORD4;
+		    float4 worldPosition	: TEXCOORD4;
 			// ==== UIEFFECT END ====
-			// ==== SOFTMASKABLE START ====
-			#if SOFTMASK_EDITOR
-			float4 worldPosition : TEXCOORD5;
-			#endif
-			// ==== SOFTMASKABLE END ====
 		};
 
 		sampler2D 	_MainTex;
@@ -149,14 +146,9 @@ SubShader {
 			OUT.mask = float4(vert.xy * 2 - clampedRect.xy - clampedRect.zw, 0.25 / (0.25 * maskSoftness + pixelSize.xy));
 
 			// ==== UIEFFECT START ====
-			OUT.uvLocal = v.texcoord1.zw;
 			OUT.uvMask = v.texcoord2;
-			// ==== UIEFFECT END ====
-			// ==== SOFTMASKABLE START ====
-			#if SOFTMASK_EDITOR
 			OUT.worldPosition = v.vertex;
-			#endif
-			// ==== SOFTMASKABLE END ====
+			// ==== UIEFFECT END ====
 
 			return OUT;
 		}
@@ -178,7 +170,7 @@ SubShader {
 		fixed4 frag (v2f IN) : COLOR
 		{
 			_fragInput = IN;
-			half4 color = uieffect(_fragInput.texcoord0, _fragInput.uvMask, _fragInput.uvLocal);
+			half4 color = uieffect(IN.texcoord0, IN.uvMask, IN.worldPosition);
 
 			// Alternative implementation to UnityGet2DClipping with support for softness.
 			#if UNITY_UI_CLIP_RECT

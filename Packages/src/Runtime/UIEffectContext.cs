@@ -53,6 +53,15 @@ namespace Coffee.UIEffects
         private static readonly int s_DetailTex = Shader.PropertyToID("_DetailTex");
         private static readonly int s_DetailTex_ST = Shader.PropertyToID("_DetailTex_ST");
         private static readonly int s_DetailTex_Speed = Shader.PropertyToID("_DetailTex_Speed");
+        private static readonly int s_GradationColor1 = Shader.PropertyToID("_GradationColor1");
+        private static readonly int s_GradationColor2 = Shader.PropertyToID("_GradationColor2");
+        private static readonly int s_GradationColor3 = Shader.PropertyToID("_GradationColor3");
+        private static readonly int s_GradationColor4 = Shader.PropertyToID("_GradationColor4");
+        private static readonly int s_GradationTex = Shader.PropertyToID("_GradationTex");
+        private static readonly int s_GradationTex_ST = Shader.PropertyToID("_GradationTex_ST");
+        private static readonly int s_RootViewMatrix = Shader.PropertyToID("_RootViewMatrix");
+        private static readonly int s_GradViewMatrix = Shader.PropertyToID("_GradViewMatrix");
+        private static readonly int s_CanvasToWorldMatrix = Shader.PropertyToID("_CanvasToWorldMatrix");
 
         private static readonly string[] s_ToneKeywords =
         {
@@ -165,6 +174,15 @@ namespace Coffee.UIEffects
             "DETAIL_MULTIPLY_ADDITIVE"
         };
 
+        private static readonly string[] s_GradationKeywords =
+        {
+            "",
+            "GRADATION_GRADIENT",
+            "GRADATION_RADIAL",
+            "GRADATION_COLOR2",
+            "GRADATION_COLOR4"
+        };
+
         private static readonly Vector2[][] s_ShadowVectors = new[]
         {
             Array.Empty<Vector2>(), // None
@@ -178,7 +196,7 @@ namespace Coffee.UIEffects
             } // Outline8
         };
 
-        public static Func<UIVertex, Rect, float, float, UIVertex> onModifyVertex;
+        public static Func<UIVertex, Rect, UIVertex> onModifyVertex;
         public ToneFilter toneFilter = ToneFilter.None;
         public float toneIntensity = 1;
         public Vector4 toneParams = new Vector4(0, 0, 0, 0);
@@ -243,7 +261,7 @@ namespace Coffee.UIEffects
         public Color gradationColor2;
         public Color gradationColor3;
         public Color gradationColor4;
-        public Gradient gradationGradient;
+        public Texture2D gradationTex;
         public float gradationOffset;
         public float gradationScale;
         public float gradationRotation;
@@ -265,10 +283,10 @@ namespace Coffee.UIEffects
                                           || dstBlendMode != BlendMode.OneMinusSrcAlpha
                                           || shadowMode != ShadowMode.None
                                           || edgeMode != EdgeMode.None
-                                          || detailFilter != DetailFilter.None;
+                                          || detailFilter != DetailFilter.None
+                                          || gradationMode != GradationMode.None;
 
-        public bool willModifyVertex => willModifyMaterial
-                                        || gradationMode != GradationMode.None;
+        public bool willModifyVertex => willModifyMaterial;
 
         public void Reset()
         {
@@ -276,7 +294,7 @@ namespace Coffee.UIEffects
             CopyFrom(s_DefaultContext);
         }
 
-        public void CopyFrom(UIEffectContext preset)
+        private void CopyFrom(UIEffectContext preset)
         {
             toneFilter = preset.toneFilter;
             toneIntensity = preset.toneIntensity;
@@ -342,9 +360,9 @@ namespace Coffee.UIEffects
             gradationColor2 = preset.gradationColor2;
             gradationColor3 = preset.gradationColor3;
             gradationColor4 = preset.gradationColor4;
-            gradationGradient = preset.gradationGradient;
-            gradationOffset = preset.gradationOffset;
+            gradationTex = preset.gradationTex;
             gradationScale = preset.gradationScale;
+            gradationOffset = preset.gradationOffset;
             gradationRotation = preset.gradationRotation;
 
             detailFilter = preset.detailFilter;
@@ -424,6 +442,14 @@ namespace Coffee.UIEffects
             material.SetFloat(s_EdgeShinyAutoPlaySpeed, edgeShinyAutoPlaySpeed);
             material.SetInt(s_PatternArea, edgeMode != EdgeMode.None ? (int)patternArea : 0);
 
+            material.SetTexture(s_GradationTex, gradationMode != 0 ? gradationTex : null);
+            material.SetVector(s_GradationTex_ST, GetGradationScaleAndOffset());
+
+            material.SetColor(s_GradationColor1, gradationColor1);
+            material.SetColor(s_GradationColor2, gradationColor2);
+            material.SetColor(s_GradationColor3, gradationColor3);
+            material.SetColor(s_GradationColor4, gradationColor4);
+
             material.SetFloat(s_DetailIntensity, Mathf.Clamp01(detailIntensity));
             material.SetVector(s_DetailThreshold, new Vector2(detailThreshold.min, detailThreshold.max));
             material.SetTexture(s_DetailTex, detailFilter != 0 ? detailTex : null);
@@ -474,6 +500,32 @@ namespace Coffee.UIEffects
 
             SetKeyword(material, s_TargetKeywords, (int)targetMode);
 
+            switch (gradationMode)
+            {
+                case GradationMode.None:
+                    SetKeyword(material, s_GradationKeywords, 0);
+                    break;
+                case GradationMode.HorizontalGradient:
+                case GradationMode.VerticalGradient:
+                case GradationMode.AngleGradient:
+                    SetKeyword(material, s_GradationKeywords, 1);
+                    break;
+                case GradationMode.RadialFast:
+                case GradationMode.RadialDetail:
+                    SetKeyword(material, s_GradationKeywords, 2);
+                    break;
+                case GradationMode.Horizontal:
+                case GradationMode.Vertical:
+                case GradationMode.DiagonalToRightBottom:
+                case GradationMode.DiagonalToLeftBottom:
+                case GradationMode.Angle:
+                    SetKeyword(material, s_GradationKeywords, 3);
+                    break;
+                case GradationMode.Diagonal:
+                    SetKeyword(material, s_GradationKeywords, 4);
+                    break;
+            }
+
             Profiler.EndSample();
         }
 
@@ -484,6 +536,92 @@ namespace Coffee.UIEffects
             material.SetVector(s_DetailTex_Speed, enable ? (Vector4)detailTexSpeed : Vector4.zero);
             material.SetFloat(s_TransitionAutoPlaySpeed, enable ? transitionAutoPlaySpeed : 0);
             material.SetFloat(s_EdgeShinyAutoPlaySpeed, enable ? edgeShinyAutoPlaySpeed : 0);
+        }
+
+        public void UpdateViewMatrix(Material material, RectTransform transitionRoot, Canvas canvas, Flip flip)
+        {
+            if (!material) return;
+
+            var size = transitionRoot.rect.size;
+            var scale = new Vector3(1f / size.x, 1f / size.y, 1f);
+            if (transitionKeepAspectRatio && !Mathf.Approximately(scale.x, scale.y))
+            {
+                scale.x = scale.y = Mathf.Min(scale.x, scale.y);
+            }
+
+            if (0 != (flip & Flip.Effect))
+            {
+                scale.x = 0 != (flip & Flip.Horizontal) ? -scale.x : scale.x;
+                scale.y = 0 != (flip & Flip.Vertical) ? -scale.y : scale.y;
+            }
+
+            var pivot = new Vector2(0.5f, 0.5f);
+            var offset = (transitionRoot.pivot - pivot) * size;
+            var w2LMat = Matrix4x4.Translate(offset) * transitionRoot.worldToLocalMatrix;
+
+            var rootRotation = Quaternion.Euler(0, 0, transitionRotation);
+            var rootScale = 1f / GetMultiplier(transitionRotation);
+            material.SetMatrix(s_RootViewMatrix, Matrix4x4.TRS(pivot, rootRotation, scale * rootScale) * w2LMat);
+
+            var gradRotation = Quaternion.Euler(0, 0, GetGradationRotation());
+            var gradScale = 1f / GetMultiplier(GetGradationRotation());
+            material.SetMatrix(s_GradViewMatrix, Matrix4x4.TRS(pivot, gradRotation, scale * gradScale) * w2LMat);
+
+            if (canvas.renderMode == RenderMode.ScreenSpaceOverlay || !canvas.worldCamera)
+            {
+                material.SetMatrix(s_CanvasToWorldMatrix, canvas.transform.localToWorldMatrix);
+            }
+            else
+            {
+                material.SetMatrix(s_CanvasToWorldMatrix, Matrix4x4.identity);
+            }
+        }
+
+        private Vector4 GetGradationScaleAndOffset()
+        {
+            var gScale = 1 / gradationScale;
+            switch (gradationMode)
+            {
+                case GradationMode.HorizontalGradient:
+                case GradationMode.VerticalGradient:
+                case GradationMode.AngleGradient:
+                    return new Vector4(gScale, 1, -0.5f * (gScale + 1) - gradationOffset, 0);
+                case GradationMode.RadialFast:
+                case GradationMode.RadialDetail:
+                {
+                    return new Vector4(gScale, 1, gradationOffset, 0);
+                }
+                default:
+                    return new Vector4(gScale, 1, gradationOffset * (gScale + 1) / 2 - gScale * 0.5f + 0.5f, 0);
+            }
+        }
+
+        private float GetGradationRotation()
+        {
+            switch (gradationMode)
+            {
+                case GradationMode.DiagonalToLeftBottom:
+                    return 135;
+                case GradationMode.DiagonalToRightBottom:
+                    return 45;
+                case GradationMode.Vertical:
+                    return 90;
+                case GradationMode.VerticalGradient:
+                    return -90;
+                case GradationMode.Angle:
+                case GradationMode.AngleGradient:
+                    return gradationRotation;
+                default:
+                    return 0;
+            }
+        }
+
+        private static float GetMultiplier(float deg)
+        {
+            var rad = Mathf.Deg2Rad * deg;
+            var sin = Mathf.Sin(rad);
+            var cos = Mathf.Cos(rad);
+            return Mathf.Max(Mathf.Abs(cos - sin), Mathf.Abs(cos + sin));
         }
 
         private static void SetKeyword(Material material, string[] keywords, int index)
@@ -520,50 +658,6 @@ namespace Coffee.UIEffects
             // Get the rectangle to calculate the normalized position.
             vh.GetUIVertexStream(verts);
             var bundleSize = isText ? 6 : count;
-            var rectMatrix = Matrix4x4.identity;
-            var rot = Matrix4x4.Rotate(Quaternion.Euler(0, 0, transitionRotation));
-            var v1 = rot.MultiplyPoint3x4(new Vector3(1, 1, 0));
-            var multiplier = Mathf.Max(Mathf.Abs(v1.x), Mathf.Abs(v1.y));
-
-            Rect rect;
-            if (transitionRoot)
-            {
-                rect = transitionRoot.rect;
-                if (transitionRoot != graphic.transform)
-                {
-                    rectMatrix = transitionRoot.worldToLocalMatrix
-                                 * graphic.transform.localToWorldMatrix;
-                }
-
-                rot *= Matrix4x4.Scale(new Vector3(1 / multiplier, 1 / multiplier, 1))
-                       * rectMatrix;
-            }
-            else
-            {
-                rect = graphic.rectTransform.rect;
-                rot *= Matrix4x4.Scale(new Vector3(multiplier, multiplier, 1));
-            }
-
-            var normalizeTex = transitionTex
-                ? transitionTex
-                : detailTex
-                    ? detailTex
-                    : null;
-            if (transitionKeepAspectRatio && normalizeTex)
-            {
-                var center = rect.center;
-                var aspectRatio = (float)normalizeTex.width / normalizeTex.height;
-                if (rect.width < rect.height)
-                {
-                    rect.width = rect.height * aspectRatio;
-                }
-                else
-                {
-                    rect.height = rect.width / aspectRatio;
-                }
-
-                rect.center = center;
-            }
 
             // Modify vertices for each bundled-quad.
             for (var i = 0; i < count; i += bundleSize)
@@ -574,13 +668,18 @@ namespace Coffee.UIEffects
                 for (var j = 0; j < bundleSize; j++)
                 {
                     var vt = verts[i + j];
-                    ModifyVertex(ref vt, vt.position, vt.uv0, uvMask, rect, rot);
+                    if (onModifyVertex != null)
+                    {
+                        vt = onModifyVertex(vt, uvMask);
+                    }
+                    else
+                    {
+                        vt.uv1 = new Vector4(uvMask.xMin, uvMask.yMin, uvMask.xMax, uvMask.yMax);
+                    }
+
                     verts[i + j] = vt;
                 }
             }
-
-            // Apply gradation.
-            ApplyGradation(verts, transitionRoot.rect, rectMatrix, canModifyShape);
 
             // Apply flip (with effect).
             ApplyFlipWithEffect(verts, flip);
@@ -590,115 +689,6 @@ namespace Coffee.UIEffects
 
             vh.Clear();
             vh.AddUIVertexTriangleStream(verts);
-        }
-
-        private void ApplyGradation(List<UIVertex> verts, Rect rect, Matrix4x4 m, bool canModifyShape)
-        {
-            if (gradationMode == GradationMode.None) return;
-
-            var a = gradationColor1;
-            var b = gradationColor2;
-            var offset = gradationOffset;
-            var scale = gradationScale;
-            var grad = gradationGradient;
-            var rot = gradationRotation;
-            switch (gradationMode)
-            {
-                case GradationMode.Horizontal:
-                    GradientUtil.DoHorizontalGradient(verts, a, b, offset, scale, rect, m);
-                    break;
-                case GradationMode.Vertical:
-                    GradientUtil.DoVerticalGradient(verts, a, b, offset, scale, rect, m);
-                    break;
-                case GradationMode.Diagonal:
-                    GradientUtil.DoDiagonal(verts, a, b, gradationColor3, gradationColor4, offset, scale, rect, m);
-                    break;
-                case GradationMode.DiagonalToRightBottom:
-                    GradientUtil.DoDiagonalGradientToRightBottom(verts, a, b, offset, scale, rect, m);
-                    break;
-                case GradationMode.DiagonalToLeftBottom:
-                    GradientUtil.DoDiagonalGradientToLeftBottom(verts, a, b, offset, scale, rect, m);
-                    break;
-                case GradationMode.RadialFast:
-                    GradientUtil.DoRadialGradient(verts, a, b, offset, scale, rect, m, 4);
-                    break;
-                case GradationMode.RadialDetail:
-                    GradientUtil.DoRadialGradient(verts, a, b, offset, scale, rect, m, 12);
-                    break;
-                case GradationMode.Angle:
-                    rect = GradientUtil.RotateRectAsNormalized(rect, rot);
-                    m = Matrix4x4.Rotate(Quaternion.Euler(0, 0, rot)) * m;
-                    GradientUtil.DoHorizontalGradient(verts, a, b, offset, scale, rect, m);
-                    break;
-                case GradationMode.HorizontalGradient:
-                {
-                    if (_keyTimes == null)
-                    {
-                        _keyTimes = InternalListPool<float>.Rent();
-                        GradientUtil.GetKeyTimes(grad, _keyTimes);
-                    }
-
-                    if (canModifyShape)
-                    {
-                        var splitTimes = InternalListPool<float>.Rent();
-                        GradientUtil.SplitKeyTimes(_keyTimes, splitTimes, offset, scale);
-                        GradientUtil.DoHorizontalGradient(verts, grad, splitTimes, offset, scale, rect, m);
-                        InternalListPool<float>.Return(ref splitTimes);
-                    }
-                    else
-                    {
-                        GradientUtil.DoHorizontalGradient(verts, grad, offset, scale, rect, m);
-                    }
-
-                    break;
-                }
-                case GradationMode.VerticalGradient:
-                {
-                    if (_keyTimes == null)
-                    {
-                        _keyTimes = InternalListPool<float>.Rent();
-                        GradientUtil.GetKeyTimes(grad, _keyTimes);
-                    }
-
-                    if (canModifyShape)
-                    {
-                        var splitTimes = InternalListPool<float>.Rent();
-                        GradientUtil.SplitKeyTimes(_keyTimes, splitTimes, offset, scale);
-                        GradientUtil.DoVerticalGradient(verts, grad, splitTimes, offset, scale, rect, m);
-                        InternalListPool<float>.Return(ref splitTimes);
-                    }
-                    else
-                    {
-                        GradientUtil.DoVerticalGradient(verts, grad, offset, scale, rect, m);
-                    }
-
-                    break;
-                }
-                case GradationMode.AngleGradient:
-                {
-                    if (_keyTimes == null)
-                    {
-                        _keyTimes = InternalListPool<float>.Rent();
-                        GradientUtil.GetKeyTimes(grad, _keyTimes);
-                    }
-
-                    rect = GradientUtil.RotateRectAsNormalized(rect, rot);
-                    m = Matrix4x4.Rotate(Quaternion.Euler(0, 0, rot)) * m;
-                    if (canModifyShape)
-                    {
-                        var splitTimes = InternalListPool<float>.Rent();
-                        GradientUtil.SplitKeyTimes(_keyTimes, splitTimes, offset, scale);
-                        GradientUtil.DoAngleGradient(verts, grad, splitTimes, offset, scale, rect, m);
-                        InternalListPool<float>.Return(ref splitTimes);
-                    }
-                    else
-                    {
-                        GradientUtil.DoHorizontalGradient(verts, grad, offset, scale, rect, m);
-                    }
-
-                    break;
-                }
-            }
         }
 
         private void ApplyShadow(List<UIVertex> verts, RectTransform transitionRoot, Flip flip)
@@ -782,25 +772,6 @@ namespace Coffee.UIEffects
             }
 
             return expandSize;
-        }
-
-        private static void ModifyVertex(ref UIVertex vt, Vector2 pos, Vector2 uv, Rect uvMask,
-            Rect rect, Matrix4x4 m)
-        {
-            pos = m.MultiplyPoint3x4(pos);
-            var normalizedX = Mathf.InverseLerp(rect.xMin, rect.xMax, pos.x);
-            var normalizedY = Mathf.InverseLerp(rect.yMin, rect.yMax, pos.y);
-
-            if (onModifyVertex != null)
-            {
-                vt = onModifyVertex(vt, uvMask, normalizedX, normalizedY);
-            }
-            else
-            {
-                vt.uv0.z = normalizedX;
-                vt.uv0.w = normalizedY;
-                vt.uv1 = new Vector4(uvMask.xMin, uvMask.yMin, uvMask.xMax, uvMask.yMax);
-            }
         }
     }
 }

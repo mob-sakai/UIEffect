@@ -83,16 +83,13 @@ namespace Coffee.UIEffects
         private static readonly Func<UIVertex, UIVertex> s_OnMarkAsShadow =
             vt =>
             {
-                vt.uv0.z -= 8;
-                vt.uv0.w -= 8;
+                vt.uv1.x -= 2;
                 return vt;
             };
 
-        private static readonly Func<UIVertex, Rect, float, float, UIVertex> s_OnModifyVertex =
-            (vt, uvMask, normalizedX, normalizedY) =>
+        private static readonly Func<UIVertex, Rect, UIVertex> s_OnModifyVertex =
+            (vt, uvMask) =>
             {
-                vt.uv0.z = normalizedX;
-                vt.uv0.w = normalizedY;
                 vt.uv1 = new Vector4(uvMask.xMin, uvMask.yMin, uvMask.xMax, uvMask.yMax);
                 return vt;
             };

@@ -69,10 +69,12 @@ Shader "Hidden/UI/Default (UIEffect)"
             #pragma shader_feature_local_fragment _ EDGE_COLOR_MULTIPLY EDGE_COLOR_ADDITIVE EDGE_COLOR_SUBTRACTIVE EDGE_COLOR_REPLACE EDGE_COLOR_MULTIPLY_LUMINANCE EDGE_COLOR_MULTIPLY_ADDITIVE EDGE_COLOR_HSV_MODIFIER EDGE_COLOR_CONTRAST
             #pragma shader_feature_local_fragment _ DETAIL_MASKING DETAIL_MULTIPLY DETAIL_ADDITIVE DETAIL_REPLACE DETAIL_MULTIPLY_ADDITIVE
             #pragma shader_feature_local_fragment _ TARGET_HUE TARGET_LUMINANCE
+            #pragma shader_feature_local_fragment _ GRADATION_GRADIENT GRADATION_RADIAL GRADATION_COLOR2 GRADATION_COLOR4
+            #pragma shader_feature_fragment _ UIEFFECT_EDITOR
             // ==== UIEFFECT END ====
 
             // ==== SOFTMASKABLE START ====
-            #pragma shader_feature _ SOFTMASK_EDITOR
+            #pragma shader_feature_fragment _ SOFTMASK_EDITOR
             #pragma shader_feature_local_fragment _ SOFTMASKABLE
             #if SOFTMASKABLE
             #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc"
@@ -83,7 +85,7 @@ Shader "Hidden/UI/Default (UIEffect)"
             {
                 float4 vertex : POSITION;
                 float4 color : COLOR;
-                float4 texcoord : TEXCOORD0;
+                float2 texcoord : TEXCOORD0;
                 // ==== UIEFFECT START ====
                 float4 uvMask : TEXCOORD1;
                 // ==== UIEFFECT END ====
@@ -99,7 +101,6 @@ Shader "Hidden/UI/Default (UIEffect)"
                 float4 mask : TEXCOORD2;
                 // ==== UIEFFECT START ====
                 float4 uvMask : TEXCOORD3;
-                float2 uvLocal : TEXCOORD4;
                 // ==== UIEFFECT END ====
                 UNITY_VERTEX_OUTPUT_STEREO
             };
@@ -143,7 +144,6 @@ Shader "Hidden/UI/Default (UIEffect)"
 
                 // ==== UIEFFECT START ====
                 OUT.uvMask = v.uvMask;
-                OUT.uvLocal = v.texcoord.zw;
                 // ==== UIEFFECT END ====
 
                 return OUT;
@@ -172,7 +172,7 @@ Shader "Hidden/UI/Default (UIEffect)"
                 IN.color.a = round(IN.color.a * alphaPrecision) * invAlphaPrecision;
 
                 _fragInput = IN;
-                half4 c = uieffect(_fragInput.texcoord, _fragInput.uvMask, _fragInput.uvLocal);
+                half4 c = uieffect(IN.texcoord, IN.uvMask, IN.worldPosition);
 
                 #ifdef UNITY_UI_CLIP_RECT
                 half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(IN.mask.xy)) * IN.mask.zw);

@@ -172,16 +172,6 @@ namespace Coffee.UIEffects
             }
         }
 
-        protected override void OnBeforeCanvasRebuild()
-        {
-            base.OnBeforeCanvasRebuild();
-
-            if (useTargetTransform && isTargetInScene && CheckTransformChangedWith(target.transform))
-            {
-                SetVerticesDirty();
-            }
-        }
-
         internal override void UpdateContext(UIEffectContext c)
         {
             if (target && !isTargetInScene)
