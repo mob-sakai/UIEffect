@@ -749,36 +749,35 @@ namespace Coffee.UIEffects
             UIVertexUtil.Flip(verts, flipHorizontal, flipVertical);
         }
 
-        private Vector2 GetExpandSize(bool canModifyShape)
+        private Vector4 GetExpandSize(bool canModifyShape)
         {
-            if (!canModifyShape) return Vector2.zero;
+            if (!canModifyShape) return Vector4.zero;
 
-            var expandSize = Vector2.zero;
+            var expandSize = Vector4.zero;
             switch (samplingFilter)
             {
                 case SamplingFilter.BlurFast:
-                    expandSize.x += 10;
-                    expandSize.y += 10;
+                    expandSize += Vector4.one * 10;
                     break;
                 case SamplingFilter.BlurMedium:
-                    expandSize.x += 15;
-                    expandSize.y += 15;
+                    expandSize += Vector4.one * 15;
                     break;
                 case SamplingFilter.BlurDetail:
-                    expandSize.x += 20;
-                    expandSize.y += 20;
+                    expandSize += Vector4.one * 20;
                     break;
                 case SamplingFilter.RgbShift:
                     expandSize.x += 40;
-                    expandSize.y += 40;
+                    expandSize.z += 40;
                     break;
             }
 
             switch (transitionFilter)
             {
                 case TransitionFilter.Melt:
-                case TransitionFilter.Burn:
                     expandSize.y += 40;
+                    break;
+                case TransitionFilter.Burn:
+                    expandSize.w += 40;
                     break;
             }
 

@@ -33,25 +33,22 @@ namespace Coffee.UIEffects
             return false;
         }
 
-        public override Vector4 ModifyExpandSize(Graphic graphic, Vector2 expandSize)
+        public override Vector4 ModifyExpandSize(Graphic graphic, Vector4 expandSize)
         {
-            var image = graphic as Image;
-            var ret = new Vector4(expandSize.x, expandSize.y, expandSize.x, expandSize.y);
-
-            if (image
+            if (graphic is Image image
                 && image.type == Image.Type.Filled
                 && image.fillMethod == Image.FillMethod.Radial360
                 && image.fillAmount <= 0.5f)
             {
-                ret[(image.fillOrigin + (image.fillClockwise ? 2 : 0)) % 4] = 0;
+                expandSize[(image.fillOrigin + (image.fillClockwise ? 2 : 0)) % 4] = 0;
 
                 if (image.fillAmount <= 0.25f)
                 {
-                    ret[(image.fillOrigin + 3) % 4] = 0;
+                    expandSize[(image.fillOrigin + 3) % 4] = 0;
                 }
             }
 
-            return ret;
+            return expandSize;
         }
     }
 }

@@ -72,9 +72,9 @@ namespace Coffee.UIEffects
         {
         }
 
-        public virtual Vector4 ModifyExpandSize(Graphic graphic, Vector2 expandSize)
+        public virtual Vector4 ModifyExpandSize(Graphic graphic, Vector4 expandSize)
         {
-            return new Vector4(expandSize.x, expandSize.y, expandSize.x, expandSize.y);
+            return expandSize;
         }
 
         private static readonly Func<UIVertex, UIVertex, UIVertex, float, UIVertex> s_OnLerpVertex =
