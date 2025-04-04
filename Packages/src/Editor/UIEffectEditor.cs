@@ -665,6 +665,7 @@ namespace Coffee.UIEffects.Editors
             r.width = 55;
             if (GUI.Button(r, EditorGUIUtility.TrTempContent("Clear"), "MiniButton"))
             {
+                Undo.RecordObjects(targets, "Clear UIEffect");
                 Array.ForEach(targets.OfType<UIEffect>().ToArray(), Unsupported.SmartReset);
             }
         }
