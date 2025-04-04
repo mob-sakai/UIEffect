@@ -1,3 +1,12 @@
+## [5.6.2](https://github.com/mob-sakai/UIEffect/compare/5.6.1...5.6.2) (2025-04-04)
+
+
+### Bug Fixes
+
+* fix a potential `ArgumentOutOfRangeException` that could occur when changing the FontAsset in TextMeshPro ([909281c](https://github.com/mob-sakai/UIEffect/commit/909281c66b702d8497e9f847c91b688716b9c6a7)), closes [#327](https://github.com/mob-sakai/UIEffect/issues/327)
+* Remove unnecessary vertex expansion ([974e3e8](https://github.com/mob-sakai/UIEffect/commit/974e3e8769d456c5cdd8eb1767a7cf57ab4d52fc))
+* undo now works correctly after clicking the 'Clear' button in the inspector ([75ed355](https://github.com/mob-sakai/UIEffect/commit/75ed355e27faf8962390eb6788e1887ffd1b5f89))
+
 ## [5.6.1](https://github.com/mob-sakai/UIEffect/compare/5.6.0...5.6.1) (2025-03-28)
 
 
