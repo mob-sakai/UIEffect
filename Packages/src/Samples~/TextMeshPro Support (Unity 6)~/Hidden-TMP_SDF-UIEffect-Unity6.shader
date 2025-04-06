@@ -346,7 +346,7 @@ SubShader {
 			faceColor.rgb += glowColor.rgb * glowColor.a;
 		    #endif
 
-  		    return faceColor * input.color.a;
+  		    return faceColor;
 		}
 		#define UIEFFECT_TEXTMESHPRO 1
 		#include "Packages/com.coffee.ui-effect/Shaders/UIEffect.cginc"
@@ -357,7 +357,8 @@ SubShader {
 			UNITY_SETUP_INSTANCE_ID(input);
 			_fragInput = input;
 			half4 faceColor = uieffect(input.atlas, input.uvMask, input.worldPosition);
-			
+			faceColor *= input.color.a;
+
 		    #if UNITY_UI_CLIP_RECT
 			half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(input.mask.xy)) * input.mask.zw);
 			faceColor *= m.x * m.y;

@@ -146,6 +146,7 @@ SubShader {
 			// ==== UIEFFECT START ====
 		    float4 uvMask			: TEXCOORD4;
 		    float4 worldPosition	: TEXCOORD5;
+			fixed  alpha			: TEXCOORD6;
 			// ==== UIEFFECT END ====
 		};
 
@@ -185,7 +186,7 @@ SubShader {
 		    color = SRGBToLinear(input.color);
 		    #endif
 
-		    float opacity = color.a;
+		    float opacity = 1;
 		    #if (UNDERLAY_ON | UNDERLAY_INNER)
 		    opacity = 1.0;
 		    #endif
@@ -216,13 +217,14 @@ SubShader {
 		    float x = -(_UnderlayOffsetX * _ScaleRatioC) * _GradientScale / _TextureWidth;
 		    float y = -(_UnderlayOffsetY * _ScaleRatioC) * _GradientScale / _TextureHeight;
 
-		    output.texcoord2 = float4(input.texcoord0 + float2(x, y), input.color.a, 0);
+		    output.texcoord2 = float4(input.texcoord0 + float2(x, y), 1, 0);
 		    output.underlayColor = underlayColor;
 		    #endif
 
 			// ==== UIEFFECT START ====
 			output.uvMask = input.texcoord2;
 			output.worldPosition = input.position;
+			output.alpha = input.color.a;
 			// ==== UIEFFECT END ====
 
 		    return output;
@@ -291,6 +293,7 @@ SubShader {
 			UNITY_SETUP_INSTANCE_ID(input);
 			_fragInput = input;
 			half4 faceColor = uieffect(input.texcoord0, input.uvMask, input.worldPosition);
+			faceColor *= input.alpha;
 
 	    // Alternative implementation to UnityGet2DClipping with support for softness
 	    #if UNITY_UI_CLIP_RECT

@@ -165,7 +165,7 @@ SubShader{
 			v2f IN = _fragInput;
 			float2 uvMove = uv - IN.texcoord0;
 			fixed4 color = tex2D(_MainTex, IN.texcoord0 + uvMove);
-			color = fixed4 (tex2D(_FaceTex, IN.texcoord1).rgb * IN.color.rgb, IN.color.a * color.a);
+			color = fixed4 (tex2D(_FaceTex, IN.texcoord1).rgb * IN.color.rgb, color.a);
 			color.rgb *= color.a;
 			return color;
 		}
@@ -177,6 +177,7 @@ SubShader{
 		{
 			_fragInput = IN;
 			half4 color = uieffect(IN.texcoord0, IN.uvMask, IN.worldPosition);
+			color *= IN.color.a;
 
 			// Alternative implementation to UnityGet2DClipping with support for softness.
 			#if UNITY_UI_CLIP_RECT

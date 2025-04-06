@@ -154,7 +154,7 @@ Shader "Hidden/UI/Default (UIEffect)"
             fixed4 uieffect_frag(float2 uv)
             {
                 v2f IN = _fragInput;
-                half4 color = IN.color * (tex2D(_MainTex, uv) + _TextureSampleAdd);
+                half4 color = (tex2D(_MainTex, uv) + _TextureSampleAdd);
                 color.rgb *= color.a;
                 return color;
             }
@@ -173,6 +173,8 @@ Shader "Hidden/UI/Default (UIEffect)"
 
                 _fragInput = IN;
                 half4 c = uieffect(IN.texcoord, IN.uvMask, IN.worldPosition);
+                c.rgb *= IN.color.rgb;
+                c *= IN.color.a;
 
                 #ifdef UNITY_UI_CLIP_RECT
                 half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(IN.mask.xy)) * IN.mask.zw);

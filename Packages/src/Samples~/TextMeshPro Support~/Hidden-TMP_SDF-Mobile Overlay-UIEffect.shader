@@ -143,6 +143,7 @@ SubShader {
 			// ==== UIEFFECT START ====
 		    float4 uvMask			: TEXCOORD5;
 		    float4 worldPosition	: TEXCOORD6;
+			fixed  alpha			: TEXCOORD7;
 			// ==== UIEFFECT END ====
 		};
 
@@ -181,17 +182,17 @@ SubShader {
 			float bias = (0.5 - weight) * scale - 0.5;
 			float outline = _OutlineWidth * _ScaleRatioA * 0.5 * scale;
 
-			float opacity = input.color.a;
+			float opacity = 1;
 		#if (UNDERLAY_ON | UNDERLAY_INNER)
 				opacity = 1.0;
 		#endif
 
 			fixed4 faceColor = fixed4(input.color.rgb, opacity) * _FaceColor;
-			// faceColor.rgb *= faceColor.a;
+			faceColor.rgb *= faceColor.a;
 
 			fixed4 outlineColor = _OutlineColor;
 			outlineColor.a *= opacity;
-			// outlineColor.rgb *= outlineColor.a;
+			outlineColor.rgb *= outlineColor.a;
 			outlineColor = lerp(faceColor, outlineColor, sqrt(min(1.0, (outline * 2))));
 
 		#if (UNDERLAY_ON | UNDERLAY_INNER)
@@ -216,13 +217,14 @@ SubShader {
 			const half2 maskSoftness = half2(max(_UIMaskSoftnessX, _MaskSoftnessX), max(_UIMaskSoftnessY, _MaskSoftnessY));
 			output.mask = half4(vert.xy * 2 - clampedRect.xy - clampedRect.zw, 0.25 / (0.25 * maskSoftness + pixelSize.xy));
 			#if (UNDERLAY_ON || UNDERLAY_INNER)
-			output.texcoord1 = float4(input.texcoord0 + layerOffset, input.color.a, 0);
+			output.texcoord1 = float4(input.texcoord0 + layerOffset, 1, 0);
 			output.underlayParam = half2(layerScale, layerBias);
 			#endif
 
 			// ==== UIEFFECT START ====
 			output.uvMask = input.texcoord2;
 			output.worldPosition = input.vertex;
+			output.alpha = input.color.a;
 			// ==== UIEFFECT END ====
 
 			return output;
@@ -269,6 +271,7 @@ SubShader {
 			UNITY_SETUP_INSTANCE_ID(input);
 			_fragInput = input;
 			half4 c = uieffect(input.texcoord0.xy, input.uvMask, input.worldPosition);
+			c *= input.alpha;
 			
 		// Alternative implementation to UnityGet2DClipping with support for softness.
 		#if UNITY_UI_CLIP_RECT

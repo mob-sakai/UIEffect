@@ -338,7 +338,7 @@ SubShader {
             faceColor.rgb += glowColor.rgb * glowColor.a;
             #endif
 
-            return faceColor * input.color.a;
+            return faceColor;
 		}
         
 
@@ -351,6 +351,7 @@ SubShader {
 		    UNITY_SETUP_INSTANCE_ID(input);
 		    _fragInput = input;
 		    half4 faceColor = uieffect(input.atlas, input.uvMask, input.worldPosition);
+	    	faceColor *= input.color.a;
 			 
             // Alternative implementation to UnityGet2DClipping with support for softness.
             #if UNITY_UI_CLIP_RECT
