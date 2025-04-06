@@ -1,3 +1,10 @@
+## [5.6.3](https://github.com/mob-sakai/UIEffect/compare/5.6.2...5.6.3) (2025-04-06)
+
+
+### Bug Fixes
+
+* fix a potential `ArgumentOutOfRangeException` that could occur when changing the FontAsset in TextMeshPro ([3b095bc](https://github.com/mob-sakai/UIEffect/commit/3b095bcebd8b1264c373b8b71c27d3c35f673f3b)), closes [#327](https://github.com/mob-sakai/UIEffect/issues/327)
+
 ## [5.6.2](https://github.com/mob-sakai/UIEffect/compare/5.6.1...5.6.2) (2025-04-04)
 
 
