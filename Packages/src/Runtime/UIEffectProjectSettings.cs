@@ -98,7 +98,11 @@ namespace Coffee.UIEffects
                 ("Hidden/TextMeshPro/Bitmap (UIEffect)", tmpSupport, version),
                 ("Hidden/TextMeshPro/Mobile/Bitmap (UIEffect)", tmpSupport, version),
                 ("Hidden/TextMeshPro/Distance Field (UIEffect)", tmpSupport, version),
-                ("Hidden/TextMeshPro/Mobile/Distance Field (UIEffect)", tmpSupport, version)
+                ("Hidden/TextMeshPro/Mobile/Distance Field (UIEffect)", tmpSupport, version),
+
+                // ShaderGraph Support
+                ("Shader Graphs/UISample (UIEffect)", "ShaderGraph Support (Unity 6 BuiltIn)", "v5.7.0"),
+                ("Shader Graphs/UISampleURP (UIEffect)", "ShaderGraph Support (Unity 6 URP)", "v5.7.0")
             });
             ShaderSampleImporter.RegisterShaderAliases(new[]
             {

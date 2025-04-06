@@ -1,9 +1,16 @@
 #ifndef UI_EFFECT_INCLUDED
 #define UI_EFFECT_INCLUDED
 
+#ifndef UNITY_PI
+#define UNITY_PI 3.14159265358979323846
+#endif
+
+#ifndef CANVAS_SHADERGRAPH
 uniform const int _SrcBlend;
 uniform const int _DstBlend;
 uniform const float4 _MainTex_TexelSize;
+#endif
+
 uniform const float _ToneIntensity;
 uniform const half4 _ColorValue;
 uniform const float _ColorIntensity;
@@ -23,7 +30,7 @@ uniform const float2 _TransitionRange;
 uniform const float _TransitionWidth;
 uniform const int _TransitionPatternReverse;
 uniform const float _TransitionAutoPlaySpeed;
-uniform const fixed4 _TargetColor;
+uniform const half4 _TargetColor;
 uniform const float _TargetRange;
 uniform const float _TargetSoftness;
 uniform const float _ShadowBlurIntensity;
@@ -67,20 +74,31 @@ uniform const matrix _CanvasToWorldMatrix;
 #define SAMPLING_NONE (!SAMPLING_BLUR_FAST && !SAMPLING_BLUR_MEDIUM && !SAMPLING_BLUR_DETAIL && !SAMPLING_PIXELATION && !SAMPLING_RGB_SHIFT && !SAMPLING_EDGE_LUMINANCE && !SAMPLING_EDGE_ALPHA)
 #define TRANSITION_NONE (!TRANSITION_FADE && !TRANSITION_CUTOFF && !TRANSITION_DISSOLVE && !TRANSITION_SHINY && !TRANSITION_MASK && !TRANSITION_MELT && !TRANSITION_BURN && !TRANSITION_PATTERN)
 #define TARGET_NONE (!TARGET_HUE && !TARGET_LUMINANCE)
+#define EDGE_NONE (!EDGE_PLAIN && !EDGE_SHINY)
+#define DETAIL_NONE (!DETAIL_MASKING && !DETAIL_MULTIPLY && !DETAIL_ADDITIVE && !DETAIL_REPLACE && !DETAIL_MULTIPLY_ADDITIVE)
+#define GRADATION_NONE (!GRADATION_GRADIENT && !GRADATION_RADIAL && !GRADATION_COLOR2 && !GRADATION_COLOR4)
 
+#if TONE_NONE && SAMPLING_NONE && TRANSITION_NONE && TARGET_NONE && EDGE_NONE && DETAIL_NONE && GRADATION_NONE
+#define NO_UIEFFECT
+#endif
+
+#define UIEFFECT_UV_MASK(uv, uvMask) step(uvMask.x, uv.x) * step(uv.x, uvMask.z) * step(uvMask.y, uv.y) * step(uv.y, uvMask.w)
 #define UIEFFECT_SAMPLE(uv) uieffect_frag(uv)
-#define UIEFFECT_SAMPLE_CLAMP(uv, uvMask) uieffect_frag(uv) \
-    * step(uvMask.x, uv.x) * step(uv.x, uvMask.z) \
-    * step(uvMask.y, uv.y) * step(uv.y, uvMask.w)
-#define TEX_SAMPLE_CLAMP(uv, uvMask) tex2D(_MainTex, uv) \
-* step(uvMask.x, uv.x) * step(uv.x, uvMask.z) \
-* step(uvMask.y, uv.y) * step(uv.y, uvMask.w)
+#define UIEFFECT_SAMPLE_CLAMP(uv, uvMask) uieffect_frag(uv) * UIEFFECT_UV_MASK(uv, uvMask)
+
+#ifdef CANVAS_SHADERGRAPH
+#define TEX_SAMPLE_CLAMP(uv, uvMask) SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv) * UIEFFECT_UV_MASK(uv, uvMask)
+#else
+#define TEX_SAMPLE_CLAMP(uv, uvMask) tex2D(_MainTex, uv) * UIEFFECT_UV_MASK(uv, uvMask)
+#endif
 
 float4 object_to_world(float4 pos)
 {
     #if UIEFFECT_EDITOR
+    return pos;
     return mul(unity_ObjectToWorld, pos);
     #else
+    return mul(_CanvasToWorldMatrix, pos);
     return mul(_CanvasToWorldMatrix, mul(unity_ObjectToWorld, pos));
     #endif
 }
@@ -152,7 +170,7 @@ half get_target_rate(const half3 color)
     #if TARGET_HUE // Target.Hue
     {
         const half value = rgb_to_hsv(color).x;
-        const half target = rgb_to_hsv(_TargetColor).x;
+        const half target = rgb_to_hsv(_TargetColor.rgb).x;
         diff = abs(target - value);
         diff = min(diff, 1 - diff);
     }
@@ -176,14 +194,14 @@ half4 apply_tone_filter(half4 color)
     #elif TONE_NEGATIVE // Tone.Negative
     color.rgb = lerp(color.rgb, (1 - color.rgb) * color.a, _ToneIntensity);
     #elif TONE_RETRO // Tone.Retro
-    const fixed l = Luminance(color.rgb);
-    const fixed r0 = step(l, 0.25);
-    const fixed r1 = step(l, 0.5);
-    const fixed r2 = step(l, 0.75);
-    const fixed3 retro = fixed3(0.06, 0.22, 0.06) * r0 // 0.0-0.25: (15, 56, 15)
-        + fixed3(0.19, 0.38, 0.19) * (1 - r0) * r1 // 0.25-0.5: (48, 98, 48)
-        + fixed3(0.54, 0.67, 0.06) * (1 - r1) * r2 // 0.5-0.75: (139, 172, 15)
-        + fixed3(0.60, 0.74, 0.06) * (1 - r2); // 0.75-1.0: (155, 188, 15)
+    const half l = Luminance(color.rgb);
+    const half r0 = step(l, 0.25);
+    const half r1 = step(l, 0.5);
+    const half r2 = step(l, 0.75);
+    const half3 retro = half3(0.06, 0.22, 0.06) * r0 // 0.0-0.25: (15, 56, 15)
+        + half3(0.19, 0.38, 0.19) * (1 - r0) * r1 // 0.25-0.5: (48, 98, 48)
+        + half3(0.54, 0.67, 0.06) * (1 - r1) * r2 // 0.5-0.75: (139, 172, 15)
+        + half3(0.60, 0.74, 0.06) * (1 - r2); // 0.75-1.0: (155, 188, 15)
     color.rgb = lerp(color.rgb, retro * color.a, _ToneIntensity);
     #elif TONE_POSTERIZE // Tone.Posterize
     const half3 hsv = rgb_to_hsv(color.rgb);
@@ -487,8 +505,8 @@ half4 apply_transition_filter(half4 color, const float alpha, const float2 uvLoc
     {
         const float factor = alpha - transition_rate() * (1 + _TransitionWidth) + _TransitionWidth;
         const float softness = max(0.0001, _TransitionWidth * _TransitionSoftness);
-        const fixed bandLerp = saturate((_TransitionWidth - factor) * 1 / softness);
-        const fixed softLerp = saturate(factor * 2 / softness);
+        const half bandLerp = saturate((_TransitionWidth - factor) * 1 / softness);
+        const half softLerp = saturate(factor * 2 / softness);
         half4 bandColor = apply_transition_color_filter(half4(color.rgb, 1), half4(_TransitionColor.rgb, 1),
                                                         _TransitionColor.a);
         bandColor *= color.a;
@@ -677,13 +695,22 @@ half4 uieffect_internal(float2 uv, float4 uvMask, const float2 uvLocal, const fl
     }
 }
 
-half4 uieffect(float2 uv, float4 uvMask, const float4 pos)
+half4 uieffect(half4 origin, float2 uv, float4 uvMask, float4 wpos)
 {
-    const fixed4 origin = UIEFFECT_SAMPLE_CLAMP(uv, uvMask);
-    const half rate = get_target_rate(origin);
-    const float4 wpos = object_to_world(pos);
-    const float2 uvLocal = saturate(mul(_RootViewMatrix, wpos));
-    const float2 uvGrad = mul(_GradViewMatrix, wpos);
+    #ifdef NO_UIEFFECT
+    return origin;
+    #endif
+
+    #ifndef CANVAS_SHADERGRAPH
+    wpos = mul(unity_ObjectToWorld, wpos);
+    #endif
+
+    #if !UIEFFECT_EDITOR
+    wpos = mul(_CanvasToWorldMatrix, wpos);
+    #endif
+    const half rate = get_target_rate(origin.rgb);
+    const float2 uvLocal = saturate(mul(_RootViewMatrix, wpos)).xy;
+    const float2 uvGrad = mul(_GradViewMatrix, wpos).xy;
     const int isShadow = uvMask.x < 0 ? 1 : 0;
     uvMask.x += isShadow * 2;
 
@@ -728,6 +755,13 @@ half4 uieffect(float2 uv, float4 uvMask, const float4 pos)
     #endif
 
     return lerp(origin, uieffect_internal(uv, uvMask, uvLocal, uvGrad, isShadow), rate);
+}
+
+
+half4 uieffect(float2 uv, float4 uvMask, float4 wpos)
+{
+    const half4 origin = UIEFFECT_SAMPLE_CLAMP(uv, uvMask);
+    return uieffect(origin, uv, uvMask, wpos);
 }
 
 #endif // UI_EFFECT_INCLUDED

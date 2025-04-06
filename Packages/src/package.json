@@ -41,6 +41,16 @@
       "displayName": "TextMeshPro Support (Unity 6)",
       "description": "TextMeshPro Support (Unity 6)",
       "path": "Samples~/TextMeshPro Support (Unity 6)~"
+    },
+    {
+      "displayName": "ShaderGraph Support (Unity 6 BuiltIn)",
+      "description": "ShaderGraph Support (Unity 6 BuiltIn)",
+      "path": "Samples~/ShaderGraph Support (Unity 6 BuiltIn)~"
+    },
+    {
+      "displayName": "ShaderGraph Support (Unity 6 URP)",
+      "description": "ShaderGraph Support (Unity 6 URP)",
+      "path": "Samples~/ShaderGraph Support (Unity 6 URP)~"
     }
   ]
 }
