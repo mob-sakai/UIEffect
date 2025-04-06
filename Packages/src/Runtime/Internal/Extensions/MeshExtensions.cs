@@ -115,7 +115,8 @@ namespace Coffee.UIEffectInternal
                     normals.GetOrDefault(i), tangents.GetOrDefault(i));
             }
 
-            for (var i = 0; i < indexCount - 2; i += 3)
+            var count = Mathf.Clamp(indexCount, 0, indices.Count);
+            for (var i = 0; i < count - 2; i += 3)
             {
                 dst.AddTriangle(indices[i], indices[i + 1], indices[i + 2]);
             }
