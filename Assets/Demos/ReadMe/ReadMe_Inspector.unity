@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311924, g: 0.38073963, b: 0.3587269, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -253,6 +252,7 @@ MonoBehaviour:
   m_UseTargetTransform: 1
   m_SamplingScale: 1
   m_AllowToModifyMeshShape: 1
+  m_CustomRoot: {fileID: 0}
 --- !u!114 &571623417
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -395,6 +395,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 27
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -476,7 +477,7 @@ GameObject:
   - component: {fileID: 1120943173}
   - component: {fileID: 1120943172}
   m_Layer: 5
-  m_Name: UIEffect (1)
+  m_Name: UIEffect_KeyFeature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -491,16 +492,16 @@ RectTransform:
   m_GameObject: {fileID: 1120943170}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 986199155}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 125, y: -57}
-  m_SizeDelta: {x: 627.607, y: 970.6}
+  m_AnchoredPosition: {x: 0, y: -12.107}
+  m_SizeDelta: {x: 404, y: 512}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1120943172
 MonoBehaviour:
@@ -515,93 +516,111 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ToneFilter: 1
-  m_ToneIntensity: 0.875
+  m_ToneIntensity: 0.5
   m_ToneParams: {x: 0, y: 0, z: 0, w: 0}
   m_ColorFilter: 6
-  m_ColorIntensity: 0.7
-  m_Color: {r: 0.745283, g: 0, b: 0.11693734, a: 1}
+  m_ColorIntensity: 0.5
+  m_Color: {r: 0.5377358, g: 0, b: 0.09190052, a: 1}
   m_ColorGlow: 0
-  m_SamplingFilter: 5
-  m_SamplingIntensity: 0.197
+  m_SamplingFilter: 1
+  m_SamplingIntensity: 0
   m_SamplingWidth: 1
   m_SamplingScale: 1
-  m_TransitionFilter: 3
-  m_TransitionRate: 0.411
+  m_TransitionFilter: 8
+  m_TransitionRate: 0
   m_TransitionReverse: 0
-  m_TransitionTex: {fileID: 2800000, guid: 5a9e7b253d8344331a9ef15185eaa629, type: 3}
+  m_TransitionTex: {fileID: 2800000, guid: 51cf4ae69d327428fbac4ee73e8587fe, type: 3}
   m_TransitionTexScale: {x: 1, y: 1}
   m_TransitionTexOffset: {x: 0, y: 0}
-  m_TransitionRotation: 120
+  m_TransitionTexSpeed: {x: 0, y: 0}
+  m_TransitionRotation: 45
   m_TransitionKeepAspectRatio: 1
-  m_TransitionWidth: 0.071
-  m_TransitionSoftness: 0.401
+  m_TransitionWidth: 0.5
+  m_TransitionSoftness: 0.475
   m_TransitionRange:
-    m_Min: 0
-    m_Max: 1
-  m_TransitionColorFilter: 6
-  m_TransitionColor: {r: 0, g: 0.5019608, b: 1.0039216, a: 1}
+    m_Min: 0.5
+    m_Max: 0.85
+  m_TransitionColorFilter: 1
+  m_TransitionColor: {r: 0, g: 0, b: 0, a: 0.5019608}
   m_TransitionColorGlow: 0
   m_TransitionPatternReverse: 0
   m_TransitionAutoPlaySpeed: 0
   m_TargetMode: 0
-  m_TargetColor: {r: 0.22352943, g: 0.87843144, b: 0.9450981, a: 1}
-  m_TargetRange: 0.118
+  m_TargetColor: {r: 0.15686275, g: 0.72156864, b: 0.8509804, a: 1}
+  m_TargetRange: 0.033
   m_TargetSoftness: 0.5
   m_BlendType: 1
   m_SrcBlendMode: 1
   m_DstBlendMode: 10
-  m_ShadowMode: 0
-  m_ShadowDistance: {x: 5, y: -5}
-  m_ShadowIteration: 4
-  m_ShadowFade: 0.9
+  m_ShadowMode: 4
+  m_ShadowDistance: {x: 3, y: -3}
+  m_ShadowIteration: 2
+  m_ShadowFade: 0.1
   m_ShadowMirrorScale: 0.5
   m_ShadowBlurIntensity: 1
   m_ShadowColorFilter: 4
-  m_ShadowColor: {r: 1, g: 1, b: 1, a: 1}
-  m_ShadowColorGlow: 0
-  m_GradationMode: 0
+  m_ShadowColor: {r: 0, g: 1, b: 1, a: 1}
+  m_ShadowColorGlow: 1
+  m_GradationMode: 10
+  m_GradationIntensity: 0.75
+  m_GradationColorFilter: 1
   m_GradationColor1: {r: 1, g: 1, b: 1, a: 1}
   m_GradationColor2: {r: 1, g: 1, b: 1, a: 1}
+  m_GradationColor3: {r: 1, g: 1, b: 1, a: 1}
+  m_GradationColor4: {r: 1, g: 1, b: 1, a: 1}
   m_GradationGradient:
     serializedVersion: 2
-    key0: {r: 1, g: 0, b: 0, a: 1}
-    key1: {r: 1, g: 0.8571428, b: 0, a: 1}
-    key2: {r: 0.2857144, g: 1, b: 0, a: 0}
-    key3: {r: 0, g: 1, b: 0.57142854, a: 0}
-    key4: {r: 0, g: 0.5714288, b: 1, a: 0}
-    key5: {r: 0.28571415, g: 0, b: 1, a: 0}
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 0.2857144, g: 1, b: 0, a: 1}
+    key2: {r: 1, g: 1, b: 1, a: 1}
+    key3: {r: 0, g: 0.5714288, b: 1, a: 0}
+    key4: {r: 1, g: 1, b: 1, a: 0}
+    key5: {r: 1, g: 0, b: 0.8571429, a: 0}
     key6: {r: 1, g: 0, b: 0.8571429, a: 0}
     key7: {r: 1, g: 0, b: 0, a: 0}
-    ctime0: 0
-    ctime1: 9830
-    ctime2: 18724
-    ctime3: 28720
-    ctime4: 38165
-    ctime5: 46838
+    ctime0: 10879
+    ctime1: 21823
+    ctime2: 32768
+    ctime3: 43646
+    ctime4: 54591
+    ctime5: 65535
     ctime6: 56173
     ctime7: 65535
     atime0: 0
     atime1: 65535
-    atime2: 0
+    atime2: 65535
     atime3: 0
     atime4: 0
     atime5: 0
     atime6: 0
     atime7: 0
-    m_Mode: 0
-    m_NumColorKeys: 8
+    m_Mode: 1
+    m_NumColorKeys: 6
     m_NumAlphaKeys: 2
-  m_GradationOffset: -0.349
-  m_GradationScale: 0.62374645
-  m_GradationRotation: 0
+  m_GradationOffset: 0
+  m_GradationScale: 0.15
+  m_GradationRotation: 135
   m_AllowToModifyMeshShape: 1
-  m_EdgeMode: 0
-  m_EdgeWidth: 0.5
+  m_EdgeMode: 2
+  m_EdgeWidth: 0.05
   m_EdgeColorFilter: 4
-  m_EdgeColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EdgeColor: {r: 1, g: 0.2688679, b: 0.76984084, a: 1}
+  m_EdgeColorGlow: 0
+  m_EdgeShinyRate: 0.75
   m_EdgeShinyWidth: 0.5
-  m_EdgeShinySpeed: 1
+  m_EdgeShinyAutoPlaySpeed: 0
   m_PatternArea: 1
+  m_DetailFilter: 0
+  m_DetailIntensity: 1
+  m_DetailThreshold:
+    m_Min: 0
+    m_Max: 1
+  m_DetailTex: {fileID: 0}
+  m_DetailTexScale: {x: 1, y: 1}
+  m_DetailTexOffset: {x: 0, y: 0}
+  m_DetailTexSpeed: {x: 0, y: 0}
+  m_CustomRoot: {fileID: 0}
+  m_Flip: 0
 --- !u!114 &1120943173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -654,7 +673,7 @@ GameObject:
   - component: {fileID: 1242517206}
   - component: {fileID: 1242517205}
   m_Layer: 5
-  m_Name: UIEffect
+  m_Name: UIEffect_Inspector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -671,7 +690,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2125393230}
   m_Father: {fileID: 986199155}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -718,6 +738,31 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  m_SeparateReverseCurve: 0
+  m_ReverseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   m_Delay: 0.5
   m_Duration: 1
   m_Interval: 0.5
@@ -726,6 +771,9 @@ MonoBehaviour:
   m_WrapMode: 1
   m_UpdateMode: 0
   m_OnComplete:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnChangedRate:
     m_PersistentCalls:
       m_Calls: []
 --- !u!114 &1242517206
@@ -748,7 +796,7 @@ MonoBehaviour:
   m_Color: {r: 1, g: 0.08701122, b: 0, a: 1}
   m_ColorGlow: 0
   m_SamplingFilter: 1
-  m_SamplingIntensity: 1
+  m_SamplingIntensity: 0.7
   m_SamplingWidth: 1
   m_SamplingScale: 1
   m_TransitionFilter: 3
@@ -757,6 +805,7 @@ MonoBehaviour:
   m_TransitionTex: {fileID: 2800000, guid: 5a9e7b253d8344331a9ef15185eaa629, type: 3}
   m_TransitionTexScale: {x: 1, y: 1}
   m_TransitionTexOffset: {x: 0, y: 0}
+  m_TransitionTexSpeed: {x: 0, y: 0}
   m_TransitionRotation: 120
   m_TransitionKeepAspectRatio: 1
   m_TransitionWidth: 0.074
@@ -773,7 +822,7 @@ MonoBehaviour:
   m_TargetColor: {r: 0.22352943, g: 0.87843144, b: 0.9450981, a: 1}
   m_TargetRange: 0.118
   m_TargetSoftness: 0.5
-  m_BlendType: 1
+  m_BlendType: 0
   m_SrcBlendMode: 1
   m_DstBlendMode: 10
   m_ShadowMode: 4
@@ -783,11 +832,15 @@ MonoBehaviour:
   m_ShadowMirrorScale: 0.5
   m_ShadowBlurIntensity: 1
   m_ShadowColorFilter: 4
-  m_ShadowColor: {r: 1, g: 1, b: 1, a: 1}
+  m_ShadowColor: {r: 0, g: 0, b: 0, a: 1}
   m_ShadowColorGlow: 0
-  m_GradationMode: 2
+  m_GradationMode: 10
+  m_GradationIntensity: 1
+  m_GradationColorFilter: 1
   m_GradationColor1: {r: 1, g: 1, b: 1, a: 1}
   m_GradationColor2: {r: 1, g: 1, b: 1, a: 1}
+  m_GradationColor3: {r: 1, g: 1, b: 1, a: 1}
+  m_GradationColor4: {r: 1, g: 1, b: 1, a: 1}
   m_GradationGradient:
     serializedVersion: 2
     key0: {r: 1, g: 0, b: 0, a: 1}
@@ -817,17 +870,30 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 8
     m_NumAlphaKeys: 2
-  m_GradationOffset: -0.349
-  m_GradationScale: 0.62374645
-  m_GradationRotation: 0
+  m_GradationOffset: 0
+  m_GradationScale: 1
+  m_GradationRotation: 60
   m_AllowToModifyMeshShape: 1
   m_EdgeMode: 2
   m_EdgeWidth: 0.5
   m_EdgeColorFilter: 6
   m_EdgeColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EdgeColorGlow: 0
+  m_EdgeShinyRate: 0.5
   m_EdgeShinyWidth: 0.5
-  m_EdgeShinySpeed: 1
+  m_EdgeShinyAutoPlaySpeed: 1
   m_PatternArea: 1
+  m_DetailFilter: 1
+  m_DetailIntensity: 1
+  m_DetailThreshold:
+    m_Min: 0.25
+    m_Max: 0.5
+  m_DetailTex: {fileID: 2800000, guid: dee1cb6c2ee294c6087ea9d89d368417, type: 3}
+  m_DetailTexScale: {x: 1, y: 1}
+  m_DetailTexOffset: {x: 0, y: 0}
+  m_DetailTexSpeed: {x: 0, y: 0}
+  m_CustomRoot: {fileID: 2125393230}
+  m_Flip: 1
 --- !u!114 &1242517207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -935,6 +1001,7 @@ MonoBehaviour:
   m_TransitionTex: {fileID: 0}
   m_TransitionTexScale: {x: 1, y: 1}
   m_TransitionTexOffset: {x: 0, y: 0}
+  m_TransitionTexSpeed: {x: 0, y: 0}
   m_TransitionRotation: 0
   m_TransitionKeepAspectRatio: 1
   m_TransitionWidth: 0.2
@@ -964,8 +1031,12 @@ MonoBehaviour:
   m_ShadowColor: {r: 1, g: 1, b: 1, a: 1}
   m_ShadowColorGlow: 0
   m_GradationMode: 0
+  m_GradationIntensity: 1
+  m_GradationColorFilter: 1
   m_GradationColor1: {r: 1, g: 1, b: 1, a: 1}
   m_GradationColor2: {r: 1, g: 1, b: 1, a: 1}
+  m_GradationColor3: {r: 1, g: 1, b: 1, a: 1}
+  m_GradationColor4: {r: 1, g: 1, b: 1, a: 1}
   m_GradationGradient:
     serializedVersion: 2
     key0: {r: 1, g: 1, b: 1, a: 1}
@@ -1003,9 +1074,22 @@ MonoBehaviour:
   m_EdgeWidth: 0.5
   m_EdgeColorFilter: 4
   m_EdgeColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EdgeColorGlow: 0
+  m_EdgeShinyRate: 0.5
   m_EdgeShinyWidth: 0.5
-  m_EdgeShinySpeed: 1
+  m_EdgeShinyAutoPlaySpeed: 1
   m_PatternArea: 1
+  m_DetailFilter: 0
+  m_DetailIntensity: 1
+  m_DetailThreshold:
+    m_Min: 0
+    m_Max: 1
+  m_DetailTex: {fileID: 0}
+  m_DetailTexScale: {x: 1, y: 1}
+  m_DetailTexOffset: {x: 0, y: 0}
+  m_DetailTexSpeed: {x: 0, y: 0}
+  m_CustomRoot: {fileID: 0}
+  m_Flip: 0
 --- !u!114 &1567169364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1082,6 +1166,31 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  m_SeparateReverseCurve: 0
+  m_ReverseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   m_Delay: 0.5
   m_Duration: 1
   m_Interval: 0.5
@@ -1092,3 +1201,42 @@ MonoBehaviour:
   m_OnComplete:
     m_PersistentCalls:
       m_Calls: []
+  m_OnChangedRate:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!1 &2125393229
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2125393230}
+  m_Layer: 5
+  m_Name: Root
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2125393230
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2125393229}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1242517204}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}

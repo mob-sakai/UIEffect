@@ -1,14 +1,35 @@
 using Coffee.UIEffects;
 using UnityEngine;
 
+[ExecuteAlways]
 public class GradationTest : MonoBehaviour
 {
-    [SerializeField] private UIEffect m_Target;
+    [Range(-1, 1)]
+    [SerializeField]
+    protected float m_GradationOffset = 0;
 
-    [SerializeField] private Gradient m_Gradient;
+    [Range(0.01f, 10)]
+    [SerializeField]
+    protected float m_GradationScale = 1;
 
-    public void SetGradation()
+    [SerializeField]
+    [Range(0, 360)]
+    private float m_GradationRotation = 0;
+
+    private UIEffect[] _uiEffects;
+
+    private void Awake()
     {
-        m_Target.SetGradientKeys(m_Gradient.colorKeys, m_Gradient.alphaKeys, m_Gradient.mode);
+        _uiEffects = GetComponentsInChildren<UIEffect>(true);
+    }
+
+    private void OnValidate()
+    {
+        foreach (var uiEffect in _uiEffects)
+        {
+            uiEffect.gradationOffset = m_GradationOffset;
+            uiEffect.gradationScale = m_GradationScale;
+            uiEffect.gradationRotation = m_GradationRotation;
+        }
     }
 }
