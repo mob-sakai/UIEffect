@@ -315,7 +315,7 @@ namespace Coffee.UIEffectInternal
                 var rKey = new Rect(r.x, r.y + 2, r.width, h);
                 if (GUI.Button(rKey, key.stringValue, EditorStyles.popup))
                 {
-                    ShowShaderDropdown(key, optionName, false);
+                    ShowShaderDropdown(key);
                 }
 
                 var rArrow = new Rect(r.x, r.y + h + 4, 20, h);
@@ -324,7 +324,7 @@ namespace Coffee.UIEffectInternal
                 var rValue = new Rect(r.x + 20, r.y + h + 4, r.width - 20, h);
                 if (GUI.Button(rValue, value.stringValue, EditorStyles.popup))
                 {
-                    ShowShaderDropdown(value, optionName, true);
+                    ShowShaderDropdown(value);
                 }
             };
 
@@ -444,12 +444,11 @@ namespace Coffee.UIEffectInternal
             return expand;
         }
 
-        private static void ShowShaderDropdown(SerializedProperty property, string option, bool required)
+        private static void ShowShaderDropdown(SerializedProperty property)
         {
             var menu = new GenericMenu();
             var current = property.stringValue;
             var allShaderNames = ShaderUtil.GetAllShaderInfo()
-                .Where(s => !required || s.name.Contains(option))
                 .Select(s => s.name);
 
             foreach (var shaderName in allShaderNames)
