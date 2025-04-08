@@ -1,0 +1,357 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!200 &-7225376290180000660
+ShaderVariantCollection:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ShaderVariants
+  m_Shaders:
+  - first: {fileID: -6465566751694194690, guid: 2da9d5515fb3241beb8b1aedff6ade6f, type: 3}
+    second:
+      variants:
+      - keywords: COLOR_ADDITIVE TONE_GRAYSCALE
+        passType: 0
+      - keywords: COLOR_MULTIPLY SAMPLING_BLUR_FAST TONE_GRAYSCALE
+        passType: 0
+      - keywords: COLOR_MULTIPLY SAMPLING_PIXELATION TONE_GRAYSCALE
+        passType: 0
+      - keywords: COLOR_MULTIPLY TONE_GRAYSCALE
+        passType: 0
+      - keywords: COLOR_REPLACE TONE_GRAYSCALE
+        passType: 0
+      - keywords: TONE_GRAYSCALE
+        passType: 0
+  - first: {fileID: 4800000, guid: 96246b1ead49a4c5a996fd477bc5a117, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: COLOR_ADDITIVE
+        passType: 0
+      - keywords: COLOR_CONTRAST
+        passType: 0
+      - keywords: COLOR_HSV_MODIFIER
+        passType: 0
+      - keywords: COLOR_HSV_MODIFIER TARGET_HUE
+        passType: 0
+      - keywords: COLOR_HSV_MODIFIER TARGET_LUMINANCE
+        passType: 0
+      - keywords: COLOR_MULTIPLY
+        passType: 0
+      - keywords: COLOR_MULTIPLY SAMPLING_BLUR_FAST TONE_GRAYSCALE
+        passType: 0
+      - keywords: COLOR_MULTIPLY SHADOW_COLOR_REPLACE
+        passType: 0
+      - keywords: COLOR_MULTIPLY_ADDITIVE
+        passType: 0
+      - keywords: COLOR_MULTIPLY_LUMINANCE
+        passType: 0
+      - keywords: COLOR_REPLACE
+        passType: 0
+      - keywords: COLOR_SUBTRACTIVE
+        passType: 0
+      - keywords: DETAIL_ADDITIVE
+        passType: 0
+      - keywords: DETAIL_MASKING
+        passType: 0
+      - keywords: DETAIL_MULTIPLY
+        passType: 0
+      - keywords: DETAIL_MULTIPLY_ADDITIVE
+        passType: 0
+      - keywords: DETAIL_REPLACE
+        passType: 0
+      - keywords: EDGE_COLOR_MULTIPLY_ADDITIVE EDGE_PLAIN
+        passType: 0
+      - keywords: EDGE_COLOR_MULTIPLY_ADDITIVE EDGE_SHINY
+        passType: 0
+      - keywords: GRADATION_COLOR2
+        passType: 0
+      - keywords: GRADATION_COLOR4
+        passType: 0
+      - keywords: GRADATION_GRADIENT
+        passType: 0
+      - keywords: GRADATION_RADIAL
+        passType: 0
+      - keywords: SAMPLING_BLUR_DETAIL
+        passType: 0
+      - keywords: SAMPLING_BLUR_FAST
+        passType: 0
+      - keywords: SAMPLING_BLUR_FAST SHADOW_COLOR_REPLACE
+        passType: 0
+      - keywords: SAMPLING_BLUR_MEDIUM
+        passType: 0
+      - keywords: SAMPLING_EDGE_ALPHA
+        passType: 0
+      - keywords: SAMPLING_EDGE_LUMINANCE
+        passType: 0
+      - keywords: SAMPLING_PIXELATION
+        passType: 0
+      - keywords: SAMPLING_RGB_SHIFT
+        passType: 0
+      - keywords: SHADOW_COLOR_REPLACE
+        passType: 0
+      - keywords: SHADOW_COLOR_REPLACE TRANSITION_COLOR_REPLACE TRANSITION_MELT
+        passType: 0
+      - keywords: TONE_GRAYSCALE
+        passType: 0
+      - keywords: TONE_NEGATIVE
+        passType: 0
+      - keywords: TONE_POSTERIZE
+        passType: 0
+      - keywords: TONE_RETRO
+        passType: 0
+      - keywords: TONE_SEPIA
+        passType: 0
+      - keywords: TRANSITION_BURN TRANSITION_COLOR_MULTIPLY_ADDITIVE
+        passType: 0
+      - keywords: TRANSITION_COLOR_MULTIPLY TRANSITION_PATTERN
+        passType: 0
+      - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_DISSOLVE
+        passType: 0
+      - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_MASK
+        passType: 0
+      - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_SHINY
+        passType: 0
+      - keywords: TRANSITION_COLOR_REPLACE TRANSITION_MELT
+        passType: 0
+      - keywords: TRANSITION_CUTOFF
+        passType: 0
+      - keywords: TRANSITION_FADE
+        passType: 0
+  - first: {fileID: -6465566751694194690, guid: e5b632cdcfc38478ebc1424ae9371f99, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: COLOR_ADDITIVE
+        passType: 0
+      - keywords: COLOR_CONTRAST
+        passType: 0
+      - keywords: COLOR_HSV_MODIFIER
+        passType: 0
+      - keywords: COLOR_HSV_MODIFIER TARGET_HUE
+        passType: 0
+      - keywords: COLOR_HSV_MODIFIER TARGET_LUMINANCE
+        passType: 0
+      - keywords: COLOR_MULTIPLY
+        passType: 0
+      - keywords: COLOR_MULTIPLY SAMPLING_BLUR_FAST TONE_GRAYSCALE
+        passType: 0
+      - keywords: COLOR_MULTIPLY SHADOW_COLOR_REPLACE
+        passType: 0
+      - keywords: COLOR_MULTIPLY_ADDITIVE
+        passType: 0
+      - keywords: COLOR_MULTIPLY_LUMINANCE
+        passType: 0
+      - keywords: COLOR_REPLACE
+        passType: 0
+      - keywords: COLOR_SUBTRACTIVE
+        passType: 0
+      - keywords: DETAIL_ADDITIVE
+        passType: 0
+      - keywords: DETAIL_MASKING
+        passType: 0
+      - keywords: DETAIL_MULTIPLY
+        passType: 0
+      - keywords: DETAIL_MULTIPLY_ADDITIVE
+        passType: 0
+      - keywords: DETAIL_REPLACE
+        passType: 0
+      - keywords: EDGE_COLOR_MULTIPLY_ADDITIVE EDGE_PLAIN
+        passType: 0
+      - keywords: EDGE_COLOR_MULTIPLY_ADDITIVE EDGE_SHINY
+        passType: 0
+      - keywords: GRADATION_COLOR2
+        passType: 0
+      - keywords: GRADATION_COLOR4
+        passType: 0
+      - keywords: GRADATION_GRADIENT
+        passType: 0
+      - keywords: GRADATION_RADIAL
+        passType: 0
+      - keywords: SAMPLING_BLUR_DETAIL
+        passType: 0
+      - keywords: SAMPLING_BLUR_FAST
+        passType: 0
+      - keywords: SAMPLING_BLUR_FAST SHADOW_COLOR_REPLACE
+        passType: 0
+      - keywords: SAMPLING_BLUR_MEDIUM
+        passType: 0
+      - keywords: SAMPLING_EDGE_ALPHA
+        passType: 0
+      - keywords: SAMPLING_EDGE_LUMINANCE
+        passType: 0
+      - keywords: SAMPLING_PIXELATION
+        passType: 0
+      - keywords: SAMPLING_RGB_SHIFT
+        passType: 0
+      - keywords: SHADOW_COLOR_REPLACE
+        passType: 0
+      - keywords: SHADOW_COLOR_REPLACE TRANSITION_COLOR_REPLACE TRANSITION_MELT
+        passType: 0
+      - keywords: TONE_GRAYSCALE
+        passType: 0
+      - keywords: TONE_NEGATIVE
+        passType: 0
+      - keywords: TONE_POSTERIZE
+        passType: 0
+      - keywords: TONE_RETRO
+        passType: 0
+      - keywords: TONE_SEPIA
+        passType: 0
+      - keywords: TRANSITION_BURN TRANSITION_COLOR_MULTIPLY_ADDITIVE
+        passType: 0
+      - keywords: TRANSITION_COLOR_MULTIPLY TRANSITION_PATTERN
+        passType: 0
+      - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_DISSOLVE
+        passType: 0
+      - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_MASK
+        passType: 0
+      - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_SHINY
+        passType: 0
+      - keywords: TRANSITION_COLOR_REPLACE TRANSITION_MELT
+        passType: 0
+      - keywords: TRANSITION_CUTOFF
+        passType: 0
+      - keywords: TRANSITION_FADE
+        passType: 0
+  - first: {fileID: -6465566751694194690, guid: c4b99d7494b704b7c885015e0153163b, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: COLOR_ADDITIVE
+        passType: 0
+      - keywords: COLOR_CONTRAST
+        passType: 0
+      - keywords: COLOR_HSV_MODIFIER
+        passType: 0
+      - keywords: COLOR_HSV_MODIFIER TARGET_HUE
+        passType: 0
+      - keywords: COLOR_HSV_MODIFIER TARGET_LUMINANCE
+        passType: 0
+      - keywords: COLOR_MULTIPLY
+        passType: 0
+      - keywords: COLOR_MULTIPLY SHADOW_COLOR_REPLACE
+        passType: 0
+      - keywords: COLOR_MULTIPLY_ADDITIVE
+        passType: 0
+      - keywords: COLOR_MULTIPLY_LUMINANCE
+        passType: 0
+      - keywords: COLOR_REPLACE
+        passType: 0
+      - keywords: COLOR_SUBTRACTIVE
+        passType: 0
+      - keywords: DETAIL_ADDITIVE
+        passType: 0
+      - keywords: DETAIL_MASKING
+        passType: 0
+      - keywords: DETAIL_MULTIPLY
+        passType: 0
+      - keywords: DETAIL_MULTIPLY_ADDITIVE
+        passType: 0
+      - keywords: DETAIL_REPLACE
+        passType: 0
+      - keywords: EDGE_COLOR_MULTIPLY_ADDITIVE EDGE_PLAIN
+        passType: 0
+      - keywords: EDGE_COLOR_MULTIPLY_ADDITIVE EDGE_SHINY
+        passType: 0
+      - keywords: GRADATION_COLOR2
+        passType: 0
+      - keywords: GRADATION_COLOR4
+        passType: 0
+      - keywords: GRADATION_GRADIENT
+        passType: 0
+      - keywords: GRADATION_RADIAL
+        passType: 0
+      - keywords: SAMPLING_BLUR_DETAIL
+        passType: 0
+      - keywords: SAMPLING_BLUR_FAST
+        passType: 0
+      - keywords: SAMPLING_BLUR_FAST SHADOW_COLOR_REPLACE
+        passType: 0
+      - keywords: SAMPLING_BLUR_MEDIUM
+        passType: 0
+      - keywords: SAMPLING_EDGE_ALPHA
+        passType: 0
+      - keywords: SAMPLING_EDGE_LUMINANCE
+        passType: 0
+      - keywords: SAMPLING_PIXELATION
+        passType: 0
+      - keywords: SAMPLING_RGB_SHIFT
+        passType: 0
+      - keywords: SHADOW_COLOR_REPLACE
+        passType: 0
+      - keywords: SHADOW_COLOR_REPLACE TRANSITION_COLOR_REPLACE TRANSITION_MELT
+        passType: 0
+      - keywords: TONE_GRAYSCALE
+        passType: 0
+      - keywords: TONE_NEGATIVE
+        passType: 0
+      - keywords: TONE_POSTERIZE
+        passType: 0
+      - keywords: TONE_RETRO
+        passType: 0
+      - keywords: TONE_SEPIA
+        passType: 0
+      - keywords: TRANSITION_BURN TRANSITION_COLOR_MULTIPLY_ADDITIVE
+        passType: 0
+      - keywords: TRANSITION_COLOR_MULTIPLY TRANSITION_PATTERN
+        passType: 0
+      - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_DISSOLVE
+        passType: 0
+      - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_MASK
+        passType: 0
+      - keywords: TRANSITION_COLOR_MULTIPLY_ADDITIVE TRANSITION_SHINY
+        passType: 0
+      - keywords: TRANSITION_COLOR_REPLACE TRANSITION_MELT
+        passType: 0
+      - keywords: TRANSITION_CUTOFF
+        passType: 0
+      - keywords: TRANSITION_FADE
+        passType: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d43f626d9b5f4d729097092ded48bdb, type: 3}
+  m_Name: UIEffectProjectSettings
+  m_EditorClassIdentifier: 
+  m_TransformSensitivity: 1
+  m_RuntimePresets:
+  - {fileID: 1645081683573595507, guid: 3b09ad143990c4c8795c6e93760e132a, type: 3}
+  - {fileID: 1645081683573595507, guid: 4f70ff0f1e25b4388b9bcb38d619f7bf, type: 3}
+  m_UseHDRColorPicker: 1
+  m_ShaderVariantCollection: {fileID: 0}
+  m_ShaderVariantRegistry:
+    m_OptionalShaders:
+    - key: Hidden/UI/Default (SoftMaskable)
+      value: Hidden/UI/Default (UIEffect)
+    - key: Hidden/TextMeshPro/Bitmap (SoftMaskable)
+      value: Hidden/TextMeshPro/Bitmap (UIEffect)
+    - key: Hidden/TextMeshPro/Distance Field (SoftMaskable)
+      value: Hidden/TextMeshPro/Distance Field (UIEffect)
+    - key: Hidden/TextMeshPro/Distance Field Overlay (SoftMaskable)
+      value: Hidden/TextMeshPro/Distance Field Overlay (UIEffect)
+    - key: Hidden/TextMeshPro/Distance Field SSD (SoftMaskable)
+      value: Hidden/TextMeshPro/Distance Field SSD (UIEffect)
+    - key: Hidden/TextMeshPro/Mobile/Bitmap (SoftMaskable)
+      value: Hidden/TextMeshPro/Mobile/Bitmap (UIEffect)
+    - key: Hidden/TextMeshPro/Mobile/Distance Field (SoftMaskable)
+      value: Hidden/TextMeshPro/Mobile/Distance Field (UIEffect)
+    - key: Hidden/TextMeshPro/Mobile/Distance Field Overlay (SoftMaskable)
+      value: Hidden/TextMeshPro/Mobile/Distance Field Overlay (UIEffect)
+    - key: Hidden/TextMeshPro/Mobile/Distance Field SSD (SoftMaskable)
+      value: Hidden/TextMeshPro/Mobile/Distance Field SSD (UIEffect)
+    - key: Shader Graphs/UISample (UIEffect)
+      value: Shader Graphs/UISample (UIEffect)
+    m_Asset: {fileID: -7225376290180000660}
+    m_ErrorOnUnregisteredVariant: 0
+    m_UnregisteredVariants: []
