@@ -19,9 +19,6 @@ namespace Coffee.UIEffects
         [SerializeField]
         protected RectTransform m_CustomRoot = null;
 
-        [SerializeField]
-        protected Flip m_Flip = 0;
-
         private UIEffect _currentTarget;
 
         public UIEffect target
@@ -82,16 +79,7 @@ namespace Coffee.UIEffects
             }
         }
 
-        public override Flip flip
-        {
-            get => m_Flip;
-            set
-            {
-                if (m_Flip == value) return;
-                m_Flip = value;
-                SetVerticesDirty();
-            }
-        }
+        public override Flip flip => target ? target.flip : 0;
 
         public override float actualSamplingScale => Mathf.Clamp(m_SamplingScale, 0.01f, 100);
 

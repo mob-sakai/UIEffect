@@ -14,7 +14,6 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _useTargetTransform;
         private SerializedProperty _samplingScale;
         private SerializedProperty _allowToModifyMeshShape;
-        private SerializedProperty _flip;
         private SerializedProperty _customRoot;
         private Editor _uiEffectEditor;
 
@@ -24,7 +23,6 @@ namespace Coffee.UIEffects.Editors
             _useTargetTransform = serializedObject.FindProperty("m_UseTargetTransform");
             _samplingScale = serializedObject.FindProperty("m_SamplingScale");
             _allowToModifyMeshShape = serializedObject.FindProperty("m_AllowToModifyMeshShape");
-            _flip = serializedObject.FindProperty("m_Flip");
             _customRoot = serializedObject.FindProperty("m_CustomRoot");
         }
 
@@ -64,7 +62,6 @@ namespace Coffee.UIEffects.Editors
 
             EditorGUILayout.PropertyField(_samplingScale);
             EditorGUILayout.PropertyField(_allowToModifyMeshShape);
-            EditorGUILayout.PropertyField(_flip);
 
             if (_target.objectReferenceValue)
             {
