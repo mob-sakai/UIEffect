@@ -1409,21 +1409,21 @@ namespace Coffee.UIEffects
         public override void SetVerticesDirty()
         {
             base.SetVerticesDirty();
-            replicas.ForEach(c =>
+            for (var i = 0; i < replicas.Count; i++)
             {
-                if (!c) return;
-                c.SetVerticesDirty();
-            });
+                if (!replicas[i]) continue;
+                replicas[i].SetVerticesDirty();
+            }
         }
 
         public override void SetMaterialDirty()
         {
             base.SetMaterialDirty();
-            replicas.ForEach(c =>
+            for (var i = 0; i < replicas.Count; i++)
             {
-                if (!c) return;
-                c.SetMaterialDirty();
-            });
+                if (!replicas[i]) continue;
+                replicas[i].SetMaterialDirty();
+            }
         }
 
         /// <summary>
@@ -1522,11 +1522,12 @@ namespace Coffee.UIEffects
         public override void ApplyContextToMaterial(Material material)
         {
             base.ApplyContextToMaterial(material);
-            replicas.ForEach(c =>
+
+            for (var i = 0; i < replicas.Count; i++)
             {
-                if (!c) return;
-                c.ApplyContextToMaterial(material);
-            });
+                if (!replicas[i]) continue;
+                replicas[i].ApplyContextToMaterial(material);
+            }
         }
 
         public override void SetRate(float rate, UIEffectTweener.CullingMask mask)
