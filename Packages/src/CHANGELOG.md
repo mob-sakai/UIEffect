@@ -1,3 +1,11 @@
+## [5.6.4](https://github.com/mob-sakai/UIEffect/compare/5.6.3...5.6.4) (2025-04-10)
+
+
+### Bug Fixes
+
+* avoid potential allocations ([26da24d](https://github.com/mob-sakai/UIEffect/commit/26da24dbc4022dcd71e7a58e5f02a6922ba2ddff))
+* optional shaders do not support all shader combinations ([6014ab5](https://github.com/mob-sakai/UIEffect/commit/6014ab54d010872f8fee63fc961ac5ab2edd08e1))
+
 ## [5.6.3](https://github.com/mob-sakai/UIEffect/compare/5.6.2...5.6.3) (2025-04-06)
 
 
