@@ -52,6 +52,8 @@ uniform const float2 _DetailThreshold;
 uniform const sampler2D _DetailTex;
 uniform const float4 _DetailTex_ST;
 uniform const float2 _DetailTex_Speed;
+uniform const float _GradationIntensity;
+uniform const int _GradationColorFilter;
 uniform const half4 _GradationColor1;
 uniform const half4 _GradationColor2;
 uniform const half4 _GradationColor3;
@@ -550,32 +552,70 @@ half4 apply_transition_filter(half4 color, const float alpha, const float2 uvLoc
     return color;
 }
 
-half4 apply_gradation_filter(half4 color, float2 uvGrad)
+half4 apply_gradation_filter(const half4 inColor, const float2 uvGrad)
 {
     const float2 uv = uvGrad * _GradationTex_ST.x + _GradationTex_ST.z;
+    half4 factor = inColor;
 
     #if GRADATION_GRADIENT // Gradation.Gradient
     {
-        return color * tex2D(_GradationTex, uv);
+        factor = tex2D(_GradationTex, uv);
     }
     #elif GRADATION_RADIAL // Gradation.Radial
     {
         float t = saturate(length((uvGrad - float2(0.5, 0.5)) * 2 * _GradationTex_ST.x) + _GradationTex_ST.z);
-        return color * lerp(_GradationColor1, _GradationColor2, t);
+        factor = lerp(_GradationColor1, _GradationColor2, t);
     }
     #elif GRADATION_COLOR2 // Gradation.Color2
     {
-        return color * lerp(_GradationColor1, _GradationColor2, saturate(uv.x));
+        factor = lerp(_GradationColor1, _GradationColor2, saturate(uv.x));
     }
     #elif GRADATION_COLOR4 // Gradation.Color4
     {
-        return color * lerp(
+        factor = lerp(
             lerp(_GradationColor3, _GradationColor4, saturate(uv.x)),
             lerp(_GradationColor1, _GradationColor2, saturate(uv.x)),
             saturate(uv.y));
     }
+    #else
+    {
+        return inColor;
+    }
     #endif
 
+    const int mode = _GradationColorFilter;
+    const float intensity = _GradationIntensity;
+    half4 color = inColor;
+    if (mode == 1) // Color.Multiply
+    {
+        color.rgb = color.rgb * factor.rgb;
+    }
+    else if (mode == 2) // Color.Additive
+    {
+        color.rgb = color.rgb + factor.rgb * color.a;
+    }
+    else if (mode == 3) // Color.Subtractive
+    {
+        color.rgb = color.rgb - factor.rgb * color.a;
+    }
+    else if (mode == 4) // Color.Replace
+    {
+        color.rgb = factor.rgb * color.a;
+    }
+    else if (mode == 5) // Color.MultiplyLuminance
+    {
+        color.rgb = (1 + Luminance(color.rgb)) * factor.rgb / 2 * color.a;
+    }
+    else if (mode == 6) // Color.MultiplyAdditive
+    {
+        color.rgb = color.rgb * (1 + factor.rgb);
+    }
+
+    if (0 < mode)
+    {
+        color = lerp(inColor, color, intensity);
+    }
+    
     return color;
 }
 

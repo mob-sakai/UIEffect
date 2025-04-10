@@ -162,6 +162,13 @@ namespace Coffee.UIEffects
         [SerializeField]
         protected GradationMode m_GradationMode = GradationMode.None;
 
+        [Range(0, 1)]
+        [SerializeField]
+        protected float m_GradationIntensity = 1;
+
+        [SerializeField]
+        protected GradationColorFilter m_GradationColorFilter = GradationColorFilter.Multiply;
+
         [SerializeField]
         protected Color m_GradationColor1 = Color.white;
 
@@ -1158,6 +1165,32 @@ namespace Coffee.UIEffects
             }
         }
 
+        /// <summary>
+        /// 0.0 (no effect) - 1.0 (full effect).
+        /// </summary>
+        public float gradationIntensity
+        {
+            get => m_GradationIntensity;
+            set
+            {
+                value = Mathf.Clamp(value, 0, 1);
+                if (Mathf.Approximately(m_GradationIntensity, value)) return;
+                context.gradationIntensity = m_GradationIntensity = value;
+                SetMaterialDirty();
+            }
+        }
+
+        public GradationColorFilter gradationColorFilter
+        {
+            get => m_GradationColorFilter;
+            set
+            {
+                if (m_GradationColorFilter == value) return;
+                context.gradationColorFilter = m_GradationColorFilter = value;
+                SetMaterialDirty();
+            }
+        }
+
         public Color gradationColor1
         {
             get => m_GradationColor1;
@@ -1546,6 +1579,8 @@ namespace Coffee.UIEffects
             c.patternArea = m_PatternArea;
 
             c.gradationMode = m_GradationMode;
+            c.gradationIntensity = m_GradationIntensity;
+            c.gradationColorFilter = m_GradationColorFilter;
             c.gradationColor1 = m_GradationColor1;
             c.gradationColor2 = m_GradationColor2;
             c.gradationColor3 = m_GradationColor3;
@@ -1747,6 +1782,8 @@ namespace Coffee.UIEffects
             if (!append || preset.m_GradationMode != GradationMode.None)
             {
                 m_GradationMode = preset.m_GradationMode;
+                m_GradationIntensity = preset.m_GradationIntensity;
+                m_GradationColorFilter = preset.m_GradationColorFilter;
                 m_GradationColor1 = preset.m_GradationColor1;
                 m_GradationColor2 = preset.m_GradationColor2;
                 m_GradationColor3 = preset.m_GradationColor3;
@@ -1837,6 +1874,8 @@ namespace Coffee.UIEffects
             m_PatternArea = c.patternArea;
 
             m_GradationMode = c.gradationMode;
+            m_GradationIntensity = c.gradationIntensity;
+            m_GradationColorFilter = c.gradationColorFilter;
             m_GradationColor1 = c.gradationColor1;
             m_GradationColor2 = c.gradationColor2;
             m_GradationColor3 = c.gradationColor3;

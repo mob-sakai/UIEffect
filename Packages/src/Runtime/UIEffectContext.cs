@@ -56,6 +56,8 @@ namespace Coffee.UIEffects
         private static readonly int s_DetailTex = Shader.PropertyToID("_DetailTex");
         private static readonly int s_DetailTex_ST = Shader.PropertyToID("_DetailTex_ST");
         private static readonly int s_DetailTex_Speed = Shader.PropertyToID("_DetailTex_Speed");
+        private static readonly int s_GradationIntensity = Shader.PropertyToID("_GradationIntensity");
+        private static readonly int s_GradationColorFilter = Shader.PropertyToID("_GradationColorFilter");
         private static readonly int s_GradationColor1 = Shader.PropertyToID("_GradationColor1");
         private static readonly int s_GradationColor2 = Shader.PropertyToID("_GradationColor2");
         private static readonly int s_GradationColor3 = Shader.PropertyToID("_GradationColor3");
@@ -214,6 +216,8 @@ namespace Coffee.UIEffects
         public PatternArea patternArea;
 
         public GradationMode gradationMode;
+        public float gradationIntensity;
+        public GradationColorFilter gradationColorFilter;
         public Color gradationColor1;
         public Color gradationColor2;
         public Color gradationColor3;
@@ -313,6 +317,8 @@ namespace Coffee.UIEffects
             patternArea = preset.patternArea;
 
             gradationMode = preset.gradationMode;
+            gradationIntensity = preset.gradationIntensity;
+            gradationColorFilter = preset.gradationColorFilter;
             gradationColor1 = preset.gradationColor1;
             gradationColor2 = preset.gradationColor2;
             gradationColor3 = preset.gradationColor3;
@@ -405,6 +411,8 @@ namespace Coffee.UIEffects
             material.SetTexture(s_GradationTex, gradationMode != 0 ? gradationTex : null);
             material.SetVector(s_GradationTex_ST, GetGradationScaleAndOffset());
 
+            material.SetFloat(s_GradationIntensity, gradationIntensity);
+            material.SetInt(s_GradationColorFilter, (int)gradationColorFilter);
             material.SetColor(s_GradationColor1, gradationColor1);
             material.SetColor(s_GradationColor2, gradationColor2);
             material.SetColor(s_GradationColor3, gradationColor3);

@@ -26,6 +26,17 @@ namespace Coffee.UIEffects
         Contrast = 8
     }
 
+    public enum GradationColorFilter
+    {
+        None = ColorFilter.None,
+        Multiply = ColorFilter.Multiply,
+        Additive = ColorFilter.Additive,
+        Subtractive = ColorFilter.Subtractive,
+        Replace = ColorFilter.Replace,
+        MultiplyLuminance = ColorFilter.MultiplyLuminance,
+        MultiplyAdditive = ColorFilter.MultiplyAdditive
+    }
+
     public enum SamplingFilter
     {
         None = 0,

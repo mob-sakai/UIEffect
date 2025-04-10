@@ -83,6 +83,8 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _shadowColorGlow;
 
         private SerializedProperty _gradationMode;
+        private SerializedProperty _gradationIntensity;
+        private SerializedProperty _gradationColorFilter;
         private SerializedProperty _gradationColor1;
         private SerializedProperty _gradationColor2;
         private SerializedProperty _gradationColor3;
@@ -187,6 +189,8 @@ namespace Coffee.UIEffects.Editors
             _patternArea = serializedObject.FindProperty("m_PatternArea");
 
             _gradationMode = serializedObject.FindProperty("m_GradationMode");
+            _gradationIntensity = serializedObject.FindProperty("m_GradationIntensity");
+            _gradationColorFilter = serializedObject.FindProperty("m_GradationColorFilter");
             _gradationColor1 = serializedObject.FindProperty("m_GradationColor1");
             _gradationColor2 = serializedObject.FindProperty("m_GradationColor2");
             _gradationColor3 = serializedObject.FindProperty("m_GradationColor3");
@@ -220,8 +224,6 @@ namespace Coffee.UIEffects.Editors
 
         public void DrawProperties()
         {
-            serializedObject.Update();
-
             // Tone filter
             if (DrawHeaderPopup(_toneFilter))
             {
@@ -377,6 +379,7 @@ namespace Coffee.UIEffects.Editors
             if (DrawHeaderPopup(_gradationMode))
             {
                 EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(_gradationColorFilter);
                 switch ((GradationMode)_gradationMode.intValue)
                 {
                     case GradationMode.HorizontalGradient:
@@ -400,6 +403,7 @@ namespace Coffee.UIEffects.Editors
                         break;
                 }
 
+                EditorGUILayout.PropertyField(_gradationIntensity);
                 EditorGUILayout.PropertyField(_gradationOffset);
                 EditorGUILayout.PropertyField(_gradationScale);
 
@@ -409,6 +413,8 @@ namespace Coffee.UIEffects.Editors
                     EditorGUILayout.PropertyField(_gradationRotation);
                 }
 
+                EditorGUILayout.PropertyField(_transitionKeepAspectRatio,
+                    EditorGUIUtility.TrTempContent("Keep Aspect Ratio"));
                 EditorGUI.indentLevel--;
             }
 
