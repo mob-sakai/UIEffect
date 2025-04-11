@@ -1,3 +1,19 @@
+# [5.7.0](https://github.com/mob-sakai/UIEffect/compare/5.6.4...5.7.0) (2025-04-11)
+
+
+### Bug Fixes
+
+* colors appeared darker when alpha was low ([21172f3](https://github.com/mob-sakai/UIEffect/commit/21172f37c21792906ac9e33827c771d388397653))
+* shrink shader variants for color filters ([7f60a56](https://github.com/mob-sakai/UIEffect/commit/7f60a56a9af6b4ecee223b466f1b2499af0194f4))
+
+
+### Features
+
+* `UIEffectReplica.flip` has been deprecated ([6af34e2](https://github.com/mob-sakai/UIEffect/commit/6af34e2994378fd33025b41fe08898b552aa08ab))
+* add `GradationIntensity` and `GradationColorFilter` properties ([a6781b9](https://github.com/mob-sakai/UIEffect/commit/a6781b92899c38f49eccfebf4173028955a5aced))
+* calculate the normalized position on the shader side ([01bbeed](https://github.com/mob-sakai/UIEffect/commit/01bbeedde7cf2d757d6d295475f0ad9acd24dce3)), closes [#323](https://github.com/mob-sakai/UIEffect/issues/323) [#324](https://github.com/mob-sakai/UIEffect/issues/324)
+* ShaderGraph support ([2dd2e26](https://github.com/mob-sakai/UIEffect/commit/2dd2e261666b611be3a1fd5ac112db34fd99038e)), closes [#326](https://github.com/mob-sakai/UIEffect/issues/326)
+
 ## [5.6.4](https://github.com/mob-sakai/UIEffect/compare/5.6.3...5.6.4) (2025-04-10)
 
 
