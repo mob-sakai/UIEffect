@@ -183,21 +183,21 @@ namespace Coffee.UIEffects
 
         internal override void UpdateContext(UIEffectContext c)
         {
-            (c.toneFilter, c.samplingFilter) = (m_EffectMode, m_BlurMode).Convert();
-            if (context.samplingFilter == SamplingFilter.Pixelation)
+            (c.m_ToneFilter, c.m_SamplingFilter) = (m_EffectMode, m_BlurMode).Convert();
+            if (context.m_SamplingFilter == SamplingFilter.Pixelation)
             {
-                c.toneIntensity = 0;
-                c.samplingIntensity = m_EffectFactor;
+                c.m_ToneIntensity = 0;
+                c.m_SamplingIntensity = m_EffectFactor;
             }
             else
             {
-                c.toneIntensity = m_EffectFactor;
-                c.samplingIntensity = m_BlurFactor;
+                c.m_ToneIntensity = m_EffectFactor;
+                c.m_SamplingIntensity = m_BlurFactor;
             }
 
-            c.colorFilter = m_ColorMode.Convert();
-            c.colorIntensity = m_ColorFactor;
-            c.color = m_Color;
+            c.m_ColorFilter = m_ColorMode.Convert();
+            c.m_ColorIntensity = m_ColorFactor;
+            c.m_Color = m_Color;
         }
 
         public override void SetRate(float rate, UIEffectTweener.CullingMask mask)

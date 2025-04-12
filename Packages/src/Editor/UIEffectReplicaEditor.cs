@@ -11,6 +11,7 @@ namespace Coffee.UIEffects.Editors
     public class UIEffectReplicaEditor : Editor
     {
         private SerializedProperty _target;
+        private SerializedProperty _preset;
         private SerializedProperty _useTargetTransform;
         private SerializedProperty _samplingScale;
         private SerializedProperty _allowToModifyMeshShape;
@@ -20,6 +21,7 @@ namespace Coffee.UIEffects.Editors
         private void OnEnable()
         {
             _target = serializedObject.FindProperty("m_Target");
+            _preset = serializedObject.FindProperty("m_Preset");
             _useTargetTransform = serializedObject.FindProperty("m_UseTargetTransform");
             _samplingScale = serializedObject.FindProperty("m_SamplingScale");
             _allowToModifyMeshShape = serializedObject.FindProperty("m_AllowToModifyMeshShape");
@@ -31,8 +33,15 @@ namespace Coffee.UIEffects.Editors
             serializedObject.Update();
 
             var r = EditorGUILayout.GetControlRect();
-            r.width -= 60;
-            EditorGUI.PropertyField(r, _target);
+            r.width -= 120;
+            if (_preset.objectReferenceValue)
+            {
+                EditorGUI.PropertyField(r, _preset);
+            }
+            else
+            {
+                EditorGUI.PropertyField(r, _target);
+            }
 
             // Preset button.
             r.x += r.width;
@@ -41,17 +50,25 @@ namespace Coffee.UIEffects.Editors
             {
                 UIEffectEditor.DropDownPreset(r, x => !x.builtin, p =>
                 {
-                    _target.objectReferenceValue = p;
-                    _target.serializedObject.ApplyModifiedProperties();
+                    _target.objectReferenceValue = null;
+                    _preset.objectReferenceValue = p;
+                    _preset.serializedObject.ApplyModifiedProperties();
                 });
+            }
+
+            // Clear button.
+            r.x += r.width;
+            r.width = 60;
+            if (GUI.Button(r, EditorGUIUtility.TrTempContent("Clear")))
+            {
+                _target.objectReferenceValue = null;
+                _preset.objectReferenceValue = null;
             }
 
             // Preset mode warning.
             if (_target.objectReferenceValue is UIEffect targetEffect && !targetEffect.gameObject.scene.IsValid())
             {
                 r = EditorGUILayout.GetControlRect();
-                r.width -= EditorGUIUtility.labelWidth;
-                r.x += EditorGUIUtility.labelWidth;
                 EditorGUI.HelpBox(r, "The target effect is not in the scene. (Preset mode)", MessageType.Warning);
             }
 
@@ -63,12 +80,13 @@ namespace Coffee.UIEffects.Editors
             EditorGUILayout.PropertyField(_samplingScale);
             EditorGUILayout.PropertyField(_allowToModifyMeshShape);
 
-            if (_target.objectReferenceValue)
+            var parent = _target.objectReferenceValue ?? _preset.objectReferenceValue;
+            if (parent)
             {
                 EditorGUI.BeginDisabledGroup(true);
-                CreateCachedEditor(_target.objectReferenceValue, null, ref _uiEffectEditor);
+                CreateCachedEditor(parent, null, ref _uiEffectEditor);
                 EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-                (_uiEffectEditor as UIEffectEditor)?.DrawProperties();
+                (_uiEffectEditor as UIEffectPropertyEditor)?.DrawProperties();
                 EditorGUILayout.EndVertical();
                 EditorGUI.EndDisabledGroup();
             }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Coffee.UIEffectInternal;
 using UnityEngine;
@@ -267,7 +268,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_ToneFilter == value) return;
-                context.toneFilter = m_ToneFilter = value;
+                context.m_ToneFilter = m_ToneFilter = value;
                 SetMaterialDirty();
             }
         }
@@ -282,7 +283,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, 0, 1);
                 if (Mathf.Approximately(m_ToneIntensity, value)) return;
-                context.toneIntensity = m_ToneIntensity = value;
+                context.m_ToneIntensity = m_ToneIntensity = value;
                 SetMaterialDirty();
             }
         }
@@ -296,7 +297,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_ColorFilter == value) return;
-                context.colorFilter = m_ColorFilter = value;
+                context.m_ColorFilter = m_ColorFilter = value;
                 SetMaterialDirty();
             }
         }
@@ -311,7 +312,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, 0, 1);
                 if (Mathf.Approximately(m_ColorIntensity, value)) return;
-                context.colorIntensity = m_ColorIntensity = value;
+                context.m_ColorIntensity = m_ColorIntensity = value;
                 SetMaterialDirty();
             }
         }
@@ -323,7 +324,7 @@ namespace Coffee.UIEffects
             {
                 m_Color.a = 1;
                 if (m_Color == value) return;
-                context.color = m_Color = value;
+                context.m_Color = m_Color = value;
                 SetMaterialDirty();
             }
         }
@@ -400,7 +401,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_ColorGlow == value) return;
-                context.colorGlow = m_ColorGlow = value;
+                context.m_ColorGlow = m_ColorGlow = value;
                 SetMaterialDirty();
             }
         }
@@ -414,7 +415,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_SamplingFilter == value) return;
-                context.samplingFilter = m_SamplingFilter = value;
+                context.m_SamplingFilter = m_SamplingFilter = value;
                 SetVerticesDirty();
                 SetMaterialDirty();
             }
@@ -430,7 +431,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, 0, 1);
                 if (Mathf.Approximately(m_SamplingIntensity, value)) return;
-                context.samplingIntensity = m_SamplingIntensity = value;
+                context.m_SamplingIntensity = m_SamplingIntensity = value;
                 SetMaterialDirty();
             }
         }
@@ -442,7 +443,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, 0.5f, 10);
                 if (Mathf.Approximately(m_SamplingWidth, value)) return;
-                context.samplingWidth = m_SamplingWidth = value;
+                context.m_SamplingWidth = m_SamplingWidth = value;
                 SetMaterialDirty();
             }
         }
@@ -472,7 +473,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_TransitionFilter == value) return;
-                context.transitionFilter = m_TransitionFilter = value;
+                context.m_TransitionFilter = m_TransitionFilter = value;
                 SetVerticesDirty();
                 SetMaterialDirty();
             }
@@ -488,7 +489,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, 0, 1);
                 if (Mathf.Approximately(m_TransitionRate, value)) return;
-                context.transitionRate = m_TransitionRate = value;
+                context.m_TransitionRate = m_TransitionRate = value;
                 SetMaterialDirty();
             }
         }
@@ -499,7 +500,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_TransitionReverse == value) return;
-                context.transitionReverse = m_TransitionReverse = value;
+                context.m_TransitionReverse = m_TransitionReverse = value;
                 SetMaterialDirty();
             }
         }
@@ -510,7 +511,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_TransitionTex == value) return;
-                context.transitionTex = m_TransitionTex = value;
+                context.m_TransitionTex = m_TransitionTex = value;
                 SetMaterialDirty();
             }
         }
@@ -521,7 +522,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_TransitionTexScale == value) return;
-                context.transitionTexScale = m_TransitionTexScale = value;
+                context.m_TransitionTexScale = m_TransitionTexScale = value;
                 SetMaterialDirty();
             }
         }
@@ -532,7 +533,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_TransitionTexOffset == value) return;
-                context.transitionTexOffset = m_TransitionTexOffset = value;
+                context.m_TransitionTexOffset = m_TransitionTexOffset = value;
                 SetMaterialDirty();
             }
         }
@@ -543,7 +544,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_TransitionTexSpeed == value) return;
-                context.transitionTexSpeed = m_TransitionTexSpeed = value;
+                context.m_TransitionTexSpeed = m_TransitionTexSpeed = value;
                 SetMaterialDirty();
             }
         }
@@ -554,7 +555,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (Mathf.Approximately(m_TransitionRotation, value)) return;
-                context.transitionRotation = m_TransitionRotation = value;
+                context.m_TransitionRotation = m_TransitionRotation = value;
             }
         }
 
@@ -564,7 +565,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_TransitionKeepAspectRatio == value) return;
-                context.transitionKeepAspectRatio = m_TransitionKeepAspectRatio = value;
+                context.m_TransitionKeepAspectRatio = m_TransitionKeepAspectRatio = value;
             }
         }
 
@@ -575,7 +576,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, 0, 1);
                 if (Mathf.Approximately(m_TransitionWidth, value)) return;
-                context.transitionWidth = m_TransitionWidth = value;
+                context.m_TransitionWidth = m_TransitionWidth = value;
                 SetMaterialDirty();
             }
         }
@@ -587,7 +588,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, 0, 1);
                 if (Mathf.Approximately(m_TransitionSoftness, value)) return;
-                context.transitionSoftness = m_TransitionSoftness = value;
+                context.m_TransitionSoftness = m_TransitionSoftness = value;
                 SetMaterialDirty();
             }
         }
@@ -598,7 +599,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_TransitionRange.Approximately(value)) return;
-                context.transitionRange = m_TransitionRange = value;
+                context.m_TransitionRange = m_TransitionRange = value;
                 SetMaterialDirty();
             }
         }
@@ -609,7 +610,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_TransitionColorFilter == value) return;
-                context.transitionColorFilter = m_TransitionColorFilter = value;
+                context.m_TransitionColorFilter = m_TransitionColorFilter = value;
                 SetMaterialDirty();
             }
         }
@@ -620,7 +621,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_TransitionColor == value) return;
-                context.transitionColor = m_TransitionColor = value;
+                context.m_TransitionColor = m_TransitionColor = value;
                 SetMaterialDirty();
             }
         }
@@ -697,7 +698,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_TransitionColorGlow == value) return;
-                context.transitionColorGlow = m_TransitionColorGlow = value;
+                context.m_TransitionColorGlow = m_TransitionColorGlow = value;
                 SetMaterialDirty();
             }
         }
@@ -708,7 +709,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_TransitionPatternReverse == value) return;
-                context.transitionPatternReverse = m_TransitionPatternReverse = value;
+                context.m_TransitionPatternReverse = m_TransitionPatternReverse = value;
                 SetMaterialDirty();
             }
         }
@@ -720,7 +721,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, -5, 5);
                 if (Mathf.Approximately(m_TransitionAutoPlaySpeed, value)) return;
-                context.transitionAutoPlaySpeed = m_TransitionAutoPlaySpeed = value;
+                context.m_TransitionAutoPlaySpeed = m_TransitionAutoPlaySpeed = value;
                 SetMaterialDirty();
             }
         }
@@ -731,7 +732,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_TargetMode == value) return;
-                context.targetMode = m_TargetMode = value;
+                context.m_TargetMode = m_TargetMode = value;
                 SetMaterialDirty();
             }
         }
@@ -742,7 +743,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_TargetColor == value) return;
-                context.targetColor = m_TargetColor = value;
+                context.m_TargetColor = m_TargetColor = value;
                 SetMaterialDirty();
             }
         }
@@ -754,7 +755,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, 0, 1);
                 if (Mathf.Approximately(m_TargetRange, value)) return;
-                context.targetRange = m_TargetRange = value;
+                context.m_TargetRange = m_TargetRange = value;
                 SetMaterialDirty();
             }
         }
@@ -766,7 +767,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, 0, 1);
                 if (Mathf.Approximately(m_TargetSoftness, value)) return;
-                context.targetSoftness = m_TargetSoftness = value;
+                context.m_TargetSoftness = m_TargetSoftness = value;
                 SetMaterialDirty();
             }
         }
@@ -778,8 +779,8 @@ namespace Coffee.UIEffects
             {
                 if (m_BlendType == value) return;
                 (m_SrcBlendMode, m_DstBlendMode) = (m_BlendType, m_SrcBlendMode, m_DstBlendMode).Convert();
-                context.srcBlendMode = m_SrcBlendMode;
-                context.dstBlendMode = m_DstBlendMode;
+                context.m_SrcBlendMode = m_SrcBlendMode;
+                context.m_DstBlendMode = m_DstBlendMode;
                 SetMaterialDirty();
             }
         }
@@ -794,7 +795,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_SrcBlendMode == value) return;
-                context.srcBlendMode = m_SrcBlendMode = value;
+                context.m_SrcBlendMode = m_SrcBlendMode = value;
                 m_BlendType = (m_SrcBlendMode, m_DstBlendMode).Convert();
                 SetMaterialDirty();
             }
@@ -810,7 +811,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_DstBlendMode == value) return;
-                context.dstBlendMode = m_DstBlendMode = value;
+                context.m_DstBlendMode = m_DstBlendMode = value;
                 m_BlendType = (m_SrcBlendMode, m_DstBlendMode).Convert();
                 SetMaterialDirty();
             }
@@ -822,7 +823,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_ShadowMode == value) return;
-                context.shadowMode = m_ShadowMode = value;
+                context.m_ShadowMode = m_ShadowMode = value;
                 SetVerticesDirty();
             }
         }
@@ -833,7 +834,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_ShadowDistance == value) return;
-                context.shadowDistance = m_ShadowDistance = value;
+                context.m_ShadowDistance = m_ShadowDistance = value;
                 SetVerticesDirty();
             }
         }
@@ -845,7 +846,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp01(value);
                 if (Mathf.Approximately(m_ShadowFade, value)) return;
-                context.shadowFade = m_ShadowFade = value;
+                context.m_ShadowFade = m_ShadowFade = value;
                 SetVerticesDirty();
             }
         }
@@ -857,7 +858,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, 1, 5);
                 if (m_ShadowIteration == value) return;
-                context.shadowIteration = m_ShadowIteration = value;
+                context.m_ShadowIteration = m_ShadowIteration = value;
                 SetVerticesDirty();
             }
         }
@@ -869,7 +870,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, 0f, 2f);
                 if (Mathf.Approximately(m_ShadowMirrorScale, value)) return;
-                context.shadowMirrorScale = m_ShadowMirrorScale = value;
+                context.m_ShadowMirrorScale = m_ShadowMirrorScale = value;
                 SetVerticesDirty();
             }
         }
@@ -881,7 +882,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, 0, 1);
                 if (Mathf.Approximately(m_ShadowBlurIntensity, value)) return;
-                context.shadowBlurIntensity = m_ShadowBlurIntensity = value;
+                context.m_ShadowBlurIntensity = m_ShadowBlurIntensity = value;
                 SetMaterialDirty();
             }
         }
@@ -892,7 +893,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_ShadowColorFilter == value) return;
-                context.shadowColorFilter = m_ShadowColorFilter = value;
+                context.m_ShadowColorFilter = m_ShadowColorFilter = value;
                 SetMaterialDirty();
             }
         }
@@ -903,7 +904,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_ShadowColor == value) return;
-                context.shadowColor = m_ShadowColor = value;
+                context.m_ShadowColor = m_ShadowColor = value;
                 SetMaterialDirty();
             }
         }
@@ -974,13 +975,20 @@ namespace Coffee.UIEffects
             }
         }
 
+        [Obsolete("shadowGlow is deprecated. Use shadowColorGlow instead.", false)]
         public bool shadowGlow
+        {
+            get => m_ShadowColorGlow;
+            set => shadowColorGlow = value;
+        }
+
+        public bool shadowColorGlow
         {
             get => m_ShadowColorGlow;
             set
             {
                 if (m_ShadowColorGlow == value) return;
-                context.shadowColorGlow = m_ShadowColorGlow = value;
+                context.m_ShadowColorGlow = m_ShadowColorGlow = value;
                 SetMaterialDirty();
             }
         }
@@ -991,7 +999,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_EdgeMode == value) return;
-                context.edgeMode = m_EdgeMode = value;
+                context.m_EdgeMode = m_EdgeMode = value;
                 SetMaterialDirty();
             }
         }
@@ -1003,7 +1011,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, 0, 1);
                 if (Mathf.Approximately(m_EdgeShinyRate, value)) return;
-                context.edgeShinyRate = m_EdgeShinyRate = value;
+                context.m_EdgeShinyRate = m_EdgeShinyRate = value;
                 SetMaterialDirty();
             }
         }
@@ -1015,7 +1023,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, 0, 1);
                 if (Mathf.Approximately(m_EdgeWidth, value)) return;
-                context.edgeWidth = m_EdgeWidth = value;
+                context.m_EdgeWidth = m_EdgeWidth = value;
                 SetMaterialDirty();
             }
         }
@@ -1026,7 +1034,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_EdgeColorFilter == value) return;
-                context.edgeColorFilter = m_EdgeColorFilter = value;
+                context.m_EdgeColorFilter = m_EdgeColorFilter = value;
                 SetMaterialDirty();
             }
         }
@@ -1037,7 +1045,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_EdgeColor == value) return;
-                context.edgeColor = m_EdgeColor = value;
+                context.m_EdgeColor = m_EdgeColor = value;
                 SetMaterialDirty();
             }
         }
@@ -1114,7 +1122,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_EdgeColorGlow == value) return;
-                context.edgeColorGlow = m_EdgeColorGlow = value;
+                context.m_EdgeColorGlow = m_EdgeColorGlow = value;
                 SetMaterialDirty();
             }
         }
@@ -1126,7 +1134,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, 0, 1);
                 if (Mathf.Approximately(m_EdgeShinyWidth, value)) return;
-                context.edgeShinyWidth = m_EdgeShinyWidth = value;
+                context.m_EdgeShinyWidth = m_EdgeShinyWidth = value;
                 SetMaterialDirty();
             }
         }
@@ -1138,7 +1146,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, -5, 5);
                 if (Mathf.Approximately(m_EdgeShinyAutoPlaySpeed, value)) return;
-                context.edgeShinyAutoPlaySpeed = m_EdgeShinyAutoPlaySpeed = value;
+                context.m_EdgeShinyAutoPlaySpeed = m_EdgeShinyAutoPlaySpeed = value;
                 SetMaterialDirty();
             }
         }
@@ -1149,7 +1157,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_PatternArea == value) return;
-                context.patternArea = m_PatternArea = value;
+                context.m_PatternArea = m_PatternArea = value;
                 SetMaterialDirty();
             }
         }
@@ -1160,7 +1168,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_GradationMode == value) return;
-                context.gradationMode = m_GradationMode = value;
+                context.m_GradationMode = m_GradationMode = value;
                 SetMaterialDirty();
             }
         }
@@ -1175,7 +1183,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, 0, 1);
                 if (Mathf.Approximately(m_GradationIntensity, value)) return;
-                context.gradationIntensity = m_GradationIntensity = value;
+                context.m_GradationIntensity = m_GradationIntensity = value;
                 SetMaterialDirty();
             }
         }
@@ -1186,7 +1194,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_GradationColorFilter == value) return;
-                context.gradationColorFilter = m_GradationColorFilter = value;
+                context.m_GradationColorFilter = m_GradationColorFilter = value;
                 SetMaterialDirty();
             }
         }
@@ -1197,7 +1205,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_GradationColor1 == value) return;
-                context.gradationColor1 = m_GradationColor1 = value;
+                context.m_GradationColor1 = m_GradationColor1 = value;
                 SetMaterialDirty();
             }
         }
@@ -1208,7 +1216,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_GradationColor2 == value) return;
-                context.gradationColor2 = m_GradationColor2 = value;
+                context.m_GradationColor2 = m_GradationColor2 = value;
                 SetMaterialDirty();
             }
         }
@@ -1219,7 +1227,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_GradationColor3 == value) return;
-                context.gradationColor3 = m_GradationColor3 = value;
+                context.m_GradationColor3 = m_GradationColor3 = value;
                 SetMaterialDirty();
             }
         }
@@ -1230,7 +1238,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_GradationColor4 == value) return;
-                context.gradationColor4 = m_GradationColor4 = value;
+                context.m_GradationColor4 = m_GradationColor4 = value;
                 SetMaterialDirty();
             }
         }
@@ -1241,7 +1249,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (Mathf.Approximately(m_GradationOffset, value)) return;
-                context.gradationOffset = m_GradationOffset = value;
+                context.m_GradationOffset = m_GradationOffset = value;
                 SetMaterialDirty();
             }
         }
@@ -1252,7 +1260,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (Mathf.Approximately(m_GradationScale, value)) return;
-                context.gradationScale = m_GradationScale = value;
+                context.m_GradationScale = m_GradationScale = value;
                 SetMaterialDirty();
             }
         }
@@ -1264,7 +1272,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Repeat(value, 360);
                 if (Mathf.Approximately(m_GradationRotation, value)) return;
-                context.gradationRotation = m_GradationRotation = value;
+                context.m_GradationRotation = m_GradationRotation = value;
             }
         }
 
@@ -1274,7 +1282,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_DetailFilter == value) return;
-                context.detailFilter = m_DetailFilter = value;
+                context.m_DetailFilter = m_DetailFilter = value;
                 SetMaterialDirty();
             }
         }
@@ -1286,7 +1294,7 @@ namespace Coffee.UIEffects
             {
                 value = Mathf.Clamp(value, 0, 1);
                 if (Mathf.Approximately(m_DetailIntensity, value)) return;
-                context.detailIntensity = m_DetailIntensity = value;
+                context.m_DetailIntensity = m_DetailIntensity = value;
                 SetMaterialDirty();
             }
         }
@@ -1297,7 +1305,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_DetailThreshold.Approximately(value)) return;
-                context.detailThreshold = m_DetailThreshold = value;
+                context.m_DetailThreshold = m_DetailThreshold = value;
                 SetMaterialDirty();
             }
         }
@@ -1308,7 +1316,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_EdgeColor == value) return;
-                context.detailColor = m_EdgeColor = value;
+                context.m_DetailColor = m_EdgeColor = value;
                 SetMaterialDirty();
             }
         }
@@ -1330,7 +1338,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_DetailTex == value) return;
-                context.detailTex = m_DetailTex = value;
+                context.m_DetailTex = m_DetailTex = value;
                 SetMaterialDirty();
             }
         }
@@ -1341,7 +1349,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_DetailTexScale == value) return;
-                context.detailTexScale = m_DetailTexScale = value;
+                context.m_DetailTexScale = m_DetailTexScale = value;
                 SetMaterialDirty();
             }
         }
@@ -1352,7 +1360,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_DetailTexOffset == value) return;
-                context.detailTexOffset = m_DetailTexOffset = value;
+                context.m_DetailTexOffset = m_DetailTexOffset = value;
                 SetMaterialDirty();
             }
         }
@@ -1363,7 +1371,7 @@ namespace Coffee.UIEffects
             set
             {
                 if (m_DetailTexSpeed == value) return;
-                context.detailTexSpeed = m_DetailTexSpeed = value;
+                context.m_DetailTexSpeed = m_DetailTexSpeed = value;
                 SetMaterialDirty();
             }
         }
@@ -1400,58 +1408,11 @@ namespace Coffee.UIEffects
             ? m_CustomRoot
             : transform as RectTransform;
 
-        private Texture2D _gradationRampTex;
-        private bool _isGradientDirty = true;
-
-        private static readonly Color32[] s_Colors = new Color32[256];
-
-        private static readonly InternalObjectPool<Texture2D> s_TexturePool = new InternalObjectPool<Texture2D>(
-            () =>
-            {
-                var w = 256;
-                var texture = new Texture2D(w, 1, TextureFormat.RGBA32, false, false)
-                {
-                    name = "GradationRamp",
-                    hideFlags = HideFlags.DontSave,
-                    wrapMode = TextureWrapMode.Repeat,
-                    anisoLevel = 0
-                };
-
-                return texture;
-            },
-            texture => texture,
-            texture => { });
-
-        private Texture2D gradationRampTex
-        {
-            get
-            {
-                if (!_gradationRampTex) _gradationRampTex = s_TexturePool.Rent();
-                if (!_isGradientDirty) return _gradationRampTex;
-                _isGradientDirty = false;
-
-                var w = _gradationRampTex.width;
-                for (var i = 0; i < w; i++)
-                {
-                    s_Colors[i] = m_GradationGradient.Evaluate((float)i / (w - 1));
-                }
-
-                _gradationRampTex.filterMode = m_GradationGradient.mode == GradientMode.Blend
-                    ? FilterMode.Bilinear
-                    : FilterMode.Point;
-
-                _gradationRampTex.SetPixels32(s_Colors);
-                _gradationRampTex.Apply();
-                return _gradationRampTex;
-            }
-        }
-
         public List<UIEffectReplica> replicas => _replicas ??= InternalListPool<UIEffectReplica>.Rent();
         private List<UIEffectReplica> _replicas;
 
         protected override void OnEnable()
         {
-            _isGradientDirty = true;
             (m_SrcBlendMode, m_DstBlendMode) = (m_BlendType, m_SrcBlendMode, m_DstBlendMode).Convert();
             base.OnEnable();
             SetMaterialDirty();
@@ -1466,7 +1427,6 @@ namespace Coffee.UIEffects
         protected override void OnDestroy()
         {
             InternalListPool<UIEffectReplica>.Return(ref _replicas);
-            s_TexturePool.Return(ref _gradationRampTex);
         }
 
 #if UNITY_EDITOR
@@ -1475,7 +1435,6 @@ namespace Coffee.UIEffects
             (m_SrcBlendMode, m_DstBlendMode) = (m_BlendType, m_SrcBlendMode, m_DstBlendMode).Convert();
             context?.SetGradationDirty();
             base.OnValidate();
-            _isGradientDirty = true;
         }
 
         internal override void SetEnablePreviewIfSelected(GameObject[] selection)
@@ -1527,94 +1486,11 @@ namespace Coffee.UIEffects
         public void SetGradientKeys(GradientColorKey[] colorKeys, GradientAlphaKey[] alphaKeys,
             GradientMode mode = GradientMode.Blend)
         {
-            _isGradientDirty = true;
             m_GradationGradient ??= new Gradient();
             m_GradationGradient.SetKeys(colorKeys, alphaKeys);
             m_GradationGradient.mode = mode;
             context?.SetGradationDirty();
             SetMaterialDirty();
-        }
-
-        internal override void UpdateContext(UIEffectContext c)
-        {
-            c.toneFilter = m_ToneFilter;
-            c.toneIntensity = m_ToneIntensity;
-
-            c.colorFilter = m_ColorFilter;
-            c.color = m_Color;
-            c.colorIntensity = m_ColorIntensity;
-            c.colorGlow = m_ColorGlow;
-
-            c.samplingFilter = m_SamplingFilter;
-            c.samplingIntensity = m_SamplingIntensity;
-            c.samplingWidth = m_SamplingWidth;
-
-            c.transitionFilter = m_TransitionFilter;
-            c.transitionRate = m_TransitionRate;
-            c.transitionReverse = m_TransitionReverse;
-            c.transitionTex = m_TransitionTex;
-            c.transitionTexScale = m_TransitionTexScale;
-            c.transitionTexOffset = m_TransitionTexOffset;
-            c.transitionTexSpeed = m_TransitionTexSpeed;
-            c.transitionRotation = m_TransitionRotation;
-            c.transitionKeepAspectRatio = m_TransitionKeepAspectRatio;
-            c.transitionWidth = m_TransitionWidth;
-            c.transitionSoftness = m_TransitionSoftness;
-            c.transitionRange = m_TransitionRange;
-            c.transitionColorFilter = m_TransitionColorFilter;
-            c.transitionColor = m_TransitionColor;
-            c.transitionColorGlow = m_TransitionColorGlow;
-            c.transitionPatternReverse = m_TransitionPatternReverse;
-            c.transitionAutoPlaySpeed = m_TransitionAutoPlaySpeed;
-
-            c.targetMode = m_TargetMode;
-            c.targetColor = m_TargetColor;
-            c.targetRange = m_TargetRange;
-            c.targetSoftness = m_TargetSoftness;
-
-            c.srcBlendMode = m_SrcBlendMode;
-            c.dstBlendMode = m_DstBlendMode;
-
-            c.shadowMode = m_ShadowMode;
-            c.shadowDistance = m_ShadowDistance;
-            c.shadowIteration = m_ShadowIteration;
-            c.shadowFade = m_ShadowFade;
-            c.shadowMirrorScale = m_ShadowMirrorScale;
-            c.shadowBlurIntensity = m_ShadowBlurIntensity;
-            c.shadowColorFilter = m_ShadowColorFilter;
-            c.shadowColor = m_ShadowColor;
-            c.shadowColorGlow = m_ShadowColorGlow;
-
-            c.edgeMode = m_EdgeMode;
-            c.edgeShinyRate = m_EdgeShinyRate;
-            c.edgeWidth = m_EdgeWidth;
-            c.edgeColorFilter = m_EdgeColorFilter;
-            c.edgeColor = m_EdgeColor;
-            c.edgeColorGlow = m_EdgeColorGlow;
-            c.edgeShinyWidth = m_EdgeShinyWidth;
-            c.edgeShinyAutoPlaySpeed = m_EdgeShinyAutoPlaySpeed;
-            c.patternArea = m_PatternArea;
-
-            c.gradationMode = m_GradationMode;
-            c.gradationIntensity = m_GradationIntensity;
-            c.gradationColorFilter = m_GradationColorFilter;
-            c.gradationColor1 = m_GradationColor1;
-            c.gradationColor2 = m_GradationColor2;
-            c.gradationColor3 = m_GradationColor3;
-            c.gradationColor4 = m_GradationColor4;
-            c.gradationTex = gradationRampTex;
-            c.gradationOffset = m_GradationOffset;
-            c.gradationScale = m_GradationScale;
-            c.gradationRotation = m_GradationRotation;
-
-            c.detailFilter = m_DetailFilter;
-            c.detailIntensity = m_DetailIntensity;
-            c.detailColor = m_DetailColor;
-            c.detailThreshold = m_DetailThreshold;
-            c.detailTex = m_DetailTex;
-            c.detailTexScale = m_DetailTexScale;
-            c.detailTexOffset = m_DetailTexOffset;
-            c.detailTexSpeed = m_DetailTexSpeed;
         }
 
         public override void ApplyContextToMaterial(Material material)
@@ -1694,13 +1570,29 @@ namespace Coffee.UIEffects
         /// </summary>
         public void LoadPreset(string presetName, bool append)
         {
-            LoadPreset(UIEffectProjectSettings.LoadRuntimePreset(presetName), append);
+            var preset = UIEffectProjectSettings.LoadPreset(presetName);
+            if (preset is UIEffect presetV1)
+            {
+                LoadPreset(presetV1, append);
+            }
+            else if (preset is UIEffectPreset presetV2)
+            {
+                LoadPreset(presetV2, append);
+            }
         }
 
         /// <summary>
         /// Load preset settings.
         /// </summary>
-        public void LoadPreset(UIEffect preset)
+        public void LoadPreset(UIEffect src)
+        {
+            LoadPreset(src, false);
+        }
+
+        /// <summary>
+        /// Load preset settings.
+        /// </summary>
+        public void LoadPreset(UIEffectPreset preset)
         {
             LoadPreset(preset, false);
         }
@@ -1708,212 +1600,448 @@ namespace Coffee.UIEffects
         /// <summary>
         /// Load preset settings.
         /// </summary>
-        public void LoadPreset(UIEffect preset, bool append)
+        public void LoadPreset(UIEffect src, bool append)
         {
-            if (!preset) return;
+            if (!src) return;
 
-            if (!append || preset.m_ToneFilter != ToneFilter.None)
+            var dst = this;
+            if (!append || src.m_ToneFilter != ToneFilter.None)
             {
-                m_ToneFilter = preset.m_ToneFilter;
-                m_ToneIntensity = preset.m_ToneIntensity;
+                dst.m_ToneFilter = src.m_ToneFilter;
+                dst.m_ToneIntensity = src.m_ToneIntensity;
             }
 
-            if (!append || preset.m_ColorFilter != ColorFilter.None)
+            if (!append || src.m_ColorFilter != ColorFilter.None)
             {
-                m_ColorFilter = preset.m_ColorFilter;
-                m_Color = preset.m_Color;
-                m_ColorIntensity = preset.m_ColorIntensity;
-                m_ColorGlow = preset.m_ColorGlow;
+                dst.m_ColorFilter = src.m_ColorFilter;
+                dst.m_Color = src.m_Color;
+                dst.m_ColorIntensity = src.m_ColorIntensity;
+                dst.m_ColorGlow = src.m_ColorGlow;
             }
 
-            if (!append || preset.m_SamplingFilter != SamplingFilter.None)
+            if (!append || src.m_SamplingFilter != SamplingFilter.None)
             {
-                m_SamplingFilter = preset.m_SamplingFilter;
-                m_SamplingIntensity = preset.m_SamplingIntensity;
-                m_SamplingWidth = preset.m_SamplingWidth;
+                dst.m_SamplingFilter = src.m_SamplingFilter;
+                dst.m_SamplingIntensity = src.m_SamplingIntensity;
+                dst.m_SamplingWidth = src.m_SamplingWidth;
             }
 
-            if (!append || preset.m_TransitionFilter != TransitionFilter.None)
+            if (!append || src.m_TransitionFilter != TransitionFilter.None)
             {
-                m_TransitionFilter = preset.m_TransitionFilter;
-                m_TransitionRate = preset.m_TransitionRate;
-                m_TransitionReverse = preset.m_TransitionReverse;
-                m_TransitionTex = preset.m_TransitionTex;
-                m_TransitionTexScale = preset.m_TransitionTexScale;
-                m_TransitionTexOffset = preset.m_TransitionTexOffset;
-                m_TransitionTexSpeed = preset.m_TransitionTexSpeed;
-                m_TransitionRotation = preset.m_TransitionRotation;
-                m_TransitionKeepAspectRatio = preset.m_TransitionKeepAspectRatio;
-                m_TransitionWidth = preset.m_TransitionWidth;
-                m_TransitionSoftness = preset.m_TransitionSoftness;
-                m_TransitionRange = preset.m_TransitionRange;
-                m_TransitionColorFilter = preset.m_TransitionColorFilter;
-                m_TransitionColor = preset.m_TransitionColor;
-                m_TransitionColorGlow = preset.m_TransitionColorGlow;
-                m_TransitionPatternReverse = preset.m_TransitionPatternReverse;
-                m_TransitionAutoPlaySpeed = preset.m_TransitionAutoPlaySpeed;
+                dst.m_TransitionFilter = src.m_TransitionFilter;
+                dst.m_TransitionRate = src.m_TransitionRate;
+                dst.m_TransitionReverse = src.m_TransitionReverse;
+                dst.m_TransitionTex = src.m_TransitionTex;
+                dst.m_TransitionTexScale = src.m_TransitionTexScale;
+                dst.m_TransitionTexOffset = src.m_TransitionTexOffset;
+                dst.m_TransitionTexSpeed = src.m_TransitionTexSpeed;
+                dst.m_TransitionRotation = src.m_TransitionRotation;
+                dst.m_TransitionKeepAspectRatio = src.m_TransitionKeepAspectRatio;
+                dst.m_TransitionWidth = src.m_TransitionWidth;
+                dst.m_TransitionSoftness = src.m_TransitionSoftness;
+                dst.m_TransitionRange = src.m_TransitionRange;
+                dst.m_TransitionColorFilter = src.m_TransitionColorFilter;
+                dst.m_TransitionColor = src.m_TransitionColor;
+                dst.m_TransitionColorGlow = src.m_TransitionColorGlow;
+                dst.m_TransitionPatternReverse = src.m_TransitionPatternReverse;
+                dst.m_TransitionAutoPlaySpeed = src.m_TransitionAutoPlaySpeed;
             }
 
-            if (!append || preset.m_TargetMode != TargetMode.None)
+            if (!append || src.m_TargetMode != TargetMode.None)
             {
-                m_TargetMode = preset.m_TargetMode;
-                m_TargetColor = preset.m_TargetColor;
-                m_TargetRange = preset.m_TargetRange;
-                m_TargetSoftness = preset.m_TargetSoftness;
+                dst.m_TargetMode = src.m_TargetMode;
+                dst.m_TargetColor = src.m_TargetColor;
+                dst.m_TargetRange = src.m_TargetRange;
+                dst.m_TargetSoftness = src.m_TargetSoftness;
             }
 
-
-            if (!append || preset.m_BlendType != BlendType.AlphaBlend)
+            if (!append || src.m_BlendType != BlendType.AlphaBlend)
             {
-                m_BlendType = preset.m_BlendType;
-                (m_SrcBlendMode, m_DstBlendMode) =
-                    (m_BlendType, preset.m_SrcBlendMode, preset.m_DstBlendMode).Convert();
+                dst.m_BlendType = src.m_BlendType;
+                (dst.m_SrcBlendMode, dst.m_DstBlendMode) =
+                    (dst.m_BlendType, src.m_SrcBlendMode, src.m_DstBlendMode).Convert();
             }
 
-            if (!append || preset.m_ShadowMode != ShadowMode.None)
+            if (!append || src.m_ShadowMode != ShadowMode.None)
             {
-                m_ShadowMode = preset.m_ShadowMode;
-                m_ShadowDistance = preset.m_ShadowDistance;
-                m_ShadowIteration = preset.m_ShadowIteration;
-                m_ShadowFade = preset.m_ShadowFade;
-                m_ShadowMirrorScale = preset.m_ShadowMirrorScale;
-                m_ShadowBlurIntensity = preset.m_ShadowBlurIntensity;
-                m_ShadowColorFilter = preset.m_ShadowColorFilter;
-                m_ShadowColor = preset.m_ShadowColor;
-                m_ShadowColorGlow = preset.m_ShadowColorGlow;
+                dst.m_ShadowMode = src.m_ShadowMode;
+                dst.m_ShadowDistance = src.m_ShadowDistance;
+                dst.m_ShadowIteration = src.m_ShadowIteration;
+                dst.m_ShadowFade = src.m_ShadowFade;
+                dst.m_ShadowMirrorScale = src.m_ShadowMirrorScale;
+                dst.m_ShadowBlurIntensity = src.m_ShadowBlurIntensity;
+                dst.m_ShadowColorFilter = src.m_ShadowColorFilter;
+                dst.m_ShadowColor = src.m_ShadowColor;
+                dst.m_ShadowColorGlow = src.m_ShadowColorGlow;
             }
 
-            if (!append || preset.m_EdgeMode != EdgeMode.None)
+            if (!append || src.m_EdgeMode != EdgeMode.None)
             {
-                m_EdgeMode = preset.m_EdgeMode;
-                m_EdgeShinyRate = preset.m_EdgeShinyRate;
-                m_EdgeWidth = preset.m_EdgeWidth;
-                m_EdgeColorFilter = preset.m_EdgeColorFilter;
-                m_EdgeColor = preset.m_EdgeColor;
-                m_EdgeColorGlow = preset.m_EdgeColorGlow;
-                m_EdgeShinyWidth = preset.m_EdgeShinyWidth;
-                m_EdgeShinyAutoPlaySpeed = preset.m_EdgeShinyAutoPlaySpeed;
-                m_PatternArea = preset.m_PatternArea;
+                dst.m_EdgeMode = src.m_EdgeMode;
+                dst.m_EdgeShinyRate = src.m_EdgeShinyRate;
+                dst.m_EdgeWidth = src.m_EdgeWidth;
+                dst.m_EdgeColorFilter = src.m_EdgeColorFilter;
+                dst.m_EdgeColor = src.m_EdgeColor;
+                dst.m_EdgeColorGlow = src.m_EdgeColorGlow;
+                dst.m_EdgeShinyWidth = src.m_EdgeShinyWidth;
+                dst.m_EdgeShinyAutoPlaySpeed = src.m_EdgeShinyAutoPlaySpeed;
+                dst.m_PatternArea = src.m_PatternArea;
             }
 
-            if (!append || preset.m_GradationMode != GradationMode.None)
+            if (!append || src.m_GradationMode != GradationMode.None)
             {
-                m_GradationMode = preset.m_GradationMode;
-                m_GradationIntensity = preset.m_GradationIntensity;
-                m_GradationColorFilter = preset.m_GradationColorFilter;
-                m_GradationColor1 = preset.m_GradationColor1;
-                m_GradationColor2 = preset.m_GradationColor2;
-                m_GradationColor3 = preset.m_GradationColor3;
-                m_GradationColor4 = preset.m_GradationColor4;
-                SetGradientKeys(preset.m_GradationGradient);
-                m_GradationOffset = preset.m_GradationOffset;
-                m_GradationScale = preset.m_GradationScale;
-                m_GradationRotation = preset.m_GradationRotation;
+                dst.m_GradationMode = src.m_GradationMode;
+                dst.m_GradationIntensity = src.m_GradationIntensity;
+                dst.m_GradationColorFilter = src.m_GradationColorFilter;
+                dst.m_GradationColor1 = src.m_GradationColor1;
+                dst.m_GradationColor2 = src.m_GradationColor2;
+                dst.m_GradationColor3 = src.m_GradationColor3;
+                dst.m_GradationColor4 = src.m_GradationColor4;
+                dst.SetGradientKeys(src.m_GradationGradient);
+                dst.m_GradationOffset = src.m_GradationOffset;
+                dst.m_GradationScale = src.m_GradationScale;
+                dst.m_GradationRotation = src.m_GradationRotation;
             }
 
-            if (!append || preset.m_DetailFilter != DetailFilter.None)
+            if (!append || src.m_DetailFilter != DetailFilter.None)
             {
-                m_DetailFilter = preset.m_DetailFilter;
-                m_DetailIntensity = preset.m_DetailIntensity;
-                m_DetailThreshold = preset.m_DetailThreshold;
-                m_DetailColor = preset.m_DetailColor;
-                m_DetailTex = preset.m_DetailTex;
-                m_DetailTexScale = preset.m_DetailTexScale;
-                m_DetailTexOffset = preset.m_DetailTexOffset;
-                m_DetailTexSpeed = preset.m_DetailTexSpeed;
+                dst.m_DetailFilter = src.m_DetailFilter;
+                dst.m_DetailIntensity = src.m_DetailIntensity;
+                dst.m_DetailThreshold = src.m_DetailThreshold;
+                dst.m_DetailTex = src.m_DetailTex;
+                dst.m_DetailTexScale = src.m_DetailTexScale;
+                dst.m_DetailTexOffset = src.m_DetailTexOffset;
+                dst.m_DetailTexSpeed = src.m_DetailTexSpeed;
             }
 
-            Misc.SetDirty(this);
+            Misc.SetDirty(dst);
             UpdateContext(context);
             SetVerticesDirty();
             SetMaterialDirty();
         }
 
-        internal void CopyFrom(UIEffectContext c)
+        /// <summary>
+        /// Load preset settings.
+        /// </summary>
+        public void LoadPreset(UIEffectPreset src, bool append)
         {
-            m_ToneFilter = c.toneFilter;
-            m_ToneIntensity = c.toneIntensity;
+            if (!src) return;
 
-            m_ColorFilter = c.colorFilter;
-            m_Color = c.color;
-            m_ColorIntensity = c.colorIntensity;
-            m_ColorGlow = c.colorGlow;
+            var dst = this;
+            if (!append || src.m_ToneFilter != ToneFilter.None)
+            {
+                dst.m_ToneFilter = src.m_ToneFilter;
+                dst.m_ToneIntensity = src.m_ToneIntensity;
+            }
 
-            m_SamplingFilter = c.samplingFilter;
-            m_SamplingIntensity = c.samplingIntensity;
-            m_SamplingWidth = c.samplingWidth;
+            if (!append || src.m_ColorFilter != ColorFilter.None)
+            {
+                dst.m_ColorFilter = src.m_ColorFilter;
+                dst.m_Color = src.m_Color;
+                dst.m_ColorIntensity = src.m_ColorIntensity;
+                dst.m_ColorGlow = src.m_ColorGlow;
+            }
 
-            m_TransitionFilter = c.transitionFilter;
-            m_TransitionRate = c.transitionRate;
-            m_TransitionReverse = c.transitionReverse;
-            m_TransitionTex = c.transitionTex;
-            m_TransitionTexScale = c.transitionTexScale;
-            m_TransitionTexOffset = c.transitionTexOffset;
-            m_TransitionTexSpeed = c.transitionTexSpeed;
-            m_TransitionRotation = c.transitionRotation;
-            m_TransitionKeepAspectRatio = c.transitionKeepAspectRatio;
-            m_TransitionWidth = c.transitionWidth;
-            m_TransitionSoftness = c.transitionSoftness;
-            m_TransitionRange = c.transitionRange;
-            m_TransitionColorFilter = c.transitionColorFilter;
-            m_TransitionColor = c.transitionColor;
-            m_TransitionColorGlow = c.transitionColorGlow;
-            m_TransitionPatternReverse = c.transitionPatternReverse;
-            m_TransitionAutoPlaySpeed = c.transitionAutoPlaySpeed;
+            if (!append || src.m_SamplingFilter != SamplingFilter.None)
+            {
+                dst.m_SamplingFilter = src.m_SamplingFilter;
+                dst.m_SamplingIntensity = src.m_SamplingIntensity;
+                dst.m_SamplingWidth = src.m_SamplingWidth;
+            }
 
-            m_TargetMode = c.targetMode;
-            m_TargetColor = c.targetColor;
-            m_TargetRange = c.targetRange;
-            m_TargetSoftness = c.targetSoftness;
+            if (!append || src.m_TransitionFilter != TransitionFilter.None)
+            {
+                dst.m_TransitionFilter = src.m_TransitionFilter;
+                dst.m_TransitionRate = src.m_TransitionRate;
+                dst.m_TransitionReverse = src.m_TransitionReverse;
+                dst.m_TransitionTex = src.m_TransitionTex;
+                dst.m_TransitionTexScale = src.m_TransitionTexScale;
+                dst.m_TransitionTexOffset = src.m_TransitionTexOffset;
+                dst.m_TransitionTexSpeed = src.m_TransitionTexSpeed;
+                dst.m_TransitionRotation = src.m_TransitionRotation;
+                dst.m_TransitionKeepAspectRatio = src.m_TransitionKeepAspectRatio;
+                dst.m_TransitionWidth = src.m_TransitionWidth;
+                dst.m_TransitionSoftness = src.m_TransitionSoftness;
+                dst.m_TransitionRange = src.m_TransitionRange;
+                dst.m_TransitionColorFilter = src.m_TransitionColorFilter;
+                dst.m_TransitionColor = src.m_TransitionColor;
+                dst.m_TransitionColorGlow = src.m_TransitionColorGlow;
+                dst.m_TransitionPatternReverse = src.m_TransitionPatternReverse;
+                dst.m_TransitionAutoPlaySpeed = src.m_TransitionAutoPlaySpeed;
+            }
 
-            m_SrcBlendMode = c.srcBlendMode;
-            m_DstBlendMode = c.dstBlendMode;
-            m_BlendType = (m_SrcBlendMode, m_DstBlendMode).Convert();
+            if (!append || src.m_TargetMode != TargetMode.None)
+            {
+                dst.m_TargetMode = src.m_TargetMode;
+                dst.m_TargetColor = src.m_TargetColor;
+                dst.m_TargetRange = src.m_TargetRange;
+                dst.m_TargetSoftness = src.m_TargetSoftness;
+            }
 
-            m_ShadowMode = c.shadowMode;
-            m_ShadowDistance = c.shadowDistance;
-            m_ShadowIteration = c.shadowIteration;
-            m_ShadowFade = c.shadowFade;
-            m_ShadowMirrorScale = c.shadowMirrorScale;
-            m_ShadowBlurIntensity = c.shadowBlurIntensity;
-            m_ShadowColorFilter = c.shadowColorFilter;
-            m_ShadowColor = c.shadowColor;
-            m_ShadowColorGlow = c.shadowColorGlow;
+            if (!append || src.m_BlendType != BlendType.AlphaBlend)
+            {
+                dst.m_BlendType = src.m_BlendType;
+                (dst.m_SrcBlendMode, dst.m_DstBlendMode) =
+                    (dst.m_BlendType, src.m_SrcBlendMode, src.m_DstBlendMode).Convert();
+            }
 
-            m_EdgeMode = c.edgeMode;
-            m_EdgeShinyRate = c.edgeShinyRate;
-            m_EdgeWidth = c.edgeWidth;
-            m_EdgeColorFilter = c.edgeColorFilter;
-            m_EdgeColor = c.edgeColor;
-            m_EdgeColorGlow = c.edgeColorGlow;
-            m_EdgeShinyWidth = c.edgeShinyWidth;
-            m_EdgeShinyAutoPlaySpeed = c.edgeShinyAutoPlaySpeed;
-            m_PatternArea = c.patternArea;
+            if (!append || src.m_ShadowMode != ShadowMode.None)
+            {
+                dst.m_ShadowMode = src.m_ShadowMode;
+                dst.m_ShadowDistance = src.m_ShadowDistance;
+                dst.m_ShadowIteration = src.m_ShadowIteration;
+                dst.m_ShadowFade = src.m_ShadowFade;
+                dst.m_ShadowMirrorScale = src.m_ShadowMirrorScale;
+                dst.m_ShadowBlurIntensity = src.m_ShadowBlurIntensity;
+                dst.m_ShadowColorFilter = src.m_ShadowColorFilter;
+                dst.m_ShadowColor = src.m_ShadowColor;
+                dst.m_ShadowColorGlow = src.m_ShadowColorGlow;
+            }
 
-            m_GradationMode = c.gradationMode;
-            m_GradationIntensity = c.gradationIntensity;
-            m_GradationColorFilter = c.gradationColorFilter;
-            m_GradationColor1 = c.gradationColor1;
-            m_GradationColor2 = c.gradationColor2;
-            m_GradationColor3 = c.gradationColor3;
-            m_GradationColor4 = c.gradationColor4;
-            m_GradationOffset = c.gradationOffset;
-            m_GradationScale = c.gradationScale;
-            m_GradationRotation = c.gradationRotation;
+            if (!append || src.m_EdgeMode != EdgeMode.None)
+            {
+                dst.m_EdgeMode = src.m_EdgeMode;
+                dst.m_EdgeShinyRate = src.m_EdgeShinyRate;
+                dst.m_EdgeWidth = src.m_EdgeWidth;
+                dst.m_EdgeColorFilter = src.m_EdgeColorFilter;
+                dst.m_EdgeColor = src.m_EdgeColor;
+                dst.m_EdgeColorGlow = src.m_EdgeColorGlow;
+                dst.m_EdgeShinyWidth = src.m_EdgeShinyWidth;
+                dst.m_EdgeShinyAutoPlaySpeed = src.m_EdgeShinyAutoPlaySpeed;
+                dst.m_PatternArea = src.m_PatternArea;
+            }
 
-            m_DetailFilter = c.detailFilter;
-            m_DetailIntensity = c.detailIntensity;
-            m_DetailThreshold = c.detailThreshold;
-            m_DetailColor = c.detailColor;
-            m_DetailTex = c.detailTex;
-            m_DetailTexScale = c.detailTexScale;
-            m_DetailTexOffset = c.detailTexOffset;
-            m_DetailTexSpeed = c.detailTexSpeed;
+            if (!append || src.m_GradationMode != GradationMode.None)
+            {
+                dst.m_GradationMode = src.m_GradationMode;
+                dst.m_GradationIntensity = src.m_GradationIntensity;
+                dst.m_GradationColorFilter = src.m_GradationColorFilter;
+                dst.m_GradationColor1 = src.m_GradationColor1;
+                dst.m_GradationColor2 = src.m_GradationColor2;
+                dst.m_GradationColor3 = src.m_GradationColor3;
+                dst.m_GradationColor4 = src.m_GradationColor4;
+                dst.SetGradientKeys(src.m_GradationGradient);
+                dst.m_GradationOffset = src.m_GradationOffset;
+                dst.m_GradationScale = src.m_GradationScale;
+                dst.m_GradationRotation = src.m_GradationRotation;
+            }
 
-            Misc.SetDirty(this);
+            if (!append || src.m_DetailFilter != DetailFilter.None)
+            {
+                dst.m_DetailFilter = src.m_DetailFilter;
+                dst.m_DetailIntensity = src.m_DetailIntensity;
+                dst.m_DetailThreshold = src.m_DetailThreshold;
+                dst.m_DetailTex = src.m_DetailTex;
+                dst.m_DetailTexScale = src.m_DetailTexScale;
+                dst.m_DetailTexOffset = src.m_DetailTexOffset;
+                dst.m_DetailTexSpeed = src.m_DetailTexSpeed;
+            }
+
+            Misc.SetDirty(dst);
             UpdateContext(context);
             SetVerticesDirty();
             SetMaterialDirty();
+        }
+
+        public void SavePreset(UIEffectPreset dst, bool append)
+        {
+            if (!dst) return;
+
+            var src = this;
+            if (!append || src.m_ToneFilter != ToneFilter.None)
+            {
+                dst.m_ToneFilter = src.m_ToneFilter;
+                dst.m_ToneIntensity = src.m_ToneIntensity;
+            }
+
+            if (!append || src.m_ColorFilter != ColorFilter.None)
+            {
+                dst.m_ColorFilter = src.m_ColorFilter;
+                dst.m_Color = src.m_Color;
+                dst.m_ColorIntensity = src.m_ColorIntensity;
+                dst.m_ColorGlow = src.m_ColorGlow;
+            }
+
+            if (!append || src.m_SamplingFilter != SamplingFilter.None)
+            {
+                dst.m_SamplingFilter = src.m_SamplingFilter;
+                dst.m_SamplingIntensity = src.m_SamplingIntensity;
+                dst.m_SamplingWidth = src.m_SamplingWidth;
+            }
+
+            if (!append || src.m_TransitionFilter != TransitionFilter.None)
+            {
+                dst.m_TransitionFilter = src.m_TransitionFilter;
+                dst.m_TransitionRate = src.m_TransitionRate;
+                dst.m_TransitionReverse = src.m_TransitionReverse;
+                dst.m_TransitionTex = src.m_TransitionTex;
+                dst.m_TransitionTexScale = src.m_TransitionTexScale;
+                dst.m_TransitionTexOffset = src.m_TransitionTexOffset;
+                dst.m_TransitionTexSpeed = src.m_TransitionTexSpeed;
+                dst.m_TransitionRotation = src.m_TransitionRotation;
+                dst.m_TransitionKeepAspectRatio = src.m_TransitionKeepAspectRatio;
+                dst.m_TransitionWidth = src.m_TransitionWidth;
+                dst.m_TransitionSoftness = src.m_TransitionSoftness;
+                dst.m_TransitionRange = src.m_TransitionRange;
+                dst.m_TransitionColorFilter = src.m_TransitionColorFilter;
+                dst.m_TransitionColor = src.m_TransitionColor;
+                dst.m_TransitionColorGlow = src.m_TransitionColorGlow;
+                dst.m_TransitionPatternReverse = src.m_TransitionPatternReverse;
+                dst.m_TransitionAutoPlaySpeed = src.m_TransitionAutoPlaySpeed;
+            }
+
+            if (!append || src.m_TargetMode != TargetMode.None)
+            {
+                dst.m_TargetMode = src.m_TargetMode;
+                dst.m_TargetColor = src.m_TargetColor;
+                dst.m_TargetRange = src.m_TargetRange;
+                dst.m_TargetSoftness = src.m_TargetSoftness;
+            }
+
+            if (!append || src.m_BlendType != BlendType.AlphaBlend)
+            {
+                dst.m_BlendType = src.m_BlendType;
+                (dst.m_SrcBlendMode, dst.m_DstBlendMode) =
+                    (dst.m_BlendType, src.m_SrcBlendMode, src.m_DstBlendMode).Convert();
+            }
+
+            if (!append || src.m_ShadowMode != ShadowMode.None)
+            {
+                dst.m_ShadowMode = src.m_ShadowMode;
+                dst.m_ShadowDistance = src.m_ShadowDistance;
+                dst.m_ShadowIteration = src.m_ShadowIteration;
+                dst.m_ShadowFade = src.m_ShadowFade;
+                dst.m_ShadowMirrorScale = src.m_ShadowMirrorScale;
+                dst.m_ShadowBlurIntensity = src.m_ShadowBlurIntensity;
+                dst.m_ShadowColorFilter = src.m_ShadowColorFilter;
+                dst.m_ShadowColor = src.m_ShadowColor;
+                dst.m_ShadowColorGlow = src.m_ShadowColorGlow;
+            }
+
+            if (!append || src.m_EdgeMode != EdgeMode.None)
+            {
+                dst.m_EdgeMode = src.m_EdgeMode;
+                dst.m_EdgeShinyRate = src.m_EdgeShinyRate;
+                dst.m_EdgeWidth = src.m_EdgeWidth;
+                dst.m_EdgeColorFilter = src.m_EdgeColorFilter;
+                dst.m_EdgeColor = src.m_EdgeColor;
+                dst.m_EdgeColorGlow = src.m_EdgeColorGlow;
+                dst.m_EdgeShinyWidth = src.m_EdgeShinyWidth;
+                dst.m_EdgeShinyAutoPlaySpeed = src.m_EdgeShinyAutoPlaySpeed;
+                dst.m_PatternArea = src.m_PatternArea;
+            }
+
+            if (!append || src.m_GradationMode != GradationMode.None)
+            {
+                dst.m_GradationMode = src.m_GradationMode;
+                dst.m_GradationIntensity = src.m_GradationIntensity;
+                dst.m_GradationColorFilter = src.m_GradationColorFilter;
+                dst.m_GradationColor1 = src.m_GradationColor1;
+                dst.m_GradationColor2 = src.m_GradationColor2;
+                dst.m_GradationColor3 = src.m_GradationColor3;
+                dst.m_GradationColor4 = src.m_GradationColor4;
+                dst.m_GradationGradient.SetKeys(src.m_GradationGradient.colorKeys, src.m_GradationGradient.alphaKeys);
+                dst.m_GradationGradient.mode = src.m_GradationGradient.mode;
+                dst.m_GradationOffset = src.m_GradationOffset;
+                dst.m_GradationScale = src.m_GradationScale;
+                dst.m_GradationRotation = src.m_GradationRotation;
+            }
+
+            if (!append || src.m_DetailFilter != DetailFilter.None)
+            {
+                dst.m_DetailFilter = src.m_DetailFilter;
+                dst.m_DetailIntensity = src.m_DetailIntensity;
+                dst.m_DetailThreshold = src.m_DetailThreshold;
+                dst.m_DetailTex = src.m_DetailTex;
+                dst.m_DetailTexScale = src.m_DetailTexScale;
+                dst.m_DetailTexOffset = src.m_DetailTexOffset;
+                dst.m_DetailTexSpeed = src.m_DetailTexSpeed;
+            }
+
+            Misc.SetDirty(dst);
+        }
+
+        internal override void UpdateContext(UIEffectContext dst)
+        {
+            var src = this;
+            dst.m_ToneFilter = src.m_ToneFilter;
+            dst.m_ToneIntensity = src.m_ToneIntensity;
+
+            dst.m_ColorFilter = src.m_ColorFilter;
+            dst.m_Color = src.m_Color;
+            dst.m_ColorIntensity = src.m_ColorIntensity;
+            dst.m_ColorGlow = src.m_ColorGlow;
+
+            dst.m_SamplingFilter = src.m_SamplingFilter;
+            dst.m_SamplingIntensity = src.m_SamplingIntensity;
+            dst.m_SamplingWidth = src.m_SamplingWidth;
+
+            dst.m_TransitionFilter = src.m_TransitionFilter;
+            dst.m_TransitionRate = src.m_TransitionRate;
+            dst.m_TransitionReverse = src.m_TransitionReverse;
+            dst.m_TransitionTex = src.m_TransitionTex;
+            dst.m_TransitionTexScale = src.m_TransitionTexScale;
+            dst.m_TransitionTexOffset = src.m_TransitionTexOffset;
+            dst.m_TransitionTexSpeed = src.m_TransitionTexSpeed;
+            dst.m_TransitionRotation = src.m_TransitionRotation;
+            dst.m_TransitionKeepAspectRatio = src.m_TransitionKeepAspectRatio;
+            dst.m_TransitionWidth = src.m_TransitionWidth;
+            dst.m_TransitionSoftness = src.m_TransitionSoftness;
+            dst.m_TransitionRange = src.m_TransitionRange;
+            dst.m_TransitionColorFilter = src.m_TransitionColorFilter;
+            dst.m_TransitionColor = src.m_TransitionColor;
+            dst.m_TransitionColorGlow = src.m_TransitionColorGlow;
+            dst.m_TransitionPatternReverse = src.m_TransitionPatternReverse;
+            dst.m_TransitionAutoPlaySpeed = src.m_TransitionAutoPlaySpeed;
+
+            dst.m_TargetMode = src.m_TargetMode;
+            dst.m_TargetColor = src.m_TargetColor;
+            dst.m_TargetRange = src.m_TargetRange;
+            dst.m_TargetSoftness = src.m_TargetSoftness;
+
+            dst.m_SrcBlendMode = src.m_SrcBlendMode;
+            dst.m_DstBlendMode = src.m_DstBlendMode;
+
+            dst.m_ShadowMode = src.m_ShadowMode;
+            dst.m_ShadowDistance = src.m_ShadowDistance;
+            dst.m_ShadowIteration = src.m_ShadowIteration;
+            dst.m_ShadowFade = src.m_ShadowFade;
+            dst.m_ShadowMirrorScale = src.m_ShadowMirrorScale;
+            dst.m_ShadowBlurIntensity = src.m_ShadowBlurIntensity;
+            dst.m_ShadowColorFilter = src.m_ShadowColorFilter;
+            dst.m_ShadowColor = src.m_ShadowColor;
+            dst.m_ShadowColorGlow = src.m_ShadowColorGlow;
+
+            dst.m_EdgeMode = src.m_EdgeMode;
+            dst.m_EdgeShinyRate = src.m_EdgeShinyRate;
+            dst.m_EdgeWidth = src.m_EdgeWidth;
+            dst.m_EdgeColorFilter = src.m_EdgeColorFilter;
+            dst.m_EdgeColor = src.m_EdgeColor;
+            dst.m_EdgeColorGlow = src.m_EdgeColorGlow;
+            dst.m_EdgeShinyWidth = src.m_EdgeShinyWidth;
+            dst.m_EdgeShinyAutoPlaySpeed = src.m_EdgeShinyAutoPlaySpeed;
+            dst.m_PatternArea = src.m_PatternArea;
+
+            dst.m_GradationMode = src.m_GradationMode;
+            dst.m_GradationIntensity = src.m_GradationIntensity;
+            dst.m_GradationColorFilter = src.m_GradationColorFilter;
+            dst.m_GradationColor1 = src.m_GradationColor1;
+            dst.m_GradationColor2 = src.m_GradationColor2;
+            dst.m_GradationColor3 = src.m_GradationColor3;
+            dst.m_GradationColor4 = src.m_GradationColor4;
+            dst.m_GradationGradient = src.m_GradationGradient;
+            dst.m_GradationOffset = src.m_GradationOffset;
+            dst.m_GradationScale = src.m_GradationScale;
+            dst.m_GradationRotation = src.m_GradationRotation;
+
+            dst.m_DetailFilter = src.m_DetailFilter;
+            dst.m_DetailIntensity = src.m_DetailIntensity;
+            dst.m_DetailColor = src.m_DetailColor;
+            dst.m_DetailThreshold = src.m_DetailThreshold;
+            dst.m_DetailTex = src.m_DetailTex;
+            dst.m_DetailTexScale = src.m_DetailTexScale;
+            dst.m_DetailTexOffset = src.m_DetailTexOffset;
+            dst.m_DetailTexSpeed = src.m_DetailTexSpeed;
         }
     }
 }

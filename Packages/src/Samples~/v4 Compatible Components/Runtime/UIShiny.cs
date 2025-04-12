@@ -168,14 +168,14 @@ namespace Coffee.UIEffects
 
         internal override void UpdateContext(UIEffectContext c)
         {
-            c.transitionFilter = TransitionFilter.Shiny;
-            c.transitionRate = m_EffectFactor;
-            c.transitionTex = m_TransitionTexture;
-            c.transitionWidth = m_Width * 2;
-            c.transitionRotation = m_Rotation;
-            c.transitionSoftness = m_Softness / 2;
-            c.transitionColorFilter = 0.5f < m_Gloss ? ColorFilter.MultiplyAdditive : ColorFilter.Additive;
-            c.transitionColor = new Color(1, 1, 1, m_Brightness);
+            c.m_TransitionFilter = TransitionFilter.Shiny;
+            c.m_TransitionRate = m_EffectFactor;
+            c.m_TransitionTex = m_TransitionTexture;
+            c.m_TransitionWidth = m_Width * 2;
+            c.m_TransitionRotation = m_Rotation;
+            c.m_TransitionSoftness = m_Softness / 2;
+            c.m_TransitionColorFilter = 0.5f < m_Gloss ? ColorFilter.MultiplyAdditive : ColorFilter.Additive;
+            c.m_TransitionColor = new Color(1, 1, 1, m_Brightness);
         }
 
         public override void SetRate(float rate, UIEffectTweener.CullingMask mask)
@@ -208,9 +208,15 @@ namespace Coffee.UIEffects
         private void LoadDefaultTransitionTextureIfNeeded()
         {
             if (m_TransitionTexture) return;
-            var preset = UIEffectProjectSettings.LoadRuntimePreset("Legacy-UIShiny");
-            if (!preset) return;
-            m_TransitionTexture = preset.transitionTexture;
+            var preset = UIEffectProjectSettings.LoadPreset("Legacy-UIShiny");
+            if (preset is UIEffect presetV1)
+            {
+                m_TransitionTexture = presetV1.transitionTexture;
+            }
+            else if (preset is UIEffectPreset presetV2)
+            {
+                m_TransitionTexture = presetV2.m_TransitionTex;
+            }
         }
     }
 }

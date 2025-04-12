@@ -1,12 +1,14 @@
-﻿using Coffee.UIEffectInternal;
+﻿using System.Linq;
+using Coffee.UIEffectInternal;
 using UnityEngine;
 
 namespace Coffee.UIEffects
 {
     [Icon("Packages/com.coffee.ui-effect/Editor/UIEffectIconIcon.png")]
-    public class UIEffectReplica : UIEffectBase
+    public class UIEffectReplica : UIEffectBase, ISerializationCallbackReceiver
     {
         [SerializeField] private UIEffect m_Target;
+        [SerializeField] private UIEffectPreset m_Preset;
         [SerializeField] private bool m_UseTargetTransform = true;
 
         [PowerRange(0.01f, 100, 10f)]
@@ -28,7 +30,21 @@ namespace Coffee.UIEffects
             {
                 if (m_Target == value) return;
                 m_Target = value;
+                m_Preset = null;
                 RefreshTarget(m_Target);
+                SetVerticesDirty();
+                SetMaterialDirty();
+            }
+        }
+
+        public UIEffectPreset preset
+        {
+            get => m_Preset;
+            set
+            {
+                if (m_Preset == value) return;
+                m_Preset = value;
+                RefreshTarget(null);
                 SetVerticesDirty();
                 SetMaterialDirty();
             }
@@ -91,10 +107,13 @@ namespace Coffee.UIEffects
         {
             get
             {
-                if (!target) return null;
-                if (!isTargetInScene) return base.context;
+                // Following the preset/preset-target.
+                if (preset || (target && !isTargetInScene)) return base.context;
 
-                return target.isActiveAndEnabled ? target.context : null;
+                // Following the instantiated target.
+                return target && target.isActiveAndEnabled && isTargetInScene
+                    ? target.context
+                    : null;
             }
         }
 
@@ -108,7 +127,11 @@ namespace Coffee.UIEffects
 
         protected override void OnEnable()
         {
-            RefreshTarget(target);
+            if (!preset)
+            {
+                RefreshTarget(target);
+            }
+
             base.OnEnable();
         }
 
@@ -133,8 +156,16 @@ namespace Coffee.UIEffects
 
         internal override void SetEnablePreviewIfSelected(GameObject[] selection)
         {
-            if (!isTargetInScene) return;
-            target.SetEnablePreviewIfSelected(selection);
+            // Following the instantiated target.
+            if (isTargetInScene)
+            {
+                target.SetEnablePreviewIfSelected(selection);
+            }
+            // Following the preset/preset-target.
+            else if (context != null)
+            {
+                context.SetEnablePreview(selection.Contains(gameObject), effectMaterial);
+            }
         }
 #endif
 
@@ -160,20 +191,34 @@ namespace Coffee.UIEffects
             }
         }
 
-        internal override void UpdateContext(UIEffectContext c)
+        internal override void UpdateContext(UIEffectContext dst)
         {
-            if (target && !isTargetInScene)
+            // Following the preset.
+            if (preset)
             {
-                target.UpdateContext(c);
+                preset.UpdateContext(dst);
+            }
+            // Following the preset-target.
+            else if (target && !isTargetInScene)
+            {
+                target.UpdateContext(dst);
             }
         }
 
         public override void ApplyContextToMaterial(Material material)
         {
-            if (!isActiveAndEnabled || !target) return;
-            if (isTargetInScene && !target.isActiveAndEnabled) return;
+            if (!isActiveAndEnabled && !preset && !target) return;
 
-            base.ApplyContextToMaterial(material);
+            // Following the preset/preset-target.
+            if (preset || (target && !isTargetInScene))
+            {
+                base.ApplyContextToMaterial(material);
+            }
+            // Following the instantiated target.
+            else if (isTargetInScene && target.isActiveAndEnabled)
+            {
+                base.ApplyContextToMaterial(material);
+            }
         }
 
         public override void SetRate(float rate, UIEffectTweener.CullingMask mask)
@@ -185,6 +230,23 @@ namespace Coffee.UIEffects
             if (!isActiveAndEnabled || !isTargetInScene) return true;
 
             return target.IsRaycastLocationValid(sp, eventCamera);
+        }
+
+
+        public void OnBeforeSerialize()
+        {
+        }
+
+        public void OnAfterDeserialize()
+        {
+            if (m_Preset)
+            {
+                m_Target = null;
+            }
+            else if (m_Target)
+            {
+                m_Preset = null;
+            }
         }
     }
 }

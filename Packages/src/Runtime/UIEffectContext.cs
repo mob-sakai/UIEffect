@@ -157,189 +157,235 @@ namespace Coffee.UIEffects
         };
 
         public static Func<UIVertex, Rect, UIVertex> onModifyVertex;
-        public ToneFilter toneFilter = ToneFilter.None;
-        public float toneIntensity = 1;
+        public ToneFilter m_ToneFilter;
+        public float m_ToneIntensity;
 
-        public ColorFilter colorFilter = ColorFilter.None;
-        public float colorIntensity = 1;
-        public Color color = Color.white;
-        public bool colorGlow;
+        public ColorFilter m_ColorFilter;
+        public float m_ColorIntensity;
+        public Color m_Color;
+        public bool m_ColorGlow;
 
-        public SamplingFilter samplingFilter = SamplingFilter.None;
-        public float samplingIntensity = 0.5f;
-        public float samplingWidth;
+        public SamplingFilter m_SamplingFilter;
+        public float m_SamplingIntensity;
+        public float m_SamplingWidth;
 
-        public TransitionFilter transitionFilter = TransitionFilter.None;
-        public float transitionRate = 0.5f;
-        public bool transitionReverse;
-        public Texture transitionTex;
-        public Vector2 transitionTexScale = new Vector2(1, 1);
-        public Vector2 transitionTexOffset = new Vector2(0, 0);
-        public Vector2 transitionTexSpeed = new Vector2(0, 0);
-        public float transitionRotation = 0;
-        public bool transitionKeepAspectRatio = true;
-        public float transitionWidth = 0.2f;
-        public float transitionSoftness = 0.2f;
-        public MinMax01 transitionRange = new MinMax01(0, 1);
-        public ColorFilter transitionColorFilter = ColorFilter.MultiplyAdditive;
-        public Color transitionColor = new Color(0f, 0.5f, 1.0f, 1.0f);
-        public bool transitionColorGlow;
-        public bool transitionPatternReverse;
-        public float transitionAutoPlaySpeed;
+        public TransitionFilter m_TransitionFilter;
+        public float m_TransitionRate;
+        public bool m_TransitionReverse;
+        public Texture m_TransitionTex;
+        public Vector2 m_TransitionTexScale;
+        public Vector2 m_TransitionTexOffset;
+        public Vector2 m_TransitionTexSpeed;
+        public float m_TransitionRotation;
+        public bool m_TransitionKeepAspectRatio;
+        public float m_TransitionWidth;
+        public float m_TransitionSoftness;
+        public MinMax01 m_TransitionRange;
+        public ColorFilter m_TransitionColorFilter;
+        public Color m_TransitionColor;
+        public bool m_TransitionColorGlow;
+        public bool m_TransitionPatternReverse;
+        public float m_TransitionAutoPlaySpeed;
 
-        public TargetMode targetMode = TargetMode.None;
-        public Color targetColor = Color.white;
-        public float targetRange = 1;
-        public float targetSoftness = 0.5f;
+        public TargetMode m_TargetMode;
+        public Color m_TargetColor;
+        public float m_TargetRange;
+        public float m_TargetSoftness;
 
-        public BlendMode srcBlendMode = BlendMode.One;
-        public BlendMode dstBlendMode = BlendMode.OneMinusSrcAlpha;
+        public BlendMode m_SrcBlendMode;
+        public BlendMode m_DstBlendMode;
 
-        public ShadowMode shadowMode = ShadowMode.None;
-        public Vector2 shadowDistance = new Vector2(1f, -1f);
-        public int shadowIteration = 1;
-        public float shadowFade = 0.9f;
-        public float shadowMirrorScale = 0.5f;
-        public float shadowBlurIntensity;
-        public ColorFilter shadowColorFilter;
-        public Color shadowColor;
-        public bool shadowColorGlow;
+        public ShadowMode m_ShadowMode;
+        public Vector2 m_ShadowDistance;
+        public int m_ShadowIteration;
+        public float m_ShadowFade;
+        public float m_ShadowMirrorScale;
+        public float m_ShadowBlurIntensity;
+        public ColorFilter m_ShadowColorFilter;
+        public Color m_ShadowColor;
+        public bool m_ShadowColorGlow;
 
-        public EdgeMode edgeMode;
-        public float edgeShinyRate;
-        public float edgeWidth;
-        public ColorFilter edgeColorFilter;
-        public Color edgeColor;
-        public bool edgeColorGlow;
-        public float edgeShinyWidth;
-        public float edgeShinyAutoPlaySpeed;
-        public PatternArea patternArea;
+        public EdgeMode m_EdgeMode;
+        public float m_EdgeShinyRate;
+        public float m_EdgeWidth;
+        public ColorFilter m_EdgeColorFilter;
+        public Color m_EdgeColor;
+        public bool m_EdgeColorGlow;
+        public float m_EdgeShinyWidth;
+        public float m_EdgeShinyAutoPlaySpeed;
+        public PatternArea m_PatternArea;
 
-        public GradationMode gradationMode;
-        public float gradationIntensity;
-        public GradationColorFilter gradationColorFilter;
-        public Color gradationColor1;
-        public Color gradationColor2;
-        public Color gradationColor3;
-        public Color gradationColor4;
-        public Texture2D gradationTex;
-        public float gradationOffset;
-        public float gradationScale;
-        public float gradationRotation;
-        private List<float> _keyTimes;
+        public GradationMode m_GradationMode;
+        public float m_GradationIntensity;
+        public GradationColorFilter m_GradationColorFilter;
+        public Color m_GradationColor1;
+        public Color m_GradationColor2;
+        public Color m_GradationColor3;
+        public Color m_GradationColor4;
+        public Gradient m_GradationGradient;
+        public float m_GradationOffset;
+        public float m_GradationScale;
+        public float m_GradationRotation;
 
-        public DetailFilter detailFilter;
-        public float detailIntensity;
-        public MinMax01 detailThreshold;
-        public Color detailColor;
-        public Texture detailTex;
-        public Vector2 detailTexScale = new Vector2(1, 1);
-        public Vector2 detailTexOffset = new Vector2(0, 0);
-        public Vector2 detailTexSpeed = new Vector2(0, 0);
+        public DetailFilter m_DetailFilter;
+        public float m_DetailIntensity;
+        public MinMax01 m_DetailThreshold;
+        public Color m_DetailColor;
+        public Texture m_DetailTex;
+        public Vector2 m_DetailTexScale;
+        public Vector2 m_DetailTexOffset;
+        public Vector2 m_DetailTexSpeed;
 
-        public bool willModifyMaterial => toneFilter != ToneFilter.None
-                                          || colorFilter != ColorFilter.None
-                                          || samplingFilter != SamplingFilter.None
-                                          || transitionFilter != TransitionFilter.None
-                                          || srcBlendMode != BlendMode.One
-                                          || dstBlendMode != BlendMode.OneMinusSrcAlpha
-                                          || shadowMode != ShadowMode.None
-                                          || edgeMode != EdgeMode.None
-                                          || detailFilter != DetailFilter.None
-                                          || gradationMode != GradationMode.None;
+        public bool willModifyMaterial => m_ToneFilter != ToneFilter.None
+                                          || m_ColorFilter != ColorFilter.None
+                                          || m_SamplingFilter != SamplingFilter.None
+                                          || m_TransitionFilter != TransitionFilter.None
+                                          || m_SrcBlendMode != BlendMode.One
+                                          || m_DstBlendMode != BlendMode.OneMinusSrcAlpha
+                                          || m_ShadowMode != ShadowMode.None
+                                          || m_EdgeMode != EdgeMode.None
+                                          || m_DetailFilter != DetailFilter.None
+                                          || m_GradationMode != GradationMode.None;
 
         public bool willModifyVertex => willModifyMaterial;
 
+        private Texture2D _gradationRampTex;
+        private bool _isGradientDirty = true;
+        private static readonly Color32[] s_Colors = new Color32[256];
+
+        private static readonly InternalObjectPool<Texture2D> s_TexturePool = new InternalObjectPool<Texture2D>(
+            () =>
+            {
+                var texture = new Texture2D(s_Colors.Length, 1, TextureFormat.RGBA32, false, false)
+                {
+                    name = "GradationRamp",
+                    hideFlags = HideFlags.DontSave,
+                    wrapMode = TextureWrapMode.Repeat,
+                    anisoLevel = 0
+                };
+
+                return texture;
+            },
+            texture => texture,
+            _ => { });
+
+        private Texture2D gradationRampTex
+        {
+            get
+            {
+                if (m_GradationGradient == null) return null;
+                if (!_gradationRampTex) _gradationRampTex = s_TexturePool.Rent();
+                if (!_isGradientDirty) return _gradationRampTex;
+                _isGradientDirty = false;
+
+                var w = s_Colors.Length;
+                for (var i = 0; i < w; i++)
+                {
+                    s_Colors[i] = m_GradationGradient.Evaluate((float)i / (w - 1));
+                }
+
+                _gradationRampTex.filterMode = m_GradationGradient.mode == GradientMode.Blend
+                    ? FilterMode.Bilinear
+                    : FilterMode.Point;
+                _gradationRampTex.SetPixels32(s_Colors);
+                _gradationRampTex.Apply();
+                return _gradationRampTex;
+            }
+        }
+
         public void Reset()
         {
-            InternalListPool<float>.Return(ref _keyTimes);
+            _isGradientDirty = true;
+            s_TexturePool.Return(ref _gradationRampTex);
             CopyFrom(s_DefaultContext);
         }
 
-        private void CopyFrom(UIEffectContext preset)
+        private void CopyFrom(UIEffectContext src)
         {
-            toneFilter = preset.toneFilter;
-            toneIntensity = preset.toneIntensity;
+            var dst = this;
+            dst.m_ToneFilter = src.m_ToneFilter;
+            dst.m_ToneIntensity = src.m_ToneIntensity;
 
-            colorFilter = preset.colorFilter;
-            color = preset.color;
-            colorIntensity = preset.colorIntensity;
-            colorGlow = preset.colorGlow;
+            dst.m_ColorFilter = src.m_ColorFilter;
+            dst.m_Color = src.m_Color;
+            dst.m_ColorIntensity = src.m_ColorIntensity;
+            dst.m_ColorGlow = src.m_ColorGlow;
 
-            samplingFilter = preset.samplingFilter;
-            samplingIntensity = preset.samplingIntensity;
-            samplingWidth = preset.samplingWidth;
+            dst.m_SamplingFilter = src.m_SamplingFilter;
+            dst.m_SamplingIntensity = src.m_SamplingIntensity;
+            dst.m_SamplingWidth = src.m_SamplingWidth;
 
-            transitionFilter = preset.transitionFilter;
-            transitionRate = preset.transitionRate;
-            transitionReverse = preset.transitionReverse;
-            transitionTex = preset.transitionTex;
-            transitionTexScale = preset.transitionTexScale;
-            transitionTexOffset = preset.transitionTexOffset;
-            transitionTexSpeed = preset.transitionTexSpeed;
-            transitionKeepAspectRatio = preset.transitionKeepAspectRatio;
-            transitionRotation = preset.transitionRotation;
-            transitionWidth = preset.transitionWidth;
-            transitionSoftness = preset.transitionSoftness;
-            transitionRange = preset.transitionRange;
-            transitionColor = preset.transitionColor;
-            transitionColorFilter = preset.transitionColorFilter;
-            transitionColorGlow = preset.transitionColorGlow;
-            transitionPatternReverse = preset.transitionPatternReverse;
-            transitionAutoPlaySpeed = preset.transitionAutoPlaySpeed;
+            dst.m_TransitionFilter = src.m_TransitionFilter;
+            dst.m_TransitionRate = src.m_TransitionRate;
+            dst.m_TransitionReverse = src.m_TransitionReverse;
+            dst.m_TransitionTex = src.m_TransitionTex;
+            dst.m_TransitionTexScale = src.m_TransitionTexScale;
+            dst.m_TransitionTexOffset = src.m_TransitionTexOffset;
+            dst.m_TransitionTexSpeed = src.m_TransitionTexSpeed;
+            dst.m_TransitionKeepAspectRatio = src.m_TransitionKeepAspectRatio;
+            dst.m_TransitionRotation = src.m_TransitionRotation;
+            dst.m_TransitionWidth = src.m_TransitionWidth;
+            dst.m_TransitionSoftness = src.m_TransitionSoftness;
+            dst.m_TransitionRange = src.m_TransitionRange;
+            dst.m_TransitionColor = src.m_TransitionColor;
+            dst.m_TransitionColorFilter = src.m_TransitionColorFilter;
+            dst.m_TransitionColorGlow = src.m_TransitionColorGlow;
+            dst.m_TransitionPatternReverse = src.m_TransitionPatternReverse;
+            dst.m_TransitionAutoPlaySpeed = src.m_TransitionAutoPlaySpeed;
 
-            targetMode = preset.targetMode;
-            targetColor = preset.targetColor;
-            targetRange = preset.targetRange;
-            targetSoftness = preset.targetSoftness;
+            dst.m_TargetMode = src.m_TargetMode;
+            dst.m_TargetColor = src.m_TargetColor;
+            dst.m_TargetRange = src.m_TargetRange;
+            dst.m_TargetSoftness = src.m_TargetSoftness;
 
-            srcBlendMode = preset.srcBlendMode;
-            dstBlendMode = preset.dstBlendMode;
+            dst.m_SrcBlendMode = src.m_SrcBlendMode;
+            dst.m_DstBlendMode = src.m_DstBlendMode;
 
-            shadowMode = preset.shadowMode;
-            shadowDistance = preset.shadowDistance;
-            shadowIteration = preset.shadowIteration;
-            shadowFade = preset.shadowFade;
-            shadowMirrorScale = preset.shadowMirrorScale;
-            shadowBlurIntensity = preset.shadowBlurIntensity;
-            shadowColorFilter = preset.shadowColorFilter;
-            shadowColor = preset.shadowColor;
-            shadowColorGlow = preset.shadowColorGlow;
+            dst.m_ShadowMode = src.m_ShadowMode;
+            dst.m_ShadowDistance = src.m_ShadowDistance;
+            dst.m_ShadowIteration = src.m_ShadowIteration;
+            dst.m_ShadowFade = src.m_ShadowFade;
+            dst.m_ShadowMirrorScale = src.m_ShadowMirrorScale;
+            dst.m_ShadowBlurIntensity = src.m_ShadowBlurIntensity;
+            dst.m_ShadowColorFilter = src.m_ShadowColorFilter;
+            dst.m_ShadowColor = src.m_ShadowColor;
+            dst.m_ShadowColorGlow = src.m_ShadowColorGlow;
 
-            edgeMode = preset.edgeMode;
-            edgeShinyRate = preset.edgeShinyRate;
-            edgeWidth = preset.edgeWidth;
-            edgeColorFilter = preset.edgeColorFilter;
-            edgeColor = preset.edgeColor;
-            edgeColorGlow = preset.edgeColorGlow;
-            edgeShinyAutoPlaySpeed = preset.edgeShinyAutoPlaySpeed;
-            edgeShinyWidth = preset.edgeShinyWidth;
-            patternArea = preset.patternArea;
+            dst.m_EdgeMode = src.m_EdgeMode;
+            dst.m_EdgeShinyRate = src.m_EdgeShinyRate;
+            dst.m_EdgeWidth = src.m_EdgeWidth;
+            dst.m_EdgeColorFilter = src.m_EdgeColorFilter;
+            dst.m_EdgeColor = src.m_EdgeColor;
+            dst.m_EdgeColorGlow = src.m_EdgeColorGlow;
+            dst.m_EdgeShinyAutoPlaySpeed = src.m_EdgeShinyAutoPlaySpeed;
+            dst.m_EdgeShinyWidth = src.m_EdgeShinyWidth;
+            dst.m_PatternArea = src.m_PatternArea;
 
-            gradationMode = preset.gradationMode;
-            gradationIntensity = preset.gradationIntensity;
-            gradationColorFilter = preset.gradationColorFilter;
-            gradationColor1 = preset.gradationColor1;
-            gradationColor2 = preset.gradationColor2;
-            gradationColor3 = preset.gradationColor3;
-            gradationColor4 = preset.gradationColor4;
-            gradationTex = preset.gradationTex;
-            gradationScale = preset.gradationScale;
-            gradationOffset = preset.gradationOffset;
-            gradationRotation = preset.gradationRotation;
+            dst.m_GradationMode = src.m_GradationMode;
+            dst.m_GradationIntensity = src.m_GradationIntensity;
+            dst.m_GradationColorFilter = src.m_GradationColorFilter;
+            dst.m_GradationColor1 = src.m_GradationColor1;
+            dst.m_GradationColor2 = src.m_GradationColor2;
+            dst.m_GradationColor3 = src.m_GradationColor3;
+            dst.m_GradationColor4 = src.m_GradationColor4;
+            dst.m_GradationGradient = src.m_GradationGradient;
+            dst.m_GradationScale = src.m_GradationScale;
+            dst.m_GradationOffset = src.m_GradationOffset;
+            dst.m_GradationRotation = src.m_GradationRotation;
 
-            detailFilter = preset.detailFilter;
-            detailIntensity = preset.detailIntensity;
-            detailThreshold = preset.detailThreshold;
-            detailTex = preset.detailTex;
-            detailTexScale = preset.detailTexScale;
-            detailTexOffset = preset.detailTexOffset;
-            detailTexSpeed = preset.detailTexSpeed;
+            dst.m_DetailFilter = src.m_DetailFilter;
+            dst.m_DetailIntensity = src.m_DetailIntensity;
+            dst.m_DetailColor = src.m_DetailColor;
+            dst.m_DetailThreshold = src.m_DetailThreshold;
+            dst.m_DetailTex = src.m_DetailTex;
+            dst.m_DetailTexScale = src.m_DetailTexScale;
+            dst.m_DetailTexOffset = src.m_DetailTexOffset;
+            dst.m_DetailTexSpeed = src.m_DetailTexSpeed;
         }
 
         public void SetGradationDirty()
         {
-            InternalListPool<float>.Return(ref _keyTimes);
+            _isGradientDirty = true;
         }
 
         public void ApplyToMaterial(Material material, float actualSamplingScale = 1f)
@@ -348,93 +394,93 @@ namespace Coffee.UIEffects
 
             Profiler.BeginSample("(UIE)[UIEffect] GetModifiedMaterial");
 
-            material.SetInt(s_SrcBlend, (int)srcBlendMode);
-            material.SetInt(s_DstBlend, (int)dstBlendMode);
+            material.SetInt(s_SrcBlend, (int)m_SrcBlendMode);
+            material.SetInt(s_DstBlend, (int)m_DstBlendMode);
 
-            material.SetFloat(s_ToneIntensity, Mathf.Clamp01(toneIntensity));
+            material.SetFloat(s_ToneIntensity, Mathf.Clamp01(m_ToneIntensity));
 
-            material.SetInt(s_ColorFilter, (int)colorFilter);
-            material.SetColor(s_ColorValue, color);
-            material.SetFloat(s_ColorIntensity, Mathf.Clamp01(colorIntensity));
-            material.SetInt(s_ColorGlow, colorGlow ? 1 : 0);
+            material.SetInt(s_ColorFilter, (int)m_ColorFilter);
+            material.SetColor(s_ColorValue, m_Color);
+            material.SetFloat(s_ColorIntensity, Mathf.Clamp01(m_ColorIntensity));
+            material.SetInt(s_ColorGlow, m_ColorGlow ? 1 : 0);
 
-            material.SetFloat(s_SamplingIntensity, Mathf.Clamp01(samplingIntensity));
-            material.SetFloat(s_SamplingWidth, samplingWidth);
+            material.SetFloat(s_SamplingIntensity, Mathf.Clamp01(m_SamplingIntensity));
+            material.SetFloat(s_SamplingWidth, m_SamplingWidth);
             material.SetFloat(s_SamplingScale, actualSamplingScale);
 
-            material.SetFloat(s_TransitionRate, Mathf.Clamp01(transitionRate));
-            material.SetInt(s_TransitionReverse, transitionReverse ? 1 : 0);
-            material.SetTexture(s_TransitionTex, transitionFilter != 0 ? transitionTex : null);
+            material.SetFloat(s_TransitionRate, Mathf.Clamp01(m_TransitionRate));
+            material.SetInt(s_TransitionReverse, m_TransitionReverse ? 1 : 0);
+            material.SetTexture(s_TransitionTex, m_TransitionFilter != 0 ? m_TransitionTex : null);
             material.SetVector(s_TransitionTex_ST,
-                new Vector4(transitionTexScale.x, transitionTexScale.y,
-                    transitionTexOffset.x, transitionTexOffset.y));
-            material.SetVector(s_TransitionTex_Speed, transitionTexSpeed);
-            material.SetFloat(s_TransitionWidth, Mathf.Clamp01(transitionWidth));
-            material.SetFloat(s_TransitionSoftness, Mathf.Clamp01(transitionSoftness));
-            material.SetVector(s_TransitionRange, new Vector2(transitionRange.min, transitionRange.max));
-            material.SetInt(s_TransitionColorFilter, (int)transitionColorFilter);
-            material.SetColor(s_TransitionColor, transitionColor);
-            material.SetInt(s_TransitionColorGlow, transitionColorGlow ? 1 : 0);
-            material.SetInt(s_TransitionPatternReverse, transitionPatternReverse ? 1 : 0);
-            material.SetFloat(s_TransitionAutoPlaySpeed, transitionAutoPlaySpeed);
+                new Vector4(m_TransitionTexScale.x, m_TransitionTexScale.y,
+                    m_TransitionTexOffset.x, m_TransitionTexOffset.y));
+            material.SetVector(s_TransitionTex_Speed, m_TransitionTexSpeed);
+            material.SetFloat(s_TransitionWidth, Mathf.Clamp01(m_TransitionWidth));
+            material.SetFloat(s_TransitionSoftness, Mathf.Clamp01(m_TransitionSoftness));
+            material.SetVector(s_TransitionRange, new Vector2(m_TransitionRange.min, m_TransitionRange.max));
+            material.SetInt(s_TransitionColorFilter, (int)m_TransitionColorFilter);
+            material.SetColor(s_TransitionColor, m_TransitionColor);
+            material.SetInt(s_TransitionColorGlow, m_TransitionColorGlow ? 1 : 0);
+            material.SetInt(s_TransitionPatternReverse, m_TransitionPatternReverse ? 1 : 0);
+            material.SetFloat(s_TransitionAutoPlaySpeed, m_TransitionAutoPlaySpeed);
 
-            material.SetColor(s_TargetColor, targetColor);
-            material.SetFloat(s_TargetRange, Mathf.Clamp01(targetRange));
-            material.SetFloat(s_TargetSoftness, Mathf.Clamp01(targetSoftness));
+            material.SetColor(s_TargetColor, m_TargetColor);
+            material.SetFloat(s_TargetRange, Mathf.Clamp01(m_TargetRange));
+            material.SetFloat(s_TargetSoftness, Mathf.Clamp01(m_TargetSoftness));
 
-            switch (samplingFilter)
+            switch (m_SamplingFilter)
             {
                 case SamplingFilter.BlurFast:
                 case SamplingFilter.BlurMedium:
                 case SamplingFilter.BlurDetail:
-                    material.SetFloat(s_ShadowBlurIntensity, Mathf.Clamp01(shadowBlurIntensity));
+                    material.SetFloat(s_ShadowBlurIntensity, Mathf.Clamp01(m_ShadowBlurIntensity));
                     break;
                 default:
-                    material.SetFloat(s_ShadowBlurIntensity, Mathf.Clamp01(samplingIntensity));
+                    material.SetFloat(s_ShadowBlurIntensity, Mathf.Clamp01(m_SamplingIntensity));
                     break;
             }
 
-            material.SetInt(s_ShadowColorFilter, (int)shadowColorFilter);
-            material.SetColor(s_ShadowColor, shadowColor);
-            material.SetInt(s_ShadowColorGlow, shadowColorGlow ? 1 : 0);
+            material.SetInt(s_ShadowColorFilter, (int)m_ShadowColorFilter);
+            material.SetColor(s_ShadowColor, m_ShadowColor);
+            material.SetInt(s_ShadowColorGlow, m_ShadowColorGlow ? 1 : 0);
 
-            material.SetFloat(s_EdgeWidth, Mathf.Clamp01(edgeWidth));
-            material.SetInt(s_EdgeColorFilter, (int)edgeColorFilter);
-            material.SetColor(s_EdgeColor, edgeColor);
-            material.SetInt(s_EdgeColorGlow, edgeColorGlow ? 1 : 0);
-            material.SetFloat(s_EdgeShinyRate, Mathf.Clamp01(edgeShinyRate));
-            material.SetFloat(s_EdgeShinyWidth, Mathf.Clamp01(edgeShinyWidth));
-            material.SetFloat(s_EdgeShinyAutoPlaySpeed, edgeShinyAutoPlaySpeed);
-            material.SetInt(s_PatternArea, edgeMode != EdgeMode.None ? (int)patternArea : 0);
+            material.SetFloat(s_EdgeWidth, Mathf.Clamp01(m_EdgeWidth));
+            material.SetInt(s_EdgeColorFilter, (int)m_EdgeColorFilter);
+            material.SetColor(s_EdgeColor, m_EdgeColor);
+            material.SetInt(s_EdgeColorGlow, m_EdgeColorGlow ? 1 : 0);
+            material.SetFloat(s_EdgeShinyRate, Mathf.Clamp01(m_EdgeShinyRate));
+            material.SetFloat(s_EdgeShinyWidth, Mathf.Clamp01(m_EdgeShinyWidth));
+            material.SetFloat(s_EdgeShinyAutoPlaySpeed, m_EdgeShinyAutoPlaySpeed);
+            material.SetInt(s_PatternArea, m_EdgeMode != EdgeMode.None ? (int)m_PatternArea : 0);
 
-            material.SetTexture(s_GradationTex, gradationMode != 0 ? gradationTex : null);
+            material.SetTexture(s_GradationTex, m_GradationMode != 0 ? gradationRampTex : null);
             material.SetVector(s_GradationTex_ST, GetGradationScaleAndOffset());
 
-            material.SetFloat(s_GradationIntensity, gradationIntensity);
-            material.SetInt(s_GradationColorFilter, (int)gradationColorFilter);
-            material.SetColor(s_GradationColor1, gradationColor1);
-            material.SetColor(s_GradationColor2, gradationColor2);
-            material.SetColor(s_GradationColor3, gradationColor3);
-            material.SetColor(s_GradationColor4, gradationColor4);
+            material.SetFloat(s_GradationIntensity, m_GradationIntensity);
+            material.SetInt(s_GradationColorFilter, (int)m_GradationColorFilter);
+            material.SetColor(s_GradationColor1, m_GradationColor1);
+            material.SetColor(s_GradationColor2, m_GradationColor2);
+            material.SetColor(s_GradationColor3, m_GradationColor3);
+            material.SetColor(s_GradationColor4, m_GradationColor4);
 
-            material.SetFloat(s_DetailIntensity, Mathf.Clamp01(detailIntensity));
-            material.SetColor(s_DetailColor, detailColor);
-            material.SetVector(s_DetailThreshold, new Vector2(detailThreshold.min, detailThreshold.max));
-            material.SetTexture(s_DetailTex, detailFilter != 0 ? detailTex : null);
+            material.SetFloat(s_DetailIntensity, Mathf.Clamp01(m_DetailIntensity));
+            material.SetColor(s_DetailColor, m_DetailColor);
+            material.SetVector(s_DetailThreshold, new Vector2(m_DetailThreshold.min, m_DetailThreshold.max));
+            material.SetTexture(s_DetailTex, m_DetailFilter != 0 ? m_DetailTex : null);
             material.SetVector(s_DetailTex_ST,
-                new Vector4(detailTexScale.x, detailTexScale.y,
-                    detailTexOffset.x, detailTexOffset.y));
-            material.SetVector(s_DetailTex_Speed, detailTexSpeed);
+                new Vector4(m_DetailTexScale.x, m_DetailTexScale.y,
+                    m_DetailTexOffset.x, m_DetailTexOffset.y));
+            material.SetVector(s_DetailTex_Speed, m_DetailTexSpeed);
 
-            SetKeyword(material, s_ToneKeywords, (int)toneFilter);
-            SetKeyword(material, s_ColorKeywords, colorFilter != 0 || shadowMode != 0 ? 1 : 0);
-            SetKeyword(material, s_SamplingKeywords, (int)samplingFilter);
-            SetKeyword(material, s_TransitionKeywords, (int)transitionFilter);
-            SetKeyword(material, s_EdgeKeywords, (int)edgeMode);
-            SetKeyword(material, s_DetailKeywords, (int)detailFilter);
-            SetKeyword(material, s_TargetKeywords, (int)targetMode);
+            SetKeyword(material, s_ToneKeywords, (int)m_ToneFilter);
+            SetKeyword(material, s_ColorKeywords, m_ColorFilter != 0 || m_ShadowMode != 0 ? 1 : 0);
+            SetKeyword(material, s_SamplingKeywords, (int)m_SamplingFilter);
+            SetKeyword(material, s_TransitionKeywords, (int)m_TransitionFilter);
+            SetKeyword(material, s_EdgeKeywords, (int)m_EdgeMode);
+            SetKeyword(material, s_DetailKeywords, (int)m_DetailFilter);
+            SetKeyword(material, s_TargetKeywords, (int)m_TargetMode);
 
-            switch (gradationMode)
+            switch (m_GradationMode)
             {
                 case GradationMode.None:
                     SetKeyword(material, s_GradationKeywords, 0);
@@ -466,10 +512,10 @@ namespace Coffee.UIEffects
         public void SetEnablePreview(bool enable, Material material)
         {
             if (!material) return;
-            material.SetVector(s_TransitionTex_Speed, enable ? (Vector4)transitionTexSpeed : Vector4.zero);
-            material.SetVector(s_DetailTex_Speed, enable ? (Vector4)detailTexSpeed : Vector4.zero);
-            material.SetFloat(s_TransitionAutoPlaySpeed, enable ? transitionAutoPlaySpeed : 0);
-            material.SetFloat(s_EdgeShinyAutoPlaySpeed, enable ? edgeShinyAutoPlaySpeed : 0);
+            material.SetVector(s_TransitionTex_Speed, enable ? (Vector4)m_TransitionTexSpeed : Vector4.zero);
+            material.SetVector(s_DetailTex_Speed, enable ? (Vector4)m_DetailTexSpeed : Vector4.zero);
+            material.SetFloat(s_TransitionAutoPlaySpeed, enable ? m_TransitionAutoPlaySpeed : 0);
+            material.SetFloat(s_EdgeShinyAutoPlaySpeed, enable ? m_EdgeShinyAutoPlaySpeed : 0);
         }
 
         public void UpdateViewMatrix(Material material, RectTransform transitionRoot, Canvas canvas, Flip flip)
@@ -478,7 +524,7 @@ namespace Coffee.UIEffects
 
             var size = transitionRoot.rect.size;
             var scale = new Vector3(1f / size.x, 1f / size.y, 1f);
-            if (transitionKeepAspectRatio && !Mathf.Approximately(scale.x, scale.y))
+            if (m_TransitionKeepAspectRatio && !Mathf.Approximately(scale.x, scale.y))
             {
                 scale.x = scale.y = Mathf.Min(scale.x, scale.y);
             }
@@ -493,8 +539,8 @@ namespace Coffee.UIEffects
             var offset = (transitionRoot.pivot - pivot) * size;
             var w2LMat = Matrix4x4.Translate(offset) * transitionRoot.worldToLocalMatrix;
 
-            var rootRotation = Quaternion.Euler(0, 0, transitionRotation);
-            var rootScale = 1f / GetMultiplier(transitionRotation);
+            var rootRotation = Quaternion.Euler(0, 0, m_TransitionRotation);
+            var rootScale = 1f / GetMultiplier(m_TransitionRotation);
             material.SetMatrix(s_RootViewMatrix, Matrix4x4.TRS(pivot, rootRotation, scale * rootScale) * w2LMat);
 
             var gradRotation = Quaternion.Euler(0, 0, GetGradationRotation());
@@ -513,26 +559,26 @@ namespace Coffee.UIEffects
 
         private Vector4 GetGradationScaleAndOffset()
         {
-            var gScale = 1 / gradationScale;
-            switch (gradationMode)
+            var gScale = 1 / m_GradationScale;
+            switch (m_GradationMode)
             {
                 case GradationMode.HorizontalGradient:
                 case GradationMode.VerticalGradient:
                 case GradationMode.AngleGradient:
-                    return new Vector4(gScale, 1, -0.5f * (gScale + 1) - gradationOffset, 0);
+                    return new Vector4(gScale, 1, -0.5f * (gScale + 1) - m_GradationOffset, 0);
                 case GradationMode.RadialFast:
                 case GradationMode.RadialDetail:
                 {
-                    return new Vector4(gScale, 1, gradationOffset, 0);
+                    return new Vector4(gScale, 1, m_GradationOffset, 0);
                 }
                 default:
-                    return new Vector4(gScale, 1, gradationOffset * (gScale + 1) / 2 - gScale * 0.5f + 0.5f, 0);
+                    return new Vector4(gScale, 1, m_GradationOffset * (gScale + 1) / 2 - gScale * 0.5f + 0.5f, 0);
             }
         }
 
         private float GetGradationRotation()
         {
-            switch (gradationMode)
+            switch (m_GradationMode)
             {
                 case GradationMode.DiagonalToLeftBottom:
                     return 135;
@@ -544,7 +590,7 @@ namespace Coffee.UIEffects
                     return -90;
                 case GradationMode.Angle:
                 case GradationMode.AngleGradient:
-                    return gradationRotation;
+                    return m_GradationRotation;
                 default:
                     return 0;
             }
@@ -627,7 +673,7 @@ namespace Coffee.UIEffects
 
         private void ApplyShadow(List<UIVertex> verts, RectTransform transitionRoot, Flip flip)
         {
-            var distance = shadowDistance;
+            var distance = m_ShadowDistance;
             if (distance == Vector2.zero) return;
 
             if ((flip & Flip.Shadow) != 0)
@@ -636,17 +682,17 @@ namespace Coffee.UIEffects
                 distance.y = (flip & Flip.Vertical) != 0 ? -distance.y : distance.y;
             }
 
-            switch (shadowMode)
+            switch (m_ShadowMode)
             {
                 case ShadowMode.Shadow:
                 case ShadowMode.Shadow3:
                 case ShadowMode.Outline:
                 case ShadowMode.Outline8:
-                    ShadowUtil.DoShadow(verts, s_ShadowVectors[(int)shadowMode], distance, shadowIteration,
-                        shadowFade);
+                    ShadowUtil.DoShadow(verts, s_ShadowVectors[(int)m_ShadowMode], distance, m_ShadowIteration,
+                        m_ShadowFade);
                     break;
                 case ShadowMode.Mirror:
-                    ShadowUtil.DoMirror(verts, distance, shadowMirrorScale, shadowFade, transitionRoot);
+                    ShadowUtil.DoMirror(verts, distance, m_ShadowMirrorScale, m_ShadowFade, transitionRoot);
                     break;
             }
         }
@@ -678,7 +724,7 @@ namespace Coffee.UIEffects
             if (!canModifyShape) return Vector4.zero;
 
             var expandSize = Vector4.zero;
-            switch (samplingFilter)
+            switch (m_SamplingFilter)
             {
                 case SamplingFilter.BlurFast:
                     expandSize += Vector4.one * 10;
@@ -695,7 +741,7 @@ namespace Coffee.UIEffects
                     break;
             }
 
-            switch (transitionFilter)
+            switch (m_TransitionFilter)
             {
                 case TransitionFilter.Melt:
                     expandSize.y += 40;

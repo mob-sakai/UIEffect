@@ -259,6 +259,7 @@ namespace Coffee.UIEffects
                     else if (effect is UIEffectReplica pReplica && pReplica.isActiveAndEnabled)
                     {
                         replica.target = pReplica.target;
+                        replica.preset = pReplica.preset;
                         replica.useTargetTransform = pReplica.useTargetTransform;
                         replica.customRoot = pReplica.customRoot;
                         replica.flip = pReplica.flip;

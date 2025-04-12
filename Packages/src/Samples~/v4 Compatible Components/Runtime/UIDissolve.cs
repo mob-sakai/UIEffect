@@ -213,24 +213,29 @@ namespace Coffee.UIEffects
 
         internal override void UpdateContext(UIEffectContext c)
         {
-            c.transitionFilter = TransitionFilter.Dissolve;
-            c.transitionRate = m_EffectFactor;
-            c.transitionTex = m_TransitionTexture;
-            c.transitionKeepAspectRatio = m_KeepAspectRatio;
-            c.transitionReverse = m_Reverse;
-            c.transitionWidth = m_Width / 2;
-            c.transitionSoftness = m_Softness / 3;
-            c.transitionColor = m_Color;
-            c.transitionColorFilter = m_ColorMode.Convert();
+            c.m_TransitionFilter = TransitionFilter.Dissolve;
+            c.m_TransitionRate = m_EffectFactor;
+            c.m_TransitionTex = m_TransitionTexture;
+            c.m_TransitionKeepAspectRatio = m_KeepAspectRatio;
+            c.m_TransitionReverse = m_Reverse;
+            c.m_TransitionWidth = m_Width / 2;
+            c.m_TransitionSoftness = m_Softness / 3;
+            c.m_TransitionColor = m_Color;
+            c.m_TransitionColorFilter = m_ColorMode.Convert();
         }
 
         private void LoadDefaultTransitionTextureIfNeeded()
         {
             if (m_TransitionTexture) return;
-            var preset = UIEffectProjectSettings.LoadRuntimePreset("Legacy-UIDissolve");
-            if (!preset) return;
-
-            m_TransitionTexture = preset.transitionTexture;
+            var preset = UIEffectProjectSettings.LoadPreset("Legacy-UIDissolve");
+            if (preset is UIEffect presetV1)
+            {
+                m_TransitionTexture = presetV1.transitionTexture;
+            }
+            else if (preset is UIEffectPreset presetV2)
+            {
+                m_TransitionTexture = presetV2.m_TransitionTex;
+            }
         }
 
         public override void SetRate(float rate, UIEffectTweener.CullingMask mask)

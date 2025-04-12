@@ -132,12 +132,12 @@ namespace Coffee.UIEffects
 
         internal override void UpdateContext(UIEffectContext c)
         {
-            c.colorFilter = ColorFilter.HsvModifier;
-            c.colorIntensity = 1;
-            c.color = new Color(m_Hue, m_Saturation, m_Value, 1);
-            c.targetMode = TargetMode.Hue;
-            c.targetColor = m_TargetColor;
-            c.targetRange = m_Range;
+            c.m_ColorFilter = ColorFilter.HsvModifier;
+            c.m_ColorIntensity = 1;
+            c.m_Color = new Color(m_Hue, m_Saturation, m_Value, 1);
+            c.m_TargetMode = TargetMode.Hue;
+            c.m_TargetColor = m_TargetColor;
+            c.m_TargetRange = m_Range;
         }
     }
 }

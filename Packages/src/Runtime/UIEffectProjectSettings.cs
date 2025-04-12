@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,6 +7,7 @@ using Coffee.UIEffectInternal;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Object = UnityEngine.Object;
 
 namespace Coffee.UIEffects
 {
@@ -19,6 +21,9 @@ namespace Coffee.UIEffects
 
         [SerializeField]
         internal List<UIEffect> m_RuntimePresets = new List<UIEffect>();
+
+        [SerializeField]
+        internal List<UIEffectPreset> m_RuntimePresetsV2 = new List<UIEffectPreset>();
 
         [Header("Editor")]
         [Tooltip("Use HDR color pickers on color fields.")]
@@ -48,17 +53,18 @@ namespace Coffee.UIEffects
             set => instance.m_UseHDRColorPicker = value;
         }
 
-        public static void RegisterRuntimePreset(UIEffect effect)
+        public static void RegisterRuntimePreset(UIEffectPreset preset)
         {
             // Already registered.
-            if (!effect || LoadRuntimePreset(effect.name)) return;
+            if (!preset || instance.m_RuntimePresetsV2.Contains(preset)) return;
 
-            instance.m_RuntimePresets.Add(effect);
+            instance.m_RuntimePresetsV2.Add(preset);
 #if UNITY_EDITOR
             EditorUtility.SetDirty(instance);
 #endif
         }
 
+        [Obsolete("LoadRuntimePreset is obsolete. Use LoadPreset instead.", false)]
         public static UIEffect LoadRuntimePreset(string presetName)
         {
             for (var i = 0; i < instance.m_RuntimePresets.Count; i++)
@@ -71,6 +77,21 @@ namespace Coffee.UIEffects
             }
 
             return null;
+        }
+
+        public static Object LoadPreset(string presetName)
+        {
+            for (var i = 0; i < instance.m_RuntimePresetsV2.Count; i++)
+            {
+                var preset = instance.m_RuntimePresetsV2[i];
+                if (preset && preset.name == presetName)
+                {
+                    return preset;
+                }
+            }
+#pragma warning disable CS0618
+            return LoadRuntimePreset(presetName);
+#pragma warning restore CS0618
         }
 
 #if UNITY_EDITOR
@@ -223,8 +244,23 @@ namespace Coffee.UIEffects
                 .ToArray();
             return AssetDatabase.FindAssets("t:prefab", dirs)
                 .Select(AssetDatabase.GUIDToAssetPath)
+                .OrderBy(x => AssetImporter.GetAtPath(x).userData)
                 .Select(AssetDatabase.LoadAssetAtPath<UIEffect>)
                 .Where(x => x)
+                .ToArray();
+        }
+
+        internal static UIEffectPreset[] LoadEditorPresetsV2()
+        {
+            var dirs = AssetDatabase.FindAssets(k_PresetDir + " t:folder")
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .Where(x => Path.GetFileName(x) == k_PresetDir)
+                .OrderBy(x => x.StartsWith("Packages/com.coffee.ui-effect/"))
+                .ToArray();
+            return AssetDatabase.FindAssets("t:UIEffectPreset", dirs)
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .OrderBy(x => AssetImporter.GetAtPath(x).userData)
+                .Select(AssetDatabase.LoadAssetAtPath<UIEffectPreset>)
                 .ToArray();
         }
 
@@ -235,18 +271,16 @@ namespace Coffee.UIEffects
                 Directory.CreateDirectory(k_PresetSaveDir);
             }
 
-            var prefabPath = EditorUtility.SaveFilePanel("Save Preset", k_PresetSaveDir, effect.name, "prefab");
-            if (string.IsNullOrEmpty(prefabPath)) return;
+            var path = EditorUtility.SaveFilePanel("Save Preset", k_PresetSaveDir, effect.name, "asset");
+            if (string.IsNullOrEmpty(path)) return;
 
-            var prefab = new GameObject();
-            prefab.SetActive(false);
+            path = FileUtil.GetProjectRelativePath(path);
+            path = AssetDatabase.GenerateUniqueAssetPath(path);
 
-            var preset = prefab.AddComponent<UIEffect>();
-            preset.LoadPreset(effect);
-            var prefabAsset = PrefabUtility.SaveAsPrefabAsset(prefab, prefabPath);
-
-            EditorGUIUtility.PingObject(prefabAsset);
-            DestroyImmediate(prefab);
+            var preset = CreateInstance<UIEffectPreset>();
+            effect.SavePreset(preset, false);
+            AssetDatabase.CreateAsset(preset, path);
+            EditorGUIUtility.PingObject(preset);
         }
 
         [SettingsProvider]
@@ -255,7 +289,7 @@ namespace Coffee.UIEffects
             return new PreloadedProjectSettingsProvider("Project/UI/UI Effect");
         }
 
-        internal static (string path, bool builtin) GetPresetPath(UIEffect preset)
+        internal static (string path, bool builtin) GetPresetPath(Object preset)
         {
             var assetPath = AssetDatabase.GetAssetPath(preset);
             var builtin = assetPath.StartsWith("Packages/com.coffee.ui-effect/");
