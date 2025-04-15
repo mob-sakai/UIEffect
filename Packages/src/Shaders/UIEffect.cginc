@@ -49,6 +49,7 @@ uniform const int _EdgeColorGlow;
 uniform const int _PatternArea;
 uniform const float _DetailIntensity;
 uniform const float2 _DetailThreshold;
+uniform const half4 _DetailColor;
 uniform const sampler2D _DetailTex;
 uniform const float4 _DetailTex_ST;
 uniform const float2 _DetailTex_Speed;
@@ -81,7 +82,7 @@ uniform const matrix _CanvasToWorldMatrix;
 #define TRANSITION_NONE (!TRANSITION_FADE && !TRANSITION_CUTOFF && !TRANSITION_DISSOLVE && !TRANSITION_SHINY && !TRANSITION_MASK && !TRANSITION_MELT && !TRANSITION_BURN && !TRANSITION_PATTERN)
 #define TARGET_NONE (!TARGET_HUE && !TARGET_LUMINANCE)
 #define EDGE_NONE (!EDGE_PLAIN && !EDGE_SHINY)
-#define DETAIL_NONE (!DETAIL_MASKING && !DETAIL_MULTIPLY && !DETAIL_ADDITIVE && !DETAIL_REPLACE && !DETAIL_MULTIPLY_ADDITIVE)
+#define DETAIL_NONE (!DETAIL_MASKING && !DETAIL_MULTIPLY && !DETAIL_ADDITIVE && !DETAIL_SUBTRACTIVE && !DETAIL_REPLACE && !DETAIL_MULTIPLY_ADDITIVE)
 #define GRADATION_NONE (!GRADATION_GRADIENT && !GRADATION_RADIAL && !GRADATION_COLOR2 && !GRADATION_COLOR4)
 
 #if TONE_NONE && !COLOR_FILTER && SAMPLING_NONE && TRANSITION_NONE && TARGET_NONE && EDGE_NONE && DETAIL_NONE && GRADATION_NONE
@@ -623,34 +624,40 @@ half4 apply_detail_filter(half4 color, float2 uvLocal)
 {
     const half4 inColor = color;
     const float2 uv = uvLocal * _DetailTex_ST.xy + _DetailTex_ST.zw + _Time.y * _DetailTex_Speed;
-    const half4 detail = tex2D(_DetailTex, uv);
+    half4 detail = tex2D(_DetailTex, uv);
     #if DETAIL_MASKING // Detail.Masking
     {
         color *= inv_lerp(_DetailThreshold.x, _DetailThreshold.y, detail.a);
     }
     #elif DETAIL_MULTIPLY // Detail.Multiply
     {
+        detail *= _DetailColor;
         color.rgb *= detail.rgb;
         color = lerp(inColor, color * detail.a, _DetailIntensity);
-
     }
     #elif DETAIL_ADDITIVE // Detail.Additive
     {
+        detail *= _DetailColor;
         color.rgb += detail.rgb * detail.a * color.a;
         color = lerp(inColor, color, _DetailIntensity);
-
+    }
+    #elif DETAIL_SUBTRACTIVE // Detail.Subtractive
+    {
+        detail *= _DetailColor;
+        color.rgb -= detail.rgb * detail.a * color.a;
+        color = lerp(inColor, color, _DetailIntensity);
     }
     #elif DETAIL_REPLACE // Detail.Replace
     {
+        detail *= _DetailColor;
         color.rgb = detail.rgb * color.a;
         color = lerp(inColor, color, _DetailIntensity * detail.a);
-
     }
     #elif DETAIL_MULTIPLY_ADDITIVE // Detail.MultiplyAdditive
     {
+        detail *= _DetailColor;
         color.rgb *= (1 + detail.rgb * detail.a);
         color = lerp(inColor, color, _DetailIntensity);
-
     }
     #else
     {

@@ -9,7 +9,7 @@ using Debug = UnityEngine.Debug;
 
 internal static class TextMeshProSupport
 {
-    private const string k_Version = "userData: v5.7.0";
+    private const string k_Version = "userData: v5.8.0";
     private const string k_VersionUnity6 = k_Version + " (Unity 6)";
 
     private static readonly Dictionary<string, string> s_FileGuids = new Dictionary<string, string>()

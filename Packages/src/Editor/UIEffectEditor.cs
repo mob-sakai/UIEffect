@@ -106,6 +106,7 @@ namespace Coffee.UIEffects.Editors
 
         private SerializedProperty _detailFilter;
         private SerializedProperty _detailIntensity;
+        private SerializedProperty _detailColor;
         private SerializedProperty _detailThreshold;
         private SerializedProperty _detailTex;
         private SerializedProperty _detailTexScale;
@@ -202,6 +203,7 @@ namespace Coffee.UIEffects.Editors
 
             _detailFilter = serializedObject.FindProperty("m_DetailFilter");
             _detailIntensity = serializedObject.FindProperty("m_DetailIntensity");
+            _detailColor = serializedObject.FindProperty("m_DetailColor");
             _detailThreshold = serializedObject.FindProperty("m_DetailThreshold");
             _detailTex = serializedObject.FindProperty("m_DetailTex");
             _detailTexScale = serializedObject.FindProperty("m_DetailTexScale");
@@ -455,6 +457,7 @@ namespace Coffee.UIEffects.Editors
                 else
                 {
                     EditorGUILayout.PropertyField(_detailIntensity);
+                    DrawColorPickerField(EditorGUILayout.GetControlRect(), _detailColor, true);
                 }
 
                 EditorGUILayout.PropertyField(_detailTex);

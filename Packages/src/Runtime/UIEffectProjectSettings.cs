@@ -83,10 +83,10 @@ namespace Coffee.UIEffects
         {
 #if UNITY_2023_2_OR_NEWER
             const string tmpSupport = "TextMeshPro Support (Unity 6)";
-            const string version = "v5.7.0 (Unity 6)";
+            const string version = "v5.8.0 (Unity 6)";
 #else
             const string tmpSupport = "TextMeshPro Support";
-            const string version = "v5.7.0";
+            const string version = "v5.8.0";
 #endif
             ShaderSampleImporter.RegisterShaderSamples(new[]
             {

@@ -241,6 +241,9 @@ namespace Coffee.UIEffects
         protected MinMax01 m_DetailThreshold = new MinMax01(0, 1);
 
         [SerializeField]
+        protected Color m_DetailColor = Color.white;
+
+        [SerializeField]
         protected Texture m_DetailTex;
 
         [SerializeField]
@@ -1302,6 +1305,28 @@ namespace Coffee.UIEffects
             }
         }
 
+        public Color detailColor
+        {
+            get => m_EdgeColor;
+            set
+            {
+                if (m_EdgeColor == value) return;
+                context.detailColor = m_EdgeColor = value;
+                SetMaterialDirty();
+            }
+        }
+
+        public float detailColorAlpha
+        {
+            get => detailColor.a;
+            set
+            {
+                var c = detailColor;
+                c.a = value;
+                detailColor = c;
+            }
+        }
+
         public Texture detailTexture
         {
             get => m_DetailTex;
@@ -1360,11 +1385,7 @@ namespace Coffee.UIEffects
         public RectTransform customRoot
         {
             get => m_CustomRoot;
-            set
-            {
-                if (m_CustomRoot == value) return;
-                m_CustomRoot = value;
-            }
+            set => m_CustomRoot = value;
         }
 
         public override Flip flip
@@ -1592,6 +1613,7 @@ namespace Coffee.UIEffects
 
             c.detailFilter = m_DetailFilter;
             c.detailIntensity = m_DetailIntensity;
+            c.detailColor = m_DetailColor;
             c.detailThreshold = m_DetailThreshold;
             c.detailTex = m_DetailTex;
             c.detailTexScale = m_DetailTexScale;
@@ -1799,6 +1821,7 @@ namespace Coffee.UIEffects
                 m_DetailFilter = preset.m_DetailFilter;
                 m_DetailIntensity = preset.m_DetailIntensity;
                 m_DetailThreshold = preset.m_DetailThreshold;
+                m_DetailColor = preset.m_DetailColor;
                 m_DetailTex = preset.m_DetailTex;
                 m_DetailTexScale = preset.m_DetailTexScale;
                 m_DetailTexOffset = preset.m_DetailTexOffset;
@@ -1887,6 +1910,7 @@ namespace Coffee.UIEffects
             m_DetailFilter = c.detailFilter;
             m_DetailIntensity = c.detailIntensity;
             m_DetailThreshold = c.detailThreshold;
+            m_DetailColor = c.detailColor;
             m_DetailTex = c.detailTex;
             m_DetailTexScale = c.detailTexScale;
             m_DetailTexOffset = c.detailTexOffset;

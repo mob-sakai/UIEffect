@@ -53,6 +53,7 @@ namespace Coffee.UIEffects
         private static readonly int s_PatternArea = Shader.PropertyToID("_PatternArea");
         private static readonly int s_DetailIntensity = Shader.PropertyToID("_DetailIntensity");
         private static readonly int s_DetailThreshold = Shader.PropertyToID("_DetailThreshold");
+        private static readonly int s_DetailColor = Shader.PropertyToID("_DetailColor");
         private static readonly int s_DetailTex = Shader.PropertyToID("_DetailTex");
         private static readonly int s_DetailTex_ST = Shader.PropertyToID("_DetailTex_ST");
         private static readonly int s_DetailTex_Speed = Shader.PropertyToID("_DetailTex_Speed");
@@ -130,7 +131,8 @@ namespace Coffee.UIEffects
             "DETAIL_MULTIPLY",
             "DETAIL_ADDITIVE",
             "DETAIL_REPLACE",
-            "DETAIL_MULTIPLY_ADDITIVE"
+            "DETAIL_MULTIPLY_ADDITIVE",
+            "DETAIL_SUBTRACTIVE"
         };
 
         private static readonly string[] s_GradationKeywords =
@@ -231,6 +233,7 @@ namespace Coffee.UIEffects
         public DetailFilter detailFilter;
         public float detailIntensity;
         public MinMax01 detailThreshold;
+        public Color detailColor;
         public Texture detailTex;
         public Vector2 detailTexScale = new Vector2(1, 1);
         public Vector2 detailTexOffset = new Vector2(0, 0);
@@ -419,6 +422,7 @@ namespace Coffee.UIEffects
             material.SetColor(s_GradationColor4, gradationColor4);
 
             material.SetFloat(s_DetailIntensity, Mathf.Clamp01(detailIntensity));
+            material.SetColor(s_DetailColor, detailColor);
             material.SetVector(s_DetailThreshold, new Vector2(detailThreshold.min, detailThreshold.max));
             material.SetTexture(s_DetailTex, detailFilter != 0 ? detailTex : null);
             material.SetVector(s_DetailTex_ST,
