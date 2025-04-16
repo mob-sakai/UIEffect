@@ -48,6 +48,7 @@ Combine various filters, such as grayscale, blur, and dissolve, to decorate your
     - [Gradation Mode](#gradation-mode)
     - [Edge Mode](#edge-mode)
     - [Detail Filter](#detail-filter)
+    - [Flip](#flip)
     - [Others](#others)
   - [Component: UIEffectTweener](#component-uieffecttweener)
   - [Component: UIEffectReplica](#component-uieffectreplica)
@@ -200,7 +201,10 @@ If upgrading from UIEffect v4 to v5, note the following breaking changes:
 3. Adjust the effect filters and parameters in the inspector.  
    ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1744308178360.gif)
 
-4. Enjoy!
+4. From the top menu, you can load/append preset.  
+   ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1744800851739.gif)
+
+5. Enjoy!
 
 <br><br>
 
@@ -354,11 +358,12 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 
 #### Detail Filter
 
-![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/uieffect5.7.0-inspector-detail.png)
+![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1744762332942.png)
 
-- **Detail Filter**: `None`, `Masking`, `Multiply`, `Additive`, `Replace`, `MuliplyAdditive`  
-  ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/uieffect5.7.0-sample-detail.png)
+- **Detail Filter**: `None`, `Masking`, `Multiply`, `Additive`, `Subtractive`, `Replace`, `MuliplyAdditive`  
+  ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1744826180386.png)
 - **Detail Intensity**: 0.0 (no effect) - 1.0 (full effect).
+- **Detail Color**: The color of the detail.
 - **Detail Threshold** (`Masking` only): The minimum and maximum alpha values used for masking. The larger the gap
     between these values, the stronger the softness effect.
 - **Detail Tex**: The texture used for the transition filter.
@@ -368,21 +373,28 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 
 <br>
 
-#### Others
+#### Flip
 
-![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/uieffect5.7.0-inspector-others.png)
+![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1744762521061.png)
 
-- **Sampling Scale**: The referencing scale during sampling.
-    - Larger values are suitable for high-resolution textures.
-- **Allow To Modify Mesh Shape**: If enabled, the mesh shape can be modified.
-- **Custom Root**: Use the custom transform for some effects.
-- **Flip**:
+- **Flip**: Combine the following flags.
     - `Nothing`
     - `Horizontal`
     - `Vertical`
     - `Effect`: Flip with the effect.
     - `Shadow`: Flip with the shadow.  
     ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/uieffect5.7.0-sample-flip.png)
+
+<br>
+
+#### Others
+
+![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1744762623263.png)
+
+- **Sampling Scale**: The referencing scale during sampling.
+    - Larger values are suitable for high-resolution textures.
+- **Allow To Modify Mesh Shape**: If enabled, the mesh shape can be modified.
+- **Custom Root**: Use the custom transform for some effects.
 
 > [!TIP]  
 > `Transition Filter`, `Gradation Filter`, and `Detail Filter` usually refer to their own `RectTransform` when applying effects.  
@@ -510,7 +522,7 @@ To use UIEffect with ShaderGraph, you need to import additional resources.
 You can create and use presets for `UIEffect` components.
 
 - Click the `Load` button to apply an editor preset.
-> Click the `Append` button to load only non-default settings from the editor preset.
+- Click the `Append` button to load only non-default settings from the editor preset.
 - Click the `Save As New` button to save the current settings as an editor preset.
 - In the [Project Settings](#project-settings), you can register saved editor presets as runtime presets.
 - Runtime presets can be loaded using the `UIEffect.LoadPreset(presetName)` method.
@@ -548,15 +560,22 @@ UIEffectProjectSettings.shaderVariantCollection.WarmUp();
 
 ### Project Settings
 
-![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1744305055425.png)
+![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1744799623192.png)
 
 You can adjust the project-wide settings for UIEffect. (`Edit > Project Settings > UI > UIEffect`)
 
 #### Settings
 
-- **Transform Sensitivity**: `Low`, `Medium`, `High`
-  - Set the sensitivity of the transformation when `Use Target Transform` is enabled in `UIEffectReplica` component.
 - **Runtime Presets**: A list of presets that can be loaded at runtime. Load them using `UIEffect.LoadPreset(presetName)` method.
+
+> [!IMPORTANT]  
+> - The legacy prefab-based preset system is deprecated as of v5.8.0.  
+> - If your project contains legacy presets, you can convert them to the new system.  
+>   - **Convert All Legacy Presets**: Creates new presets based on the legacy ones.  
+>     If the legacy presets are used as runtime presets, they will be replaced with the new ones.  
+>     You can load the new preset via the `UIEffect.LoadPreset` method.
+>   - **Delete All Legacy Presets**: Deletes all legacy presets. If any legacy presets are assigned to `UIEffectReplica.target`, those targets will also be removed.  
+>   ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1744792792701.png)
 
 #### Editor
 
