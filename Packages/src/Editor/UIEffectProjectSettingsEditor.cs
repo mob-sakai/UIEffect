@@ -48,7 +48,7 @@ namespace Coffee.UIEffects.Editors
             _reorderableList.onAddDropdownCallback = (rect, list) =>
             {
                 UIEffectEditor.DropDownPreset(rect,
-                    x => !x.builtin && !UIEffectProjectSettings.instance.m_RuntimePresets.Contains(x.preset),
+                    x => !UIEffectProjectSettings.instance.m_RuntimePresetsV2.Contains(x.preset),
                     UIEffectProjectSettings.RegisterRuntimePreset);
             };
 
