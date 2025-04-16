@@ -91,10 +91,10 @@ namespace Coffee.UIEffects
             };
 #endif
 
-        private static readonly Func<UIVertex, UIVertex> s_OnMarkAsShadow =
-            vt =>
+        private static readonly Func<UIVertex, float, UIVertex> s_OnMarkAsShadow =
+            (vt, s) =>
             {
-                vt.uv2.x -= 2;
+                vt.uv2.x -= s;
                 return vt;
             };
 

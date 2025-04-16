@@ -6,7 +6,7 @@ namespace Coffee.UIEffects
 {
     public static class ShadowUtil
     {
-        public static Func<UIVertex, UIVertex> onMarkAsShadow;
+        public static Func<UIVertex, float, UIVertex> onMarkAsShadow;
 
         public static void DoShadow(List<UIVertex> verts, Vector2[] vectors, Vector2 distance, int iteration,
             float fade)
@@ -30,14 +30,7 @@ namespace Coffee.UIEffects
             {
                 if (onMarkAsShadow != null)
                 {
-                    verts[i] = onMarkAsShadow(verts[i]);
-                }
-                else
-                {
-                    var vt = verts[i];
-                    vt.uv0.z -= 8;
-                    vt.uv0.w -= 8;
-                    verts[i] = vt;
+                    verts[i] = onMarkAsShadow(verts[i], 2);
                 }
             }
         }
@@ -54,6 +47,15 @@ namespace Coffee.UIEffects
             var offset = distance.y - (scale + 1) * pivot * height;
             var range = new Vector2(rect2.yMin, rect2.yMax);
             ApplyMirror(verts, count, rate, range, scale, offset, fade);
+
+            // Mark as shadow vertices.
+            for (var i = 0; i < verts.Count - count; i++)
+            {
+                if (onMarkAsShadow != null)
+                {
+                    verts[i] = onMarkAsShadow(verts[i], 4);
+                }
+            }
         }
 
         private static void ApplyMirror(List<UIVertex> verts, int count, float rate, Vector2 range, float scale,

@@ -66,6 +66,8 @@ namespace Coffee.UIEffects
         private static readonly int s_GradationTex_ST = Shader.PropertyToID("_GradationTex_ST");
         private static readonly int s_RootViewMatrix = Shader.PropertyToID("_RootViewMatrix");
         private static readonly int s_GradViewMatrix = Shader.PropertyToID("_GradViewMatrix");
+        private static readonly int s_MirrorRootViewMatrix = Shader.PropertyToID("_MirrorRootViewMatrix");
+        private static readonly int s_MirrorGradViewMatrix = Shader.PropertyToID("_MirrorGradViewMatrix");
         private static readonly int s_CanvasToWorldMatrix = Shader.PropertyToID("_CanvasToWorldMatrix");
 
         private static readonly string[] s_ToneKeywords =
@@ -546,6 +548,20 @@ namespace Coffee.UIEffects
             var gradRotation = Quaternion.Euler(0, 0, GetGradationRotation());
             var gradScale = 1f / GetMultiplier(GetGradationRotation());
             material.SetMatrix(s_GradViewMatrix, Matrix4x4.TRS(pivot, gradRotation, scale * gradScale) * w2LMat);
+
+            if (m_ShadowMode == ShadowMode.Mirror)
+            {
+                var mirrorInv = 1f / m_ShadowMirrorScale;
+                var mirrorOffset = new Vector3(0, size.y / 2 * (mirrorInv + 1) - m_ShadowDistance.y * mirrorInv, 0);
+                var mirrorScale = new Vector3(1, mirrorInv, 1);
+                var udScale = new Vector3(scale.x, -scale.y, scale.z);
+                material.SetMatrix(s_MirrorRootViewMatrix,
+                    Matrix4x4.TRS(pivot, rootRotation, udScale * rootScale)
+                    * Matrix4x4.TRS(mirrorOffset, Quaternion.identity, mirrorScale) * w2LMat);
+                material.SetMatrix(s_MirrorGradViewMatrix,
+                    Matrix4x4.TRS(pivot, gradRotation, udScale * gradScale)
+                    * Matrix4x4.TRS(mirrorOffset, Quaternion.identity, mirrorScale) * w2LMat);
+            }
 
             if (canvas.renderMode == RenderMode.ScreenSpaceOverlay || !canvas.worldCamera)
             {

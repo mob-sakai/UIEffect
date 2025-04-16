@@ -63,6 +63,8 @@ uniform const sampler2D _GradationTex;
 uniform const float4 _GradationTex_ST;
 uniform const matrix _RootViewMatrix;
 uniform const matrix _GradViewMatrix;
+uniform const matrix _MirrorRootViewMatrix;
+uniform const matrix _MirrorGradViewMatrix;
 uniform const matrix _CanvasToWorldMatrix;
 
 // For performance reasons, limit the sampling of blur in TextMeshPro.
@@ -760,8 +762,17 @@ half4 uieffect(half4 origin, float2 uv, float4 uvMask, float4 wpos)
     wpos = mul(_CanvasToWorldMatrix, wpos);
     #endif
     const half rate = get_target_rate(origin.rgb);
-    const float2 uvLocal = saturate(mul(_RootViewMatrix, wpos)).xy;
-    const float2 uvGrad = mul(_GradViewMatrix, wpos).xy;
+    float2 uvLocal = saturate(mul(_RootViewMatrix, wpos)).xy;
+    float2 uvGrad = mul(_GradViewMatrix, wpos).xy;
+
+    // Mirror
+    if (uvMask.x < -3)
+    {
+        uvLocal = saturate(mul(_MirrorRootViewMatrix, wpos)).xy;
+        uvGrad = saturate(mul(_MirrorGradViewMatrix, wpos)).xy;
+        uvMask.x += 4;
+    }
+    
     const float isShadow = uvMask.x < 0 ? 1 : 0;
     uvMask.x += isShadow * 2;
 
