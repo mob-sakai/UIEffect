@@ -15,7 +15,6 @@ namespace Coffee.UIEffects
         private static readonly int s_SrcBlend = Shader.PropertyToID("_SrcBlend");
         private static readonly int s_DstBlend = Shader.PropertyToID("_DstBlend");
         private static readonly int s_ToneIntensity = Shader.PropertyToID("_ToneIntensity");
-        private static readonly int s_ToneParams = Shader.PropertyToID("_ToneParams");
         private static readonly int s_ColorFilter = Shader.PropertyToID("_ColorFilter");
         private static readonly int s_ColorValue = Shader.PropertyToID("_ColorValue");
         private static readonly int s_ColorIntensity = Shader.PropertyToID("_ColorIntensity");
@@ -160,7 +159,6 @@ namespace Coffee.UIEffects
         public static Func<UIVertex, Rect, UIVertex> onModifyVertex;
         public ToneFilter toneFilter = ToneFilter.None;
         public float toneIntensity = 1;
-        public Vector4 toneParams = new Vector4(0, 0, 0, 0);
 
         public ColorFilter colorFilter = ColorFilter.None;
         public float colorIntensity = 1;
@@ -262,7 +260,6 @@ namespace Coffee.UIEffects
         {
             toneFilter = preset.toneFilter;
             toneIntensity = preset.toneIntensity;
-            toneParams = preset.toneParams;
 
             colorFilter = preset.colorFilter;
             color = preset.color;
@@ -355,7 +352,6 @@ namespace Coffee.UIEffects
             material.SetInt(s_DstBlend, (int)dstBlendMode);
 
             material.SetFloat(s_ToneIntensity, Mathf.Clamp01(toneIntensity));
-            material.SetVector(s_ToneParams, toneParams);
 
             material.SetInt(s_ColorFilter, (int)colorFilter);
             material.SetColor(s_ColorValue, color);

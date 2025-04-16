@@ -19,9 +19,6 @@ namespace Coffee.UIEffects
         protected float m_ToneIntensity = 1;
 
         [SerializeField]
-        protected Vector4 m_ToneParams = new Vector4(0, 0, 0, 0);
-
-        [SerializeField]
         protected ColorFilter m_ColorFilter = ColorFilter.None;
 
         [Range(0, 1)]
@@ -1542,7 +1539,6 @@ namespace Coffee.UIEffects
         {
             c.toneFilter = m_ToneFilter;
             c.toneIntensity = m_ToneIntensity;
-            c.toneParams = m_ToneParams;
 
             c.colorFilter = m_ColorFilter;
             c.color = m_Color;
@@ -1720,7 +1716,6 @@ namespace Coffee.UIEffects
             {
                 m_ToneFilter = preset.m_ToneFilter;
                 m_ToneIntensity = preset.m_ToneIntensity;
-                m_ToneParams = preset.m_ToneParams;
             }
 
             if (!append || preset.m_ColorFilter != ColorFilter.None)
@@ -1838,7 +1833,6 @@ namespace Coffee.UIEffects
         {
             m_ToneFilter = c.toneFilter;
             m_ToneIntensity = c.toneIntensity;
-            m_ToneParams = c.toneParams;
 
             m_ColorFilter = c.colorFilter;
             m_Color = c.color;
