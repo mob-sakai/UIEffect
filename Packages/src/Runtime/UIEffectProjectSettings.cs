@@ -111,8 +111,8 @@ namespace Coffee.UIEffects
                 ("Hidden/TextMeshPro/Mobile/Distance Field (UIEffect)", tmpSupport, version),
 
                 // ShaderGraph Support
-                ("Shader Graphs/UISample (UIEffect)", "ShaderGraph Support (Unity 6 BuiltIn)", "v5.7.0"),
-                ("Shader Graphs/UISampleURP (UIEffect)", "ShaderGraph Support (Unity 6 URP)", "v5.7.0")
+                ("Shader Graphs/UISample (UIEffect)", "ShaderGraph Support (Unity 6 BuiltIn)", "v5.8.0"),
+                ("Shader Graphs/UISampleURP (UIEffect)", "ShaderGraph Support (Unity 6 URP)", "v5.8.0")
             });
             ShaderSampleImporter.RegisterShaderAliases(new[]
             {

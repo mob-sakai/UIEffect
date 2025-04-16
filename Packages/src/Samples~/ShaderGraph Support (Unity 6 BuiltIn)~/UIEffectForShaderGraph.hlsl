@@ -60,7 +60,7 @@ half4 frag_override(PackedVaryings packedInput) : SV_TARGET
     // ==== SOFTMASKABLE END ====
 
     #if defined(_ALPHATEST_ON) || defined(_BUILTIN_ALPHATEST_ON)
-    clip(color.a - surfaceDescription.Alpha);
+    clip(color.a - surfaceDescription.AlphaClipThreshold);
     #endif
     
     #if UNITY_UI_ALPHACLIP
