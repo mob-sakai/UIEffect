@@ -16,7 +16,6 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _runtimePresets;
         private SerializedProperty _runtimePresetsV2;
         private SerializedProperty _useHDRColorPicker;
-        private SerializedProperty _transformSensitivity;
         private bool _isInitialized;
         private ShaderVariantRegistryEditor _shaderVariantRegistryEditor;
         private UIEffect[] _legacyPresets;
@@ -27,7 +26,6 @@ namespace Coffee.UIEffects.Editors
         {
             if (_isInitialized) return;
 
-            _transformSensitivity = serializedObject.FindProperty("m_TransformSensitivity");
             _useHDRColorPicker = serializedObject.FindProperty("m_UseHDRColorPicker");
             _runtimePresets = serializedObject.FindProperty("m_RuntimePresets");
             _runtimePresetsV2 = serializedObject.FindProperty("m_RuntimePresetsV2");
@@ -71,9 +69,6 @@ namespace Coffee.UIEffects.Editors
             InitializeIfNeeded();
 
             // Settings
-            // Transform sensitivity.
-            EditorGUILayout.PropertyField(_transformSensitivity);
-
             // Runtime Presets
             _reorderableList.DoLayoutList();
 

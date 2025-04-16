@@ -13,12 +13,7 @@ namespace Coffee.UIEffects
 {
     public class UIEffectProjectSettings : PreloadedProjectSettings<UIEffectProjectSettings>
     {
-        [Tooltip(
-            "The sensitivity of the transformation when `Use Target Transform` is enabled in the `UIEffectReplica` component.")]
         [Header("Setting")]
-        [SerializeField]
-        private TransformSensitivity m_TransformSensitivity = TransformSensitivity.Medium;
-
         [SerializeField]
         internal List<UIEffect> m_RuntimePresets = new List<UIEffect>();
 
@@ -40,12 +35,6 @@ namespace Coffee.UIEffects
         public static ShaderVariantRegistry shaderRegistry => instance.m_ShaderVariantRegistry;
 
         public static ShaderVariantCollection shaderVariantCollection => shaderRegistry.shaderVariantCollection;
-
-        public static TransformSensitivity transformSensitivity
-        {
-            get => instance.m_TransformSensitivity;
-            set => instance.m_TransformSensitivity = value;
-        }
 
         public static bool useHdrColorPicker
         {

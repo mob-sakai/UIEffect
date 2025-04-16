@@ -271,7 +271,8 @@ namespace Coffee.UIEffectInternal
         private readonly ReorderableList _rlOptionalShaders;
         private readonly ReorderableList _rlUnregisteredVariants;
         private Editor _editor;
-        private bool _expand;
+        private bool _expandOptionalShaders;
+        private bool _expandUnregisteredVariants;
 
         public ShaderVariantRegistryEditor(SerializedProperty property, string optionName, Action onFindOptions)
         {
@@ -285,7 +286,7 @@ namespace Coffee.UIEffectInternal
             _rlOptionalShaders.drawHeaderCallback = rect =>
             {
                 var rLabel = new Rect(rect.x, rect.y, rect.width - 80, rect.height);
-                EditorGUI.LabelField(rLabel,
+                _expandOptionalShaders = EditorGUI.Foldout(rLabel, _expandOptionalShaders,
                     EditorGUIUtility.TrTextContent($"Optional Shaders {optionName}",
                         "Specify optional shaders explicitly."));
 
@@ -301,10 +302,12 @@ namespace Coffee.UIEffectInternal
                     optionalShaders.ClearArray();
                 }
             };
-            _rlOptionalShaders.elementHeight = EditorGUIUtility.singleLineHeight * 2 + 4;
+            _rlOptionalShaders.elementHeightCallback = _ => _expandOptionalShaders
+                ? EditorGUIUtility.singleLineHeight * 2 + 4
+                : 0;
             _rlOptionalShaders.drawElementCallback = (r, index, isActive, isFocused) =>
             {
-                if (optionalShaders.arraySize <= index) return;
+                if (optionalShaders.arraySize <= index || !_expandOptionalShaders) return;
 
                 var element = optionalShaders.GetArrayElementAtIndex(index);
                 if (element == null) return;
@@ -376,8 +379,8 @@ namespace Coffee.UIEffectInternal
 
         public void Draw()
         {
-            _rlOptionalShaders.DoLayoutList();
-            _expand = DrawRegisteredShaderVariants(_expand, _asset, ref _editor);
+            DrawOptionalShaders(ref _expandOptionalShaders, _rlOptionalShaders);
+            DrawRegisteredShaderVariants(ref _expandUnregisteredVariants, _asset, ref _editor);
             if (0 < _rlUnregisteredVariants.serializedProperty.arraySize)
             {
                 EditorGUILayout.Space(4);
@@ -406,20 +409,40 @@ namespace Coffee.UIEffectInternal
             EditorUtility.SetDirty(collection);
         }
 
-        private static bool DrawRegisteredShaderVariants(bool expand, SerializedProperty property, ref Editor editor)
+        private static void DrawOptionalShaders(ref bool expand, ReorderableList list)
+        {
+            if (expand)
+            {
+                list.DoLayoutList();
+            }
+            else
+            {
+                var r = EditorGUILayout.GetControlRect(false, 20);
+                var rBg = new Rect(r.x - 3, r.y, r.width + 6, r.height);
+                EditorGUI.LabelField(rBg, GUIContent.none, "RL Header");
+
+                r.x += 3;
+                r.width -= 3;
+                r.y += 0;
+                list.drawHeaderCallback.Invoke(r);
+            }
+        }
+
+        private static void DrawRegisteredShaderVariants(ref bool expand, SerializedProperty property,
+            ref Editor editor)
         {
             var collection = property.objectReferenceValue as ShaderVariantCollection;
-            if (collection == null) return expand;
+            if (collection == null) return;
 
             EditorGUILayout.Space();
             var r = EditorGUILayout.GetControlRect(false, 20);
             var rBg = new Rect(r.x - 3, r.y, r.width + 6, r.height);
             EditorGUI.LabelField(rBg, GUIContent.none, "RL Header");
 
-            var rLabel = new Rect(r.x + 5, r.y, 200, r.height);
+            var rLabel = new Rect(r.x + 3, r.y, 200, r.height);
             expand = EditorGUI.Foldout(rLabel, expand, "Registered Shader Variants");
 
-            var rButton = new Rect(r.x + r.width - 82, r.y + 1, 80, r.height - 4);
+            var rButton = new Rect(r.x + r.width - 62, r.y + 1, 60, r.height - 4);
             if (GUI.Button(rButton, "Clear All", EditorStyles.miniButton))
             {
                 collection.Clear();
@@ -440,8 +463,6 @@ namespace Coffee.UIEffectInternal
                 EditorGUILayout.EndVertical();
                 editor.serializedObject.ApplyModifiedProperties();
             }
-
-            return expand;
         }
 
         private static void ShowShaderDropdown(SerializedProperty property)

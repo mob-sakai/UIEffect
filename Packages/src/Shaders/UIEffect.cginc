@@ -419,7 +419,7 @@ half4 apply_edge_color_filter(const half4 inColor, const half4 factor, const flo
     return color;
 }
 
-half4 apply_sampling_filter(float2 uv, const float4 uvMask, const float2 uvLocal, const float isShadow)
+half4 apply_sampling_filter(float2 uv, const float4 uvMask, const float isShadow)
 {
     #if SAMPLING_BLUR_FAST || SAMPLING_BLUR_MEDIUM || SAMPLING_BLUR_DETAIL
     {
@@ -719,7 +719,7 @@ half4 uieffect_internal(float2 uv, float4 uvMask, const float2 uvLocal, const fl
     const half alpha = transition_alpha(uvLocal);
     const float edgeFactor = edge(uv, uvMask, _EdgeWidth);
     uv += move_transition_filter(uvMask, alpha);
-    half4 color = apply_sampling_filter(uv, uvMask, uvLocal, isShadow);
+    half4 color = apply_sampling_filter(uv, uvMask, isShadow);
     color = apply_gradation_filter(color, uvGrad);
     color = apply_tone_filter(color);
     color = apply_transition_filter(color, alpha, uvLocal, edgeFactor);
