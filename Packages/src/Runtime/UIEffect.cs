@@ -1830,6 +1830,7 @@ namespace Coffee.UIEffects
             {
                 dst.m_DetailFilter = src.m_DetailFilter;
                 dst.m_DetailIntensity = src.m_DetailIntensity;
+                dst.m_DetailColor = src.m_DetailColor;
                 dst.m_DetailThreshold = src.m_DetailThreshold;
                 dst.m_DetailTex = src.m_DetailTex;
                 dst.m_DetailTexScale = src.m_DetailTexScale;
@@ -1951,6 +1952,7 @@ namespace Coffee.UIEffects
             {
                 dst.m_DetailFilter = src.m_DetailFilter;
                 dst.m_DetailIntensity = src.m_DetailIntensity;
+                dst.m_DetailColor = src.m_DetailColor;
                 dst.m_DetailThreshold = src.m_DetailThreshold;
                 dst.m_DetailTex = src.m_DetailTex;
                 dst.m_DetailTexScale = src.m_DetailTexScale;
