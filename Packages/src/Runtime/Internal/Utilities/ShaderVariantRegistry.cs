@@ -282,7 +282,7 @@ namespace Coffee.UIEffectInternal
             _errorOnUnregisteredVariant = property.FindPropertyRelative("m_ErrorOnUnregisteredVariant");
             _asset = property.FindPropertyRelative("m_Asset");
 
-            _rlOptionalShaders = new ReorderableList(so, optionalShaders, false, true, true, true);
+            _rlOptionalShaders = new ReorderableList(so, optionalShaders, true, true, true, true);
             _rlOptionalShaders.drawHeaderCallback = rect =>
             {
                 var rLabel = new Rect(rect.x, rect.y, rect.width - 80, rect.height);
@@ -302,12 +302,10 @@ namespace Coffee.UIEffectInternal
                     optionalShaders.ClearArray();
                 }
             };
-            _rlOptionalShaders.elementHeightCallback = _ => _expandOptionalShaders
-                ? EditorGUIUtility.singleLineHeight * 2 + 4
-                : 0;
+            _rlOptionalShaders.elementHeight = EditorGUIUtility.singleLineHeight * 2 + 4;
             _rlOptionalShaders.drawElementCallback = (r, index, isActive, isFocused) =>
             {
-                if (optionalShaders.arraySize <= index || !_expandOptionalShaders) return;
+                if (optionalShaders.arraySize <= index) return;
 
                 var element = optionalShaders.GetArrayElementAtIndex(index);
                 if (element == null) return;
@@ -322,7 +320,7 @@ namespace Coffee.UIEffectInternal
                 }
 
                 var rArrow = new Rect(r.x, r.y + h + 4, 20, h);
-                EditorGUI.LabelField(rArrow, "->");
+                EditorGUI.LabelField(rArrow, GUIContent.none, "ArrowNavigationRight");
 
                 var rValue = new Rect(r.x + 20, r.y + h + 4, r.width - 20, h);
                 if (GUI.Button(rValue, value.stringValue, EditorStyles.popup))
