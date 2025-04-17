@@ -1,3 +1,12 @@
+## [5.8.1](https://github.com/mob-sakai/UIEffect/compare/5.8.0...5.8.1) (2025-04-17)
+
+
+### Bug Fixes
+
+* built-in presets cannot be used with `UIEffectReplica` ([1106f4b](https://github.com/mob-sakai/UIEffect/commit/1106f4bf4632e1372d44ced9a38e98209a6b55e8))
+* New presets ignore `DetailColor` property ([1143fbb](https://github.com/mob-sakai/UIEffect/commit/1143fbb84a1e08817de93f1349ee5cdad0972db5)), closes [#336](https://github.com/mob-sakai/UIEffect/issues/336)
+* prevent built-in preset assets from being editable ([0898d73](https://github.com/mob-sakai/UIEffect/commit/0898d730add42970fb74bf2ad8aca9809bf6dd39))
+
 # [5.8.0](https://github.com/mob-sakai/UIEffect/compare/5.7.0...5.8.0) (2025-04-17)
 
 
