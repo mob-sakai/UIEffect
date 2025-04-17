@@ -1,3 +1,18 @@
+# [5.8.0](https://github.com/mob-sakai/UIEffect/compare/5.7.0...5.8.0) (2025-04-17)
+
+
+### Bug Fixes
+
+* `ShadowMode.Mirror` does not flip the effect ([37daad0](https://github.com/mob-sakai/UIEffect/commit/37daad01c4f3f4c259650b1493aeae204e0bd247))
+* fix alpha clipping for ShaderGraph ([ae177a8](https://github.com/mob-sakai/UIEffect/commit/ae177a800cba1561b523292279d7986d4eff9f9c))
+* unable to add editor presets as runtime presets to project settings ([726bb10](https://github.com/mob-sakai/UIEffect/commit/726bb100a0ad327619634ea73ccdccc36276d0d0)), closes [#330](https://github.com/mob-sakai/UIEffect/issues/330)
+
+
+### Features
+
+* add `DetailColor` property ([30bf783](https://github.com/mob-sakai/UIEffect/commit/30bf783320398d68b90b09b0dcf93738b4683e00)), closes [#332](https://github.com/mob-sakai/UIEffect/issues/332)
+* ScriptableObject based preset system ([f8682f3](https://github.com/mob-sakai/UIEffect/commit/f8682f3c9889fb56ff3cd9010934f998e121553a)), closes [#333](https://github.com/mob-sakai/UIEffect/issues/333)
+
 # [5.7.0](https://github.com/mob-sakai/UIEffect/compare/5.6.4...5.7.0) (2025-04-11)
 
 
