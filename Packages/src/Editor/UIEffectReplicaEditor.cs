@@ -48,7 +48,7 @@ namespace Coffee.UIEffects.Editors
             r.width = 60;
             if (GUI.Button(r, EditorGUIUtility.TrTempContent("Preset"), "MiniPopup"))
             {
-                UIEffectEditor.DropDownPreset(r, x => !x.builtin, p =>
+                UIEffectEditor.DropDownPreset(r, null, p =>
                 {
                     _target.objectReferenceValue = null;
                     _preset.objectReferenceValue = p;
