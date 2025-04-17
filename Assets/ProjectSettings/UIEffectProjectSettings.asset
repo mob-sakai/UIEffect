@@ -76,6 +76,8 @@ ShaderVariantCollection:
         passType: 0
       - keywords: DETAIL_REPLACE
         passType: 0
+      - keywords: DETAIL_SUBTRACTIVE
+        passType: 0
       - keywords: EDGE_PLAIN
         passType: 0
       - keywords: EDGE_PLAIN TRANSITION_PATTERN

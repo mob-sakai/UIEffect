@@ -295,7 +295,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ToneFilter: 0
   m_ToneIntensity: 1
-  m_ToneParams: {x: 0, y: 0, z: 0, w: 0}
   m_ColorFilter: 0
   m_ColorIntensity: 0.344
   m_Color: {r: 0, g: 1.7098039, b: 4, a: 1}
@@ -340,6 +339,8 @@ MonoBehaviour:
   m_ShadowColor: {r: 1, g: 1, b: 1, a: 1}
   m_ShadowColorGlow: 0
   m_GradationMode: 0
+  m_GradationIntensity: 1
+  m_GradationColorFilter: 1
   m_GradationColor1: {r: 1, g: 1, b: 1, a: 1}
   m_GradationColor2: {r: 1, g: 1, b: 1, a: 1}
   m_GradationColor3: {r: 1, g: 1, b: 1, a: 1}
@@ -382,11 +383,23 @@ MonoBehaviour:
   m_EdgeWidth: 0.5
   m_EdgeColorFilter: 4
   m_EdgeColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EdgeColorGlow: 0
   m_EdgeShinyRate: 0.5
   m_EdgeShinyWidth: 0.5
   m_EdgeShinyAutoPlaySpeed: 1
   m_PatternArea: 1
+  m_DetailFilter: 0
+  m_DetailIntensity: 1
+  m_DetailThreshold:
+    m_Min: 0
+    m_Max: 1
+  m_DetailColor: {r: 1, g: 1, b: 1, a: 1}
+  m_DetailTex: {fileID: 0}
+  m_DetailTexScale: {x: 1, y: 1}
+  m_DetailTexOffset: {x: 0, y: 0}
+  m_DetailTexSpeed: {x: 0, y: 0}
   m_CustomRoot: {fileID: 0}
+  m_Flip: 0
 --- !u!1 &973375176
 GameObject:
   m_ObjectHideFlags: 0
@@ -592,7 +605,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 189, y: -165}
+  m_AnchoredPosition: {x: 189, y: -117}
   m_SizeDelta: {x: 415.4, y: 111.41}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1421004028
@@ -609,7 +622,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ToneFilter: 0
   m_ToneIntensity: 1
-  m_ToneParams: {x: 0, y: 0, z: 0, w: 0}
   m_ColorFilter: 0
   m_ColorIntensity: 1
   m_Color: {r: 0.7454045, g: 0.18447503, b: 0.000303527, a: 1}
@@ -654,6 +666,8 @@ MonoBehaviour:
   m_ShadowColor: {r: 1, g: 1, b: 1, a: 1}
   m_ShadowColorGlow: 0
   m_GradationMode: 0
+  m_GradationIntensity: 1
+  m_GradationColorFilter: 1
   m_GradationColor1: {r: 1, g: 1, b: 1, a: 1}
   m_GradationColor2: {r: 1, g: 1, b: 1, a: 1}
   m_GradationColor3: {r: 1, g: 1, b: 1, a: 1}
@@ -696,11 +710,23 @@ MonoBehaviour:
   m_EdgeWidth: 0.5
   m_EdgeColorFilter: 4
   m_EdgeColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EdgeColorGlow: 0
   m_EdgeShinyRate: 0.5
   m_EdgeShinyWidth: 0.5
   m_EdgeShinyAutoPlaySpeed: 1
   m_PatternArea: 1
+  m_DetailFilter: 0
+  m_DetailIntensity: 1
+  m_DetailThreshold:
+    m_Min: 0
+    m_Max: 1
+  m_DetailColor: {r: 1, g: 1, b: 1, a: 1}
+  m_DetailTex: {fileID: 0}
+  m_DetailTexScale: {x: 1, y: 1}
+  m_DetailTexOffset: {x: 0, y: 0}
+  m_DetailTexSpeed: {x: 0, y: 0}
   m_CustomRoot: {fileID: 0}
+  m_Flip: 0
 --- !u!114 &1421004029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -853,7 +879,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ToneFilter: 1
   m_ToneIntensity: 0.75
-  m_ToneParams: {x: 0, y: 0, z: 0, w: 0}
   m_ColorFilter: 6
   m_ColorIntensity: 0.6
   m_Color: {r: 0.16862746, g: 0, b: 0.12038653, a: 1}
@@ -898,6 +923,8 @@ MonoBehaviour:
   m_ShadowColor: {r: 1, g: 1, b: 1, a: 1}
   m_ShadowColorGlow: 0
   m_GradationMode: 0
+  m_GradationIntensity: 1
+  m_GradationColorFilter: 1
   m_GradationColor1: {r: 1, g: 1, b: 1, a: 1}
   m_GradationColor2: {r: 1, g: 1, b: 1, a: 1}
   m_GradationColor3: {r: 1, g: 1, b: 1, a: 1}
@@ -940,11 +967,23 @@ MonoBehaviour:
   m_EdgeWidth: 0.5
   m_EdgeColorFilter: 4
   m_EdgeColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EdgeColorGlow: 0
   m_EdgeShinyRate: 0.5
   m_EdgeShinyWidth: 0.5
   m_EdgeShinyAutoPlaySpeed: 1
   m_PatternArea: 1
+  m_DetailFilter: 0
+  m_DetailIntensity: 1
+  m_DetailThreshold:
+    m_Min: 0
+    m_Max: 1
+  m_DetailColor: {r: 1, g: 1, b: 1, a: 1}
+  m_DetailTex: {fileID: 0}
+  m_DetailTexScale: {x: 1, y: 1}
+  m_DetailTexOffset: {x: 0, y: 0}
+  m_DetailTexSpeed: {x: 0, y: 0}
   m_CustomRoot: {fileID: 0}
+  m_Flip: 0
 --- !u!114 &1567169364
 MonoBehaviour:
   m_ObjectHideFlags: 0
