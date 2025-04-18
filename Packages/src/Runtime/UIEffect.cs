@@ -1600,6 +1600,15 @@ namespace Coffee.UIEffects
             }
         }
 
+        public void Clear()
+        {
+            m_SamplingScale = 1;
+            m_AllowToModifyMeshShape = true;
+            m_CustomRoot = null;
+
+            LoadPreset(UIEffectPreset.GetDefaultPreset());
+        }
+
         /// <summary>
         /// Load preset settings.
         /// </summary>

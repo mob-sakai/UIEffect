@@ -8,6 +8,19 @@ namespace Coffee.UIEffects
     [ExecuteAlways]
     public class UIEffectPreset : ScriptableObject
     {
+        internal static UIEffectPreset s_DefaultPreset;
+
+        internal static UIEffectPreset GetDefaultPreset()
+        {
+            if (!s_DefaultPreset)
+            {
+                s_DefaultPreset = CreateInstance<UIEffectPreset>();
+                s_DefaultPreset.hideFlags = HideFlags.HideAndDontSave;
+            }
+
+            return s_DefaultPreset;
+        }
+
         public ToneFilter m_ToneFilter = ToneFilter.None;
         [Range(0, 1)] public float m_ToneIntensity = 1;
 
