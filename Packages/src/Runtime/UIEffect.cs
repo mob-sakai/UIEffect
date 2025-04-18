@@ -1393,13 +1393,13 @@ namespace Coffee.UIEffects
             set => m_CustomRoot = value;
         }
 
-        public override Flip flip
+        public Flip flip
         {
             get => m_Flip;
             set
             {
                 if (m_Flip == value) return;
-                m_Flip = value;
+                context.m_Flip = m_Flip = value;
                 SetVerticesDirty();
             }
         }
@@ -1714,6 +1714,11 @@ namespace Coffee.UIEffects
                 dst.m_DetailTexSpeed = src.m_DetailTexSpeed;
             }
 
+            if (!append || src.m_Flip != 0)
+            {
+                dst.m_Flip = append ? dst.m_Flip | src.m_Flip : src.m_Flip;
+            }
+
             Misc.SetDirty(dst);
             UpdateContext(context);
             SetVerticesDirty();
@@ -1838,6 +1843,11 @@ namespace Coffee.UIEffects
                 dst.m_DetailTexSpeed = src.m_DetailTexSpeed;
             }
 
+            if (!append || src.m_Flip != 0)
+            {
+                dst.m_Flip = append ? dst.m_Flip | src.m_Flip : src.m_Flip;
+            }
+
             Misc.SetDirty(dst);
             UpdateContext(context);
             SetVerticesDirty();
@@ -1960,6 +1970,11 @@ namespace Coffee.UIEffects
                 dst.m_DetailTexSpeed = src.m_DetailTexSpeed;
             }
 
+            if (!append || src.m_Flip != 0)
+            {
+                dst.m_Flip = append ? dst.m_Flip | src.m_Flip : src.m_Flip;
+            }
+
             Misc.SetDirty(dst);
         }
 
@@ -2044,6 +2059,8 @@ namespace Coffee.UIEffects
             dst.m_DetailTexScale = src.m_DetailTexScale;
             dst.m_DetailTexOffset = src.m_DetailTexOffset;
             dst.m_DetailTexSpeed = src.m_DetailTexSpeed;
+
+            dst.m_Flip = src.m_Flip;
         }
     }
 }

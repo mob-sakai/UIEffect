@@ -238,6 +238,8 @@ namespace Coffee.UIEffects
         public Vector2 m_DetailTexOffset;
         public Vector2 m_DetailTexSpeed;
 
+        public Flip m_Flip;
+
         public bool willModifyMaterial => m_ToneFilter != ToneFilter.None
                                           || m_ColorFilter != ColorFilter.None
                                           || m_SamplingFilter != SamplingFilter.None
@@ -383,6 +385,8 @@ namespace Coffee.UIEffects
             dst.m_DetailTexScale = src.m_DetailTexScale;
             dst.m_DetailTexOffset = src.m_DetailTexOffset;
             dst.m_DetailTexSpeed = src.m_DetailTexSpeed;
+
+            dst.m_Flip = src.m_Flip;
         }
 
         public void SetGradationDirty()
@@ -520,7 +524,7 @@ namespace Coffee.UIEffects
             material.SetFloat(s_EdgeShinyAutoPlaySpeed, enable ? m_EdgeShinyAutoPlaySpeed : 0);
         }
 
-        public void UpdateViewMatrix(Material material, RectTransform transitionRoot, Canvas canvas, Flip flip)
+        public void UpdateViewMatrix(Material material, RectTransform transitionRoot, Canvas canvas)
         {
             if (!material) return;
 
@@ -531,10 +535,10 @@ namespace Coffee.UIEffects
                 scale.x = scale.y = Mathf.Min(scale.x, scale.y);
             }
 
-            if (0 != (flip & Flip.Effect))
+            if (0 != (m_Flip & Flip.Effect))
             {
-                scale.x = 0 != (flip & Flip.Horizontal) ? -scale.x : scale.x;
-                scale.y = 0 != (flip & Flip.Vertical) ? -scale.y : scale.y;
+                scale.x = 0 != (m_Flip & Flip.Horizontal) ? -scale.x : scale.x;
+                scale.y = 0 != (m_Flip & Flip.Vertical) ? -scale.y : scale.y;
             }
 
             var pivot = new Vector2(0.5f, 0.5f);
@@ -635,11 +639,10 @@ namespace Coffee.UIEffects
             }
         }
 
-        public void ModifyMesh(Graphic graphic, RectTransform transitionRoot, VertexHelper vh,
-            bool canModifyShape, Flip flip)
+        public void ModifyMesh(Graphic graphic, RectTransform transitionRoot, VertexHelper vh, bool canModifyShape)
         {
             // Apply flip (without effect).
-            ApplyFlipWithoutEffect(vh, flip);
+            ApplyFlipWithoutEffect(vh, m_Flip);
 
             var count = vh.currentIndexCount;
             if (!willModifyVertex || count == 0) return;
@@ -678,10 +681,10 @@ namespace Coffee.UIEffects
             }
 
             // Apply flip (with effect).
-            ApplyFlipWithEffect(verts, flip);
+            ApplyFlipWithEffect(verts, m_Flip);
 
             // Apply shadow.
-            ApplyShadow(verts, transitionRoot, flip);
+            ApplyShadow(verts, transitionRoot, m_Flip);
 
             vh.Clear();
             vh.AddUIVertexTriangleStream(verts);

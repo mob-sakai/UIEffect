@@ -95,8 +95,6 @@ namespace Coffee.UIEffects
             }
         }
 
-        public override Flip flip => target ? target.flip : 0;
-
         public override float actualSamplingScale => Mathf.Clamp(m_SamplingScale, 0.01f, 100);
 
         public override bool canModifyShape => m_AllowToModifyMeshShape;

@@ -171,6 +171,8 @@ namespace Coffee.UIEffects
             dst.m_DetailTexScale = src.m_DetailTexScale;
             dst.m_DetailTexOffset = src.m_DetailTexOffset;
             dst.m_DetailTexSpeed = src.m_DetailTexSpeed;
+
+            dst.m_Flip = src.m_Flip;
         }
     }
 }
