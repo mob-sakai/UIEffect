@@ -629,25 +629,25 @@ half4 apply_detail_filter(half4 color, float2 uvLocal)
     half4 detail = tex2D(_DetailTex, uv);
     #if DETAIL_MASKING // Detail.Masking
     {
-        color *= inv_lerp(_DetailThreshold.x, _DetailThreshold.y, detail.a);
+        color.a *= inv_lerp(_DetailThreshold.x, _DetailThreshold.y, detail.a);
     }
     #elif DETAIL_MULTIPLY // Detail.Multiply
     {
         detail *= _DetailColor;
         color.rgb *= detail.rgb;
-        color = lerp(inColor, color * detail.a, _DetailIntensity);
+        color = lerp(inColor, color, _DetailIntensity * detail.a);
     }
     #elif DETAIL_ADDITIVE // Detail.Additive
     {
         detail *= _DetailColor;
-        color.rgb += detail.rgb * detail.a * color.a;
-        color = lerp(inColor, color, _DetailIntensity);
+        color.rgb += detail.rgb * color.a;
+        color = lerp(inColor, color, _DetailIntensity * detail.a);
     }
     #elif DETAIL_SUBTRACTIVE // Detail.Subtractive
     {
         detail *= _DetailColor;
-        color.rgb -= detail.rgb * detail.a * color.a;
-        color = lerp(inColor, color, _DetailIntensity);
+        color.rgb -= detail.rgb * color.a;
+        color = lerp(inColor, color, _DetailIntensity * detail.a);
     }
     #elif DETAIL_REPLACE // Detail.Replace
     {
@@ -658,8 +658,8 @@ half4 apply_detail_filter(half4 color, float2 uvLocal)
     #elif DETAIL_MULTIPLY_ADDITIVE // Detail.MultiplyAdditive
     {
         detail *= _DetailColor;
-        color.rgb *= (1 + detail.rgb * detail.a);
-        color = lerp(inColor, color, _DetailIntensity);
+        color.rgb *= (1 + detail.rgb);
+        color = lerp(inColor, color, _DetailIntensity * detail.a);
     }
     #else
     {
