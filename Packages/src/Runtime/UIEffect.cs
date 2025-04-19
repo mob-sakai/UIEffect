@@ -69,10 +69,14 @@ namespace Coffee.UIEffects
         [SerializeField]
         protected Vector2 m_TransitionTexSpeed = new Vector2(0, 0);
 
+        [Tooltip("Effect rotation (0–360).\n" +
+                 "NOTE: This property is shared between `Transition Filter` and `Detail Filter`.")]
         [SerializeField]
         [Range(0, 360)]
         private float m_TransitionRotation = 0;
 
+        [Tooltip("The effect maintains its aspect ratio.\n" +
+                 "NOTE: This property is shared between `Transition Filter`, `Gradation Mode`, and `Detail Filter`.")]
         [SerializeField]
         protected bool m_TransitionKeepAspectRatio = true;
 

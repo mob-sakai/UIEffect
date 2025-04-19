@@ -101,6 +101,8 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _detailTexSpeed;
 
         private SerializedProperty _flip;
+        private static GUIContent s_RotationLabel = new GUIContent("* Rotation");
+        private static GUIContent s_KeepAspectRatioLabel = new GUIContent("* Keep Aspect Ratio");
 
         protected virtual void OnEnable()
         {
@@ -133,6 +135,9 @@ namespace Coffee.UIEffects.Editors
             _transitionColorGlow = serializedObject.FindProperty("m_TransitionColorGlow");
             _transitionPatternReverse = serializedObject.FindProperty("m_TransitionPatternReverse");
             _transitionAutoPlaySpeed = serializedObject.FindProperty("m_TransitionAutoPlaySpeed");
+
+            s_RotationLabel.tooltip = _transitionRotation.tooltip;
+            s_KeepAspectRatioLabel.tooltip = _transitionKeepAspectRatio.tooltip;
 
             _targetMode = serializedObject.FindProperty("m_TargetMode");
             _targetColor = serializedObject.FindProperty("m_TargetColor");
@@ -251,9 +256,8 @@ namespace Coffee.UIEffects.Editors
                     EditorApplication.QueuePlayerLoopUpdate();
                 }
 
-                EditorGUILayout.PropertyField(_transitionRotation, EditorGUIUtility.TrTempContent("Rotation"));
-                EditorGUILayout.PropertyField(_transitionKeepAspectRatio,
-                    EditorGUIUtility.TrTempContent("Keep Aspect Ratio"));
+                EditorGUILayout.PropertyField(_transitionRotation, s_RotationLabel);
+                EditorGUILayout.PropertyField(_transitionKeepAspectRatio, s_KeepAspectRatioLabel);
                 EditorGUILayout.PropertyField(_transitionReverse, EditorGUIUtility.TrTempContent("Reverse"));
                 EditorGUI.indentLevel--;
 
@@ -387,8 +391,7 @@ namespace Coffee.UIEffects.Editors
                     EditorGUILayout.PropertyField(_gradationRotation);
                 }
 
-                EditorGUILayout.PropertyField(_transitionKeepAspectRatio,
-                    EditorGUIUtility.TrTempContent("Keep Aspect Ratio"));
+                EditorGUILayout.PropertyField(_transitionKeepAspectRatio, s_KeepAspectRatioLabel);
                 EditorGUI.indentLevel--;
             }
 
@@ -442,9 +445,8 @@ namespace Coffee.UIEffects.Editors
                     EditorApplication.QueuePlayerLoopUpdate();
                 }
 
-                EditorGUILayout.PropertyField(_transitionRotation, EditorGUIUtility.TrTempContent("Rotation"));
-                EditorGUILayout.PropertyField(_transitionKeepAspectRatio,
-                    EditorGUIUtility.TrTempContent("Keep Aspect Ratio"));
+                EditorGUILayout.PropertyField(_transitionRotation, s_RotationLabel);
+                EditorGUILayout.PropertyField(_transitionKeepAspectRatio, s_KeepAspectRatioLabel);
                 EditorGUI.indentLevel--;
                 EditorGUI.indentLevel--;
             }
