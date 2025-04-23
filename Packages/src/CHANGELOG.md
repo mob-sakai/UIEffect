@@ -1,3 +1,12 @@
+## [5.8.2](https://github.com/mob-sakai/UIEffect/compare/5.8.1...5.8.2) (2025-04-23)
+
+
+### Bug Fixes
+
+* `Flip` is ignored when loading a preset ([e1f3abf](https://github.com/mob-sakai/UIEffect/commit/e1f3abf7a65b62718b28e33ac2f7d700c3ae3f5a))
+* fix detail color ([90ab16c](https://github.com/mob-sakai/UIEffect/commit/90ab16c3fd46435ebf7c8e47ffb4ec521d2f61c9))
+* indicate in the inspector using tooltips and asterisks that `Rotation` and `Keep Aspect Ratio` are shared properties ([2cca822](https://github.com/mob-sakai/UIEffect/commit/2cca822413aa7580e1eb777c3295d1de928cd65f))
+
 ## [5.8.1](https://github.com/mob-sakai/UIEffect/compare/5.8.0...5.8.1) (2025-04-17)
 
 
