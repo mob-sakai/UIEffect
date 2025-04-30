@@ -107,7 +107,7 @@ namespace Coffee.UIEffects
 
         protected virtual void OnAfterCanvasRebuild()
         {
-            if (!_material || !graphic || context == null) return;
+            if (!_material || !graphic || !graphic.canvas || context == null) return;
 
             context.UpdateViewMatrix(GetCurrentMaterial(), transitionRoot, graphic.canvas.rootCanvas);
         }
