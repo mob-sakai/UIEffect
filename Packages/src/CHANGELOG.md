@@ -1,3 +1,10 @@
+## [5.8.4](https://github.com/mob-sakai/UIEffect/compare/5.8.3...5.8.4) (2025-04-30)
+
+
+### Bug Fixes
+
+* NRE while canvas is disabled ([a3773e3](https://github.com/mob-sakai/UIEffect/commit/a3773e33028c60517fb4e6c534f6280194df8e64)), closes [#342](https://github.com/mob-sakai/UIEffect/issues/342)
+
 ## [5.8.3](https://github.com/mob-sakai/UIEffect/compare/5.8.2...5.8.3) (2025-04-30)
 
 
