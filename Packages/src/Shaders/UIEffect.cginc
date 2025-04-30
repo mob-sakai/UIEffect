@@ -592,26 +592,28 @@ half4 apply_gradation_filter(const half4 inColor, const float2 uvGrad)
     if (mode == 1) // Color.Multiply
     {
         color.rgb = color.rgb * factor.rgb;
+    	color *= factor.a;
     }
     else if (mode == 2) // Color.Additive
     {
-        color.rgb = color.rgb + factor.rgb * color.a;
+        color.rgb = color.rgb + factor.rgb * color.a * factor.a;
     }
     else if (mode == 3) // Color.Subtractive
     {
-        color.rgb = color.rgb - factor.rgb * color.a;
+        color.rgb = color.rgb - factor.rgb * color.a * factor.a;
     }
     else if (mode == 4) // Color.Replace
     {
         color.rgb = factor.rgb * color.a;
+    	color *= factor.a;
     }
     else if (mode == 5) // Color.MultiplyLuminance
     {
-        color.rgb = (1 + Luminance(color.rgb)) * factor.rgb / 2 * color.a;
+        color.rgb = (1 + Luminance(color.rgb)) * factor.rgb * factor.a / 2 * color.a;
     }
     else if (mode == 6) // Color.MultiplyAdditive
     {
-        color.rgb = color.rgb * (1 + factor.rgb);
+        color.rgb = color.rgb * (1 + factor.rgb * factor.a);
     }
 
     if (0 < mode)
