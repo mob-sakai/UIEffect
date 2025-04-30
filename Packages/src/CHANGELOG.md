@@ -1,3 +1,10 @@
+## [5.8.3](https://github.com/mob-sakai/UIEffect/compare/5.8.2...5.8.3) (2025-04-30)
+
+
+### Bug Fixes
+
+* the alpha of the gradation color and gradient was being ignored ([3807e4c](https://github.com/mob-sakai/UIEffect/commit/3807e4c69aefaef04b2245522e7c5085ccc65a36)), closes [#341](https://github.com/mob-sakai/UIEffect/issues/341)
+
 ## [5.8.2](https://github.com/mob-sakai/UIEffect/compare/5.8.1...5.8.2) (2025-04-23)
 
 
