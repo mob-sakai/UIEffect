@@ -111,10 +111,19 @@ namespace Coffee.UIEffects
         private static readonly HashSet<TextMeshProUGUI> s_RegisteredInstances = new HashSet<TextMeshProUGUI>();
         private static readonly Dictionary<int, float> s_SdfScaleCache = new Dictionary<int, float>();
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void RuntimeInitializeOnLoadMethod()
+        {
+            s_ChangedInstances.Clear();
+            s_RegisteredInstances.Clear();
+            s_SdfScaleCache.Clear();
+        }
+
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
-#endif
+#else
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+#endif
         private static void InitializeOnLoad()
         {
             s_ChangedInstances.Clear();
