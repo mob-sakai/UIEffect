@@ -1,3 +1,12 @@
+## [5.8.5](https://github.com/mob-sakai/UIEffect/compare/5.8.4...5.8.5) (2025-05-22)
+
+
+### Bug Fixes
+
+* skip processing when graphic is invalid ([5cd48a4](https://github.com/mob-sakai/UIEffect/commit/5cd48a463309270ec3d6501bde2add9944bbaf02))
+* TextMeshPro strikethrough and underline not displaying ([68ebae2](https://github.com/mob-sakai/UIEffect/commit/68ebae28e02045cb45996bf5b77d7d93d2f0ca82)), closes [#344](https://github.com/mob-sakai/UIEffect/issues/344)
+* TMP SubMeshUI generates overhead every frame (since 5.6.0) ([791d867](https://github.com/mob-sakai/UIEffect/commit/791d8670761902466d81412d832cddf013cd28cd)), closes [#343](https://github.com/mob-sakai/UIEffect/issues/343) [#345](https://github.com/mob-sakai/UIEffect/issues/345)
+
 ## [5.8.4](https://github.com/mob-sakai/UIEffect/compare/5.8.3...5.8.4) (2025-04-30)
 
 
