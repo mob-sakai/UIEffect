@@ -1,3 +1,10 @@
+## [5.8.6](https://github.com/mob-sakai/UIEffect/compare/5.8.5...5.8.6) (2025-05-22)
+
+
+### Bug Fixes
+
+* some methods may be called multiple times when domain reload on play is disabled (editor) ([3b52c3a](https://github.com/mob-sakai/UIEffect/commit/3b52c3a8fc67980d426b8e4e2ed2067c725ca262))
+
 ## [5.8.5](https://github.com/mob-sakai/UIEffect/compare/5.8.4...5.8.5) (2025-05-22)
 
 
