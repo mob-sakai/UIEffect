@@ -64,6 +64,7 @@ namespace Coffee.UIEffects
 
         protected override void OnEnable()
         {
+            _canModifyMesh = true;
             _onBeforeCanvasRebuild ??= OnBeforeCanvasRebuild;
             _onAfterCanvasRebuild ??= OnAfterCanvasRebuild;
             UIExtraCallbacks.onBeforeCanvasRebuild += _onBeforeCanvasRebuild;
@@ -99,8 +100,10 @@ namespace Coffee.UIEffects
 
         protected virtual void OnBeforeCanvasRebuild()
         {
+            // If the mesh is not modified in the previous frame, try to modify it if possible.
             if (!_canModifyMesh && CanModifyMesh())
             {
+                _canModifyMesh = true;
                 SetVerticesDirty();
             }
         }
