@@ -129,6 +129,8 @@ namespace Coffee.UIEffects
 
         private bool CanModifyMesh()
         {
+            if (!graphic || !graphic.isActiveAndEnabled) return false;
+
             // The transitionRoot is same as the transform => true.
             var root = transitionRoot;
             if (transform == root) return true;
