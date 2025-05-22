@@ -226,7 +226,7 @@ namespace Coffee.UIEffects
             {
                 var meshInfo = textMeshProUGUI.textInfo.meshInfo[i];
                 s_VertexHelper.Clear();
-                meshInfo.mesh.CopyTo(s_VertexHelper, meshInfo.vertexCount, meshInfo.vertexCount * 6 / 4);
+                meshInfo.mesh.CopyTo(s_VertexHelper);
                 if (i == 0)
                 {
                     foreach (var modifier in modifiers)
