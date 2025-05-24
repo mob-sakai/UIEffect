@@ -93,10 +93,10 @@ namespace Coffee.UIEffects
         {
 #if UNITY_2023_2_OR_NEWER
             const string tmpSupport = "TextMeshPro Support (Unity 6)";
-            const string version = "v5.8.0 (Unity 6)";
+            const string version = "v5.9.0 (Unity 6)";
 #else
             const string tmpSupport = "TextMeshPro Support";
-            const string version = "v5.8.0";
+            const string version = "v5.9.0";
 #endif
             ShaderSampleImporter.RegisterShaderSamples(new[]
             {
@@ -111,8 +111,8 @@ namespace Coffee.UIEffects
                 ("Hidden/TextMeshPro/Mobile/Distance Field (UIEffect)", tmpSupport, version),
 
                 // ShaderGraph Support
-                ("Shader Graphs/UISample (UIEffect)", "ShaderGraph Support (Unity 6 BuiltIn)", "v5.8.0"),
-                ("Shader Graphs/UISampleURP (UIEffect)", "ShaderGraph Support (Unity 6 URP)", "v5.8.0")
+                ("Shader Graphs/UISample (UIEffect)", "ShaderGraph Support (Unity 6 BuiltIn)", "v5.9.0"),
+                ("Shader Graphs/UISampleURP (UIEffect)", "ShaderGraph Support (Unity 6 URP)", "v5.9.0")
             });
             ShaderSampleImporter.RegisterShaderAliases(new[]
             {

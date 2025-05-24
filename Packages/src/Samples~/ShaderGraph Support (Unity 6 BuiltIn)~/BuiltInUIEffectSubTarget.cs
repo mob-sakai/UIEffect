@@ -10,7 +10,9 @@ namespace UnityEditor.Rendering.BuiltIn.ShaderGraph
     internal class BuiltInUIEffectSubTarget : BuiltInCanvasSubTarget
     {
         // UIEffectForShaderGraph.hlsl
-        internal static string s_UIEffectHlsl => AssetDatabase.GUIDToAssetPath("5109b2ad9b8be459592190a5678464e3");
+        private static GUID s_UIEffectCgincGuid => new GUID("2dd0ed35b98b345218d9aa8ac5a3ad6b");
+        private static GUID s_UIEffectHlslGuid => new GUID("5109b2ad9b8be459592190a5678464e3");
+        private static string s_UIEffectHlsl => AssetDatabase.GUIDToAssetPath(s_UIEffectHlslGuid.ToString());
 
         public BuiltInUIEffectSubTarget() { displayName = "Canvas (UIEffect)"; }
 
@@ -24,6 +26,13 @@ namespace UnityEditor.Rendering.BuiltIn.ShaderGraph
 
         protected override IncludeCollection postgraphIncludes => base.postgraphIncludes
             .Add(s_UIEffectHlsl, IncludeLocation.Postgraph); // Include UIEffectForShaderGraph.hlsl on postgraph
+
+        public override void Setup(ref TargetSetupContext context)
+        {
+            base.Setup(ref context);
+            context.AddAssetDependency(s_UIEffectHlslGuid, AssetCollection.Flags.SourceDependency);
+            context.AddAssetDependency(s_UIEffectCgincGuid, AssetCollection.Flags.SourceDependency);
+        }
 
         /// <summary>
         /// Modify pass descriptor for UIEffect.
