@@ -1,5 +1,6 @@
 // ==== UIEFFECT START ====
 SurfaceDescriptionInputs _fragInput;
+
 half4 uieffect_frag(float2 uv)
 {
     float2 prevUv = _fragInput.uv0.xy;
@@ -34,25 +35,25 @@ half4 frag_override(PackedVaryings packedInput) : SV_TARGET
     _fragInput = surfaceDescriptionInputs;
     const half4 origin = uieffect_frag(_fragInput.uv0.xy);
     half4 color = uieffect(origin, _fragInput.uv0.xy, unpacked.texCoord2, float4(unpacked.positionWS, 1));
-    
+
     //Round up the alpha color coming from the interpolator (to 1.0/256.0 steps)
     //The incoming alpha could have numerical instability, which makes it very sensible to
     //HDR color transparency blend, when it blends with the world's texture.
     const half alphaPrecision = half(0xff);
-    const half invAlphaPrecision = half(1.0/alphaPrecision);
-    unpacked.color.a = round(unpacked.color.a * alphaPrecision)*invAlphaPrecision;
-    
+    const half invAlphaPrecision = half(1.0 / alphaPrecision);
+    unpacked.color.a = round(unpacked.color.a * alphaPrecision) * invAlphaPrecision;
+
     #if !defined(HAVE_VFX_MODIFICATION) && !defined(_DISABLE_COLOR_TINT)
     color.rgb *= unpacked.color.rgb;
     color *= unpacked.color.a;
     #endif
-    
+
     #ifdef UNITY_UI_CLIP_RECT
     //mask = Uv2
     half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(unpacked.texCoord1.xy)) * unpacked.texCoord1.zw);
     color *= m.x * m.y;
     #endif
-    
+
     // ==== SOFTMASKABLE START ====
     #if SOFTMASKABLE
     color *= SoftMask(unpacked.positionCS, unpacked.positionWS, color.a);
@@ -62,10 +63,10 @@ half4 frag_override(PackedVaryings packedInput) : SV_TARGET
     #if defined(_ALPHATEST_ON) || defined(_BUILTIN_ALPHATEST_ON)
     clip(color.a - surfaceDescription.AlphaClipThreshold);
     #endif
-    
+
     #if UNITY_UI_ALPHACLIP
     clip(color.a - 0.001);
     #endif
-    
-    return  color;
+
+    return color;
 }
