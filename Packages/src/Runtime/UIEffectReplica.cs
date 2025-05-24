@@ -149,6 +149,13 @@ namespace Coffee.UIEffects
         protected override void OnValidate()
         {
             RefreshTarget(target);
+
+            if (preset || (target && !isTargetInScene))
+            {
+                context?.SetGradationDirty();
+                context?.SetTransitionGradationDirty();
+            }
+
             base.OnValidate();
         }
 
