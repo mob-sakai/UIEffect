@@ -32,6 +32,7 @@ uniform const float2 _TransitionRange;
 uniform const float _TransitionWidth;
 uniform const int _TransitionPatternReverse;
 uniform const float _TransitionAutoPlaySpeed;
+uniform const sampler2D _TransitionGradientTex;
 uniform const half4 _TargetColor;
 uniform const float _TargetRange;
 uniform const float _TargetSoftness;
@@ -81,7 +82,7 @@ uniform const matrix _CanvasToWorldMatrix;
 
 #define TONE_NONE (!TONE_GRAYSCALE && !TONE_SEPIA && !TONE_NEGATIVE && !TONE_RETRO && !TONE_POSTERIZE)
 #define SAMPLING_NONE (!SAMPLING_BLUR_FAST && !SAMPLING_BLUR_MEDIUM && !SAMPLING_BLUR_DETAIL && !SAMPLING_PIXELATION && !SAMPLING_RGB_SHIFT && !SAMPLING_EDGE_LUMINANCE && !SAMPLING_EDGE_ALPHA)
-#define TRANSITION_NONE (!TRANSITION_FADE && !TRANSITION_CUTOFF && !TRANSITION_DISSOLVE && !TRANSITION_SHINY && !TRANSITION_MASK && !TRANSITION_MELT && !TRANSITION_BURN && !TRANSITION_PATTERN)
+#define TRANSITION_NONE (!TRANSITION_FADE && !TRANSITION_CUTOFF && !TRANSITION_DISSOLVE && !TRANSITION_SHINY && !TRANSITION_MASK && !TRANSITION_MELT && !TRANSITION_BURN && !TRANSITION_PATTERN && !TRANSITION_BLAZE)
 #define TARGET_NONE (!TARGET_HUE && !TARGET_LUMINANCE)
 #define EDGE_NONE (!EDGE_PLAIN && !EDGE_SHINY)
 #define DETAIL_NONE (!DETAIL_MASKING && !DETAIL_MULTIPLY && !DETAIL_ADDITIVE && !DETAIL_SUBTRACTIVE && !DETAIL_REPLACE && !DETAIL_MULTIPLY_ADDITIVE)
@@ -549,6 +550,20 @@ half4 apply_transition_filter(half4 color, const float alpha, const float2 uvLoc
             color *= bandLerp * softLerp;
         }
         #endif
+    }
+    // Transition.Blaze
+    #elif TRANSITION_BLAZE
+    {
+        const float maxValue = transition_rate();
+        const float minValue = maxValue - _TransitionWidth / 2;
+        const float rate = 1 - inv_lerp(minValue, maxValue, alpha * (1 - _TransitionWidth / 2));
+        const float4 gradColor = tex2D(_TransitionGradientTex, float2(rate, 0.5));
+        const float4 burntColor = gradColor * color;
+        const float4 flameColor = float4(gradColor.rgb, gradColor.a * color.a);
+
+        // 0-0.5: burnt color, 0.5-1: flame color
+        color = lerp(burntColor, flameColor, step(0.5, rate));
+        color.rgb *= color.a;
     }
     #endif
 

@@ -108,6 +108,9 @@ namespace Coffee.UIEffects
         protected float m_TransitionAutoPlaySpeed = 0f;
 
         [SerializeField]
+        private Gradient m_TransitionGradient = new Gradient();
+
+        [SerializeField]
         protected TargetMode m_TargetMode = TargetMode.None;
 
         [SerializeField]
@@ -1438,6 +1441,7 @@ namespace Coffee.UIEffects
         {
             (m_SrcBlendMode, m_DstBlendMode) = (m_BlendType, m_SrcBlendMode, m_DstBlendMode).Convert();
             context?.SetGradationDirty();
+            context?.SetTransitionGradationDirty();
             base.OnValidate();
         }
 
@@ -1485,6 +1489,14 @@ namespace Coffee.UIEffects
         }
 
         /// <summary>
+        /// Set transition gradient's keys.
+        /// </summary>
+        public void SetTransitionGradientKeys(Gradient gradient)
+        {
+            SetTransitionGradientKeys(gradient.colorKeys, gradient.alphaKeys, gradient.mode);
+        }
+
+        /// <summary>
         /// Set gradation gradient's keys.
         /// </summary>
         public void SetGradientKeys(GradientColorKey[] colorKeys, GradientAlphaKey[] alphaKeys,
@@ -1494,6 +1506,19 @@ namespace Coffee.UIEffects
             m_GradationGradient.SetKeys(colorKeys, alphaKeys);
             m_GradationGradient.mode = mode;
             context?.SetGradationDirty();
+            SetMaterialDirty();
+        }
+
+        /// <summary>
+        /// Set transition gradient's keys.
+        /// </summary>
+        public void SetTransitionGradientKeys(GradientColorKey[] colorKeys, GradientAlphaKey[] alphaKeys,
+            GradientMode mode = GradientMode.Blend)
+        {
+            m_TransitionGradient ??= new Gradient();
+            m_TransitionGradient.SetKeys(colorKeys, alphaKeys);
+            m_TransitionGradient.mode = mode;
+            context?.SetTransitionGradationDirty();
             SetMaterialDirty();
         }
 
@@ -1649,6 +1674,7 @@ namespace Coffee.UIEffects
                 dst.m_TransitionColorGlow = src.m_TransitionColorGlow;
                 dst.m_TransitionPatternReverse = src.m_TransitionPatternReverse;
                 dst.m_TransitionAutoPlaySpeed = src.m_TransitionAutoPlaySpeed;
+                dst.SetTransitionGradientKeys(src.m_TransitionGradient);
             }
 
             if (!append || src.m_TargetMode != TargetMode.None)
@@ -1777,6 +1803,7 @@ namespace Coffee.UIEffects
                 dst.m_TransitionColorGlow = src.m_TransitionColorGlow;
                 dst.m_TransitionPatternReverse = src.m_TransitionPatternReverse;
                 dst.m_TransitionAutoPlaySpeed = src.m_TransitionAutoPlaySpeed;
+                dst.SetTransitionGradientKeys(src.m_TransitionGradient);
             }
 
             if (!append || src.m_TargetMode != TargetMode.None)
@@ -1903,6 +1930,9 @@ namespace Coffee.UIEffects
                 dst.m_TransitionColorGlow = src.m_TransitionColorGlow;
                 dst.m_TransitionPatternReverse = src.m_TransitionPatternReverse;
                 dst.m_TransitionAutoPlaySpeed = src.m_TransitionAutoPlaySpeed;
+                dst.m_TransitionGradient.SetKeys(src.m_TransitionGradient.colorKeys,
+                    src.m_TransitionGradient.alphaKeys);
+                dst.m_TransitionGradient.mode = src.m_TransitionGradient.mode;
             }
 
             if (!append || src.m_TargetMode != TargetMode.None)
@@ -2014,6 +2044,7 @@ namespace Coffee.UIEffects
             dst.m_TransitionColorGlow = src.m_TransitionColorGlow;
             dst.m_TransitionPatternReverse = src.m_TransitionPatternReverse;
             dst.m_TransitionAutoPlaySpeed = src.m_TransitionAutoPlaySpeed;
+            dst.m_TransitionGradient = src.m_TransitionGradient;
 
             dst.m_TargetMode = src.m_TargetMode;
             dst.m_TargetColor = src.m_TargetColor;

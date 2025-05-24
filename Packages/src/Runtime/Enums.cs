@@ -59,6 +59,7 @@ namespace Coffee.UIEffects
         Mask = 5,
         Melt = 6,
         Burn = 7,
+        Blaze = 9,
         Pattern = 8
     }
 
