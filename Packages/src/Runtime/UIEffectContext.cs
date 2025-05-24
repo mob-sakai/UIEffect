@@ -65,6 +65,7 @@ namespace Coffee.UIEffects
         private static readonly int s_GradationColor4 = Shader.PropertyToID("_GradationColor4");
         private static readonly int s_GradationTex = Shader.PropertyToID("_GradationTex");
         private static readonly int s_GradationTex_ST = Shader.PropertyToID("_GradationTex_ST");
+        private static readonly int s_GradationRadial = Shader.PropertyToID("_GradationRadial");
         private static readonly int s_RootViewMatrix = Shader.PropertyToID("_RootViewMatrix");
         private static readonly int s_GradViewMatrix = Shader.PropertyToID("_GradViewMatrix");
         private static readonly int s_MirrorRootViewMatrix = Shader.PropertyToID("_MirrorRootViewMatrix");
@@ -142,7 +143,6 @@ namespace Coffee.UIEffects
         {
             "",
             "GRADATION_GRADIENT",
-            "GRADATION_RADIAL",
             "GRADATION_COLOR2",
             "GRADATION_COLOR4"
         };
@@ -510,6 +510,9 @@ namespace Coffee.UIEffects
             material.SetColor(s_GradationColor2, m_GradationColor2);
             material.SetColor(s_GradationColor3, m_GradationColor3);
             material.SetColor(s_GradationColor4, m_GradationColor4);
+            material.SetInt(s_GradationRadial, m_GradationMode == GradationMode.RadialFast
+                                               || m_GradationMode == GradationMode.RadialDetail
+                                               || m_GradationMode == GradationMode.RadialGradient ? 1 : 0);
 
             material.SetFloat(s_DetailIntensity, Mathf.Clamp01(m_DetailIntensity));
             material.SetColor(s_DetailColor, m_DetailColor);
@@ -536,21 +539,20 @@ namespace Coffee.UIEffects
                 case GradationMode.HorizontalGradient:
                 case GradationMode.VerticalGradient:
                 case GradationMode.AngleGradient:
+                case GradationMode.RadialGradient:
                     SetKeyword(material, s_GradationKeywords, 1);
-                    break;
-                case GradationMode.RadialFast:
-                case GradationMode.RadialDetail:
-                    SetKeyword(material, s_GradationKeywords, 2);
                     break;
                 case GradationMode.Horizontal:
                 case GradationMode.Vertical:
                 case GradationMode.DiagonalToRightBottom:
                 case GradationMode.DiagonalToLeftBottom:
                 case GradationMode.Angle:
-                    SetKeyword(material, s_GradationKeywords, 3);
+                case GradationMode.RadialFast:
+                case GradationMode.RadialDetail:
+                    SetKeyword(material, s_GradationKeywords, 2);
                     break;
                 case GradationMode.Diagonal:
-                    SetKeyword(material, s_GradationKeywords, 4);
+                    SetKeyword(material, s_GradationKeywords, 3);
                     break;
             }
 
