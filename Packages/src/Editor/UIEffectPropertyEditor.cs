@@ -370,6 +370,7 @@ namespace Coffee.UIEffects.Editors
                     case GradationMode.HorizontalGradient:
                     case GradationMode.VerticalGradient:
                     case GradationMode.AngleGradient:
+                    case GradationMode.RadialGradient:
                         DrawGradientField(_gradationGradient);
                         break;
                     case GradationMode.Diagonal:

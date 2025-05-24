@@ -113,6 +113,7 @@ namespace Coffee.UIEffects
         VerticalGradient = 4,
         RadialFast = 5,
         RadialDetail = 6,
+        RadialGradient = 12,
         Diagonal = 11,
         DiagonalToRightBottom = 7,
         DiagonalToLeftBottom = 8,
