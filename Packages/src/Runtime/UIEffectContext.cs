@@ -266,7 +266,7 @@ namespace Coffee.UIEffects
         private static readonly InternalObjectPool<Texture2D> s_TexturePool = new InternalObjectPool<Texture2D>(
             () =>
             {
-                var texture = new Texture2D(s_Colors.Length, 1, TextureFormat.RGBA32, false, false)
+                var texture = new Texture2D(s_Colors.Length, 1, TextureFormat.RGBAFloat, false, false)
                 {
                     name = "GradationRamp",
                     hideFlags = HideFlags.DontSave,
