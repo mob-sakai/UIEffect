@@ -37,6 +37,7 @@ namespace Coffee.UIEffects
         public bool m_TransitionColorGlow = false;
         public bool m_TransitionPatternReverse = false;
         [Range(-5, 5)] public float m_TransitionAutoPlaySpeed = 0f;
+        public Gradient m_TransitionGradient = new Gradient();
 
         public TargetMode m_TargetMode = TargetMode.None;
         public Color m_TargetColor = Color.white;
@@ -122,6 +123,7 @@ namespace Coffee.UIEffects
             dst.m_TransitionColorGlow = src.m_TransitionColorGlow;
             dst.m_TransitionPatternReverse = src.m_TransitionPatternReverse;
             dst.m_TransitionAutoPlaySpeed = src.m_TransitionAutoPlaySpeed;
+            dst.m_TransitionGradient = src.m_TransitionGradient;
 
             dst.m_TargetMode = src.m_TargetMode;
             dst.m_TargetColor = src.m_TargetColor;

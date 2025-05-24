@@ -47,6 +47,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _transitionColorGlow;
         private SerializedProperty _transitionPatternReverse;
         private SerializedProperty _transitionAutoPlaySpeed;
+        private SerializedProperty _transitionGradient;
 
         private SerializedProperty _targetMode;
         private SerializedProperty _targetColor;
@@ -135,6 +136,7 @@ namespace Coffee.UIEffects.Editors
             _transitionColorGlow = serializedObject.FindProperty("m_TransitionColorGlow");
             _transitionPatternReverse = serializedObject.FindProperty("m_TransitionPatternReverse");
             _transitionAutoPlaySpeed = serializedObject.FindProperty("m_TransitionAutoPlaySpeed");
+            _transitionGradient = serializedObject.FindProperty("m_TransitionGradient");
 
             s_RotationLabel.tooltip = _transitionRotation.tooltip;
             s_KeepAspectRatioLabel.tooltip = _transitionKeepAspectRatio.tooltip;
@@ -268,6 +270,11 @@ namespace Coffee.UIEffects.Editors
                     EditorGUILayout.PropertyField(_transitionPatternReverse,
                         EditorGUIUtility.TrTempContent("Pattern Reverse"));
                     DrawColor(_transitionColorFilter, _transitionColor, null);
+                }
+                else if (_transitionFilter.intValue == (int)TransitionFilter.Blaze)
+                {
+                    EditorGUILayout.PropertyField(_transitionWidth);
+                    DrawGradientField(_transitionGradient);
                 }
                 else if (2 < _transitionFilter.intValue)
                 {
