@@ -35,6 +35,7 @@ namespace Coffee.UIEffects
         private static readonly int s_TransitionColorGlow = Shader.PropertyToID("_TransitionColorGlow");
         private static readonly int s_TransitionPatternReverse = Shader.PropertyToID("_TransitionPatternReverse");
         private static readonly int s_TransitionAutoPlaySpeed = Shader.PropertyToID("_TransitionAutoPlaySpeed");
+        private static readonly int s_TransitionGradientTex = Shader.PropertyToID("_TransitionGradientTex");
         private static readonly int s_TargetColor = Shader.PropertyToID("_TargetColor");
         private static readonly int s_TargetRange = Shader.PropertyToID("_TargetRange");
         private static readonly int s_TargetSoftness = Shader.PropertyToID("_TargetSoftness");
@@ -108,7 +109,8 @@ namespace Coffee.UIEffects
             "TRANSITION_MASK",
             "TRANSITION_MELT",
             "TRANSITION_BURN",
-            "TRANSITION_PATTERN"
+            "TRANSITION_PATTERN",
+            "TRANSITION_BLAZE"
         };
 
         private static readonly string[] s_TargetKeywords =
@@ -188,6 +190,7 @@ namespace Coffee.UIEffects
         public bool m_TransitionColorGlow;
         public bool m_TransitionPatternReverse;
         public float m_TransitionAutoPlaySpeed;
+        public Gradient m_TransitionGradient;
 
         public TargetMode m_TargetMode;
         public Color m_TargetColor;
@@ -254,8 +257,10 @@ namespace Coffee.UIEffects
         public bool willModifyVertex => willModifyMaterial;
 
         private Texture2D _gradationRampTex;
+        private Texture2D _transitionRampTex;
         private bool _isGradientDirty = true;
-        private static readonly Color32[] s_Colors = new Color32[256];
+        private bool _isTransitionGradientDirty = true;
+        private static readonly Color[] s_Colors = new Color[256];
 
         private static readonly InternalObjectPool<Texture2D> s_TexturePool = new InternalObjectPool<Texture2D>(
             () =>
@@ -291,16 +296,45 @@ namespace Coffee.UIEffects
                 _gradationRampTex.filterMode = m_GradationGradient.mode == GradientMode.Blend
                     ? FilterMode.Bilinear
                     : FilterMode.Point;
-                _gradationRampTex.SetPixels32(s_Colors);
+                _gradationRampTex.SetPixels(s_Colors);
                 _gradationRampTex.Apply();
                 return _gradationRampTex;
+            }
+        }
+
+        private Texture2D transitionRampTex
+        {
+            get
+            {
+                if (m_TransitionGradient == null) return null;
+                if (!_transitionRampTex) _transitionRampTex = s_TexturePool.Rent();
+                if (!_isTransitionGradientDirty) return _transitionRampTex;
+                _isTransitionGradientDirty = false;
+
+                var w = s_Colors.Length;
+                for (var i = 0; i < w; i++)
+                {
+                    s_Colors[i] = m_TransitionGradient.Evaluate((float)i / (w - 1));
+                }
+
+                s_Colors[w - 1].a = 0;
+
+                _transitionRampTex.wrapMode = TextureWrapMode.Clamp;
+                _transitionRampTex.filterMode = m_TransitionGradient.mode == GradientMode.Blend
+                    ? FilterMode.Bilinear
+                    : FilterMode.Point;
+                _transitionRampTex.SetPixels(s_Colors);
+                _transitionRampTex.Apply();
+                return _transitionRampTex;
             }
         }
 
         public void Reset()
         {
             _isGradientDirty = true;
+            _isTransitionGradientDirty = true;
             s_TexturePool.Return(ref _gradationRampTex);
+            s_TexturePool.Return(ref _transitionRampTex);
             CopyFrom(s_DefaultContext);
         }
 
@@ -336,6 +370,7 @@ namespace Coffee.UIEffects
             dst.m_TransitionColorGlow = src.m_TransitionColorGlow;
             dst.m_TransitionPatternReverse = src.m_TransitionPatternReverse;
             dst.m_TransitionAutoPlaySpeed = src.m_TransitionAutoPlaySpeed;
+            dst.m_TransitionGradient = src.m_TransitionGradient;
 
             dst.m_TargetMode = src.m_TargetMode;
             dst.m_TargetColor = src.m_TargetColor;
@@ -394,6 +429,11 @@ namespace Coffee.UIEffects
             _isGradientDirty = true;
         }
 
+        public void SetTransitionGradationDirty()
+        {
+            _isTransitionGradientDirty = true;
+        }
+
         public void ApplyToMaterial(Material material, float actualSamplingScale = 1f)
         {
             if (!material) return;
@@ -429,6 +469,8 @@ namespace Coffee.UIEffects
             material.SetInt(s_TransitionColorGlow, m_TransitionColorGlow ? 1 : 0);
             material.SetInt(s_TransitionPatternReverse, m_TransitionPatternReverse ? 1 : 0);
             material.SetFloat(s_TransitionAutoPlaySpeed, m_TransitionAutoPlaySpeed);
+            material.SetTexture(s_TransitionGradientTex,
+                m_TransitionFilter == TransitionFilter.Blaze ? transitionRampTex : null);
 
             material.SetColor(s_TargetColor, m_TargetColor);
             material.SetFloat(s_TargetRange, Mathf.Clamp01(m_TargetRange));

@@ -153,6 +153,7 @@ namespace Coffee.UIEffects
             if (preset || (target && !isTargetInScene))
             {
                 context?.SetGradationDirty();
+                context?.SetTransitionGradationDirty();
             }
 
             base.OnValidate();
