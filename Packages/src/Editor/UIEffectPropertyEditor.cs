@@ -81,6 +81,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _gradationOffset;
         private SerializedProperty _gradationScale;
         private SerializedProperty _gradationRotation;
+        private SerializedProperty _gradationWrapMode;
 
         private SerializedProperty _edgeMode;
         private SerializedProperty _edgeWidth;
@@ -183,6 +184,7 @@ namespace Coffee.UIEffects.Editors
             _gradationOffset = serializedObject.FindProperty("m_GradationOffset");
             _gradationScale = serializedObject.FindProperty("m_GradationScale");
             _gradationRotation = serializedObject.FindProperty("m_GradationRotation");
+            _gradationWrapMode = serializedObject.FindProperty("m_GradationWrapMode");
 
             _detailFilter = serializedObject.FindProperty("m_DetailFilter");
             _detailIntensity = serializedObject.FindProperty("m_DetailIntensity");
@@ -372,6 +374,9 @@ namespace Coffee.UIEffects.Editors
                     case GradationMode.AngleGradient:
                     case GradationMode.RadialGradient:
                         DrawGradientField(_gradationGradient);
+                        EditorGUI.indentLevel++;
+                        EditorGUILayout.PropertyField(_gradationWrapMode, EditorGUIUtility.TrTempContent("Wrap Mode"));
+                        EditorGUI.indentLevel--;
                         break;
                     case GradationMode.Diagonal:
                         DrawColorPickerField("Top", _gradationColor1, _gradationColor2);

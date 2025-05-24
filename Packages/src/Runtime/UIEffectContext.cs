@@ -231,6 +231,7 @@ namespace Coffee.UIEffects
         public float m_GradationOffset;
         public float m_GradationScale;
         public float m_GradationRotation;
+        public TextureWrapMode m_GradationWrapMode;
 
         public DetailFilter m_DetailFilter;
         public float m_DetailIntensity;
@@ -293,6 +294,7 @@ namespace Coffee.UIEffects
                     s_Colors[i] = m_GradationGradient.Evaluate((float)i / (w - 1));
                 }
 
+                _gradationRampTex.wrapMode = m_GradationWrapMode;
                 _gradationRampTex.filterMode = m_GradationGradient.mode == GradientMode.Blend
                     ? FilterMode.Bilinear
                     : FilterMode.Point;
@@ -411,6 +413,7 @@ namespace Coffee.UIEffects
             dst.m_GradationScale = src.m_GradationScale;
             dst.m_GradationOffset = src.m_GradationOffset;
             dst.m_GradationRotation = src.m_GradationRotation;
+            dst.m_GradationWrapMode = src.m_GradationWrapMode;
 
             dst.m_DetailFilter = src.m_DetailFilter;
             dst.m_DetailIntensity = src.m_DetailIntensity;

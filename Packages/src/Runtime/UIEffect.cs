@@ -202,6 +202,9 @@ namespace Coffee.UIEffects
         private float m_GradationRotation = 0;
 
         [SerializeField]
+        protected TextureWrapMode m_GradationWrapMode = TextureWrapMode.Repeat;
+
+        [SerializeField]
         protected bool m_AllowToModifyMeshShape = true;
 
         [SerializeField]
@@ -1283,6 +1286,17 @@ namespace Coffee.UIEffects
             }
         }
 
+        public TextureWrapMode gradationWrapMode
+        {
+            get => m_GradationWrapMode;
+            set
+            {
+                if (m_GradationWrapMode == value) return;
+                context.m_GradationWrapMode = m_GradationWrapMode = value;
+                context.SetGradationDirty();
+            }
+        }
+
         public DetailFilter detailFilter
         {
             get => m_DetailFilter;
@@ -1731,6 +1745,7 @@ namespace Coffee.UIEffects
                 dst.m_GradationOffset = src.m_GradationOffset;
                 dst.m_GradationScale = src.m_GradationScale;
                 dst.m_GradationRotation = src.m_GradationRotation;
+                dst.m_GradationWrapMode = src.m_GradationWrapMode;
             }
 
             if (!append || src.m_DetailFilter != DetailFilter.None)
@@ -1860,6 +1875,7 @@ namespace Coffee.UIEffects
                 dst.m_GradationOffset = src.m_GradationOffset;
                 dst.m_GradationScale = src.m_GradationScale;
                 dst.m_GradationRotation = src.m_GradationRotation;
+                dst.m_GradationWrapMode = src.m_GradationWrapMode;
             }
 
             if (!append || src.m_DetailFilter != DetailFilter.None)
@@ -1990,6 +2006,7 @@ namespace Coffee.UIEffects
                 dst.m_GradationOffset = src.m_GradationOffset;
                 dst.m_GradationScale = src.m_GradationScale;
                 dst.m_GradationRotation = src.m_GradationRotation;
+                dst.m_GradationWrapMode = src.m_GradationWrapMode;
             }
 
             if (!append || src.m_DetailFilter != DetailFilter.None)
@@ -2085,6 +2102,7 @@ namespace Coffee.UIEffects
             dst.m_GradationOffset = src.m_GradationOffset;
             dst.m_GradationScale = src.m_GradationScale;
             dst.m_GradationRotation = src.m_GradationRotation;
+            dst.m_GradationWrapMode = src.m_GradationWrapMode;
 
             dst.m_DetailFilter = src.m_DetailFilter;
             dst.m_DetailIntensity = src.m_DetailIntensity;
