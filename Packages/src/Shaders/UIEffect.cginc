@@ -62,6 +62,7 @@ uniform const half4 _GradationColor3;
 uniform const half4 _GradationColor4;
 uniform const sampler2D _GradationTex;
 uniform const float4 _GradationTex_ST;
+uniform const int _GradationRadial;
 uniform const matrix _RootViewMatrix;
 uniform const matrix _GradViewMatrix;
 uniform const matrix _MirrorRootViewMatrix;
@@ -573,20 +574,16 @@ half4 apply_transition_filter(half4 color, const float alpha, const float2 uvLoc
 half4 apply_gradation_filter(const half4 inColor, const float2 uvGrad)
 {
     const float2 uv = uvGrad * _GradationTex_ST.x + _GradationTex_ST.z;
+    const float uvRad = length((uvGrad - float2(0.5, 0.5)) * 2 * _GradationTex_ST.x) + _GradationTex_ST.z;
     half4 factor = inColor;
 
     #if GRADATION_GRADIENT // Gradation.Gradient
     {
-        factor = tex2D(_GradationTex, uv);
-    }
-    #elif GRADATION_RADIAL // Gradation.Radial
-    {
-        float t = saturate(length((uvGrad - float2(0.5, 0.5)) * 2 * _GradationTex_ST.x) + _GradationTex_ST.z);
-        factor = lerp(_GradationColor1, _GradationColor2, t);
+        factor = tex2D(_GradationTex, float2(_GradationRadial ? uvRad : uv.x, 0.5));
     }
     #elif GRADATION_COLOR2 // Gradation.Color2
     {
-        factor = lerp(_GradationColor1, _GradationColor2, saturate(uv.x));
+        factor = lerp(_GradationColor1, _GradationColor2, _GradationRadial ? saturate(uvRad) : saturate(uv.x));
     }
     #elif GRADATION_COLOR4 // Gradation.Color4
     {
