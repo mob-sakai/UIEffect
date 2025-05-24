@@ -59,7 +59,7 @@ namespace Coffee.UIEffects
             {
                 if (enabled)
                 {
-                    OnChangeText(textMeshProUGUI);
+                    s_ChangedInstances.Add(textMeshProUGUI);
                 }
                 else if (0 < textMeshProUGUI.textInfo?.meshInfo?.Length
                          && 0 < textMeshProUGUI.textInfo.meshInfo[0].vertexCount)
@@ -126,9 +126,6 @@ namespace Coffee.UIEffects
 #endif
         private static void InitializeOnLoad()
         {
-            s_ChangedInstances.Clear();
-            s_RegisteredInstances.Clear();
-            s_SdfScaleCache.Clear();
             Register(new TmpProxy());
 
             // When the text is changed, add it to the changed list
@@ -154,11 +151,11 @@ namespace Coffee.UIEffects
                         // If the scale has changed, add to the changed list
                         if (s_SdfScaleCache.TryGetValue(id, out var prev) && !Mathf.Approximately(prev, lossyScaleY))
                         {
-                            OnChangeText(textMeshProUGUI);
+                            s_ChangedInstances.Add(textMeshProUGUI);
                         }
 
                         // Update the scale cache
-                        s_SdfScaleCache[id] = textMeshProUGUI.transform.lossyScale.y;
+                        s_SdfScaleCache[id] = lossyScaleY;
                     }
                     // Remove destroyed objects later
                     else if (!ReferenceEquals(textMeshProUGUI, null))
@@ -183,6 +180,9 @@ namespace Coffee.UIEffects
                 foreach (var textMeshProUGUI in s_ChangedInstances)
                 {
                     if (!textMeshProUGUI || !textMeshProUGUI.isActiveAndEnabled) continue;
+                    if (!textMeshProUGUI.TryGetComponent<IMeshModifier>(out var _)) continue;
+
+                    s_RegisteredInstances.Add(textMeshProUGUI);
                     ModifyMesh(textMeshProUGUI);
                 }
 
@@ -207,14 +207,6 @@ namespace Coffee.UIEffects
 #endif
         }
 
-        private static void OnChangeText(Object obj)
-        {
-            if (obj is TextMeshProUGUI textMeshProUGUI && textMeshProUGUI.isActiveAndEnabled)
-            {
-                s_ChangedInstances.Add(textMeshProUGUI);
-            }
-        }
-
         private static void ModifyMesh(TextMeshProUGUI textMeshProUGUI)
         {
             if (!s_Mesh)
@@ -223,11 +215,10 @@ namespace Coffee.UIEffects
                 s_Mesh.MarkDynamic();
             }
 
-            s_RegisteredInstances.Add(textMeshProUGUI);
-            var effect = textMeshProUGUI.GetComponent<UIEffectBase>();
             var subMeshes = InternalListPool<TMP_SubMeshUI>.Rent();
             var modifiers = InternalListPool<IMeshModifier>.Rent();
             var subModifiers = InternalListPool<IMeshModifier>.Rent();
+            textMeshProUGUI.TryGetComponent<UIEffectBase>(out var effect);
             textMeshProUGUI.GetComponentsInChildren(subMeshes, 1);
             textMeshProUGUI.GetComponents(modifiers);
 
@@ -303,6 +294,7 @@ namespace Coffee.UIEffects
             InternalListPool<IMeshModifier>.Return(ref modifiers);
             InternalListPool<IMeshModifier>.Return(ref subModifiers);
             s_Mesh.Clear(false);
+            Misc.QueuePlayerLoopUpdate();
         }
 
         private static TMP_SubMeshUI GetSubMeshUI(List<TMP_SubMeshUI> subMeshes, Material material, int start)
