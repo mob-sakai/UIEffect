@@ -232,6 +232,7 @@ namespace Coffee.UIEffects
         public float m_GradationScale;
         public float m_GradationRotation;
         public TextureWrapMode m_GradationWrapMode;
+        public bool m_GradationReverse;
 
         public DetailFilter m_DetailFilter;
         public float m_DetailIntensity;
@@ -291,7 +292,9 @@ namespace Coffee.UIEffects
                 var w = s_Colors.Length;
                 for (var i = 0; i < w; i++)
                 {
-                    s_Colors[i] = m_GradationGradient.Evaluate((float)i / (w - 1));
+                    var x = m_GradationReverse ? w - 1 - i : i;
+                    var t = (float)i / (w - 1);
+                    s_Colors[x] = m_GradationGradient.Evaluate(t);
                 }
 
                 _gradationRampTex.wrapMode = m_GradationWrapMode;
@@ -316,7 +319,8 @@ namespace Coffee.UIEffects
                 var w = s_Colors.Length;
                 for (var i = 0; i < w; i++)
                 {
-                    s_Colors[i] = m_TransitionGradient.Evaluate((float)i / (w - 1));
+                    var t = (float)i / (w - 1);
+                    s_Colors[i] = m_TransitionGradient.Evaluate(t);
                 }
 
                 s_Colors[w - 1].a = 0;
@@ -414,6 +418,7 @@ namespace Coffee.UIEffects
             dst.m_GradationOffset = src.m_GradationOffset;
             dst.m_GradationRotation = src.m_GradationRotation;
             dst.m_GradationWrapMode = src.m_GradationWrapMode;
+            dst.m_GradationReverse = src.m_GradationReverse;
 
             dst.m_DetailFilter = src.m_DetailFilter;
             dst.m_DetailIntensity = src.m_DetailIntensity;

@@ -83,6 +83,7 @@ namespace Coffee.UIEffects
         [PowerRange(0.01f, 10, 10)] public float m_GradationScale = 1;
         [Range(0, 360)] public float m_GradationRotation = 0;
         public TextureWrapMode m_GradationWrapMode = TextureWrapMode.Repeat;
+        public bool m_GradationReverse;
 
         public EdgeMode m_EdgeMode = EdgeMode.None;
         [Range(0, 1)] public float m_EdgeWidth = 0.5f;
@@ -179,6 +180,7 @@ namespace Coffee.UIEffects
             dst.m_GradationScale = src.m_GradationScale;
             dst.m_GradationRotation = src.m_GradationRotation;
             dst.m_GradationWrapMode = src.m_GradationWrapMode;
+            dst.m_GradationReverse = src.m_GradationReverse;
 
             dst.m_DetailFilter = src.m_DetailFilter;
             dst.m_DetailIntensity = src.m_DetailIntensity;
