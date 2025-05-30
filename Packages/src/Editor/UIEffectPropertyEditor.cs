@@ -82,6 +82,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _gradationScale;
         private SerializedProperty _gradationRotation;
         private SerializedProperty _gradationWrapMode;
+        private SerializedProperty _gradationReverse;
 
         private SerializedProperty _edgeMode;
         private SerializedProperty _edgeWidth;
@@ -185,6 +186,7 @@ namespace Coffee.UIEffects.Editors
             _gradationScale = serializedObject.FindProperty("m_GradationScale");
             _gradationRotation = serializedObject.FindProperty("m_GradationRotation");
             _gradationWrapMode = serializedObject.FindProperty("m_GradationWrapMode");
+            _gradationReverse = serializedObject.FindProperty("m_GradationReverse");
 
             _detailFilter = serializedObject.FindProperty("m_DetailFilter");
             _detailIntensity = serializedObject.FindProperty("m_DetailIntensity");
@@ -376,6 +378,7 @@ namespace Coffee.UIEffects.Editors
                         DrawGradientField(_gradationGradient);
                         EditorGUI.indentLevel++;
                         EditorGUILayout.PropertyField(_gradationWrapMode, EditorGUIUtility.TrTempContent("Wrap Mode"));
+                        EditorGUILayout.PropertyField(_gradationReverse, EditorGUIUtility.TrTempContent("Reverse"));
                         EditorGUI.indentLevel--;
                         break;
                     case GradationMode.Diagonal:
