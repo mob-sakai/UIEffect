@@ -1263,6 +1263,7 @@ namespace Coffee.UIEffects
             get => m_GradationScale;
             set
             {
+                value = Mathf.Clamp(value, 0.01f, 10f);
                 if (Mathf.Approximately(m_GradationScale, value)) return;
                 context.m_GradationScale = m_GradationScale = value;
                 SetMaterialDirty();
