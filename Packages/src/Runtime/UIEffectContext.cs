@@ -555,7 +555,7 @@ namespace Coffee.UIEffects
                 case GradationMode.DiagonalToRightBottom:
                 case GradationMode.DiagonalToLeftBottom:
                 case GradationMode.Angle:
-                case GradationMode.RadialFast:
+                case GradationMode.Radial:
                 case GradationMode.RadialDetail:
                     SetKeyword(material, s_GradationKeywords, 2);
                     break;
@@ -638,7 +638,7 @@ namespace Coffee.UIEffects
                 case GradationMode.VerticalGradient:
                 case GradationMode.AngleGradient:
                     return new Vector4(gScale, 1, -0.5f * (gScale + 1) - m_GradationOffset, 0);
-                case GradationMode.RadialFast:
+                case GradationMode.Radial:
                 case GradationMode.RadialDetail:
                 {
                     return new Vector4(gScale, 1, m_GradationOffset, 0);
