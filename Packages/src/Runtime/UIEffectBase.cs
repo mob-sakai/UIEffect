@@ -6,6 +6,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.Profiling;
 using UnityEngine.UI;
 using UnityEditor;
+#if TIMELINE_ENABLE
+using UnityEngine.Timeline;
+#endif
 
 [assembly: InternalsVisibleTo("UIEffect")]
 [assembly: InternalsVisibleTo("Coffee.UIEffect.Editor")]
@@ -15,6 +18,9 @@ namespace Coffee.UIEffects
     [ExecuteAlways]
     [DisallowMultipleComponent]
     public abstract class UIEffectBase : UIBehaviour, IMeshModifier, IMaterialModifier, ICanvasRaycastFilter
+#if TIMELINE_ENABLE
+    ,ITimeControl
+#endif
     {
         private static readonly InternalObjectPool<UIEffectContext> s_ContextPool =
             new InternalObjectPool<UIEffectContext>(() => new UIEffectContext(), x => true, x => x.Reset());
@@ -254,5 +260,25 @@ namespace Coffee.UIEffects
 
         public abstract void SetRate(float rate, UIEffectTweener.CullingMask cullingMask);
         public abstract bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera);
+
+        public void SetTime(double _)
+        {
+        }
+
+        public void OnControlTimeStart()
+        {
+            if (this)
+            {
+                enabled = true;
+            }
+        }
+
+        public void OnControlTimeStop()
+        {
+            if (this)
+            {
+                enabled = false;
+            }
+        }
     }
 }
