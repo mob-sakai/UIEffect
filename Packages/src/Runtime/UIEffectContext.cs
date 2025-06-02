@@ -518,8 +518,10 @@ namespace Coffee.UIEffects
             material.SetColor(s_GradationColor2, m_GradationColor2);
             material.SetColor(s_GradationColor3, m_GradationColor3);
             material.SetColor(s_GradationColor4, m_GradationColor4);
-            material.SetInt(s_GradationRadial, m_GradationMode == GradationMode.RadialFast
+            material.SetInt(s_GradationRadial, m_GradationMode == GradationMode.Radial
+#pragma warning disable CS0612 // Type or member is obsolete
                                                || m_GradationMode == GradationMode.RadialDetail
+#pragma warning restore CS0612
                                                || m_GradationMode == GradationMode.RadialGradient ? 1 : 0);
 
             material.SetFloat(s_DetailIntensity, Mathf.Clamp01(m_DetailIntensity));
@@ -555,8 +557,10 @@ namespace Coffee.UIEffects
                 case GradationMode.DiagonalToRightBottom:
                 case GradationMode.DiagonalToLeftBottom:
                 case GradationMode.Angle:
-                case GradationMode.RadialFast:
+                case GradationMode.Radial:
+#pragma warning disable CS0612 // Type or member is obsolete
                 case GradationMode.RadialDetail:
+#pragma warning restore CS0612
                     SetKeyword(material, s_GradationKeywords, 2);
                     break;
                 case GradationMode.Diagonal:
@@ -638,8 +642,10 @@ namespace Coffee.UIEffects
                 case GradationMode.VerticalGradient:
                 case GradationMode.AngleGradient:
                     return new Vector4(gScale, 1, -0.5f * (gScale + 1) - m_GradationOffset, 0);
-                case GradationMode.RadialFast:
+                case GradationMode.Radial:
+#pragma warning disable CS0612 // Type or member is obsolete
                 case GradationMode.RadialDetail:
+#pragma warning restore CS0612
                 {
                     return new Vector4(gScale, 1, m_GradationOffset, 0);
                 }
