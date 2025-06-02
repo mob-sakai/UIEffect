@@ -3,7 +3,9 @@
     "rootNamespace": "",
     "references": [
         "GUID:6055be8ebefd69e48b49212b09b47b2f",
-        "GUID:735c8f008d0ad4caa9cdc4306f1c3042"
+        "GUID:735c8f008d0ad4caa9cdc4306f1c3042",
+        "GUID:f06555f75b070af458a003d92f9efb00",
+        "GUID:02f771204943f4a40949438e873e3eff"
     ],
     "includePlatforms": [
         "Editor"
@@ -24,6 +26,11 @@
             "name": "com.unity.ugui",
             "expression": "2.0.0",
             "define": "TMP_ENABLE"
+        },
+        {
+            "name": "com.unity.timeline",
+            "expression": "1.0.0",
+            "define": "TIMELINE_ENABLE"
         }
     ],
     "noEngineReferences": false
