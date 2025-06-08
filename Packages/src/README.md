@@ -7,6 +7,7 @@
 ![](https://img.shields.io/badge/Unity-6000.0+-57b9d3.svg?style=flat&logo=unity)  
 ![](https://img.shields.io/badge/TextMeshPro_Support-57b9d3.svg?style=flat)
 ![](https://img.shields.io/badge/ShaderGraph_Support-57b9d3.svg?style=flat)
+![](https://img.shields.io/badge/Timeline_Support-57b9d3.svg?style=flat)
 ![](https://img.shields.io/badge/UPR%2FHDPR_Support-57b9d3.svg?style=flat)
 ![](https://img.shields.io/badge/VR_Support-57b9d3.svg?style=flat)  
 [![](https://img.shields.io/github/license/mob-sakai/UIEffect.svg)](https://github.com/mob-sakai/UIEffect/blob/main/LICENSE.md)
@@ -20,9 +21,12 @@
 
 ## 📝 Description <!-- omit in toc -->
 
-**_"Decorate your UI, simply and powerfully."_**  
-UIEffect is an open-source package that allows you to intuitively apply rich Unity UI effects directly from the Inspector or via code.  
-Combine various filters, such as grayscale, blur, and dissolve, to decorate your UI with a unique visual style!
+**_"Decorate your UI, simply and powerfully."_**
+
+UIEffect is a powerful, open-source Unity package that transforms your UI with stunning visual effects.  
+Apply professional-grade filters like grayscale, blur, and dissolve directly from the Inspector—no coding required!
+
+✨ **Perfect for**: Game developers, UI designers, and anyone looking to enhance their Unity UI with minimal effort
 
 ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/uieffect5.7.0-demo-title.png)
 
@@ -55,6 +59,7 @@ Combine various filters, such as grayscale, blur, and dissolve, to decorate your
   - [Usage with TextMeshPro](#usage-with-textmeshpro)
   - [Usage with SoftMaskForUGUI](#usage-with-softmaskforugui)
   - [Usage with ShaderGraph](#usage-with-shadergraph)
+  - [Usage with Timeline](#usage-with-timeline)
   - [Runtime/Editor Preset for UIEffect](#runtimeeditor-preset-for-uieffect)
   - [Usage with Code](#usage-with-code)
   - [Project Settings](#project-settings)
@@ -88,6 +93,7 @@ Combine various filters, such as grayscale, blur, and dissolve, to decorate your
 - **v4 compatible components (optional)**: For easy upgrading with minimal changes, compatible v4 components are available optionally.
 - **SoftMaskForUGUI support (optional)**: Compatible with SoftMaskForUGUI for creating soft masks for UI elements. See for more details [here](#usage-with-softmaskforugui).
 - **ShaderGraph support (optional)**: Add `Canvas (UIEffect)` sub target (material) for UIEffect shaders. See for more details [here](#usage-with-shadergraph).
+- **Timeline support**: Control UIEffect using Timeline with `ControlTrack` and `UIEffect Tracks`. See for more details [here](#usage-with-timeline).
 
 <br><br>
 
@@ -99,7 +105,7 @@ Combine various filters, such as grayscale, blur, and dissolve, to decorate your
 ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/uieffect5.7.0-demo-showcase.png)  
 ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/uieffect5.7.0-demo-tmp.png)  
 
-[WebGL Demo](https://mob-sakai.github.io/UIEffect/)
+[Try the WebGL Demo](https://mob-sakai.github.io/UIEffect/)
 
 <br><br>
 
@@ -117,7 +123,7 @@ _This package requires **Unity 2020.3 or later**._
   ```
 - To update the package, use Package Manager UI (`Window > Package Manager`) or run the following command with `@{version}`:
   ```
-  openupm add com.coffee.ui-effect@5.7.0
+  openupm add com.coffee.ui-effect@5.9.0
   ```
 
 ### Install via UPM (with Package Manager UI)
@@ -126,7 +132,7 @@ _This package requires **Unity 2020.3 or later**._
 - Click `+ > Add package from git URL...` and input the repository URL: `https://github.com/mob-sakai/UIEffect.git?path=Packages/src`  
   ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/upm-add-from-url.png)
 - To update the package, change suffix `#{version}` to the target version.
-    - e.g. `https://github.com/mob-sakai/UIEffect.git?path=Packages/src#5.7.0`
+    - e.g. `https://github.com/mob-sakai/UIEffect.git?path=Packages/src#5.9.0`
 
 ### Install via UPM (Manually)
 
@@ -141,7 +147,7 @@ _This package requires **Unity 2020.3 or later**._
   ```
 
 - To update the package, change suffix `#{version}` to the target version.
-    - e.g. `"com.coffee.ui-effect": "https://github.com/mob-sakai/UIEffect.git?path=Packages/src#5.7.0",`
+    - e.g. `"com.coffee.ui-effect": "https://github.com/mob-sakai/UIEffect.git?path=Packages/src#5.9.0",`
 
 ### Install as Embedded Package
 
@@ -198,10 +204,17 @@ If upgrading from UIEffect v4 to v5, note the following breaking changes:
 2. Add a `UIEffect` component to a UI element (Image, RawImage, Text, TextMeshProUGUI, etc...) from the `Add Component` in the inspector or `Component > UI > UIEffect` menu.  
    ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/uieffect5.7.0-add-component.png)
 
-3. Adjust the effect filters and parameters in the inspector.  
+3. Set `Tone Filter` to `Grayscale` and `Tone Intensity` to `1.0`.  
+   <img src="https://github.com/mob-sakai/mob-sakai/releases/download/docs/1749029605043.png" width="480"/>
+
+4. Try other effect filters and parameters in the inspector.  
    ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1744308178360.gif)
 
-4. From the top menu, you can load/append preset.  
+5. From the top menu, you can load/append preset.  
+   > [!TIP]  
+   > `Load` overwrites all properties with the preset, while `Append` only overwrites enabled filters and modes with the preset.  
+   > You can easily build effects by combining them with `Append`.
+
    ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1744800851739.gif)
 
 5. Enjoy!
@@ -256,8 +269,8 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 
 ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/uieffect5.7.0-inspector-transition.png)
 
-- **Transition Filter**: `None`, `Fade`, `Cutoff`, `Dissolve`, `Shiny`, `Mask`, `Melt`, `Burn`, `Pattern`  
-  ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/uieffect5.7.0-sample-transition.png)
+- **Transition Filter**: `None`, `Fade`, `Cutoff`, `Dissolve`, `Shiny`, `Mask`, `Melt`, `Burn`, `Blaze`, `Pattern`  
+  ![](.vscode/1749212789443.png)
 - **Transition Rate**: 0.0 (no effect) - 1.0 (full effect).
 - **Transition Tex**: The texture used for the transition filter.
     - **Scale**, **Offset**, **Speed**, **Rotation**, **Keep Aspect Ratio**, **Reverse**: Additional properties for the texture.
@@ -271,6 +284,7 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
     - **Transition Color**: The color of the transition.
     - **Transition Color Glow**: Set the transition color to glow.
 - **Transition Auto Play Speed**: The speed of the transition animation (using shader side `_Time`). You can use this property to loop the `TransitionRate` without tweener or animation.
+    - ⚠️ NOTE: This uses scaled time (affected by `Time.timeScale`). If you need unscaled time (useful for pause-resistant effects), use the [UIEffectTweener](#component-uieffecttweener) component instead.
 
 > [!TIP]  
 > **Transition Tex** applies transitions using its alpha channel.  
@@ -325,10 +339,10 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 
 ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1744305109784.png)
 
-- **Gradation Mode**: `None`, `Horizontal`, `HorizontalGradient`, `Vertical`, `VerticalGradient`, `Radial`, `Diagonal`, `DiagonalToRightBottom`, `DiagonalToLeftBottom`, `Angle`, `AngleGradient`  
+- **Gradation Mode**: `None`, `Horizontal`, `HorizontalGradient`, `Vertical`, `VerticalGradient`, `Radial`, `RadialGradient`, `Diagonal`, `DiagonalToRightBottom`, `DiagonalToLeftBottom`, `Angle`, `AngleGradient`  
   ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/uieffect5.7.0-sample-gradation.png)
 - **Gradation Color Filter**: `None`, `Multiply`, `Additive`, `Subtractive`, `Replace`, `Multiply Luminance`, `Multiply Additive`
-- **Gradation Gradient**: The gradient of the gradation.
+- **Gradation Gradient**: The gradient of the gradation. HDR colors are supported.
   - `Blend` and `Fixed` modes are available.
 - **Gradation Color 1**: The first color of the gradation.
 - **Gradation Color 2**: The second color of the gradation.
@@ -336,6 +350,8 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 - **Gradation Offset**: The offset of the gradation range.
 - **Gradation Scale**: The scale of the gradation range.
 - **Gradation Rotation** (`Angle` or `AngleGradient` only): The rotation of the gradation range.
+- **Gradation Wrap Mode**: `Repaet`, `Clamp`, `Mirror`, `Mirror Once`
+- **Gradation Reverse**: Reverse the gradient.
 - **Keep Aspect Ratio**: 
   - ⚠️ NOTE: `Keep Aspect Ratio` is shared with `Transition Filter` and `Gradation Mode` and `Detail Filter`.
 
@@ -353,6 +369,7 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
     - **Edge Color Glow**: Set the shadow color to glow.
 - **Edge Shiny Width**: The width of the edge shiny.
 - **Edge Shiny Auto Play Speed**: The speed of the edge shiny (using shader side `_Time`).
+  - ⚠️ NOTE: This uses scaled time (affected by `Time.timeScale`). If you need unscaled time (useful for pause-resistant effects), use the [UIEffectTweener](#component-uieffecttweener) component instead.
 
 <br>
 
@@ -512,6 +529,18 @@ To use UIEffect with ShaderGraph, you need to import additional resources.
 
 > [!TIP]
 > Use `(UIEffect)` in the shader name or register as an optional shader in [ProjectSettings](#project-settings).
+
+<br><br>
+
+### Usage with Timeline
+
+![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1749028017092.png)
+
+Timeline is a powerful animation tool that can control UIEffect using `ControlTrack` and UIEffect tracks.
+
+- `Control Track`: One of the built-in tracks. When you assign a GameObject with `UIEffect`, `UIEffect` will be enabled during the clip duration.
+- `UIEffect Tracks`: Tracks for UIEffect. They control `float` or `Color` type properties.
+  - Supports blending, extrapolation, and tween.
 
 <br><br>
 
