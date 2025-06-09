@@ -86,7 +86,8 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git merge origin/${{ github.event.pull_request.base.ref }} --no-edit
+          git rebase ${{ github.event.pull_request.base.sha }}
+          git log --oneline -n 10
 
       - name: 📥 Cache library
         uses: actions/cache@v4
