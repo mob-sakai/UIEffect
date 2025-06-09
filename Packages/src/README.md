@@ -269,7 +269,7 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/uieffect5.7.0-inspector-transition.png)
 
 - **Transition Filter**: `None`, `Fade`, `Cutoff`, `Dissolve`, `Shiny`, `Mask`, `Melt`, `Burn`, `Blaze`, `Pattern`  
-  ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1749461050342.png)
+  ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1749466907712.gif)
 - **Transition Rate**: 0.0 (no effect) - 1.0 (full effect).
 - **Transition Tex**: The texture used for the transition filter.
     - **Scale**, **Offset**, **Speed**, **Rotation**, **Keep Aspect Ratio**, **Reverse**: Additional properties for the texture.
@@ -339,7 +339,7 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1744305109784.png)
 
 - **Gradation Mode**: `None`, `Horizontal`, `HorizontalGradient`, `Vertical`, `VerticalGradient`, `Radial`, `RadialGradient`, `Diagonal`, `DiagonalToRightBottom`, `DiagonalToLeftBottom`, `Angle`, `AngleGradient`  
-  ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1749460950217.png)
+  ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1749461050342.png)
 - **Gradation Color Filter**: `None`, `Multiply`, `Additive`, `Subtractive`, `Replace`, `Multiply Luminance`, `Multiply Additive`
 - **Gradation Gradient**: The gradient of the gradation. HDR colors are supported.
   - `Blend` and `Fixed` modes are available.
