@@ -1,3 +1,25 @@
+# [5.9.0](https://github.com/mob-sakai/UIEffect/compare/5.8.7...5.9.0) (2025-06-09)
+
+
+### Bug Fixes
+
+* `GradationMode.RadialFast` and `GradationMode.RadialDetail` are obsolete ([1a923dd](https://github.com/mob-sakai/UIEffect/commit/1a923dd72c263de5480d71bd17b697feca317ef1))
+* soft masking not working with `DetailFilter.Masking` ([ffdeaa7](https://github.com/mob-sakai/UIEffect/commit/ffdeaa7e2f1c2a9ccb7eb21d5674e2c19021aef9))
+
+
+### Features
+
+* `GradationGradient` supports HDR color ([50f6b3c](https://github.com/mob-sakai/UIEffect/commit/50f6b3c5d20b93a2245f6d54b6eb4bc13565c3b5))
+* add `Clear` method to reset properties via script ([264c453](https://github.com/mob-sakai/UIEffect/commit/264c453bb6ebad08ef950b0cec2f38e60a1710d8)), closes [#337](https://github.com/mob-sakai/UIEffect/issues/337)
+* add `GradationMode.RadialGradient` feature ([179ec89](https://github.com/mob-sakai/UIEffect/commit/179ec89a0215af9d8046e150d98fa06371155e93)), closes [#348](https://github.com/mob-sakai/UIEffect/issues/348)
+* add `GradationReverse` option for gradient ([c0fec32](https://github.com/mob-sakai/UIEffect/commit/c0fec32d502ec1f9d03172ed200f4d9233506eb9)), closes [#348](https://github.com/mob-sakai/UIEffect/issues/348)
+* add `GradationWrapMode` option ([f98929d](https://github.com/mob-sakai/UIEffect/commit/f98929d7e9656b4c02d5545b3893748c963d1118))
+* add `TransitionFilter.Blaze` feature ([ed4716d](https://github.com/mob-sakai/UIEffect/commit/ed4716d7ada102fe0053480941925e9f27b1c2c3))
+* add new built-in presets ([4f2c9f1](https://github.com/mob-sakai/UIEffect/commit/4f2c9f12b5e115bab1418a7a0b1187269a041fc4))
+* improve performance for TextMeshPro ([6af520e](https://github.com/mob-sakai/UIEffect/commit/6af520ed408f2e5eb4d84ec0df484338719ebc8e))
+* timeline package support ([742a5cd](https://github.com/mob-sakai/UIEffect/commit/742a5cd8dc47500de4b111a132d7a8b242844342)), closes [#347](https://github.com/mob-sakai/UIEffect/issues/347)
+* update shaders in samples ([4c6cd11](https://github.com/mob-sakai/UIEffect/commit/4c6cd11d86582f2351c40374180828ad1c8955c3))
+
 ## [5.8.7](https://github.com/mob-sakai/UIEffect/compare/5.8.6...5.8.7) (2025-06-09)
 
 
