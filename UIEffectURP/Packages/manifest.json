@@ -6,8 +6,9 @@
     "com.coffee.symbolic-linker": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/SymbolicLinker",
     "com.coffee.ui-effect": "file:../../Packages/src",
     "com.unity.ide.rider": "3.0.35",
-    "com.unity.render-pipelines.universal": "17.0.3",
-    "com.unity.test-framework": "1.4.6",
+    "com.unity.render-pipelines.universal": "17.0.4",
+    "com.unity.test-framework": "1.5.1",
+    "com.unity.timeline": "1.8.8",
     "com.unity.ugui": "2.0.0",
     "com.unity.modules.animation": "1.0.0"
   }

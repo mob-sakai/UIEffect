@@ -27,7 +27,8 @@ UserSettings/
 *.app/
 Build/
 Assets/TextMeshPro Support*
-Assets/Demos*
+Assets/Demos
+Assets/Demos.meta
 Assets/Samples*
 Assets/ShaderGraph*
 .utmp/
