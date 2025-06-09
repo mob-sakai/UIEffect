@@ -31,6 +31,8 @@ ShaderVariantCollection:
         passType: 0
       - keywords: GLOW_ON TONE_RETRO UNDERLAY_ON
         passType: 0
+      - keywords: GLOW_ON TRANSITION_BLAZE UNDERLAY_ON
+        passType: 0
       - keywords: GLOW_ON TRANSITION_BURN UNDERLAY_ON
         passType: 0
       - keywords: GLOW_ON TRANSITION_DISSOLVE UNDERLAY_ON
@@ -71,6 +73,8 @@ ShaderVariantCollection:
       - keywords: DETAIL_MASKING
         passType: 0
       - keywords: DETAIL_MULTIPLY
+        passType: 0
+      - keywords: DETAIL_MULTIPLY GRADATION_GRADIENT
         passType: 0
       - keywords: DETAIL_MULTIPLY_ADDITIVE
         passType: 0
@@ -125,6 +129,10 @@ ShaderVariantCollection:
       - keywords: TONE_RETRO
         passType: 0
       - keywords: TONE_SEPIA
+        passType: 0
+      - keywords: TRANSITION_BLAZE
+        passType: 0
+      - keywords: TRANSITION_BLAZE UNITY_UI_CLIP_RECT
         passType: 0
       - keywords: TRANSITION_BURN
         passType: 0
