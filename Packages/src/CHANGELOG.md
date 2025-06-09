@@ -1,3 +1,12 @@
+## [5.8.7](https://github.com/mob-sakai/UIEffect/compare/5.8.6...5.8.7) (2025-06-09)
+
+
+### Bug Fixes
+
+* `GradationGradient` and `TransitionGradient` in reprica will be not dirty (editor) ([58b197e](https://github.com/mob-sakai/UIEffect/commit/58b197e551aea8efca10e12da8df132853d4a24e))
+* changes not reflected in rendering when TextMeshPro is cleared ([f508eb3](https://github.com/mob-sakai/UIEffect/commit/f508eb32caf6757eb4c27b98ac29a1582dcd14b4)), closes [#351](https://github.com/mob-sakai/UIEffect/issues/351)
+* setting `gradationScale` to 0 throws `DivideByZeroException` ([ecd265e](https://github.com/mob-sakai/UIEffect/commit/ecd265e4828c7f81c96a76c16df147b6c4804429))
+
 ## [5.8.6](https://github.com/mob-sakai/UIEffect/compare/5.8.5...5.8.6) (2025-05-22)
 
 
