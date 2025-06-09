@@ -234,6 +234,13 @@ namespace Coffee.UIEffects
             for (var i = 0; i < textMeshProUGUI.textInfo.meshInfo.Length; i++)
             {
                 var meshInfo = textMeshProUGUI.textInfo.meshInfo[i];
+                if (meshInfo.vertexCount == 0)
+                {
+                    s_Mesh.Clear(false);
+                    textMeshProUGUI.canvasRenderer.SetMesh(s_Mesh);
+                    continue;
+                }
+
                 s_VertexHelper.Clear();
                 meshInfo.mesh.CopyTo(s_VertexHelper);
                 if (i == 0)
