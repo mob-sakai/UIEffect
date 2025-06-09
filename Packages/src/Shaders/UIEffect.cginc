@@ -643,7 +643,7 @@ half4 apply_detail_filter(half4 color, float2 uvLocal)
     half4 detail = tex2D(_DetailTex, uv);
     #if DETAIL_MASKING // Detail.Masking
     {
-        color.a *= inv_lerp(_DetailThreshold.x, _DetailThreshold.y, detail.a);
+        color *= inv_lerp(_DetailThreshold.x, _DetailThreshold.y, detail.a);
     }
     #elif DETAIL_MULTIPLY // Detail.Multiply
     {
