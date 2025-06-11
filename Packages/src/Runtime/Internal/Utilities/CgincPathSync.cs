@@ -20,16 +20,18 @@ namespace Coffee.UIEffectInternal
             UpdateTmpCgincPath();
         }
 
-        private static void OnPostprocessAllAssets(string[] _, string[] __, string[] ___, string[] ____)
+        private static void OnPostprocessAllAssets(string[] imported, string[] __, string[] ___, string[] ____)
         {
-            UpdateTmpCgincPath();
+            if (imported.Any(x => x.EndsWith(".cginc") || x.EndsWith(".shader")))
+            {
+                UpdateTmpCgincPath();
+            }
         }
 
         private static void UpdateTmpCgincPath()
         {
             if (s_CgincPattern == null || s_ShaderNames == null || s_ShaderNames.Length == 0) return;
 
-            AssetDatabase.StartAssetEditing();
             string[] cgincs = null;
             foreach (var shaderName in s_ShaderNames)
             {
@@ -47,8 +49,6 @@ namespace Coffee.UIEffectInternal
 
                 UpdateTmpCgincPath(shader, cgincs);
             }
-
-            AssetDatabase.StopAssetEditing();
         }
 
         private static void UpdateTmpCgincPath(Shader shader, string[] cgincs)
