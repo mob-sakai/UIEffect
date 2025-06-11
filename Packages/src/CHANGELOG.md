@@ -1,3 +1,10 @@
+## [5.9.1](https://github.com/mob-sakai/UIEffect/compare/5.9.0...5.9.1) (2025-06-11)
+
+
+### Bug Fixes
+
+* prefabs will be deselected when editing them ([8addbad](https://github.com/mob-sakai/UIEffect/commit/8addbad4941340807d824e295280473d197d889f)), closes [#354](https://github.com/mob-sakai/UIEffect/issues/354)
+
 # [5.9.0](https://github.com/mob-sakai/UIEffect/compare/5.8.7...5.9.0) (2025-06-09)
 
 
