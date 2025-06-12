@@ -1,3 +1,10 @@
+## [5.9.2](https://github.com/mob-sakai/UIEffect/compare/5.9.1...5.9.2) (2025-06-12)
+
+
+### Bug Fixes
+
+* TextMeshPro 3.2.0-pre support ([804b48c](https://github.com/mob-sakai/UIEffect/commit/804b48c73ec648eaceb720cb79551fdbf3729fc9)), closes [#355](https://github.com/mob-sakai/UIEffect/issues/355)
+
 ## [5.9.1](https://github.com/mob-sakai/UIEffect/compare/5.9.0...5.9.1) (2025-06-11)
 
 
