@@ -1,3 +1,11 @@
+## [5.9.3](https://github.com/mob-sakai/UIEffect/compare/5.9.2...5.9.3) (2025-06-23)
+
+
+### Bug Fixes
+
+* add `GetGradientKeys` and `GetTransitionGradientKeys` APIs ([a0c3e49](https://github.com/mob-sakai/UIEffect/commit/a0c3e4997af181ae16744c53ad3867e2106ccff3)), closes [#358](https://github.com/mob-sakai/UIEffect/issues/358)
+* support world canvas without UI events ([cadbb8d](https://github.com/mob-sakai/UIEffect/commit/cadbb8d68d17a2ec7e2d6e8e885d711e61fa53af)), closes [#356](https://github.com/mob-sakai/UIEffect/issues/356) [#357](https://github.com/mob-sakai/UIEffect/issues/357)
+
 ## [5.9.2](https://github.com/mob-sakai/UIEffect/compare/5.9.1...5.9.2) (2025-06-12)
 
 
