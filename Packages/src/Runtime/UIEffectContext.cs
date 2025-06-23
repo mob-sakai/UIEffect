@@ -623,7 +623,11 @@ namespace Coffee.UIEffects
                     * Matrix4x4.TRS(mirrorOffset, Quaternion.identity, mirrorScale) * w2LMat);
             }
 
-            if (canvas.renderMode == RenderMode.ScreenSpaceOverlay || !canvas.worldCamera)
+            if (canvas.renderMode == RenderMode.WorldSpace)
+            {
+                material.SetMatrix(s_CanvasToWorldMatrix, Matrix4x4.identity);
+            }
+            else if (canvas.renderMode == RenderMode.ScreenSpaceOverlay || !canvas.worldCamera)
             {
                 material.SetMatrix(s_CanvasToWorldMatrix, canvas.transform.localToWorldMatrix);
             }
