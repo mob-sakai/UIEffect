@@ -19,7 +19,7 @@ namespace Coffee.UIEffects
     [DisallowMultipleComponent]
     public abstract class UIEffectBase : UIBehaviour, IMeshModifier, IMaterialModifier, ICanvasRaycastFilter
 #if TIMELINE_ENABLE
-    ,ITimeControl
+        , ITimeControl
 #endif
     {
         private static readonly InternalObjectPool<UIEffectContext> s_ContextPool =

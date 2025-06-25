@@ -76,7 +76,6 @@ namespace Coffee.UIEffects.Timeline
 
         private void OnValidate()
         {
-
         }
     }
 
