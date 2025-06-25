@@ -1,3 +1,10 @@
+## [5.9.4](https://github.com/mob-sakai/UIEffect/compare/5.9.3...5.9.4) (2025-06-25)
+
+
+### Bug Fixes
+
+* colors specified in UIEffect are output differently in linear color space ([0d7fb1e](https://github.com/mob-sakai/UIEffect/commit/0d7fb1eb63881b67f2658567750a83c92187df35)), closes [#359](https://github.com/mob-sakai/UIEffect/issues/359)
+
 ## [5.9.3](https://github.com/mob-sakai/UIEffect/compare/5.9.2...5.9.3) (2025-06-23)
 
 
