@@ -294,7 +294,7 @@ namespace Coffee.UIEffects
                 {
                     var x = m_GradationReverse ? w - 1 - i : i;
                     var t = (float)i / (w - 1);
-                    s_Colors[x] = m_GradationGradient.Evaluate(t);
+                    s_Colors[x] = ApplyColorSpace(m_GradationGradient.Evaluate(t));
                 }
 
                 _gradationRampTex.wrapMode = m_GradationWrapMode;
@@ -320,7 +320,7 @@ namespace Coffee.UIEffects
                 for (var i = 0; i < w; i++)
                 {
                     var t = (float)i / (w - 1);
-                    s_Colors[i] = m_TransitionGradient.Evaluate(t);
+                    s_Colors[i] = ApplyColorSpace(m_TransitionGradient.Evaluate(t));
                 }
 
                 s_Colors[w - 1].a = 0;
@@ -454,7 +454,7 @@ namespace Coffee.UIEffects
             material.SetFloat(s_ToneIntensity, Mathf.Clamp01(m_ToneIntensity));
 
             material.SetInt(s_ColorFilter, (int)m_ColorFilter);
-            material.SetColor(s_ColorValue, m_Color);
+            material.SetColor(s_ColorValue, ApplyColorSpace(m_Color));
             material.SetFloat(s_ColorIntensity, Mathf.Clamp01(m_ColorIntensity));
             material.SetInt(s_ColorGlow, m_ColorGlow ? 1 : 0);
 
@@ -473,14 +473,14 @@ namespace Coffee.UIEffects
             material.SetFloat(s_TransitionSoftness, Mathf.Clamp01(m_TransitionSoftness));
             material.SetVector(s_TransitionRange, new Vector2(m_TransitionRange.min, m_TransitionRange.max));
             material.SetInt(s_TransitionColorFilter, (int)m_TransitionColorFilter);
-            material.SetColor(s_TransitionColor, m_TransitionColor);
+            material.SetColor(s_TransitionColor, ApplyColorSpace(m_TransitionColor));
             material.SetInt(s_TransitionColorGlow, m_TransitionColorGlow ? 1 : 0);
             material.SetInt(s_TransitionPatternReverse, m_TransitionPatternReverse ? 1 : 0);
             material.SetFloat(s_TransitionAutoPlaySpeed, m_TransitionAutoPlaySpeed);
             material.SetTexture(s_TransitionGradientTex,
                 m_TransitionFilter == TransitionFilter.Blaze ? transitionRampTex : null);
 
-            material.SetColor(s_TargetColor, m_TargetColor);
+            material.SetColor(s_TargetColor, ApplyColorSpace(m_TargetColor));
             material.SetFloat(s_TargetRange, Mathf.Clamp01(m_TargetRange));
             material.SetFloat(s_TargetSoftness, Mathf.Clamp01(m_TargetSoftness));
 
@@ -497,12 +497,12 @@ namespace Coffee.UIEffects
             }
 
             material.SetInt(s_ShadowColorFilter, (int)m_ShadowColorFilter);
-            material.SetColor(s_ShadowColor, m_ShadowColor);
+            material.SetColor(s_ShadowColor, ApplyColorSpace(m_ShadowColor));
             material.SetInt(s_ShadowColorGlow, m_ShadowColorGlow ? 1 : 0);
 
             material.SetFloat(s_EdgeWidth, Mathf.Clamp01(m_EdgeWidth));
             material.SetInt(s_EdgeColorFilter, (int)m_EdgeColorFilter);
-            material.SetColor(s_EdgeColor, m_EdgeColor);
+            material.SetColor(s_EdgeColor, ApplyColorSpace(m_EdgeColor));
             material.SetInt(s_EdgeColorGlow, m_EdgeColorGlow ? 1 : 0);
             material.SetFloat(s_EdgeShinyRate, Mathf.Clamp01(m_EdgeShinyRate));
             material.SetFloat(s_EdgeShinyWidth, Mathf.Clamp01(m_EdgeShinyWidth));
@@ -514,10 +514,10 @@ namespace Coffee.UIEffects
 
             material.SetFloat(s_GradationIntensity, m_GradationIntensity);
             material.SetInt(s_GradationColorFilter, (int)m_GradationColorFilter);
-            material.SetColor(s_GradationColor1, m_GradationColor1);
-            material.SetColor(s_GradationColor2, m_GradationColor2);
-            material.SetColor(s_GradationColor3, m_GradationColor3);
-            material.SetColor(s_GradationColor4, m_GradationColor4);
+            material.SetColor(s_GradationColor1, ApplyColorSpace(m_GradationColor1));
+            material.SetColor(s_GradationColor2, ApplyColorSpace(m_GradationColor2));
+            material.SetColor(s_GradationColor3, ApplyColorSpace(m_GradationColor3));
+            material.SetColor(s_GradationColor4, ApplyColorSpace(m_GradationColor4));
             material.SetInt(s_GradationRadial, m_GradationMode == GradationMode.Radial
 #pragma warning disable CS0612 // Type or member is obsolete
                                                || m_GradationMode == GradationMode.RadialDetail
@@ -525,7 +525,7 @@ namespace Coffee.UIEffects
                                                || m_GradationMode == GradationMode.RadialGradient ? 1 : 0);
 
             material.SetFloat(s_DetailIntensity, Mathf.Clamp01(m_DetailIntensity));
-            material.SetColor(s_DetailColor, m_DetailColor);
+            material.SetColor(s_DetailColor, ApplyColorSpace(m_DetailColor));
             material.SetVector(s_DetailThreshold, new Vector2(m_DetailThreshold.min, m_DetailThreshold.max));
             material.SetTexture(s_DetailTex, m_DetailFilter != 0 ? m_DetailTex : null);
             material.SetVector(s_DetailTex_ST,
@@ -833,6 +833,11 @@ namespace Coffee.UIEffects
             }
 
             return expandSize;
+        }
+
+        private static Color ApplyColorSpace(Color color)
+        {
+            return QualitySettings.activeColorSpace == ColorSpace.Linear ? color.linear : color;
         }
     }
 }
