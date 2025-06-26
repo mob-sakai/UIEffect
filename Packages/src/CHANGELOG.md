@@ -1,3 +1,10 @@
+## [5.9.5](https://github.com/mob-sakai/UIEffect/compare/5.9.4...5.9.5) (2025-06-26)
+
+
+### Bug Fixes
+
+* `GetGradientKeys` and `GetTransitionGradientKeys` cannot get GradientMode ([fd2d1b8](https://github.com/mob-sakai/UIEffect/commit/fd2d1b80592ac4ea62e15b6150be63964b113fa2)), closes [#358](https://github.com/mob-sakai/UIEffect/issues/358)
+
 ## [5.9.4](https://github.com/mob-sakai/UIEffect/compare/5.9.3...5.9.4) (2025-06-25)
 
 
