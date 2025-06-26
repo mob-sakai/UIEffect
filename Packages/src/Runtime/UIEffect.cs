@@ -1522,10 +1522,12 @@ namespace Coffee.UIEffects
         /// <summary>
         /// Get gradation gradient's keys.
         /// </summary>
-        public void GetGradientKeys(out GradientColorKey[] colorKeys, out GradientAlphaKey[] alphaKeys)
+        public void GetGradientKeys(out GradientColorKey[] colorKeys, out GradientAlphaKey[] alphaKeys,
+            out GradientMode mode)
         {
             colorKeys = m_GradationGradient?.colorKeys ?? Array.Empty<GradientColorKey>();
             alphaKeys = m_GradationGradient?.alphaKeys ?? Array.Empty<GradientAlphaKey>();
+            mode = m_GradationGradient?.mode ?? GradientMode.Blend;
         }
 
         /// <summary>
@@ -1539,10 +1541,12 @@ namespace Coffee.UIEffects
         /// <summary>
         /// Get transition gradation gradient's keys.
         /// </summary>
-        public void GetTransitionGradientKeys(out GradientColorKey[] colorKeys, out GradientAlphaKey[] alphaKeys)
+        public void GetTransitionGradientKeys(out GradientColorKey[] colorKeys, out GradientAlphaKey[] alphaKeys,
+            out GradientMode mode)
         {
             colorKeys = m_TransitionGradient?.colorKeys ?? Array.Empty<GradientColorKey>();
             alphaKeys = m_TransitionGradient?.alphaKeys ?? Array.Empty<GradientAlphaKey>();
+            mode = m_TransitionGradient?.mode ?? GradientMode.Blend;
         }
 
         /// <summary>
