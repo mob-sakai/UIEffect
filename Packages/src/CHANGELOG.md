@@ -1,3 +1,11 @@
+## [5.9.6](https://github.com/mob-sakai/UIEffect/compare/5.9.5...5.9.6) (2025-07-17)
+
+
+### Bug Fixes
+
+* `ColorFilter` does not output intended color when vertex color is not white ([9dffdb0](https://github.com/mob-sakai/UIEffect/commit/9dffdb0ed88750a915fdd5e437b79ab766ce45c2)), closes [#363](https://github.com/mob-sakai/UIEffect/issues/363)
+* draw calls increase even when using `UIEffectReplica` ([83128eb](https://github.com/mob-sakai/UIEffect/commit/83128ebb09305e4c15a58968a94550179e96ffac)), closes [#364](https://github.com/mob-sakai/UIEffect/issues/364)
+
 ## [5.9.5](https://github.com/mob-sakai/UIEffect/compare/5.9.4...5.9.5) (2025-06-26)
 
 
