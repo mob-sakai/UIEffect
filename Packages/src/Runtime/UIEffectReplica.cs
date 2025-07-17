@@ -99,7 +99,12 @@ namespace Coffee.UIEffects
 
         public override bool canModifyShape => m_AllowToModifyMeshShape;
 
-        public override uint effectId => target ? target.effectId : 0;
+        public override uint effectId => target
+            ? target.effectId
+            : preset
+                ? (uint)preset.GetInstanceID()
+                : (uint)GetInstanceID();
+
 
         public override UIEffectContext context
         {
@@ -115,11 +120,25 @@ namespace Coffee.UIEffects
             }
         }
 
-        public override RectTransform transitionRoot => useTargetTransform && isTargetInScene
-            ? target.transitionRoot
-            : m_CustomRoot
-                ? m_CustomRoot
-                : transform as RectTransform;
+        public override RectTransform transitionRoot
+        {
+            get
+            {
+                if (preset && useTargetTransform && !m_CustomRoot && graphic && graphic.canvas)
+                {
+                    return graphic.canvas.transform as RectTransform;
+                }
+
+                if (useTargetTransform && isTargetInScene)
+                {
+                    return target.transitionRoot;
+                }
+
+                return m_CustomRoot
+                    ? m_CustomRoot
+                    : transform as RectTransform;
+            }
+        }
 
         private bool isTargetInScene => target && target.gameObject.scene.IsValid();
 
