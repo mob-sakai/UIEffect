@@ -516,7 +516,7 @@ half4 apply_transition_filter(half4 color, const float alpha, const float2 uvLoc
     {
         const float factor = alpha - transition_rate() * (1 + _TransitionWidth) + _TransitionWidth;
         const float softness = max(0.0001, _TransitionWidth * _TransitionSoftness);
-        const half bandLerp = saturate((_TransitionWidth - factor) * 1 / softness);
+        const half bandLerp = saturate((_TransitionWidth - factor) * 2 / softness);
         const half softLerp = saturate(factor * 2 / softness);
         half4 bandColor = apply_transition_color_filter(half4(color.rgb, 1), half4(_TransitionColor.rgb, 1),
                                                         _TransitionColor.a);
@@ -540,7 +540,14 @@ half4 apply_transition_filter(half4 color, const float alpha, const float2 uvLoc
         }
         #endif
 
-        color = lerp(color, bandColor, bandLerp * softLerp);
+        half lerpFactor = bandLerp * softLerp;
+        #if TRANSITION_SHINY
+        {
+            lerpFactor *= lerpFactor;
+        }
+        #endif
+
+        color = lerp(color, bandColor, lerpFactor);
 
         #if TRANSITION_DISSOLVE
         {
