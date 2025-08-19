@@ -143,7 +143,9 @@ namespace Coffee.UIEffects
                 var toRemove = InternalListPool<TextMeshProUGUI>.Rent();
                 foreach (var textMeshProUGUI in s_RegisteredInstances)
                 {
-                    if (textMeshProUGUI && textMeshProUGUI.isActiveAndEnabled)
+                    if (textMeshProUGUI
+                        && textMeshProUGUI.isActiveAndEnabled
+                        && !textMeshProUGUI.isTextObjectScaleStatic)
                     {
                         var id = textMeshProUGUI.GetHashCode();
                         var lossyScaleY = textMeshProUGUI.transform.lossyScale.y;
