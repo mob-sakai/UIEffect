@@ -2,6 +2,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Reflection;
 
 namespace Coffee.UIEffectInternal
 {
@@ -67,7 +68,15 @@ namespace Coffee.UIEffectInternal
             if (s_IsInitializedAfterCanvasRebuild) return;
             s_IsInitializedAfterCanvasRebuild = true;
 
+            // Explicitly set `Canvas.willRenderCanvases += CanvasUpdateRegistry.PerformUpdate`.
             CanvasUpdateRegistry.IsRebuildingLayout();
+#if TMP_ENABLE
+            // Explicitly set `Canvas.willRenderCanvases += TMP_UpdateManager.DoRebuilds`.
+            typeof(TMPro.TMP_UpdateManager)
+                .GetProperty("instance", BindingFlags.NonPublic | BindingFlags.Static)
+                .GetValue(null);
+#endif
+            Canvas.willRenderCanvases -= OnAfterCanvasRebuild;
             Canvas.willRenderCanvases += OnAfterCanvasRebuild;
             Logging.LogMulticast(typeof(Canvas), "willRenderCanvases",
                 message: "InitializeAfterCanvasRebuild");
