@@ -223,84 +223,34 @@ half4 apply_tone_filter(half4 color)
     return color;
 }
 
-half4 apply_color_filter(const half4 inColor, const half4 factor, const float intensity)
+half4 apply_color_filter(int mode, half4 inColor, half4 factor, float intensity, float glow)
 {
-    const float glow = _ColorGlow;
-    const int mode = _ColorFilter;
     half4 color = inColor;
     if (mode == 1) // Color.Multiply
     {
         color.rgb = color.rgb * factor.rgb;
+        color *= factor.a;
     }
     else if (mode == 2) // Color.Additive
     {
-        color.rgb = color.rgb + factor.rgb * color.a;
+        color.rgb = color.rgb + factor.rgb * color.a * factor.a;
     }
     else if (mode == 3) // Color.Subtractive
     {
-        color.rgb = color.rgb - factor.rgb * color.a;
+        color.rgb = color.rgb - factor.rgb * color.a * factor.a;
     }
     else if (mode == 4) // Color.Replace
     {
         color.rgb = factor.rgb * color.a;
+        color *= factor.a;
     }
     else if (mode == 5) // Color.MultiplyLuminance
     {
-        color.rgb = (1 + Luminance(color.rgb)) * factor.rgb / 2 * color.a;
+        color.rgb = (1 + Luminance(color.rgb)) * factor.rgb * factor.a / 2 * color.a;
     }
     else if (mode == 6) // Color.MultiplyAdditive
     {
-        color.rgb = color.rgb * (1 + factor.rgb);
-    }
-    else if (mode == 7) // Color.HsvModifier
-    {
-        const float3 hsv = rgb_to_hsv(color.rgb);
-        color.rgb = hsv_to_rgb(hsv + factor.rgb) * color.a * factor.a;
-        color.a = inColor.a * factor.a;
-    }
-    else if (mode == 8) // Color.Contrast
-    {
-        color.rgb = ((color.rgb - 0.5) * (factor.r + 1) + 0.5 + factor.g * 1.5) * color.a * factor.a;
-        color.a = color.a * factor.a;
-    }
-
-    if (0 < mode)
-    {
-        color = lerp(inColor, color, intensity);
-        color.a *= 1 - glow * intensity;
-    }
-    
-    return color;
-}
-
-half4 apply_transition_color_filter(const half4 inColor, const half4 factor, const float intensity)
-{
-    const float glow = _TransitionColorGlow;
-    const int mode = _TransitionColorFilter;
-    half4 color = inColor;
-    if (mode == 1) // Color.Multiply
-    {
-        color.rgb = color.rgb * factor.rgb;
-    }
-    else if (mode == 2) // Color.Additive
-    {
-        color.rgb = color.rgb + factor.rgb * color.a;
-    }
-    else if (mode == 3) // Color.Subtractive
-    {
-        color.rgb = color.rgb - factor.rgb * color.a;
-    }
-    else if (mode == 4) // Color.Replace
-    {
-        color.rgb = factor.rgb * color.a;
-    }
-    else if (mode == 5) // Color.MultiplyLuminance
-    {
-        color.rgb = (1 + Luminance(color.rgb)) * factor.rgb / 2 * color.a;
-    }
-    else if (mode == 6) // Color.MultiplyAdditive
-    {
-        color.rgb = color.rgb * (1 + factor.rgb);
+        color.rgb = color.rgb * (1 + factor.rgb * factor.a);
     }
     else if (mode == 7) // Color.HsvModifier
     {
@@ -320,106 +270,6 @@ half4 apply_transition_color_filter(const half4 inColor, const half4 factor, con
         color.a *= 1 - glow * intensity;
     }
 
-    return color;
-}
-
-half4 apply_shadow_color_filter(const half4 inColor, const half4 factor, const float intensity)
-{
-    const float glow = _ShadowColorGlow;
-    const int mode = _ShadowColorFilter;
-    half4 color = inColor;
-    if (mode == 1) // Color.Multiply
-    {
-        color.rgb = color.rgb * factor.rgb;
-    }
-    else if (mode == 2) // Color.Additive
-    {
-        color.rgb = color.rgb + factor.rgb * color.a;
-    }
-    else if (mode == 3) // Color.Subtractive
-    {
-        color.rgb = color.rgb - factor.rgb * color.a;
-    }
-    else if (mode == 4) // Color.Replace
-    {
-        color.rgb = factor.rgb * color.a;
-    }
-    else if (mode == 5) // Color.MultiplyLuminance
-    {
-        color.rgb = (1 + Luminance(color.rgb)) * factor.rgb / 2 * color.a;
-    }
-    else if (mode == 6) // Color.MultiplyAdditive
-    {
-        color.rgb = color.rgb * (1 + factor.rgb);
-    }
-    else if (mode == 7) // Color.HsvModifier
-    {
-        const float3 hsv = rgb_to_hsv(color.rgb);
-        color.rgb = hsv_to_rgb(hsv + factor.rgb) * color.a * factor.a;
-        color.a = inColor.a * factor.a;
-    }
-    else if (mode == 8) // Color.Contrast
-    {
-        color.rgb = ((color.rgb - 0.5) * (factor.r + 1) + 0.5 + factor.g * 1.5) * color.a * factor.a;
-        color.a = color.a * factor.a;
-    }
-
-    if (0 < mode)
-    {
-        color = lerp(inColor, color, intensity);
-        color.a *= 1 - glow * intensity;
-    }
-    
-    return color;
-}
-
-half4 apply_edge_color_filter(const half4 inColor, const half4 factor, const float intensity)
-{
-    const float glow = _EdgeColorGlow;
-    const int mode = _EdgeColorFilter;
-    half4 color = inColor;
-    if (mode == 1) // Color.Multiply
-    {
-        color.rgb = color.rgb * factor.rgb;
-    }
-    else if (mode == 2) // Color.Additive
-    {
-        color.rgb = color.rgb + factor.rgb * color.a;
-    }
-    else if (mode == 3) // Color.Subtractive
-    {
-        color.rgb = color.rgb - factor.rgb * color.a;
-    }
-    else if (mode == 4) // Color.Replace
-    {
-        color.rgb = factor.rgb * color.a;
-    }
-    else if (mode == 5) // Color.MultiplyLuminance
-    {
-        color.rgb = (1 + Luminance(color.rgb)) * factor.rgb / 2 * color.a;
-    }
-    else if (mode == 6) // Color.MultiplyAdditive
-    {
-        color.rgb = color.rgb * (1 + factor.rgb);
-    }
-    else if (mode == 7) // Color.HsvModifier
-    {
-        const float3 hsv = rgb_to_hsv(color.rgb);
-        color.rgb = hsv_to_rgb(hsv + factor.rgb) * color.a * factor.a;
-        color.a = inColor.a * factor.a;
-    }
-    else if (mode == 8) // Color.Contrast
-    {
-        color.rgb = ((color.rgb - 0.5) * (factor.r + 1) + 0.5 + factor.g * 1.5) * color.a * factor.a;
-        color.a = color.a * factor.a;
-    }
-
-    if (0 < mode)
-    {
-        color = lerp(inColor, color, intensity);
-        color.a *= 1 - glow * intensity;
-    }
-    
     return color;
 }
 
@@ -505,7 +355,7 @@ half4 apply_transition_filter(half4 color, const float alpha, const float2 uvLoc
     }
     #elif TRANSITION_PATTERN  // Transition.Pattern
     {
-        const half4 patternColor = apply_transition_color_filter(half4(color.rgb, 1), half4(_TransitionColor.rgb * color.a, 1), _TransitionColor.a);
+        const half4 patternColor = apply_color_filter(_TransitionColorFilter, half4(color.rgb, 1), half4(_TransitionColor.rgb * color.a, 1), _TransitionColor.a, _TransitionColorGlow);
         float isPattern = min(inv_lerp(_TransitionRange.x, _TransitionRange.y, uvLocal.x), 0.995) < (_TransitionPatternReverse ? alpha : 1 - alpha);
         isPattern = _TransitionPatternReverse ? isPattern : 1 - isPattern;
         const float patternFactor = _PatternArea == 0 ? 1 : _PatternArea == 1 ? 1 - edgeFactor : edgeFactor;
@@ -518,8 +368,8 @@ half4 apply_transition_filter(half4 color, const float alpha, const float2 uvLoc
         const float softness = max(0.0001, _TransitionWidth * _TransitionSoftness);
         const half bandLerp = saturate((_TransitionWidth - factor) * 2 / softness);
         const half softLerp = saturate(factor * 2 / softness);
-        half4 bandColor = apply_transition_color_filter(half4(color.rgb, 1), half4(_TransitionColor.rgb, 1),
-                                                        _TransitionColor.a);
+        half4 bandColor = apply_color_filter(_TransitionColorFilter, half4(color.rgb, 1),
+                                             half4(_TransitionColor.rgb, 1), _TransitionColor.a, _TransitionColorGlow);
         bandColor *= color.a;
 
         #if TRANSITION_MELT
@@ -605,42 +455,7 @@ half4 apply_gradation_filter(const half4 inColor, const float2 uvGrad)
     }
     #endif
 
-    const int mode = _GradationColorFilter;
-    const float intensity = _GradationIntensity;
-    half4 color = inColor;
-    if (mode == 1) // Color.Multiply
-    {
-        color.rgb = color.rgb * factor.rgb;
-    	color *= factor.a;
-    }
-    else if (mode == 2) // Color.Additive
-    {
-        color.rgb = color.rgb + factor.rgb * color.a * factor.a;
-    }
-    else if (mode == 3) // Color.Subtractive
-    {
-        color.rgb = color.rgb - factor.rgb * color.a * factor.a;
-    }
-    else if (mode == 4) // Color.Replace
-    {
-        color.rgb = factor.rgb * color.a;
-    	color *= factor.a;
-    }
-    else if (mode == 5) // Color.MultiplyLuminance
-    {
-        color.rgb = (1 + Luminance(color.rgb)) * factor.rgb * factor.a / 2 * color.a;
-    }
-    else if (mode == 6) // Color.MultiplyAdditive
-    {
-        color.rgb = color.rgb * (1 + factor.rgb * factor.a);
-    }
-
-    if (0 < mode)
-    {
-        color = lerp(inColor, color, intensity);
-    }
-    
-    return color;
+    return apply_color_filter(_GradationColorFilter, inColor, factor, _GradationIntensity, 0);
 }
 
 half4 apply_detail_filter(half4 color, float2 uvLocal)
@@ -750,20 +565,20 @@ half4 uieffect_internal(float2 uv, float4 uvMask, const float2 uvLocal, const fl
 
     if (0 < isShadow)
     {
-        return apply_shadow_color_filter(color, _ShadowColor, 1);
+        return apply_color_filter(_ShadowColorFilter, color, _ShadowColor, 1, _ShadowColorGlow);
     }
     else
     {
         #if EDGE_PLAIN || EDGE_SHINY
         {
-            color = apply_color_filter(color, _ColorValue, _ColorIntensity);
-            const half4 edgeColor = apply_edge_color_filter(color, _EdgeColor, 1);
+            color = apply_color_filter(_ColorFilter, color, _ColorValue, _ColorIntensity, _ColorGlow);
+            const half4 edgeColor = apply_color_filter(_EdgeColorFilter, color, _EdgeColor, 1, _EdgeColorGlow);
             const float isEdgeShiny = is_edge_shiny(uvLocal);
             return lerp(color, edgeColor, edgeFactor * isEdgeShiny);
         }
         #else
         {
-            return apply_color_filter(color, _ColorValue, _ColorIntensity);
+            return apply_color_filter(_ColorFilter, color, _ColorValue, _ColorIntensity, _ColorGlow);
         }
         #endif
     }
