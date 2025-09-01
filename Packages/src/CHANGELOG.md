@@ -1,3 +1,13 @@
+## [5.9.7](https://github.com/mob-sakai/UIEffect/compare/5.9.6...5.9.7) (2025-09-01)
+
+
+### Bug Fixes
+
+* edges of `TransitionFilter.Shiny` appear sharp ([b077d97](https://github.com/mob-sakai/UIEffect/commit/b077d97ed706acbbdd3b20e765ec0552fa464f9b)), closes [#366](https://github.com/mob-sakai/UIEffect/issues/366)
+* error message sometimes after importing assets ([3207105](https://github.com/mob-sakai/UIEffect/commit/3207105a067801696de789d282c74a93b798ed57)), closes [#365](https://github.com/mob-sakai/UIEffect/issues/365)
+* flickering issue when scale Y changes when used `ShadowMode` with TextMeshPro ([4cca2fb](https://github.com/mob-sakai/UIEffect/commit/4cca2fb5ab34ea454ff8df3def5f1730a71a198c)), closes [#367](https://github.com/mob-sakai/UIEffect/issues/367)
+* skip monitoring TMP objects that can ignore Y-axis scaling ([d1adb33](https://github.com/mob-sakai/UIEffect/commit/d1adb33884971aa7d6c473fcd08cdf25e58cd261))
+
 ## [5.9.6](https://github.com/mob-sakai/UIEffect/compare/5.9.5...5.9.6) (2025-07-17)
 
 
