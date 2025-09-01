@@ -258,6 +258,11 @@ namespace Coffee.UIEffects
 
         public bool willModifyVertex => willModifyMaterial;
 
+        public bool useViewMatrix => m_TransitionFilter != TransitionFilter.None
+                                     || m_GradationMode != GradationMode.None
+                                     || m_DetailFilter != DetailFilter.None
+                                     || m_EdgeMode == EdgeMode.Shiny;
+
         private Texture2D _gradationRampTex;
         private Texture2D _transitionRampTex;
         private bool _isGradientDirty = true;
