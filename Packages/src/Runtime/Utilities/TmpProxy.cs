@@ -131,7 +131,10 @@ namespace Coffee.UIEffects
             // When the text is changed, add it to the changed list
             TMPro_EventManager.TEXT_CHANGED_EVENT.Add(obj =>
             {
-                if (obj is TextMeshProUGUI textMeshProUGUI && textMeshProUGUI.isActiveAndEnabled)
+                if (obj is TextMeshProUGUI textMeshProUGUI
+                    && textMeshProUGUI.isActiveAndEnabled
+                    // fix: `TmpProxy` causes loss of modifications from other `IMeshModifiers` (#371)
+                    && textMeshProUGUI.TryGetComponent<UIEffectBase>(out var _))
                 {
                     s_ChangedInstances.Add(textMeshProUGUI);
                 }
