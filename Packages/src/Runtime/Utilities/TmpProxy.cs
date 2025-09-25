@@ -260,7 +260,16 @@ namespace Coffee.UIEffects
                     var subMeshUI = GetSubMeshUI(subMeshes, meshInfo.material, i - 1);
                     if (!subMeshUI) break;
 
-                    var replica = subMeshUI.GetOrAddComponent<UIEffectReplica>();
+                    // fix: TMP Text sprite submesh lost when changing fontMaterial (#368)
+                    if (!subMeshUI.TryGetComponent<UIEffectReplica>(out var replica))
+                    {
+                        replica = subMeshUI.gameObject.AddComponent<UIEffectReplica>();
+                        textMeshProUGUI.RegisterDirtyMaterialCallback(() =>
+                        {
+                            if (subMeshUI) subMeshUI.SetMaterialDirty();
+                        });
+                    }
+
                     if (effect is UIEffect pEffect && pEffect.isActiveAndEnabled)
                     {
                         replica.target = pEffect;
