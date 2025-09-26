@@ -1,3 +1,18 @@
+# [5.10.0](https://github.com/mob-sakai/UIEffect/compare/5.9.7...5.10.0) (2025-09-26)
+
+
+### Bug Fixes
+
+* `TmpProxy` causes loss of modifications from other `IMeshModifiers` ([c4202b4](https://github.com/mob-sakai/UIEffect/commit/c4202b45d28fa84567a5671baaef8fa3e3df85dc)), closes [#371](https://github.com/mob-sakai/UIEffect/issues/371)
+* display may disappear when using TMP SubMesh (multi-language or sprites, etc.) ([b4adb32](https://github.com/mob-sakai/UIEffect/commit/b4adb325120eeed64af1d9cb2468a1e1e8e10812)), closes [#372](https://github.com/mob-sakai/UIEffect/issues/372)
+* TMP Text sprite submesh lost when changing fontMaterial ([59874dd](https://github.com/mob-sakai/UIEffect/commit/59874ddffe356f927dc8ff9b157c54043e149522)), closes [#368](https://github.com/mob-sakai/UIEffect/issues/368)
+
+
+### Features
+
+* [improve performance] merged apply_color function and reduced shader compilation size ([ce69258](https://github.com/mob-sakai/UIEffect/commit/ce692580a33c0c433fd7fadb64a3dcda0121b2ff))
+* [improve performance] various view matrices are only updated when necessary ([6c808aa](https://github.com/mob-sakai/UIEffect/commit/6c808aa3417450fd1ce0fc6fbfe0adffdff9a79a))
+
 ## [5.9.7](https://github.com/mob-sakai/UIEffect/compare/5.9.6...5.9.7) (2025-09-01)
 
 
