@@ -232,8 +232,21 @@ namespace Coffee.UIEffects
                 var meshInfo = textMeshProUGUI.textInfo.meshInfo[i];
                 if (meshInfo.vertexCount == 0)
                 {
+                    // Clear mesh if no vertices.
                     s_Mesh.Clear(false);
-                    textMeshProUGUI.canvasRenderer.SetMesh(s_Mesh);
+                    if (i == 0)
+                    {
+                        textMeshProUGUI.canvasRenderer.SetMesh(s_Mesh);
+                    }
+                    else
+                    {
+                        var subMeshUI = GetSubMeshUI(subMeshes, meshInfo.material, i - 1);
+                        if (subMeshUI)
+                        {
+                            subMeshUI.canvasRenderer.SetMesh(s_Mesh);
+                        }
+                    }
+
                     continue;
                 }
 
