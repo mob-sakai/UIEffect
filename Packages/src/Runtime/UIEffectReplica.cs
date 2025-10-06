@@ -124,9 +124,9 @@ namespace Coffee.UIEffects
         {
             get
             {
-                if (preset && useTargetTransform && !m_CustomRoot && graphic && graphic.canvas)
+                if (preset && useTargetTransform && !m_CustomRoot && graphic && canvas)
                 {
-                    return graphic.canvas.transform as RectTransform;
+                    return canvas.transform as RectTransform;
                 }
 
                 if (useTargetTransform && isTargetInScene)

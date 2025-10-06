@@ -451,7 +451,7 @@ namespace Coffee.UIEffects
         {
             if (!material) return;
 
-            Profiler.BeginSample("(UIE)[UIEffect] GetModifiedMaterial");
+            Profiler.BeginSample("(UIE)[UIEffect] ApplyToMaterial");
 
             material.SetInt(s_SrcBlend, (int)m_SrcBlendMode);
             material.SetInt(s_DstBlend, (int)m_DstBlendMode);
@@ -706,7 +706,8 @@ namespace Coffee.UIEffects
             }
         }
 
-        public void ModifyMesh(Graphic graphic, RectTransform transitionRoot, VertexHelper vh, bool canModifyShape)
+        public void ModifyMesh(Graphic graphic, Canvas canvas, RectTransform transitionRoot, VertexHelper vh,
+            bool canModifyShape)
         {
             // Apply flip (without effect).
             ApplyFlipWithoutEffect(vh, m_Flip);
@@ -716,7 +717,7 @@ namespace Coffee.UIEffects
 
             var effectProxy = GraphicProxy.Find(graphic);
             var isText = effectProxy.IsText(graphic);
-            effectProxy.OnPreModifyMesh(graphic);
+            effectProxy.OnPreModifyMesh(graphic, canvas);
 
             var verts = s_WorkingVertices;
             var expandSize = effectProxy.ModifyExpandSize(graphic, GetExpandSize(canModifyShape));

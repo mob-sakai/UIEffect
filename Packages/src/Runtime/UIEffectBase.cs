@@ -32,12 +32,31 @@ namespace Coffee.UIEffects
         private Action _onAfterCanvasRebuild;
         private bool _canModifyMesh;
         private Matrix4x4 _prevTransformHash;
+        private Canvas _canvas;
+        private bool _canvasCached = false;
 
         public Material effectMaterial => _material;
         public Graphic graphic => _graphic ? _graphic : _graphic = GetComponent<Graphic>();
         public virtual uint effectId => (uint)GetInstanceID();
         public virtual float actualSamplingScale => 1;
         public virtual bool canModifyShape => true;
+
+        protected Canvas canvas
+        {
+            get
+            {
+                if (_canvasCached) return _canvas;
+
+                _canvasCached = true;
+                _canvas = GetComponentInParent<Canvas>();
+                if (!_canvas || !_canvas.isActiveAndEnabled)
+                {
+                    _canvas = null;
+                }
+
+                return _canvas;
+            }
+        }
 
         public virtual UIEffectContext context
         {
@@ -104,7 +123,7 @@ namespace Coffee.UIEffects
             s_ContextPool.Return(ref _context);
         }
 
-        protected virtual void OnBeforeCanvasRebuild()
+        private void OnBeforeCanvasRebuild()
         {
             // If the mesh is not modified in the previous frame, try to modify it if possible.
             if (!_canModifyMesh && CanModifyMesh())
@@ -114,12 +133,18 @@ namespace Coffee.UIEffects
             }
         }
 
-        protected virtual void OnAfterCanvasRebuild()
+        private void OnAfterCanvasRebuild()
         {
-            if (!_material || !graphic || !graphic.canvas || context == null) return;
+            if (!_material || !graphic || !canvas || context == null) return;
             if (!context.useViewMatrix) return;
 
-            context.UpdateViewMatrix(GetCurrentMaterial(), transitionRoot, graphic.canvas.rootCanvas);
+            context.UpdateViewMatrix(GetCurrentMaterial(), transitionRoot, canvas.rootCanvas);
+        }
+
+        protected override void OnCanvasHierarchyChanged()
+        {
+            _canvasCached = false;
+            _canvas = null;
         }
 
         public void ModifyMesh(Mesh mesh)
@@ -133,13 +158,14 @@ namespace Coffee.UIEffects
             _canModifyMesh = CanModifyMesh();
             if (_canModifyMesh)
             {
-                context.ModifyMesh(graphic, transitionRoot, vh, canModifyShape);
+                context.ModifyMesh(graphic, canvas, transitionRoot, vh, canModifyShape);
             }
         }
 
         private bool CanModifyMesh()
         {
             if (!graphic || !graphic.isActiveAndEnabled) return false;
+            if (!isActiveAndEnabled) return false;
 
             // The transitionRoot is same as the transform => true.
             var root = transitionRoot;

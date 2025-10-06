@@ -6,6 +6,7 @@ using UnityEngine.Profiling;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditorInternal;
@@ -122,10 +123,15 @@ namespace Coffee.UIEffectInternal
 
 #if UNITY_EDITOR
         private readonly HashSet<StringPair> _logVariants = new HashSet<StringPair>();
+        private readonly StringBuilder _sb = new StringBuilder(1024);
+
+        private readonly Dictionary<Hash128, (ShaderVariantCollection.ShaderVariant, StringPair)> _cachedVariants =
+            new Dictionary<Hash128, (ShaderVariantCollection.ShaderVariant, StringPair)>();
 
         public void ClearCache()
         {
             _cachedOptionalShaders.Clear();
+            _cachedVariants.Clear();
         }
 
         /// <summary>
@@ -213,21 +219,10 @@ namespace Coffee.UIEffectInternal
             if (!material || !material.shader || !m_Asset) return;
 
             Profiler.BeginSample("(EDITOR/COF)[ShaderVariantRegistry] RegisterVariant");
-            var shaderName = material.shader.name;
-            var validKeywords = material.shaderKeywords
-                .Where(x => !Regex.IsMatch(x, "(_EDITOR|EDITOR_)"))
-                .ToArray();
-            var keywords = string.Join(" ", validKeywords);
-            var variant = new ShaderVariantCollection.ShaderVariant
-            {
-                shader = material.shader,
-                keywords = validKeywords
-            };
-
-            // Already registered.
-            var pair = new StringPair() { key = shaderName, value = keywords };
+            var (variant, pair) = GetVariant(material);
             if (m_Asset.Contains(variant))
             {
+                // Already registered.
                 m_UnregisteredVariants.Remove(pair);
                 Profiler.EndSample();
                 return;
@@ -243,7 +238,8 @@ namespace Coffee.UIEffectInternal
 
                 if (_logVariants.Add(pair))
                 {
-                    keywords = string.IsNullOrEmpty(keywords) ? "no keywords" : keywords;
+                    var shaderName = pair.key;
+                    var keywords = string.IsNullOrEmpty(pair.value) ? "no keywords" : pair.value;
                     Debug.LogError($"Shader variant '{shaderName} <{keywords}>' is not registered.\n" +
                                    $"Register it in 'ProjectSettings > {path}' to use it in player.", m_Asset);
                 }
@@ -255,6 +251,44 @@ namespace Coffee.UIEffectInternal
             m_Asset.Add(variant);
             m_UnregisteredVariants.Remove(pair);
             Profiler.EndSample();
+        }
+
+        private (ShaderVariantCollection.ShaderVariant, StringPair) GetVariant(Material material)
+        {
+            Profiler.BeginSample("(EDITOR/COF)[ShaderVariantRegistry] GetVariant");
+            var shader = material.shader;
+            _sb.Length = 0;
+            foreach (var keyword in material.shaderKeywords)
+            {
+                // Ignore editor keyword.
+                if (keyword.Contains("_EDITOR") || keyword.Contains("EDITOR_")) continue;
+
+                _sb.Append(keyword);
+                _sb.Append(' ');
+            }
+
+            if (0 < _sb.Length)
+            {
+                _sb.Length--; // Remove last space.
+            }
+
+            var hash = new Hash128((uint)shader.GetInstanceID(), (uint)_sb.GetHashCode(), 0, 0);
+            if (_cachedVariants.TryGetValue(hash, out var result))
+            {
+                Profiler.EndSample();
+                return result;
+            }
+
+            var pair = new StringPair() { key = shader.name, value = _sb.ToString() };
+            var variant = new ShaderVariantCollection.ShaderVariant
+            {
+                shader = shader,
+                keywords = pair.value.Split(' ')
+            };
+
+            _cachedVariants.Add(hash, (variant, pair));
+            Profiler.EndSample();
+            return (variant, pair);
         }
 #endif
     }

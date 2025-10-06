@@ -55,13 +55,12 @@ namespace Coffee.UIEffects
         /// <summary>
         /// Called before modifying the mesh.
         /// </summary>
-        public virtual void OnPreModifyMesh(Graphic graphic)
+        public virtual void OnPreModifyMesh(Graphic graphic, Canvas canvas)
         {
             UIVertexUtil.onLerpVertex = s_OnLerpVertex;
             ShadowUtil.onMarkAsShadow = s_OnMarkAsShadow;
             UIEffectContext.onModifyVertex = s_OnModifyVertex;
 
-            var canvas = graphic.canvas;
             if (canvas)
             {
                 canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord1;
