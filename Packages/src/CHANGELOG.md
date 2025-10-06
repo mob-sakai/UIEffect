@@ -1,3 +1,10 @@
+## [5.10.1](https://github.com/mob-sakai/UIEffect/compare/5.10.0...5.10.1) (2025-10-06)
+
+
+### Bug Fixes
+
+* [improve performance] `UpdateViewMatrix` is called even though (direct-)parent canvas is disabled ([533d7b8](https://github.com/mob-sakai/UIEffect/commit/533d7b8c0a33871b1849fbda862d4fa1899822f4)), closes [#373](https://github.com/mob-sakai/UIEffect/issues/373)
+
 # [5.10.0](https://github.com/mob-sakai/UIEffect/compare/5.9.7...5.10.0) (2025-09-26)
 
 
