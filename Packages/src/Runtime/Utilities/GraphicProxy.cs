@@ -15,8 +15,10 @@ namespace Coffee.UIEffects
         public static void Register(GraphicProxy proxy)
         {
             // Register only once.
-            foreach (var p in s_Proxies)
+            var count = s_Proxies.Count;
+            for (var index = 0; index < count; index++)
             {
+                var p = s_Proxies[index];
                 if (p.GetType() == proxy.GetType()) return;
             }
 
@@ -27,7 +29,8 @@ namespace Coffee.UIEffects
         {
             if (!graphic) return null;
 
-            for (var i = s_Proxies.Count - 1; i >= 0; i--)
+            var count = s_Proxies.Count;
+            for (var i = count - 1; i >= 0; i--)
             {
                 var p = s_Proxies[i];
                 if (p.IsValid(graphic)) return p;

@@ -27,9 +27,7 @@ namespace Coffee.UIEffectInternal
 
             public bool Equals(StringPair other)
             {
-                if (other == null) return false;
-                if (ReferenceEquals(this, other)) return true;
-                return key == other.key && value == other.value;
+                return other != null && key == other.key && value == other.value;
             }
 
             public override bool Equals(object obj)
@@ -89,15 +87,15 @@ namespace Coffee.UIEffectInternal
 
             // Find optional shader.
             Shader optionalShader;
-            foreach (var pair in m_OptionalShaders)
+            var count = m_OptionalShaders.Count;
+            for (var index = 0; index < count; index++)
             {
+                var pair = m_OptionalShaders[index];
                 if (pair.key != shaderName) continue;
                 optionalShader = Shader.Find(pair.value);
-                if (optionalShader)
-                {
-                    _cachedOptionalShaders[id] = pair.value;
-                    return optionalShader;
-                }
+                if (!optionalShader) continue;
+                _cachedOptionalShaders[id] = pair.value;
+                return optionalShader;
             }
 
             // Find optional shader by format.
