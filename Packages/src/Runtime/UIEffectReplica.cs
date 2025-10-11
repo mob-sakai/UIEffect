@@ -165,7 +165,7 @@ namespace Coffee.UIEffects
             base.OnDestroy();
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         protected override void OnValidate()
         {
             RefreshTarget(target);
@@ -192,7 +192,7 @@ namespace Coffee.UIEffects
                 context?.SetEnablePreview(selection.Contains(gameObject), effectMaterial);
             }
         }
-        #endif
+#endif
 
         private void RefreshTarget(UIEffect newTarget)
         {
