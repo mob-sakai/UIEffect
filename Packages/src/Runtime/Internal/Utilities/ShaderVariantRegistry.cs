@@ -17,7 +17,7 @@ using Object = UnityEngine.Object;
 namespace Coffee.UIEffectInternal
 {
     [Serializable]
-    public class ShaderVariantRegistry
+    public sealed class ShaderVariantRegistry
     {
         [Serializable]
         internal class StringPair : IEquatable<StringPair>

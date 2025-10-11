@@ -10,7 +10,7 @@ using Object = UnityEngine.Object;
 
 namespace Coffee.UIEffects
 {
-    internal class TmpProxy : GraphicProxy
+    internal sealed class TmpProxy : GraphicProxy
     {
         /// <summary>
         /// Check if the graphic is valid for this proxy.

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Coffee.UIEffects
 {
-    internal class ImageProxy : GraphicProxy
+    internal sealed class ImageProxy : GraphicProxy
     {
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
