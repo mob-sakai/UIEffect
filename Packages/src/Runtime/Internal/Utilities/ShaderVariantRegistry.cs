@@ -17,7 +17,7 @@ using Object = UnityEngine.Object;
 namespace Coffee.UIEffectInternal
 {
     [Serializable]
-    public class ShaderVariantRegistry
+    public sealed class ShaderVariantRegistry
     {
         [Serializable]
         internal class StringPair : IEquatable<StringPair>
@@ -27,9 +27,7 @@ namespace Coffee.UIEffectInternal
 
             public bool Equals(StringPair other)
             {
-                if (other == null) return false;
-                if (ReferenceEquals(this, other)) return true;
-                return key == other.key && value == other.value;
+                return other != null && key == other.key && value == other.value;
             }
 
             public override bool Equals(object obj)
@@ -89,15 +87,15 @@ namespace Coffee.UIEffectInternal
 
             // Find optional shader.
             Shader optionalShader;
-            foreach (var pair in m_OptionalShaders)
+            var count = m_OptionalShaders.Count;
+            for (var i = 0; i < count; i++)
             {
+                var pair = m_OptionalShaders[i];
                 if (pair.key != shaderName) continue;
                 optionalShader = Shader.Find(pair.value);
-                if (optionalShader)
-                {
-                    _cachedOptionalShaders[id] = pair.value;
-                    return optionalShader;
-                }
+                if (!optionalShader) continue;
+                _cachedOptionalShaders[id] = pair.value;
+                return optionalShader;
             }
 
             // Find optional shader by format.

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Coffee.UIEffects
 {
-    public class UIEffectContext
+    public sealed class UIEffectContext
     {
         private static readonly UIEffectContext s_DefaultContext = new UIEffectContext();
         private static readonly List<UIVertex> s_WorkingVertices = new List<UIVertex>(1024 * 8);
@@ -602,16 +602,17 @@ namespace Coffee.UIEffects
                 scale.y = 0 != (m_Flip & Flip.Vertical) ? -scale.y : scale.y;
             }
 
-            var pivot = new Vector2(0.5f, 0.5f);
-            var offset = (transitionRoot.pivot - pivot) * size;
+            var pivot = new Vector3(0.5f, 0.5f);
+            var offset = (transitionRoot.pivot - (Vector2)pivot) * size;
             var w2LMat = Matrix4x4.Translate(offset) * transitionRoot.worldToLocalMatrix;
 
             var rootRotation = Quaternion.Euler(0, 0, m_TransitionRotation);
             var rootScale = 1f / GetMultiplier(m_TransitionRotation);
             material.SetMatrix(s_RootViewMatrix, Matrix4x4.TRS(pivot, rootRotation, scale * rootScale) * w2LMat);
 
-            var gradRotation = Quaternion.Euler(0, 0, GetGradationRotation());
-            var gradScale = 1f / GetMultiplier(GetGradationRotation());
+            var rotation = GetGradationRotation();
+            var gradRotation = Quaternion.Euler(0, 0, rotation);
+            var gradScale = 1f / GetMultiplier(rotation);
             material.SetMatrix(s_GradViewMatrix, Matrix4x4.TRS(pivot, gradRotation, scale * gradScale) * w2LMat);
 
             if (m_ShadowMode == ShadowMode.Mirror)
@@ -620,26 +621,25 @@ namespace Coffee.UIEffects
                 var mirrorOffset = new Vector3(0, size.y / 2 * (mirrorInv + 1) - m_ShadowDistance.y * mirrorInv, 0);
                 var mirrorScale = new Vector3(1, mirrorInv, 1);
                 var udScale = new Vector3(scale.x, -scale.y, scale.z);
-                material.SetMatrix(s_MirrorRootViewMatrix,
-                    Matrix4x4.TRS(pivot, rootRotation, udScale * rootScale)
-                    * Matrix4x4.TRS(mirrorOffset, Quaternion.identity, mirrorScale) * w2LMat);
-                material.SetMatrix(s_MirrorGradViewMatrix,
-                    Matrix4x4.TRS(pivot, gradRotation, udScale * gradScale)
-                    * Matrix4x4.TRS(mirrorOffset, Quaternion.identity, mirrorScale) * w2LMat);
+                var mirrorTranslation = Matrix4x4.TRS(mirrorOffset, Quaternion.identity, mirrorScale) * w2LMat;
+                material.SetMatrix(
+                    s_MirrorRootViewMatrix,
+                    Matrix4x4.TRS(pivot, rootRotation, udScale * rootScale) * mirrorTranslation
+                );
+                material.SetMatrix(
+                    s_MirrorGradViewMatrix,
+                    Matrix4x4.TRS(pivot, gradRotation, udScale * gradScale) * mirrorTranslation
+                );
             }
 
-            if (canvas.renderMode == RenderMode.WorldSpace)
-            {
-                material.SetMatrix(s_CanvasToWorldMatrix, Matrix4x4.identity);
-            }
-            else if (canvas.renderMode == RenderMode.ScreenSpaceOverlay || !canvas.worldCamera)
-            {
-                material.SetMatrix(s_CanvasToWorldMatrix, canvas.transform.localToWorldMatrix);
-            }
-            else
-            {
-                material.SetMatrix(s_CanvasToWorldMatrix, Matrix4x4.identity);
-            }
+            var useIdentity =
+                canvas.renderMode == RenderMode.WorldSpace ||
+                (canvas.renderMode != RenderMode.ScreenSpaceOverlay && canvas.worldCamera);
+
+            material.SetMatrix(
+                s_CanvasToWorldMatrix,
+                useIdentity ? Matrix4x4.identity : canvas.transform.localToWorldMatrix
+            );
         }
 
         private Vector4 GetGradationScaleAndOffset()
@@ -691,18 +691,22 @@ namespace Coffee.UIEffects
             return Mathf.Max(Mathf.Abs(cos - sin), Mathf.Abs(cos + sin));
         }
 
+        #if UNITY_2021_2_OR_NEWER
+        private static void SetKeyword(Material material, Span<string> keywords, int index)
+        #else
         private static void SetKeyword(Material material, string[] keywords, int index)
+        #endif
         {
-            for (var i = 0; i < keywords.Length; i++)
+            var length = keywords.Length;
+            if (index < length && !string.IsNullOrEmpty(keywords[index]))
             {
-                if (i != index)
-                {
-                    material.DisableKeyword(keywords[i]);
-                }
-                else if (!string.IsNullOrEmpty(keywords[i]))
-                {
-                    material.EnableKeyword(keywords[i]);
-                }
+                material.EnableKeyword(keywords[index]);
+            }
+
+            for (var i = 0; i < length; i++)
+            {
+                if (i == index) continue;
+                material.DisableKeyword(keywords[i]);
             }
         }
 
