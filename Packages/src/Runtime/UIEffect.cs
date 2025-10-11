@@ -10,7 +10,7 @@ namespace Coffee.UIEffects
     [Icon("Packages/com.coffee.ui-effect/Editor/UIEffectIconIcon.png")]
     [ExecuteAlways]
     [DisallowMultipleComponent]
-    public class UIEffect : UIEffectBase
+    public sealed class UIEffect : UIEffectBase
     {
         [SerializeField]
         protected ToneFilter m_ToneFilter = ToneFilter.None;
@@ -1494,7 +1494,8 @@ namespace Coffee.UIEffects
         public override void SetVerticesDirty()
         {
             base.SetVerticesDirty();
-            for (var i = 0; i < replicas.Count; i++)
+            var count = replicas.Count;
+            for (var i = 0; i < count; i++)
             {
                 if (!replicas[i]) continue;
                 replicas[i].SetVerticesDirty();
@@ -1504,7 +1505,8 @@ namespace Coffee.UIEffects
         public override void SetMaterialDirty()
         {
             base.SetMaterialDirty();
-            for (var i = 0; i < replicas.Count; i++)
+            var count = replicas.Count;
+            for (var i = 0; i < count; i++)
             {
                 if (!replicas[i]) continue;
                 replicas[i].SetMaterialDirty();
@@ -1579,7 +1581,8 @@ namespace Coffee.UIEffects
         {
             base.ApplyContextToMaterial(material);
 
-            for (var i = 0; i < replicas.Count; i++)
+            var count = replicas.Count;
+            for (var i = 0; i < count; i++)
             {
                 if (!replicas[i]) continue;
                 replicas[i].ApplyContextToMaterial(material);

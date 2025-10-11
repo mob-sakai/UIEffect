@@ -6,7 +6,7 @@ namespace Coffee.UIEffectInternal
     /// <summary>
     /// Object pool.
     /// </summary>
-    internal class InternalObjectPool<T> where T : class
+    internal sealed class InternalObjectPool<T> where T : class
     {
 #if UNITY_2021_1_OR_NEWER
         private readonly Predicate<T> _onValid; // Delegate for checking if instances are valid

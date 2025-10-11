@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Coffee.UIEffects
 {
     [Icon("Packages/com.coffee.ui-effect/Editor/UIEffectIconIcon.png")]
-    public class UIEffectReplica : UIEffectBase, ISerializationCallbackReceiver
+    public sealed class UIEffectReplica : UIEffectBase, ISerializationCallbackReceiver
     {
         [SerializeField] private UIEffect m_Target;
         [SerializeField] private UIEffectPreset m_Preset;
@@ -124,19 +124,20 @@ namespace Coffee.UIEffects
         {
             get
             {
-                if (preset && useTargetTransform && !m_CustomRoot && graphic && canvas)
+                if (useTargetTransform)
                 {
-                    return canvas.transform as RectTransform;
+                    if (preset && !m_CustomRoot && graphic && canvas)
+                    {
+                        return canvas.transform as RectTransform;
+                    }
+
+                    if (isTargetInScene)
+                    {
+                        return target.transitionRoot;
+                    }
                 }
 
-                if (useTargetTransform && isTargetInScene)
-                {
-                    return target.transitionRoot;
-                }
-
-                return m_CustomRoot
-                    ? m_CustomRoot
-                    : transform as RectTransform;
+                return m_CustomRoot ? m_CustomRoot : transform as RectTransform;
             }
         }
 
@@ -186,9 +187,9 @@ namespace Coffee.UIEffects
                 target.SetEnablePreviewIfSelected(selection);
             }
             // Following the preset/preset-target.
-            else if (context != null)
+            else
             {
-                context.SetEnablePreview(selection.Contains(gameObject), effectMaterial);
+                context?.SetEnablePreview(selection.Contains(gameObject), effectMaterial);
             }
         }
 #endif
