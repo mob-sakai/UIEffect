@@ -16,9 +16,9 @@ namespace Coffee.UIEffects
         {
             // Register only once.
             var count = s_Proxies.Count;
-            for (var index = 0; index < count; index++)
+            for (var i = 0; i < count; i++)
             {
-                var p = s_Proxies[index];
+                var p = s_Proxies[i];
                 if (p.GetType() == proxy.GetType()) return;
             }
 

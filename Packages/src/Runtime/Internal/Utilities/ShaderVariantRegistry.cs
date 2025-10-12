@@ -88,9 +88,9 @@ namespace Coffee.UIEffectInternal
             // Find optional shader.
             Shader optionalShader;
             var count = m_OptionalShaders.Count;
-            for (var index = 0; index < count; index++)
+            for (var i = 0; i < count; i++)
             {
-                var pair = m_OptionalShaders[index];
+                var pair = m_OptionalShaders[i];
                 if (pair.key != shaderName) continue;
                 optionalShader = Shader.Find(pair.value);
                 if (!optionalShader) continue;

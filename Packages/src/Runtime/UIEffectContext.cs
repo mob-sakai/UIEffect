@@ -691,10 +691,14 @@ namespace Coffee.UIEffects
             return Mathf.Max(Mathf.Abs(cos - sin), Mathf.Abs(cos + sin));
         }
 
+        #if UNITY_2021_2_OR_NEWER
         private static void SetKeyword(Material material, Span<string> keywords, int index)
+        #else
+        private static void SetKeyword(Material material, string[] keywords, int index)
+        #endif
         {
             var length = keywords.Length;
-            if (index < keywords.Length && !string.IsNullOrEmpty(keywords[index]))
+            if (index < length && !string.IsNullOrEmpty(keywords[index]))
             {
                 material.EnableKeyword(keywords[index]);
             }
