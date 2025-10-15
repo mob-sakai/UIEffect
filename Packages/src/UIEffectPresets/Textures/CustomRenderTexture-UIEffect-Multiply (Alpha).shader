@@ -5,7 +5,7 @@ Shader "CustomRenderTexture/UIEffect/Multiply (Alpha)"
         [Header(Main)]
         _MainTex ("Main Texture", 2D) = "white" {}
         _MainTex_Speed ("Main Texture Speed", Vector) = (0,0,0,0)
-        
+
         [Header(Detail)]
         _DetailTex ("Detail Texture", 2D) = "white" {}
         _DetailTex_Speed ("Detail Texture Speed", Vector) = (0,0,0,0)

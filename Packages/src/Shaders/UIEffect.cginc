@@ -608,7 +608,7 @@ half4 uieffect(half4 origin, float2 uv, float4 uvMask, float4 wpos)
         uvGrad = saturate(mul(_MirrorGradViewMatrix, wpos)).xy;
         uvMask.x += 4;
     }
-    
+
     const float isShadow = uvMask.x < 0 ? 1 : 0;
     uvMask.x += isShadow * 2;
 
