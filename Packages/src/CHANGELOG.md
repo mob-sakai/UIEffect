@@ -1,3 +1,10 @@
+## [5.10.2](https://github.com/mob-sakai/UIEffect/compare/5.10.1...5.10.2) (2025-10-16)
+
+
+### Bug Fixes
+
+* [improve performance] code optimization ([e6fb78a](https://github.com/mob-sakai/UIEffect/commit/e6fb78a0f67ed6f70be08259f674ab2f83364bd7))
+
 ## [5.10.1](https://github.com/mob-sakai/UIEffect/compare/5.10.0...5.10.1) (2025-10-06)
 
 
