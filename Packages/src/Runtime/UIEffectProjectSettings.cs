@@ -191,6 +191,15 @@ namespace Coffee.UIEffects
                         }
                     }
                 }
+
+                // Refresh all UI Graphics in the opened scenes. (#376)
+                EditorApplication.delayCall += () =>
+                {
+                    foreach (var g in Misc.FindObjectsOfType<UnityEngine.UI.Graphic>())
+                    {
+                        g.SetAllDirty();
+                    }
+                };
             }
         }
 
