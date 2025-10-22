@@ -1,3 +1,10 @@
+## [5.10.3](https://github.com/mob-sakai/UIEffect/compare/5.10.2...5.10.3) (2025-10-22)
+
+
+### Bug Fixes
+
+* displays as black rectangle when opening editor ([4a8d341](https://github.com/mob-sakai/UIEffect/commit/4a8d341625f73d70c512f7e6f0b864be1adbf459)), closes [#376](https://github.com/mob-sakai/UIEffect/issues/376)
+
 ## [5.10.2](https://github.com/mob-sakai/UIEffect/compare/5.10.1...5.10.2) (2025-10-16)
 
 
