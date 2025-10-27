@@ -1,3 +1,10 @@
+## [5.10.4](https://github.com/mob-sakai/UIEffect/compare/5.10.3...5.10.4) (2025-10-27)
+
+
+### Bug Fixes
+
+* remove `sealed` from `UIEffect` and `UIEffectReplica` ([2fd87e9](https://github.com/mob-sakai/UIEffect/commit/2fd87e909af65bf88a9c39cd157dfb06a56b3af0)), closes [#379](https://github.com/mob-sakai/UIEffect/issues/379)
+
 ## [5.10.3](https://github.com/mob-sakai/UIEffect/compare/5.10.2...5.10.3) (2025-10-22)
 
 
