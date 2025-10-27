@@ -10,7 +10,7 @@ namespace Coffee.UIEffects
     [Icon("Packages/com.coffee.ui-effect/Editor/UIEffectIconIcon.png")]
     [ExecuteAlways]
     [DisallowMultipleComponent]
-    public sealed class UIEffect : UIEffectBase
+    public class UIEffect : UIEffectBase
     {
         [SerializeField]
         protected ToneFilter m_ToneFilter = ToneFilter.None;
