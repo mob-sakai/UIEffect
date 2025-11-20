@@ -1,3 +1,10 @@
+## [5.10.5](https://github.com/mob-sakai/UIEffect/compare/5.10.4...5.10.5) (2025-11-20)
+
+
+### Bug Fixes
+
+* graphic disappears when changing filters from code ([8776057](https://github.com/mob-sakai/UIEffect/commit/87760570ec7f4e2ca395cfaa0d2ab5d28c9cf9f3)), closes [#382](https://github.com/mob-sakai/UIEffect/issues/382)
+
 ## [5.10.4](https://github.com/mob-sakai/UIEffect/compare/5.10.3...5.10.4) (2025-10-27)
 
 
