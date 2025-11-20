@@ -282,6 +282,7 @@ namespace Coffee.UIEffects
             {
                 if (m_ToneFilter == value) return;
                 context.m_ToneFilter = m_ToneFilter = value;
+                SetVerticesDirty();
                 SetMaterialDirty();
             }
         }
@@ -311,6 +312,7 @@ namespace Coffee.UIEffects
             {
                 if (m_ColorFilter == value) return;
                 context.m_ColorFilter = m_ColorFilter = value;
+                SetVerticesDirty();
                 SetMaterialDirty();
             }
         }
@@ -794,6 +796,7 @@ namespace Coffee.UIEffects
                 (m_SrcBlendMode, m_DstBlendMode) = (m_BlendType, m_SrcBlendMode, m_DstBlendMode).Convert();
                 context.m_SrcBlendMode = m_SrcBlendMode;
                 context.m_DstBlendMode = m_DstBlendMode;
+                SetVerticesDirty();
                 SetMaterialDirty();
             }
         }
@@ -810,6 +813,7 @@ namespace Coffee.UIEffects
                 if (m_SrcBlendMode == value) return;
                 context.m_SrcBlendMode = m_SrcBlendMode = value;
                 m_BlendType = (m_SrcBlendMode, m_DstBlendMode).Convert();
+                SetVerticesDirty();
                 SetMaterialDirty();
             }
         }
@@ -826,6 +830,7 @@ namespace Coffee.UIEffects
                 if (m_DstBlendMode == value) return;
                 context.m_DstBlendMode = m_DstBlendMode = value;
                 m_BlendType = (m_SrcBlendMode, m_DstBlendMode).Convert();
+                SetVerticesDirty();
                 SetMaterialDirty();
             }
         }
@@ -837,6 +842,7 @@ namespace Coffee.UIEffects
             {
                 if (m_ShadowMode == value) return;
                 context.m_ShadowMode = m_ShadowMode = value;
+                SetVerticesDirty();
                 SetVerticesDirty();
             }
         }
@@ -1013,6 +1019,7 @@ namespace Coffee.UIEffects
             {
                 if (m_EdgeMode == value) return;
                 context.m_EdgeMode = m_EdgeMode = value;
+                SetVerticesDirty();
                 SetMaterialDirty();
             }
         }
@@ -1182,6 +1189,7 @@ namespace Coffee.UIEffects
             {
                 if (m_GradationMode == value) return;
                 context.m_GradationMode = m_GradationMode = value;
+                SetVerticesDirty();
                 SetMaterialDirty();
             }
         }
@@ -1321,6 +1329,7 @@ namespace Coffee.UIEffects
             {
                 if (m_DetailFilter == value) return;
                 context.m_DetailFilter = m_DetailFilter = value;
+                SetVerticesDirty();
                 SetMaterialDirty();
             }
         }
