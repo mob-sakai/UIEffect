@@ -1,6 +1,11 @@
 using System;
 using UnityEditor.Rendering.BuiltIn.ShaderGraph;
 using UnityEditor.ShaderGraph;
+#if UNITY_6000_4_OR_NEWER
+using GUID = UnityEngine.GUID;
+#else
+using GUID = UnityEditor.GUID;
+#endif
 
 namespace UnityEditor.Rendering.Universal.ShaderGraph
 {

@@ -5,7 +5,7 @@
     "com.coffee.nano-monitor": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/NanoMonitor",
     "com.coffee.symbolic-linker": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/SymbolicLinker",
     "com.coffee.ui-effect": "file:../../Packages/src",
-    "com.unity.ide.rider": "3.0.35",
+    "com.unity.ide.rider": "3.0.38",
     "com.unity.render-pipelines.universal": "17.0.4",
     "com.unity.test-framework": "1.5.1",
     "com.unity.timeline": "1.8.8",
