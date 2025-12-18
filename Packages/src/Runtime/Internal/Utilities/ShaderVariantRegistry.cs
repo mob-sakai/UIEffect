@@ -270,7 +270,7 @@ namespace Coffee.UIEffectInternal
                 _sb.Length--; // Remove last space.
             }
 
-            var hash = new Hash128((uint)shader.GetInstanceID(), (uint)_sb.GetHashCode(), 0, 0);
+            var hash = new Hash128((uint)shader.GetInstanceID(), (uint)GetContentsHash(_sb), 0, 0);
             if (_cachedVariants.TryGetValue(hash, out var result))
             {
                 Profiler.EndSample();
@@ -287,6 +287,17 @@ namespace Coffee.UIEffectInternal
             _cachedVariants.Add(hash, (variant, pair));
             Profiler.EndSample();
             return (variant, pair);
+        }
+
+        private static int GetContentsHash(StringBuilder sb)
+        {
+            var hash = 17;
+            for (var i = 0; i < sb.Length; i++)
+            {
+                hash = unchecked(hash * 31 + sb[i]);
+            }
+
+            return hash;
         }
 #endif
     }
