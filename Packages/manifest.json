@@ -4,7 +4,7 @@
     "com.coffee.minimal-resource": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/MinimalResource",
     "com.coffee.nano-monitor": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/NanoMonitor",
     "com.coffee.symbolic-linker": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/SymbolicLinker",
-    "com.unity.ide.rider": "3.0.36",
+    "com.unity.ide.rider": "3.0.38",
     "com.unity.test-framework": "1.1.33",
     "com.unity.textmeshpro": "3.0.9",
     "com.unity.modules.animation": "1.0.0"
