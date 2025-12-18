@@ -1,3 +1,10 @@
+## [5.10.6](https://github.com/mob-sakai/UIEffect/compare/5.10.5...5.10.6) (2025-12-18)
+
+
+### Bug Fixes
+
+* fixed an issue where shader variants were not registered automatically ([6b79864](https://github.com/mob-sakai/UIEffect/commit/6b79864a394d79e6ad13f64af1d521fab1f781a7)), closes [#383](https://github.com/mob-sakai/UIEffect/issues/383)
+
 ## [5.10.5](https://github.com/mob-sakai/UIEffect/compare/5.10.4...5.10.5) (2025-11-20)
 
 
