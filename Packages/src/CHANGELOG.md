@@ -1,3 +1,10 @@
+## [5.10.7](https://github.com/mob-sakai/UIEffect/compare/5.10.6...5.10.7) (2025-12-18)
+
+
+### Bug Fixes
+
+* support Unity 6000.4 ([7fc0c73](https://github.com/mob-sakai/UIEffect/commit/7fc0c7364d8dc39e26eac3c3b79797b139f09817))
+
 ## [5.10.6](https://github.com/mob-sakai/UIEffect/compare/5.10.5...5.10.6) (2025-12-18)
 
 
