@@ -52,6 +52,7 @@ namespace Coffee.UIEffects
                 if (!_canvas || !_canvas.isActiveAndEnabled)
                 {
                     _canvas = null;
+                    _canvasCached = false;
                 }
 
                 return _canvas;
