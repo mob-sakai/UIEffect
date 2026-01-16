@@ -1,3 +1,10 @@
+## [5.10.8](https://github.com/mob-sakai/UIEffect/compare/5.10.7...5.10.8) (2026-01-16)
+
+
+### Bug Fixes
+
+* Canvas not properly cached when objects are outside Canvas ([4a4e50e](https://github.com/mob-sakai/UIEffect/commit/4a4e50e01fb50925352c73b27901024494ae933c))
+
 ## [5.10.7](https://github.com/mob-sakai/UIEffect/compare/5.10.6...5.10.7) (2025-12-18)
 
 
