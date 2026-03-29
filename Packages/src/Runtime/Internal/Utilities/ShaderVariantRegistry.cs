@@ -279,10 +279,12 @@ namespace Coffee.UIEffectInternal
             }
 
 #if UNITY_6000_5_OR_NEWER
-            var hash = new Hash128(shader.GetEntityId(), (uint)GetContentsHash(_sb), 0, 0);
+            ulong shaderIdFull = EntityId.ToULong(shader.GetEntityId());
+            uint shaderId = (uint)(shaderIdFull ^ (shaderIdFull >>32));
 #else
-            var hash = new Hash128((uint)shader.GetInstanceID(), (uint)GetContentsHash(_sb), 0, 0);
+            uint shaderId = (uint)shader.GetInstanceID();
 #endif
+            var hash = new Hash128(shaderId, (uint)GetContentsHash(_sb), 0, 0);
             if (_cachedVariants.TryGetValue(hash, out var result))
             {
                 Profiler.EndSample();

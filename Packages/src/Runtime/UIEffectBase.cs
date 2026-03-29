@@ -193,11 +193,17 @@ namespace Coffee.UIEffects
             Profiler.BeginSample("(UIE)[UIEffect] GetModifiedMaterial");
             var samplingScaleId = (uint)(Mathf.InverseLerp(0.01f, 100, actualSamplingScale) * uint.MaxValue);
 #if UNITY_6000_5_OR_NEWER
-            var rootId = transitionRoot ? transitionRoot.GetEntityId() : EntityId.None;
-            var hash = new Hash256(baseMaterial.GetEntityId(), effectId, samplingScaleId, rootId);
+            ulong matIdFull = EntityId.ToULong(baseMaterial.GetEntityId());
+            uint matId = (uint)(matIdFull ^ (matIdFull >> 32));
+            ulong rootIdFull = transitionRoot ? EntityId.ToULong(transitionRoot.GetEntityId()) : 0;
+            uint rootId = (uint)(rootIdFull ^ (rootIdFull >> 32));
+            ulong effIdFull = EntityId.ToULong(effectId);
+            uint effId = (uint)(effIdFull ^ (effIdFull >>32));
+            var hash = new Hash128(matId, effId, samplingScaleId, rootId);
 #else
-            var rootId = (uint)(transitionRoot ? transitionRoot.GetInstanceID() : 0);
-            var hash = new Hash128((uint)baseMaterial.GetInstanceID(), effectId, samplingScaleId, rootId);
+            uint matId = (uint)baseMaterial.GetInstanceID();
+            uint rootId = transitionRoot ? (uint)transitionRoot.GetInstanceID() : 0;
+            var hash = new Hash128(matId, effectId, samplingScaleId, rootId);
 #endif
             if (!MaterialRepository.Valid(hash, _material))
             {
