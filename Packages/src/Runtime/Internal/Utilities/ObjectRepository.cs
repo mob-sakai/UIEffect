@@ -9,7 +9,11 @@ namespace Coffee.UIEffectInternal
     internal class ObjectRepository<T> where T : Object
     {
         private readonly Dictionary<Hash128, Entry> _cache = new Dictionary<Hash128, Entry>(8);
+#if UNITY_6000_5_OR_NEWER
+        private readonly Dictionary<EntityId, Hash128> _objectKey = new Dictionary<EntityId, Hash128>(8);
+#else
         private readonly Dictionary<int, Hash128> _objectKey = new Dictionary<int, Hash128>(8);
+#endif
         private readonly string _name;
         private readonly Action<T> _onRelease;
         private readonly Stack<Entry> _pool = new Stack<Entry>(8);
@@ -130,7 +134,11 @@ namespace Coffee.UIEffectInternal
             newEntry.hash = hash;
             newEntry.reference = 1;
             _cache[hash] = newEntry;
+#if UNITY_6000_5_OR_NEWER
+            _objectKey[newObject.GetEntityId()] = hash;
+#else
             _objectKey[newObject.GetInstanceID()] = hash;
+#endif
             Logging.Log(_name, $"<color=#03c700>Add</color>(total#{count}): {newEntry}");
             Release(ref obj);
             obj = newObject;
@@ -146,7 +154,11 @@ namespace Coffee.UIEffectInternal
 
             // Find and release the entry.
             Profiler.BeginSample("(COF)[ObjectRepository] Release");
+#if UNITY_6000_5_OR_NEWER
+            var id = obj.GetEntityId();
+#else
             var id = obj.GetInstanceID();
+#endif
             if (_objectKey.TryGetValue(id, out var hash)
                 && _cache.TryGetValue(hash, out var entry))
             {
@@ -175,7 +187,11 @@ namespace Coffee.UIEffectInternal
 
             Profiler.BeginSample("(COF)[ObjectRepository] Remove");
             _cache.Remove(entry.hash);
+#if UNITY_6000_5_OR_NEWER
+            _objectKey.Remove(entry.storedObject.GetEntityId());
+#else
             _objectKey.Remove(entry.storedObject.GetInstanceID());
+#endif
             _pool.Push(entry);
             entry.reference = 0;
             Logging.Log(_name, $"<color=#f29e03>Remove</color>(total#{_cache.Count}): {entry}");

@@ -37,7 +37,11 @@ namespace Coffee.UIEffects
 
         public Material effectMaterial => _material;
         public Graphic graphic => _graphic ? _graphic : _graphic = GetComponent<Graphic>();
+#if UNITY_6000_5_OR_NEWER
+        public virtual EntityId effectId => GetEntityId();
+#else
         public virtual uint effectId => (uint)GetInstanceID();
+#endif
         public virtual float actualSamplingScale => 1;
         public virtual bool canModifyShape => true;
 
@@ -188,8 +192,13 @@ namespace Coffee.UIEffects
 
             Profiler.BeginSample("(UIE)[UIEffect] GetModifiedMaterial");
             var samplingScaleId = (uint)(Mathf.InverseLerp(0.01f, 100, actualSamplingScale) * uint.MaxValue);
+#if UNITY_6000_5_OR_NEWER
+            var rootId = transitionRoot ? transitionRoot.GetEntityId() : EntityId.None;
+            var hash = new Hash256(baseMaterial.GetEntityId(), effectId, samplingScaleId, rootId);
+#else
             var rootId = (uint)(transitionRoot ? transitionRoot.GetInstanceID() : 0);
             var hash = new Hash128((uint)baseMaterial.GetInstanceID(), effectId, samplingScaleId, rootId);
+#endif
             if (!MaterialRepository.Valid(hash, _material))
             {
                 Profiler.BeginSample("(UIE)[UIEffect] GetModifiedMaterial > Get or create material");

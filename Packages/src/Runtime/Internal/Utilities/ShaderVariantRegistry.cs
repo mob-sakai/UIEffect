@@ -44,7 +44,11 @@ namespace Coffee.UIEffectInternal
             }
         }
 
+#if UNITY_6000_5_OR_NEWER
+        private Dictionary<EntityId, string> _cachedOptionalShaders = new Dictionary<EntityId, string>();
+#else
         private Dictionary<int, string> _cachedOptionalShaders = new Dictionary<int, string>();
+#endif
 
         [SerializeField]
         private List<StringPair> m_OptionalShaders = new List<StringPair>();
@@ -71,7 +75,11 @@ namespace Coffee.UIEffectInternal
             if (!shader) return null;
 
             // Already cached.
+#if UNITY_6000_5_OR_NEWER
+            var id = shader.GetEntityId();
+#else
             var id = shader.GetInstanceID();
+#endif
             if (_cachedOptionalShaders.TryGetValue(id, out var optionalShaderName))
             {
                 return Shader.Find(optionalShaderName);
@@ -270,7 +278,11 @@ namespace Coffee.UIEffectInternal
                 _sb.Length--; // Remove last space.
             }
 
+#if UNITY_6000_5_OR_NEWER
+            var hash = new Hash128(shader.GetEntityId(), (uint)GetContentsHash(_sb), 0, 0);
+#else
             var hash = new Hash128((uint)shader.GetInstanceID(), (uint)GetContentsHash(_sb), 0, 0);
+#endif
             if (_cachedVariants.TryGetValue(hash, out var result))
             {
                 Profiler.EndSample();
