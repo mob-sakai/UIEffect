@@ -44,7 +44,7 @@ namespace Coffee.UIEffectInternal
             }
         }
 
-#if UNITY_6000_5_OR_NEWER
+#if UNITY_6000_4_OR_NEWER
         private Dictionary<EntityId, string> _cachedOptionalShaders = new Dictionary<EntityId, string>();
 #else
         private Dictionary<int, string> _cachedOptionalShaders = new Dictionary<int, string>();
@@ -75,7 +75,7 @@ namespace Coffee.UIEffectInternal
             if (!shader) return null;
 
             // Already cached.
-#if UNITY_6000_5_OR_NEWER
+#if UNITY_6000_4_OR_NEWER
             var id = shader.GetEntityId();
 #else
             var id = shader.GetInstanceID();
@@ -278,7 +278,7 @@ namespace Coffee.UIEffectInternal
                 _sb.Length--; // Remove last space.
             }
 
-#if UNITY_6000_5_OR_NEWER
+#if UNITY_6000_4_OR_NEWER
             ulong shaderIdFull = EntityId.ToULong(shader.GetEntityId());
             uint shaderId = (uint)(shaderIdFull ^ (shaderIdFull >>32));
 #else

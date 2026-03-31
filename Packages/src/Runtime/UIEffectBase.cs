@@ -37,7 +37,7 @@ namespace Coffee.UIEffects
 
         public Material effectMaterial => _material;
         public Graphic graphic => _graphic ? _graphic : _graphic = GetComponent<Graphic>();
-#if UNITY_6000_5_OR_NEWER
+#if UNITY_6000_4_OR_NEWER
         public virtual EntityId effectId => GetEntityId();
 #else
         public virtual uint effectId => (uint)GetInstanceID();
@@ -192,7 +192,7 @@ namespace Coffee.UIEffects
 
             Profiler.BeginSample("(UIE)[UIEffect] GetModifiedMaterial");
             var samplingScaleId = (uint)(Mathf.InverseLerp(0.01f, 100, actualSamplingScale) * uint.MaxValue);
-#if UNITY_6000_5_OR_NEWER
+#if UNITY_6000_4_OR_NEWER
             ulong matIdFull = EntityId.ToULong(baseMaterial.GetEntityId());
             uint matId = (uint)(matIdFull ^ (matIdFull >> 32));
             ulong rootIdFull = transitionRoot ? EntityId.ToULong(transitionRoot.GetEntityId()) : 0;
