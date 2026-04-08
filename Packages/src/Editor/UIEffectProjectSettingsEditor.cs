@@ -16,6 +16,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _runtimePresets;
         private SerializedProperty _runtimePresetsV2;
         private SerializedProperty _useHDRColorPicker;
+        private SerializedProperty _preLoadSettingsInBuild;
         private bool _isInitialized;
         private ShaderVariantRegistryEditor _shaderVariantRegistryEditor;
         private UIEffect[] _legacyPresets;
@@ -29,6 +30,7 @@ namespace Coffee.UIEffects.Editors
             _useHDRColorPicker = serializedObject.FindProperty("m_UseHDRColorPicker");
             _runtimePresets = serializedObject.FindProperty("m_RuntimePresets");
             _runtimePresetsV2 = serializedObject.FindProperty("m_RuntimePresetsV2");
+            _preLoadSettingsInBuild = serializedObject.FindProperty("m_PreLoadSettingsInBuild");
 
             _reorderableList = new ReorderableList(serializedObject, _runtimePresetsV2, true, true, true, true);
             _reorderableList.drawHeaderCallback = rect => EditorGUI.LabelField(rect, "Runtime Presets");
@@ -77,6 +79,7 @@ namespace Coffee.UIEffects.Editors
 
             // Editor
             // Use HDR color pickers.
+            EditorGUIUtility.labelWidth = 200;
             EditorGUILayout.PropertyField(_useHDRColorPicker);
 
             // Shader
@@ -95,6 +98,24 @@ namespace Coffee.UIEffects.Editors
             }
 
             _shaderVariantRegistryEditor.Draw();
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Advanced", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(_preLoadSettingsInBuild);
+            if (!_preLoadSettingsInBuild.boolValue)
+            {
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.HelpBox("UIEffectProjectSettings asset will not be built in." +
+                                        "please load manually from Resources, AssetBundle, or Addressables before using UIEffect.",
+                    MessageType.Warning);
+                if (GUILayout.Button("Ping"))
+                {
+                    EditorGUIUtility.PingObject(target);
+                }
+
+                EditorGUILayout.EndHorizontal();
+            }
+
             GUILayout.FlexibleSpace();
             serializedObject.ApplyModifiedProperties();
         }

@@ -631,6 +631,21 @@ You can adjust the project-wide settings for UIEffect. (`Edit > Project Settings
 > - The setting file is usually saved in `Assets/ProjectSettings/UIEffectProjectSettings.asset`. Include this file in your version control system.
 > - The setting file is automatically added as a preloaded asset in `ProjectSettings/ProjectSettings.asset`.
 
+#### Advanced
+
+- **Pre Load Settings In Build**: When enabled, this settings asset will be added to `PlayerSettings.preloadedAssets` in build.
+ - When disable, you should load this settings via `Resources`, `AssetBundles` or `Addressables` to use `UIEffect`.
+ - You can overwrite the settings by re-enabling `UIEffectProjectSettings`. This allows you to hot update shader variants and presets.
+
+```csharp
+private static IEnumerator HotUpdateCoroutine()
+{
+    const string k_SettingsAddress = "Assets/ProjectSettings/UIEffectProjectSettings.asset";
+    yield return Addressables.LoadAssetAsync<UIEffectProjectSettings>(k_SettingsAddress);
+    while (UIEffectProjectSettings.shaderVariantCollection.WarmUpProgressively(5) == false) yield return null;
+}
+```
+
 <br><br>
 
 ### :warning: Limitations
