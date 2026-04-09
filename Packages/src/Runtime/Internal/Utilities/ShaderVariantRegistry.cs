@@ -45,12 +45,16 @@ namespace Coffee.UIEffectInternal
         }
 
         private Dictionary<int, string> _cachedOptionalShaders = new Dictionary<int, string>();
+        private Dictionary<string, Shader> _shaderByName;
 
         [SerializeField]
         private List<StringPair> m_OptionalShaders = new List<StringPair>();
 
         [SerializeField]
         internal ShaderVariantCollection m_Asset;
+
+        [SerializeField]
+        private List<Shader> m_RegisteredShaders = new List<Shader>();
 
 #if UNITY_EDITOR
         [SerializeField]
@@ -63,6 +67,43 @@ namespace Coffee.UIEffectInternal
         public ShaderVariantCollection shaderVariantCollection => m_Asset;
         public Func<string, bool> onShaderRequested;
 
+        /// <summary>
+        /// Build the runtime name-to-shader lookup from <see cref="m_RegisteredShaders"/>.
+        /// When shaders are delivered via AssetBundles (i.e. not in the player build),
+        /// <see cref="Shader.Find"/> cannot locate them by name. This lookup provides
+        /// direct references serialized at edit-time as a reliable alternative.
+        /// </summary>
+        public void InitializeShaderLookup()
+        {
+            var count = m_RegisteredShaders.Count;
+            if (count == 0) return;
+
+            if (_shaderByName == null)
+                _shaderByName = new Dictionary<string, Shader>(count);
+            else
+                _shaderByName.Clear();
+
+            for (var i = 0; i < count; i++)
+            {
+                var s = m_RegisteredShaders[i];
+                if (s)
+                    _shaderByName[s.name] = s;
+            }
+        }
+
+        /// <summary>
+        /// Find a shader by name. Prefers the registered direct reference from
+        /// <see cref="m_RegisteredShaders"/> when available, falls back to
+        /// <see cref="Shader.Find"/> otherwise. This ensures correct behavior in both
+        /// built-in delivery (PreloadedAssets) and external delivery (AssetBundle) modes.
+        /// </summary>
+        public Shader FindShaderByName(string name)
+        {
+            if (_shaderByName != null && _shaderByName.TryGetValue(name, out var shader) && shader)
+                return shader;
+            return Shader.Find(name);
+        }
+
         public Shader FindOptionalShader(Shader shader,
             string requiredName,
             string format,
@@ -74,7 +115,7 @@ namespace Coffee.UIEffectInternal
             var id = shader.GetInstanceID();
             if (_cachedOptionalShaders.TryGetValue(id, out var optionalShaderName))
             {
-                return Shader.Find(optionalShaderName);
+                return FindShaderByName(optionalShaderName);
             }
 
             // The shader has required name.
@@ -92,7 +133,7 @@ namespace Coffee.UIEffectInternal
             {
                 var pair = m_OptionalShaders[i];
                 if (pair.key != shaderName) continue;
-                optionalShader = Shader.Find(pair.value);
+                optionalShader = FindShaderByName(pair.value);
                 if (!optionalShader) continue;
                 _cachedOptionalShaders[id] = pair.value;
                 return optionalShader;
@@ -100,7 +141,7 @@ namespace Coffee.UIEffectInternal
 
             // Find optional shader by format.
             optionalShaderName = string.Format(format, shaderName);
-            optionalShader = Shader.Find(optionalShaderName);
+            optionalShader = FindShaderByName(optionalShaderName);
             if (optionalShader)
             {
                 _cachedOptionalShaders[id] = optionalShaderName;
@@ -110,13 +151,13 @@ namespace Coffee.UIEffectInternal
 #if UNITY_EDITOR
             if (onShaderRequested?.Invoke(optionalShaderName) ?? false)
             {
-                return Shader.Find(defaultOptionalShaderName);
+                return FindShaderByName(defaultOptionalShaderName);
             }
 #endif
 
             // Find default optional shader.
             _cachedOptionalShaders[id] = defaultOptionalShaderName;
-            return Shader.Find(defaultOptionalShaderName);
+            return FindShaderByName(defaultOptionalShaderName);
         }
 
 #if UNITY_EDITOR
@@ -208,8 +249,46 @@ namespace Coffee.UIEffectInternal
                 AssetDatabase.SaveAssets();
             }
 
+            SyncRegisteredShaders(owner);
             ClearCache();
             Profiler.EndSample();
+        }
+
+        /// <summary>
+        /// Sync <see cref="m_RegisteredShaders"/> based on the current delivery mode.
+        /// When <see cref="PreloadedProjectSettings.excludeFromPreloadedAssetsWhenBuildPlayer"/> is enabled,
+        /// extracts shader references from the SVC so they can be resolved at runtime
+        /// without <see cref="Shader.Find"/>. Otherwise clears the list to avoid
+        /// stale references and unnecessary asset dependencies.
+        /// </summary>
+        private void SyncRegisteredShaders(Object owner)
+        {
+            var settings = owner as PreloadedProjectSettings;
+            var needsDirectRef = settings && settings.excludeFromPreloadedAssetsWhenBuildPlayer;
+
+            if (!needsDirectRef || !m_Asset)
+            {
+                if (m_RegisteredShaders.Count > 0)
+                {
+                    m_RegisteredShaders.Clear();
+                    EditorUtility.SetDirty(owner);
+                }
+                return;
+            }
+
+            var so = new SerializedObject(m_Asset);
+            var shaders = so.FindProperty("m_Shaders");
+            m_RegisteredShaders.Clear();
+            for (var i = 0; i < shaders.arraySize; i++)
+            {
+                var shaderRef = shaders.GetArrayElementAtIndex(i)
+                    .FindPropertyRelative("first")
+                    .objectReferenceValue as Shader;
+                if (shaderRef && !m_RegisteredShaders.Contains(shaderRef))
+                    m_RegisteredShaders.Add(shaderRef);
+            }
+
+            EditorUtility.SetDirty(owner);
         }
 
         internal void RegisterVariant(Material material, string path)

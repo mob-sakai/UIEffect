@@ -629,6 +629,13 @@ You can adjust the project-wide settings for UIEffect. (`Edit > Project Settings
 > - The setting file is usually saved in `Assets/ProjectSettings/UIEffectProjectSettings.asset`. Include this file in your version control system.
 > - The setting file is automatically added as a preloaded asset in `ProjectSettings/ProjectSettings.asset`.
 
+#### Advanced
+
+- **Exclude From Preloaded Assets When Build Player**: When enabled, the settings asset will be **temporarily removed** from `PlayerSettings.preloadedAssets` **during Player Build only**, so it is NOT included in the built player. The asset remains in PreloadedAssets during normal Editor operation.
+  - Use this for AssetBundle / Addressables based hot-update workflows where settings and shaders are delivered externally instead of being built into the player.
+  - Shader references are serialized from the `ShaderVariantCollection` at edit-time, so `Shader.Find()` is not required at runtime.
+  - When toggled off, serialized shader references are automatically cleared.
+
 <br><br>
 
 ### :warning: Limitations

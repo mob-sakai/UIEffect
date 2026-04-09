@@ -1,3 +1,9 @@
+## [Unreleased]
+
+### Features
+
+* add `Exclude From Preloaded Assets When Build Player` option: temporarily removes settings from `PlayerSettings.preloadedAssets` during Player Build only, enabling AssetBundle / Addressables hot-update workflows while keeping normal Editor behavior unchanged
+
 ## [5.10.8](https://github.com/mob-sakai/UIEffect/compare/5.10.7...5.10.8) (2026-01-16)
 
 

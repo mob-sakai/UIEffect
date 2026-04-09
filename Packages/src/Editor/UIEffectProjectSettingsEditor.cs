@@ -95,6 +95,33 @@ namespace Coffee.UIEffects.Editors
             }
 
             _shaderVariantRegistryEditor.Draw();
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Advanced", EditorStyles.boldLabel);
+            var excludeProp = serializedObject.FindProperty("m_ExcludeFromPreloadedAssetsWhenBuildPlayer");
+            EditorGUILayout.PropertyField(excludeProp);
+
+            if (excludeProp.boolValue)
+            {
+                var shadersProp = serializedObject.FindProperty("m_ShaderVariantRegistry")
+                    .FindPropertyRelative("m_RegisteredShaders");
+                EditorGUI.BeginDisabledGroup(true);
+                EditorGUI.indentLevel++;
+                for (var i = 0; i < shadersProp.arraySize; i++)
+                {
+                    EditorGUILayout.PropertyField(shadersProp.GetArrayElementAtIndex(i), GUIContent.none);
+                }
+                EditorGUI.indentLevel--;
+                EditorGUI.EndDisabledGroup();
+
+                if (shadersProp.arraySize == 0)
+                {
+                    EditorGUILayout.HelpBox(
+                        "No shaders registered. Re-import or modify the settings asset to trigger sync.",
+                        MessageType.Warning);
+                }
+            }
+
             GUILayout.FlexibleSpace();
             serializedObject.ApplyModifiedProperties();
         }

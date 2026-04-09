@@ -83,6 +83,14 @@ namespace Coffee.UIEffects
 #pragma warning restore CS0618
         }
 
+#if !UNITY_EDITOR
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            m_ShaderVariantRegistry.InitializeShaderLookup();
+        }
+#endif
+
 #if UNITY_EDITOR
         private const string k_PresetDir = "UIEffectPresets";
         private const string k_PresetSaveDir = "Assets/ProjectSettings/" + k_PresetDir;
@@ -212,6 +220,7 @@ namespace Coffee.UIEffects
         protected override void OnEnable()
         {
             base.OnEnable();
+            m_ShaderVariantRegistry.InitializeShaderLookup();
             m_ShaderVariantRegistry.onShaderRequested = ShaderSampleImporter.ImportShaderIfSelected;
             m_ShaderVariantRegistry.ClearCache();
         }

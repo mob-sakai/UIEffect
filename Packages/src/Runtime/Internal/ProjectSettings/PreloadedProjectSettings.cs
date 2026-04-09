@@ -14,11 +14,83 @@ namespace Coffee.UIEffectInternal
     public abstract class PreloadedProjectSettings : ScriptableObject
 #if UNITY_EDITOR
     {
+        [Tooltip("When enabled, this settings asset will be temporarily removed from " +
+                 "PlayerSettings.preloadedAssets during Player Build, so it is NOT included " +
+                 "in the built player. The asset remains in PreloadedAssets during normal " +
+                 "Editor operation.\n\n" +
+                 "Enable this when you deliver settings and shaders via AssetBundles or " +
+                 "Addressables for hot-update support. Shaders are then resolved via direct " +
+                 "serialized references instead of Shader.Find().")]
+        [SerializeField]
+        private bool m_ExcludeFromPreloadedAssetsWhenBuildPlayer;
+
+        /// <summary>
+        /// When enabled, this settings asset will be temporarily removed from
+        /// <see cref="PlayerSettings.preloadedAssets"/> only during Player Build,
+        /// so it is NOT included in the built player. The asset remains in
+        /// PreloadedAssets during normal Editor operation.
+        /// <para>
+        /// Enable this when you deliver settings and shaders via AssetBundles or
+        /// Addressables for hot-update support. Shaders are resolved via direct
+        /// serialized references in the shader variant registry instead of
+        /// <see cref="Shader.Find"/>, since AB-loaded shaders are not registered
+        /// in the global shader name table.
+        /// </para>
+        /// </summary>
+        public bool excludeFromPreloadedAssetsWhenBuildPlayer
+        {
+            get => m_ExcludeFromPreloadedAssetsWhenBuildPlayer;
+            set => m_ExcludeFromPreloadedAssetsWhenBuildPlayer = value;
+        }
+
+        protected static bool s_BuildingPlayer;
+
         private class Postprocessor : AssetPostprocessor
         {
             private static void OnPostprocessAllAssets(string[] _, string[] __, string[] ___, string[] ____)
             {
                 Initialize();
+            }
+        }
+
+        private class ExcludeFromBuild : IPreprocessBuildWithReport, IPostprocessBuildWithReport
+        {
+            int IOrderedCallback.callbackOrder => -1;
+
+            void IPreprocessBuildWithReport.OnPreprocessBuild(BuildReport report)
+            {
+                s_BuildingPlayer = true;
+
+                foreach (var t in TypeCache.GetTypesDerivedFrom(typeof(PreloadedProjectSettings<>)))
+                {
+                    var settings = GetDefaultSettings(t);
+                    if (!settings || !settings.m_ExcludeFromPreloadedAssetsWhenBuildPlayer) continue;
+
+                    PlayerSettings.SetPreloadedAssets(
+                        PlayerSettings.GetPreloadedAssets()
+                            .Where(x => x && x.GetType() != t)
+                            .ToArray());
+
+                    Debug.Log($"[PreloadedProjectSettings] Build started: removed '{settings.name}' " +
+                              $"({t.Name}) from PreloadedAssets. " +
+                              $"It will be restored after build completes.");
+                }
+            }
+
+            void IPostprocessBuildWithReport.OnPostprocessBuild(BuildReport report)
+            {
+                s_BuildingPlayer = false;
+
+                Initialize();
+
+                foreach (var t in TypeCache.GetTypesDerivedFrom(typeof(PreloadedProjectSettings<>)))
+                {
+                    var settings = GetDefaultSettings(t);
+                    if (!settings || !settings.m_ExcludeFromPreloadedAssetsWhenBuildPlayer) continue;
+
+                    Debug.Log($"[PreloadedProjectSettings] Build finished: restored '{settings.name}' " +
+                              $"({t.Name}) to PreloadedAssets.");
+                }
             }
         }
 
@@ -41,11 +113,11 @@ namespace Coffee.UIEffectInternal
                 {
                     // When create a new instance, automatically set it as default settings.
                     defaultSettings = CreateInstance(t) as PreloadedProjectSettings;
-                    SetDefaultSettings(defaultSettings);
+                    if (!s_BuildingPlayer) SetDefaultSettings(defaultSettings);
                 }
                 else if (GetPreloadedSettings(t).Length != 1)
                 {
-                    SetDefaultSettings(defaultSettings);
+                    if (!s_BuildingPlayer) SetDefaultSettings(defaultSettings);
                 }
 
                 if (defaultSettings)
@@ -151,7 +223,7 @@ namespace Coffee.UIEffectInternal
                     return s_Instance;
                 }
 
-                SetDefaultSettings(s_Instance);
+                if (!s_BuildingPlayer) SetDefaultSettings(s_Instance);
                 return s_Instance;
             }
         }
