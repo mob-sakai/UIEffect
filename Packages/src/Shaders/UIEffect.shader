@@ -147,12 +147,10 @@ Shader "Hidden/UI/Default (UIEffect)"
             }
 
             // ==== UIEFFECT START ====
-            v2f _fragInput;
-            fixed4 uieffect_frag(float2 uv)
+            fixed4 uieffect_frag(float2 uv, fixed4 inColor)
             {
-                v2f IN = _fragInput;
                 half4 color = (tex2D(_MainTex, uv) + _TextureSampleAdd);
-                color.rgb *= IN.color.rgb;
+                color.rgb *= inColor.rgb;
                 color.rgb *= color.a;
                 return color;
             }
@@ -169,8 +167,7 @@ Shader "Hidden/UI/Default (UIEffect)"
                 const half invAlphaPrecision = half(1.0 / alphaPrecision);
                 IN.color.a = round(IN.color.a * alphaPrecision) * invAlphaPrecision;
 
-                _fragInput = IN;
-                half4 c = uieffect(IN.texcoord, IN.uvMask, IN.worldPosition);
+                half4 c = uieffect(IN.texcoord, IN.uvMask, IN.worldPosition, IN.color);
                 c *= IN.color.a;
 
                 #ifdef UNITY_UI_CLIP_RECT
