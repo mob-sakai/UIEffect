@@ -648,7 +648,7 @@ half4 uieffect(half4 origin, float2 uv, float4 uvMask, float4 wpos)
         half sobel_v = v00 * -1.0 + v10 * -2.0 + v20 * -1.0 + v02 * 1.0 + v12 * 2.0 + v22 * 1.0;
 
         const half sobel = sqrt(sobel_h * sobel_h + sobel_v * sobel_v) * _SamplingIntensity;
-        return lerp(0, uieffect_internal(uv, uvMask, uvLocal, uvGrad, isShadow), inv_lerp(0.5, 1, sobel));
+        return lerp(half4(0, 0, 0, 0), uieffect_internal(uv, uvMask, uvLocal, uvGrad, isShadow), inv_lerp(0.5, 1, sobel));
     }
     #endif
 
