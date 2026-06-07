@@ -1359,11 +1359,11 @@ namespace Coffee.UIEffects
 
         public Color detailColor
         {
-            get => m_EdgeColor;
+            get => m_DetailColor;
             set
             {
-                if (m_EdgeColor == value) return;
-                context.m_DetailColor = m_EdgeColor = value;
+                if (m_DetailColor == value) return;
+                context.m_DetailColor = m_DetailColor = value;
                 SetMaterialDirty();
             }
         }
@@ -1811,6 +1811,7 @@ namespace Coffee.UIEffects
 
             if (!append || src.m_DetailFilter != DetailFilter.None)
             {
+                dst.m_DetailColor = src.m_DetailColor;
                 dst.m_DetailFilter = src.m_DetailFilter;
                 dst.m_DetailIntensity = src.m_DetailIntensity;
                 dst.m_DetailThreshold = src.m_DetailThreshold;
