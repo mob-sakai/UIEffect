@@ -514,6 +514,8 @@ Click the `Import` button.
 
 ### Usage with ShaderGraph
 
+⚠️ ShaderGraph support is available only in Unity 2023.2/6.0 or later.
+
 ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1744307236288.png)
 
 To use UIEffect with ShaderGraph, you need to import additional resources.
