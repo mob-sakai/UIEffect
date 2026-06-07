@@ -102,8 +102,8 @@ namespace Coffee.UIEffects
         public override uint effectId => target
             ? target.effectId
             : preset
-                ? (uint)preset.GetInstanceID()
-                : (uint)GetInstanceID();
+                ? (uint)preset.GetHashCode()
+                : (uint)GetHashCode();
 
 
         public override UIEffectContext context

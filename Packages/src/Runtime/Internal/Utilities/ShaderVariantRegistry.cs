@@ -71,7 +71,7 @@ namespace Coffee.UIEffectInternal
             if (!shader) return null;
 
             // Already cached.
-            var id = shader.GetInstanceID();
+            var id = shader.GetHashCode();
             if (_cachedOptionalShaders.TryGetValue(id, out var optionalShaderName))
             {
                 return Shader.Find(optionalShaderName);
@@ -270,7 +270,7 @@ namespace Coffee.UIEffectInternal
                 _sb.Length--; // Remove last space.
             }
 
-            var hash = new Hash128((uint)shader.GetInstanceID(), (uint)GetContentsHash(_sb), 0, 0);
+            var hash = new Hash128((uint)shader.GetHashCode(), (uint)GetContentsHash(_sb), 0, 0);
             if (_cachedVariants.TryGetValue(hash, out var result))
             {
                 Profiler.EndSample();

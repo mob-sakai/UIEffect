@@ -130,7 +130,7 @@ namespace Coffee.UIEffectInternal
             newEntry.hash = hash;
             newEntry.reference = 1;
             _cache[hash] = newEntry;
-            _objectKey[newObject.GetInstanceID()] = hash;
+            _objectKey[newObject.GetHashCode()] = hash;
             Logging.Log(_name, $"<color=#03c700>Add</color>(total#{count}): {newEntry}");
             Release(ref obj);
             obj = newObject;
@@ -146,7 +146,7 @@ namespace Coffee.UIEffectInternal
 
             // Find and release the entry.
             Profiler.BeginSample("(COF)[ObjectRepository] Release");
-            var id = obj.GetInstanceID();
+            var id = obj.GetHashCode();
             if (_objectKey.TryGetValue(id, out var hash)
                 && _cache.TryGetValue(hash, out var entry))
             {
@@ -175,7 +175,7 @@ namespace Coffee.UIEffectInternal
 
             Profiler.BeginSample("(COF)[ObjectRepository] Remove");
             _cache.Remove(entry.hash);
-            _objectKey.Remove(entry.storedObject.GetInstanceID());
+            _objectKey.Remove(entry.storedObject.GetHashCode());
             _pool.Push(entry);
             entry.reference = 0;
             Logging.Log(_name, $"<color=#f29e03>Remove</color>(total#{_cache.Count}): {entry}");
