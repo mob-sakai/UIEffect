@@ -22,7 +22,7 @@ jobs:
           find _site -name __MACOSX | xargs rm -rf
 
       - name: 📦 Upload '_site'
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
 
       - name: 🚀 Deploy To GitHub Pages
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
