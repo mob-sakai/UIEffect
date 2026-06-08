@@ -90,7 +90,7 @@ namespace Coffee.UIEffectInternal
             Profiler.BeginSample("(COF)[ObjectRepository] GetFromCache");
             if (_cache.TryGetValue(hash, out var entry))
             {
-                if (!entry.storedObject)
+                if (entry.storedObject == null)
                 {
                     Release(ref entry.storedObject);
                     Profiler.EndSample();
@@ -103,7 +103,7 @@ namespace Coffee.UIEffectInternal
                     Release(ref obj);
                     ++entry.reference;
                     obj = entry.storedObject;
-                    Logging.Log(_name, $"Get(total#{count}): {entry}");
+                    Logger.Log(_name, $"Get(total#{count}): {entry}");
                 }
 
                 Profiler.EndSample();
@@ -116,7 +116,7 @@ namespace Coffee.UIEffectInternal
 
         private void Add(Hash128 hash, ref T obj, T newObject)
         {
-            if (!newObject)
+            if (newObject == null)
             {
                 Release(ref obj);
                 obj = newObject;
@@ -131,7 +131,7 @@ namespace Coffee.UIEffectInternal
             newEntry.reference = 1;
             _cache[hash] = newEntry;
             _objectKey[newObject.GetHashCode()] = hash;
-            Logging.Log(_name, $"<color=#03c700>Add</color>(total#{count}): {newEntry}");
+            Logger.Log(_name, $"<color=#03c700>Add</color>(total#{count}): {newEntry}");
             Release(ref obj);
             obj = newObject;
             Profiler.EndSample();
@@ -151,18 +151,18 @@ namespace Coffee.UIEffectInternal
                 && _cache.TryGetValue(hash, out var entry))
             {
                 entry.reference--;
-                if (entry.reference <= 0 || !entry.storedObject)
+                if (entry.reference <= 0 || entry.storedObject == null)
                 {
                     Remove(entry);
                 }
                 else
                 {
-                    Logging.Log(_name, $"Release(total#{_cache.Count}): {entry}");
+                    Logger.Log(_name, $"Release(total#{_cache.Count}): {entry}");
                 }
             }
             else
             {
-                Logging.Log(_name, $"Release(total#{_cache.Count}): <color=red>Already released: {obj}</color>");
+                Logger.Log(_name, $"Release(total#{_cache.Count}): <color=red>Already released: {obj}</color>");
             }
 
             obj = null;
@@ -178,7 +178,7 @@ namespace Coffee.UIEffectInternal
             _objectKey.Remove(entry.storedObject.GetHashCode());
             _pool.Push(entry);
             entry.reference = 0;
-            Logging.Log(_name, $"<color=#f29e03>Remove</color>(total#{_cache.Count}): {entry}");
+            Logger.Log(_name, $"<color=#f29e03>Remove</color>(total#{_cache.Count}): {entry}");
             entry.Release(_onRelease);
             Profiler.EndSample();
         }
@@ -192,7 +192,7 @@ namespace Coffee.UIEffectInternal
             public void Release(Action<T> onRelease)
             {
                 reference = 0;
-                if (storedObject)
+                if (storedObject != null)
                 {
                     onRelease?.Invoke(storedObject);
                 }

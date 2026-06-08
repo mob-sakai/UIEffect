@@ -1,8 +1,8 @@
 using System;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Reflection;
 
 namespace Coffee.UIEffectInternal
 {
@@ -21,7 +21,7 @@ namespace Coffee.UIEffectInternal
         static UIExtraCallbacks()
         {
             Canvas.willRenderCanvases += OnBeforeCanvasRebuild;
-            Logging.LogMulticast(typeof(Canvas), "willRenderCanvases", message: "ctor");
+            Logger.LogMulticast(typeof(Canvas), "willRenderCanvases", message: "ctor");
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Coffee.UIEffectInternal
 #endif
             Canvas.willRenderCanvases -= OnAfterCanvasRebuild;
             Canvas.willRenderCanvases += OnAfterCanvasRebuild;
-            Logging.LogMulticast(typeof(Canvas), "willRenderCanvases",
+            Logger.LogMulticast(typeof(Canvas), "willRenderCanvases",
                 message: "InitializeAfterCanvasRebuild");
         }
 

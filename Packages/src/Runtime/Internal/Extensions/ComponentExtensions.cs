@@ -38,7 +38,7 @@ namespace Coffee.UIEffectInternal
         private static void GetComponentsInChildren_Internal<T>(this Component self, List<T> results, int depth)
             where T : Component
         {
-            if (!self || results == null || depth < 0) return;
+            if (self == null || results == null || depth < 0) return;
 
             var tr = self.transform;
             if (tr.TryGetComponent<T>(out var t))
@@ -59,7 +59,7 @@ namespace Coffee.UIEffectInternal
         /// </summary>
         public static T GetOrAddComponent<T>(this Component self) where T : Component
         {
-            if (!self) return null;
+            if (self == null) return null;
             return self.TryGetComponent<T>(out var component)
                 ? component
                 : self.gameObject.AddComponent<T>();
@@ -166,7 +166,7 @@ namespace Coffee.UIEffectInternal
 #if !UNITY_2021_2_OR_NEWER && !UNITY_2020_3_45 && !UNITY_2020_3_46 && !UNITY_2020_3_47 && !UNITY_2020_3_48
         public static T GetComponentInParent<T>(this Component self, bool includeInactive) where T : Component
         {
-            if (!self) return null;
+            if (self == null) return null;
             if (!includeInactive) return self.GetComponentInParent<T>();
 
             var current = self.transform;
@@ -186,7 +186,7 @@ namespace Coffee.UIEffectInternal
         /// </summary>
         internal static bool CanConvertTo<T>(this Object context) where T : MonoBehaviour
         {
-            return context && context.GetType() != typeof(T);
+            return context != null && context.GetType() != typeof(T);
         }
 
         /// <summary>

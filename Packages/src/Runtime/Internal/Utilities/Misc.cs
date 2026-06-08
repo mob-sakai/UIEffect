@@ -31,7 +31,7 @@ namespace Coffee.UIEffectInternal
 
         public static void Destroy(Object obj)
         {
-            if (!obj) return;
+            if (obj == null) return;
 #if UNITY_EDITOR
             if (!Application.isPlaying)
             {
@@ -46,7 +46,7 @@ namespace Coffee.UIEffectInternal
 
         public static void DestroyImmediate(Object obj)
         {
-            if (!obj) return;
+            if (obj == null) return;
 #if UNITY_EDITOR
             if (Application.isEditor)
             {
@@ -63,7 +63,7 @@ namespace Coffee.UIEffectInternal
         public static void SetDirty(Object obj)
         {
 #if UNITY_EDITOR
-            if (!obj) return;
+            if (obj == null) return;
             EditorUtility.SetDirty(obj);
 #endif
         }
@@ -119,11 +119,11 @@ namespace Coffee.UIEffectInternal
             foreach (var type in types)
             {
                 var script = scripts.FirstOrDefault(x => x.GetClass() == type);
-                if (!script) continue;
+                if (script == null) continue;
 
                 var path = type.GetCustomAttribute<IconAttribute>()?._path;
                 var icon = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
-                if (!icon) continue;
+                if (icon == null) continue;
 
                 s_SetIconForObject(script, icon);
             }
