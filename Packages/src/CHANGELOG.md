@@ -1,3 +1,13 @@
+## [5.10.9](https://github.com/mob-sakai/UIEffect/compare/5.10.8...5.10.9) (2026-06-08)
+
+
+### Bug Fixes
+
+* ambiguous call to 'lerp' in shader ([cd68b36](https://github.com/mob-sakai/UIEffect/commit/cd68b364c48e979d6ef227e53a522f096e0df47a)), closes [#390](https://github.com/mob-sakai/UIEffect/issues/390)
+* Clarify that the `ShaderGraph support` is available only in Unity 2023.2/6.0 or later ([57031c3](https://github.com/mob-sakai/UIEffect/commit/57031c3e3c2d64ee76d3e568d378cd54a5e84af5)), closes [#391](https://github.com/mob-sakai/UIEffect/issues/391)
+* support Unity 6.5 or later ([2d6f7ed](https://github.com/mob-sakai/UIEffect/commit/2d6f7ed63dd83b3f90c2fa6d93a3c84afd6de866)), closes [#392](https://github.com/mob-sakai/UIEffect/issues/392) [#398](https://github.com/mob-sakai/UIEffect/issues/398)
+* UIEffect.detailColor is not working ([f3da972](https://github.com/mob-sakai/UIEffect/commit/f3da972c0cba526f7784207c2d8ab48b5dd692f3)), closes [#399](https://github.com/mob-sakai/UIEffect/issues/399)
+
 ## [5.10.8](https://github.com/mob-sakai/UIEffect/compare/5.10.7...5.10.8) (2026-01-16)
 
 
