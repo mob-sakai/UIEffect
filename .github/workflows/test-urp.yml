@@ -45,7 +45,8 @@ jobs:
     steps:
       - name: 🔑 Secrets check
         run: |
-          if [ -z "$UNITY_EMAIL" ] || [ -z "$UNITY_PASSWORD" ] || [ -z "UNITY_LICENSE" ]; then
+          echo "Checking secrets for ${{ github.actor }} ..."
+          if [ -z "$UNITY_EMAIL" ] || [ -z "$UNITY_PASSWORD" ] || [ -z "$UNITY_LICENSE" ]; then
             echo "Error: UNITY_EMAIL, UNITY_PASSWORD, and UNITY_LICENSE secrets must be set." | tee -a $GITHUB_STEP_SUMMARY >&2
             echo "Error: See https://game.ci/docs/github/test-runner#basic-setup" | tee -a $GITHUB_STEP_SUMMARY >&2
             echo "Error: Set the secrets at ${{ github.server_url }}/${{ github.repository }}/settings/secrets/actions" | tee -a $GITHUB_STEP_SUMMARY >&2
