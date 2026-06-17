@@ -239,7 +239,7 @@ namespace Coffee.UIEffects
                     }
                     else
                     {
-                        var subMeshUI = GetSubMeshUI(subMeshes, meshInfo.material, i - 1);
+                        var subMeshUI = GetSubMeshUI(subMeshes, meshInfo.material, meshInfo.mesh, i - 1);
                         if (subMeshUI)
                         {
                             subMeshUI.canvasRenderer.SetMesh(s_Mesh);
@@ -269,7 +269,7 @@ namespace Coffee.UIEffects
                         modifier.ModifyMesh(s_VertexHelper);
                     }
 
-                    var subMeshUI = GetSubMeshUI(subMeshes, meshInfo.material, i - 1);
+                    var subMeshUI = GetSubMeshUI(subMeshes, meshInfo.material, meshInfo.mesh, i - 1);
                     if (!subMeshUI) break;
 
                     // fix: TMP Text sprite submesh lost when changing fontMaterial (#368)
@@ -323,12 +323,23 @@ namespace Coffee.UIEffects
             Misc.QueuePlayerLoopUpdate();
         }
 
-        private static TMP_SubMeshUI GetSubMeshUI(List<TMP_SubMeshUI> subMeshes, Material material, int start)
+        private static TMP_SubMeshUI GetSubMeshUI(List<TMP_SubMeshUI> subMeshes, Material material, Mesh mesh, int start)
         {
             var count = subMeshes.Count;
+            if (mesh)
+            {
+                for (var j = 0; j < count; j++)
+                {
+                    var s = subMeshes[(j + start + count) % count];
+                    if (!s) continue;
+                    if (s.mesh == mesh) return s;
+                }
+            }
+
             for (var j = 0; j < count; j++)
             {
                 var s = subMeshes[(j + start + count) % count];
+                if (!s) continue;
                 if (s.sharedMaterial == material) return s;
             }
 
