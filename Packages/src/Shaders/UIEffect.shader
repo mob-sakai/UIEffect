@@ -147,16 +147,15 @@ Shader "Hidden/UI/Default (UIEffect)"
             }
 
             // ==== UIEFFECT START ====
-            v2f _fragInput;
-            fixed4 uieffect_frag(float2 uv)
+            fixed4 uieffect_frag(v2f IN, float2 uv)
             {
-                v2f IN = _fragInput;
                 half4 color = (tex2D(_MainTex, uv) + _TextureSampleAdd);
                 color.rgb *= IN.color.rgb;
                 color.rgb *= color.a;
                 return color;
             }
 
+            #define UIEFFECT_FRAG_STRUCT v2f
             #include "Packages/com.coffee.ui-effect/Shaders/UIEffect.cginc"
             // ==== UIEFFECT END ====
 
@@ -169,8 +168,7 @@ Shader "Hidden/UI/Default (UIEffect)"
                 const half invAlphaPrecision = half(1.0 / alphaPrecision);
                 IN.color.a = round(IN.color.a * alphaPrecision) * invAlphaPrecision;
 
-                _fragInput = IN;
-                half4 c = uieffect(IN.texcoord, IN.uvMask, IN.worldPosition);
+                half4 c = uieffect(IN.texcoord, IN.uvMask, IN.worldPosition, IN);
                 c *= IN.color.a;
 
                 #ifdef UNITY_UI_CLIP_RECT

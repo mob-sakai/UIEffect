@@ -81,6 +81,11 @@ uniform const matrix _CanvasToWorldMatrix;
 #endif
 #endif
 
+#ifndef UIEFFECT_FRAG_STRUCT
+struct uieffect_v2f{};
+#define UIEFFECT_FRAG_STRUCT uieffect_v2f
+#endif
+
 #define TONE_NONE (!TONE_GRAYSCALE && !TONE_SEPIA && !TONE_NEGATIVE && !TONE_RETRO && !TONE_POSTERIZE)
 #define SAMPLING_NONE (!SAMPLING_BLUR_FAST && !SAMPLING_BLUR_MEDIUM && !SAMPLING_BLUR_DETAIL && !SAMPLING_PIXELATION && !SAMPLING_RGB_SHIFT && !SAMPLING_EDGE_LUMINANCE && !SAMPLING_EDGE_ALPHA)
 #define TRANSITION_NONE (!TRANSITION_FADE && !TRANSITION_CUTOFF && !TRANSITION_DISSOLVE && !TRANSITION_SHINY && !TRANSITION_MASK && !TRANSITION_MELT && !TRANSITION_BURN && !TRANSITION_PATTERN && !TRANSITION_BLAZE)
@@ -94,8 +99,8 @@ uniform const matrix _CanvasToWorldMatrix;
 #endif
 
 #define UIEFFECT_UV_MASK(uv, uvMask) step(uvMask.x, uv.x) * step(uv.x, uvMask.z) * step(uvMask.y, uv.y) * step(uv.y, uvMask.w)
-#define UIEFFECT_SAMPLE(uv) uieffect_frag(uv)
-#define UIEFFECT_SAMPLE_CLAMP(uv, uvMask) uieffect_frag(uv) * UIEFFECT_UV_MASK(uv, uvMask)
+#define UIEFFECT_SAMPLE(in, uv) uieffect_frag(in, uv)
+#define UIEFFECT_SAMPLE_CLAMP(in, uv, uvMask) uieffect_frag(in, uv) * UIEFFECT_UV_MASK(uv, uvMask)
 
 #ifdef CANVAS_SHADERGRAPH
 #define TEX_SAMPLE_CLAMP(uv, uvMask) SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv) * UIEFFECT_UV_MASK(uv, uvMask)
@@ -273,7 +278,7 @@ half4 apply_color_filter(int mode, half4 inColor, half4 factor, float intensity,
     return color;
 }
 
-half4 apply_sampling_filter(float2 uv, const float4 uvMask, const float isShadow)
+half4 apply_sampling_filter(UIEFFECT_FRAG_STRUCT IN, float2 uv, const float4 uvMask, const float isShadow)
 {
     #if SAMPLING_BLUR_FAST || SAMPLING_BLUR_MEDIUM || SAMPLING_BLUR_DETAIL
     {
@@ -305,7 +310,7 @@ half4 apply_sampling_filter(float2 uv, const float4 uvMask, const float isShadow
                     const float weight = KERNEL_[x] * KERNEL_[y]
                         * step(uvMask.x, bluredUv.x) * step(bluredUv.x, uvMask.z)
                         * step(uvMask.y, bluredUv.y) * step(bluredUv.y, uvMask.w);
-                    o += UIEFFECT_SAMPLE(bluredUv) * weight;
+                    o += UIEFFECT_SAMPLE(IN, bluredUv) * weight;
                     sum += weight;
                 }
             }
@@ -315,7 +320,7 @@ half4 apply_sampling_filter(float2 uv, const float4 uvMask, const float isShadow
     }
     #endif
 
-    return UIEFFECT_SAMPLE_CLAMP(uv, uvMask);
+    return UIEFFECT_SAMPLE_CLAMP(IN, uv, uvMask);
 }
 
 float2 move_transition_filter(const float4 uvMask, const float alpha)
@@ -552,12 +557,12 @@ float is_edge_shiny(const float2 uvLocal)
     #endif
 }
 
-half4 uieffect_internal(float2 uv, float4 uvMask, const float2 uvLocal, const float2 uvGrad, const float isShadow)
+half4 uieffect_internal(UIEFFECT_FRAG_STRUCT IN, float2 uv, float4 uvMask, const float2 uvLocal, const float2 uvGrad, const float isShadow)
 {
     const half alpha = transition_alpha(uvLocal);
     const float edgeFactor = edge(uv, uvMask, _EdgeWidth);
     uv += move_transition_filter(uvMask, alpha);
-    half4 color = apply_sampling_filter(uv, uvMask, isShadow);
+    half4 color = apply_sampling_filter(IN, uv, uvMask, isShadow);
     color = apply_gradation_filter(color, uvGrad);
     color = apply_tone_filter(color);
     color = apply_transition_filter(color, alpha, uvLocal, edgeFactor);
@@ -584,7 +589,7 @@ half4 uieffect_internal(float2 uv, float4 uvMask, const float2 uvLocal, const fl
     }
 }
 
-half4 uieffect(half4 origin, float2 uv, float4 uvMask, float4 wpos)
+half4 uieffect(half4 origin, float2 uv, float4 uvMask, float4 wpos, UIEFFECT_FRAG_STRUCT IN)
 {
     #ifdef NO_UIEFFECT
     return origin;
@@ -622,9 +627,9 @@ half4 uieffect(half4 origin, float2 uv, float4 uvMask, float4 wpos)
     #elif SAMPLING_RGB_SHIFT
     {
         const half2 offset = half2(_SamplingIntensity * texel_size().x * 20, 0);
-        const half2 r = uieffect_internal(uv + offset, uvMask, uvLocal, uvGrad, isShadow).ra;
-        const half2 g = uieffect_internal(uv, uvMask, uvLocal, uvGrad, isShadow).ga;
-        const half2 b = uieffect_internal(uv - offset, uvMask, uvLocal, uvGrad, isShadow).ba;
+        const half2 r = uieffect_internal(IN, uv + offset, uvMask, uvLocal, uvGrad, isShadow).ra;
+        const half2 g = uieffect_internal(IN, uv, uvMask, uvLocal, uvGrad, isShadow).ga;
+        const half2 b = uieffect_internal(IN, uv - offset, uvMask, uvLocal, uvGrad, isShadow).ba;
         return half4(r.x * r.y, g.x * g.y, b.x * b.y, (r.y + g.y + b.y) / 3);
     }
     // Sampling.EdgeLuminance/EdgeAlpha
@@ -634,32 +639,32 @@ half4 uieffect(half4 origin, float2 uv, float4 uvMask, float4 wpos)
         const float2 d = texel_size() * _SamplingWidth;
 
         // Pixel values around the current pixel (3x3, 8 neighbors)
-        const half v00 = to_value(UIEFFECT_SAMPLE_CLAMP((uv + half2(-d.x, -d.y)), uvMask));
-        const half v01 = to_value(UIEFFECT_SAMPLE_CLAMP((uv + half2(-d.x, 0.0)), uvMask));
-        const half v02 = to_value(UIEFFECT_SAMPLE_CLAMP((uv + half2(-d.x, +d.y)), uvMask));
-        const half v10 = to_value(UIEFFECT_SAMPLE_CLAMP((uv + half2(0.0, -d.y)), uvMask));
-        const half v12 = to_value(UIEFFECT_SAMPLE_CLAMP((uv + half2(0.0, +d.y)), uvMask));
-        const half v20 = to_value(UIEFFECT_SAMPLE_CLAMP((uv + half2(+d.x, -d.y)), uvMask));
-        const half v21 = to_value(UIEFFECT_SAMPLE_CLAMP((uv + half2(+d.x, 0.0)), uvMask));
-        const half v22 = to_value(UIEFFECT_SAMPLE_CLAMP((uv + half2(+d.x, +d.y)), uvMask));
+        const half v00 = to_value(UIEFFECT_SAMPLE_CLAMP(IN, (uv + half2(-d.x, -d.y)), uvMask));
+        const half v01 = to_value(UIEFFECT_SAMPLE_CLAMP(IN, (uv + half2(-d.x, 0.0)), uvMask));
+        const half v02 = to_value(UIEFFECT_SAMPLE_CLAMP(IN, (uv + half2(-d.x, +d.y)), uvMask));
+        const half v10 = to_value(UIEFFECT_SAMPLE_CLAMP(IN, (uv + half2(0.0, -d.y)), uvMask));
+        const half v12 = to_value(UIEFFECT_SAMPLE_CLAMP(IN, (uv + half2(0.0, +d.y)), uvMask));
+        const half v20 = to_value(UIEFFECT_SAMPLE_CLAMP(IN, (uv + half2(+d.x, -d.y)), uvMask));
+        const half v21 = to_value(UIEFFECT_SAMPLE_CLAMP(IN, (uv + half2(+d.x, 0.0)), uvMask));
+        const half v22 = to_value(UIEFFECT_SAMPLE_CLAMP(IN, (uv + half2(+d.x, +d.y)), uvMask));
 
         // Apply Sobel operator
         half sobel_h = v00 * -1.0 + v01 * -2.0 + v02 * -1.0 + v20 * 1.0 + v21 * 2.0 + v22 * 1.0;
         half sobel_v = v00 * -1.0 + v10 * -2.0 + v20 * -1.0 + v02 * 1.0 + v12 * 2.0 + v22 * 1.0;
 
         const half sobel = sqrt(sobel_h * sobel_h + sobel_v * sobel_v) * _SamplingIntensity;
-        return lerp(half4(0, 0, 0, 0), uieffect_internal(uv, uvMask, uvLocal, uvGrad, isShadow), inv_lerp(0.5, 1, sobel));
+        return lerp(half4(0, 0, 0, 0), uieffect_internal(IN, uv, uvMask, uvLocal, uvGrad, isShadow), inv_lerp(0.5, 1, sobel));
     }
     #endif
 
-    return lerp(origin, uieffect_internal(uv, uvMask, uvLocal, uvGrad, isShadow), rate);
+    return lerp(origin, uieffect_internal(IN, uv, uvMask, uvLocal, uvGrad, isShadow), rate);
 }
 
 
-half4 uieffect(float2 uv, float4 uvMask, float4 wpos)
+half4 uieffect(float2 uv, float4 uvMask, float4 wpos, UIEFFECT_FRAG_STRUCT IN)
 {
-    const half4 origin = UIEFFECT_SAMPLE_CLAMP(uv, uvMask);
-    return uieffect(origin, uv, uvMask, wpos);
+    const half4 origin = UIEFFECT_SAMPLE_CLAMP(IN, uv, uvMask);
+    return uieffect(origin, uv, uvMask, wpos, IN);
 }
 
 #endif // UI_EFFECT_INCLUDED

@@ -229,10 +229,8 @@ SubShader {
 		}
 
 		// ==== UIEFFECT START ====
-		pixel_t _fragInput;
-		fixed4 uieffect_frag(float2 uv)
+		fixed4 uieffect_frag(pixel_t input, float2 uv)
 		{
-			pixel_t input = _fragInput;
 			float2 uvMove = uv - input.texcoord0.xy;
 			half d = tex2D(_MainTex, input.texcoord0.xy + uvMove).a * input.param.x;
 			half4 c = input.faceColor * saturate(d - input.param.w);
@@ -261,14 +259,14 @@ SubShader {
 		}
 
 		#define UIEFFECT_TEXTMESHPRO 1
+		#define UIEFFECT_FRAG_STRUCT pixel_t
 		#include "Packages/com.coffee.ui-effect/Shaders/UIEffect.cginc"
 		// ==== UIEFFECT END ====
 
 		fixed4 PixShader(pixel_t input) : SV_Target
 		{
 			UNITY_SETUP_INSTANCE_ID(input);
-			_fragInput = input;
-			half4 c = uieffect(input.texcoord0.xy, input.uvMask, input.worldPosition);
+			half4 c = uieffect(input.texcoord0.xy, input.uvMask, input.worldPosition, input);
 			c *= input.alpha;
 			
 			// Alternative implementation to UnityGet2DClipping with support for softness.

@@ -151,23 +151,21 @@ SubShader {
 		}
 
 		// ==== UIEFFECT START ====
-		v2f _fragInput;
-		fixed4 uieffect_frag(float2 uv)
+		fixed4 uieffect_frag(v2f IN, float2 uv)
 		{
-			v2f IN = _fragInput;
 			float2 uvMove = uv - IN.texcoord0;
 			fixed4 color = fixed4(IN.color.rgb, tex2D(_MainTex, IN.texcoord0 + uvMove).a);
 			color.rgb *= color.a;
 			return color;
 		}
 		#define UIEFFECT_TEXTMESHPRO 1
+		#define UIEFFECT_FRAG_STRUCT v2f
 		#include "Packages/com.coffee.ui-effect/Shaders/UIEffect.cginc"
 		// ==== UIEFFECT END ====
 
 		fixed4 frag (v2f IN) : COLOR
 		{
-			_fragInput = IN;
-			half4 color = uieffect(IN.texcoord0, IN.uvMask, IN.worldPosition);
+			half4 color = uieffect(IN.texcoord0, IN.uvMask, IN.worldPosition, IN);
 			color *= IN.color.a; 
 
 			// Alternative implementation to UnityGet2DClipping with support for softness.

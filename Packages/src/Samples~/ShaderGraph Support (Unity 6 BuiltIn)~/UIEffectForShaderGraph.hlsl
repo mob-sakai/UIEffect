@@ -1,20 +1,18 @@
 // ==== UIEFFECT START ====
-SurfaceDescriptionInputs _fragInput;
-
-half4 uieffect_frag(float2 uv)
+half4 uieffect_frag(SurfaceDescriptionInputs fragInput, float2 uv)
 {
-    float2 prevUv = _fragInput.uv0.xy;
-    _fragInput.uv0.xy = uv;
-    SurfaceDescription surfaceDescription = SurfaceDescriptionFunction(_fragInput);
-    _fragInput.uv0.xy = prevUv;
+    float2 prevUv = fragInput.uv0.xy;
+    fragInput.uv0.xy = uv;
+    SurfaceDescription surfaceDescription = SurfaceDescriptionFunction(fragInput);
+    //fragInput.uv0.xy = prevUv;
 
     half alpha = surfaceDescription.Alpha;
     return half4(surfaceDescription.BaseColor * alpha + surfaceDescription.Emission, alpha);
 }
-
+#define CANVAS_SHADERGRAPH
+#define UIEFFECT_FRAG_STRUCT SurfaceDescriptionInputs
 #include "Packages/com.coffee.ui-effect/Shaders/UIEffect.cginc"
 // ==== UIEFFECT END ====
-
 
 PackedVaryings vert_override(Attributes input)
 {
@@ -29,12 +27,11 @@ half4 frag_override(PackedVaryings packedInput) : SV_TARGET
     Varyings unpacked = UnpackVaryings(packedInput);
     UNITY_SETUP_INSTANCE_ID(unpacked);
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(unpacked);
-    SurfaceDescriptionInputs surfaceDescriptionInputs = BuildSurfaceDescriptionInputs(unpacked);
-    SurfaceDescription surfaceDescription = SurfaceDescriptionFunction(surfaceDescriptionInputs);
+    SurfaceDescriptionInputs fragInput = BuildSurfaceDescriptionInputs(unpacked);
+    SurfaceDescription surfaceDescription = SurfaceDescriptionFunction(fragInput);
 
-    _fragInput = surfaceDescriptionInputs;
-    const half4 origin = uieffect_frag(_fragInput.uv0.xy);
-    half4 color = uieffect(origin, _fragInput.uv0.xy, unpacked.texCoord2, float4(unpacked.positionWS, 1));
+    const half4 origin = uieffect_frag(fragInput, fragInput.uv0.xy);
+    half4 color = uieffect(origin, fragInput.uv0.xy, unpacked.texCoord2, float4(unpacked.positionWS, 1), fragInput);
 
     //Round up the alpha color coming from the interpolator (to 1.0/256.0 steps)
     //The incoming alpha could have numerical instability, which makes it very sensible to
