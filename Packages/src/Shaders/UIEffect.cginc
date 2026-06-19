@@ -614,7 +614,7 @@ half4 uieffect(half4 origin, float2 uv, float4 uvMask, float4 wpos, UIEFFECT_FRA
         uvMask.x += 4;
     }
 
-    const float isShadow = uvMask.x < 0 ? 1 : 0;
+    const float isShadow = uvMask.x < -1 ? 1 : 0;
     uvMask.x += isShadow * 2;
 
     // Sampling.Pixelation

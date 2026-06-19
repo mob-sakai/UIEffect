@@ -273,5 +273,33 @@ namespace Coffee.UIEffects
                 m_Preset = null;
             }
         }
+
+        public void SetTarget(UIEffectBase effect)
+        {
+            if (effect is UIEffect pEffect)
+            {
+                target = pEffect;
+                preset = null;
+                useTargetTransform = true;
+                customRoot = null;
+                samplingScale = pEffect.samplingScale;
+            }
+            else if (effect is UIEffectReplica pReplica)
+            {
+                target = pReplica.target;
+                preset = pReplica.preset;
+                useTargetTransform = pReplica.useTargetTransform;
+                customRoot = pReplica.customRoot;
+                samplingScale = pReplica.samplingScale;
+            }
+            else
+            {
+                target = null;
+                preset = null;
+                useTargetTransform = true;
+                customRoot = null;
+                samplingScale = 1;
+            }
+        }
     }
 }

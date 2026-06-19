@@ -282,25 +282,7 @@ namespace Coffee.UIEffects
                         });
                     }
 
-                    if (effect is UIEffect pEffect && pEffect.isActiveAndEnabled)
-                    {
-                        replica.target = pEffect;
-                        replica.useTargetTransform = true;
-                        replica.customRoot = null;
-                    }
-                    else if (effect is UIEffectReplica pReplica && pReplica.isActiveAndEnabled)
-                    {
-                        replica.target = pReplica.target;
-                        replica.preset = pReplica.preset;
-                        replica.useTargetTransform = pReplica.useTargetTransform;
-                        replica.customRoot = pReplica.customRoot;
-                    }
-                    else
-                    {
-                        replica.target = null;
-                        replica.customRoot = null;
-                    }
-
+                    replica.SetTarget(effect);
                     subMeshUI.GetComponents(subModifiers);
                     foreach (var modifier in subModifiers)
                     {

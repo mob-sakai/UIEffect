@@ -229,8 +229,6 @@ namespace Coffee.UIEffects.Editors
                 EditorGUI.indentLevel--;
             }
 
-            EditorGUI.EndChangeCheck();
-
             // Sampling filter
             DrawSeparator();
             if (DrawHeaderPopup(_samplingFilter))
