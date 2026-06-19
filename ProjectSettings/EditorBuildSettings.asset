@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Demos/HotUpdate/HotUpdate.unity
+    guid: 7ec916ecedc5e41a1896062381cbd257
+  - enabled: 1
     path: Assets/Samples/Demo/UIEffect_AvailableFilters.unity
     guid: d5c078bb25f6943a8aca31e4ebf27d86
   - enabled: 1
@@ -32,4 +35,6 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Demos/GradationTest/4ColorGradation.unity
     guid: d9fda278a556f4bd6bf27213319aaf06
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: c73d220faf28240f1a28d59807c79b75,
+      type: 2}

@@ -172,6 +172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d43f626d9b5f4d729097092ded48bdb, type: 3}
   m_Name: UIEffectProjectSettings
   m_EditorClassIdentifier: 
+  m_PreLoadSettingsInBuild: 1
   m_RuntimePresets: []
   m_RuntimePresetsV2:
   - {fileID: 11400000, guid: 460881a8263ce454799a8c689c28d8c9, type: 2}
@@ -199,5 +200,8 @@ MonoBehaviour:
     - key: Hidden/UI/Default (SoftMaskable)
       value: Hidden/UI/Default (UIEffect)
     m_Asset: {fileID: -8740588384831342173}
+    m_RegisteredShaders:
+    - {fileID: 4800000, guid: 935b7be1c88464d2eb87204fdfab5a38, type: 3}
+    - {fileID: 4800000, guid: 96246b1ead49a4c5a996fd477bc5a117, type: 3}
     m_ErrorOnUnregisteredVariant: 0
     m_UnregisteredVariants: []

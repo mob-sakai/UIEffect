@@ -38,6 +38,20 @@
         "com.unity.ugui": "1.0.0"
       }
     },
+    "com.unity.addressables": {
+      "version": "1.22.3",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.assetbundle": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.modules.imageconversion": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.scriptablebuildpipeline": "1.21.25",
+        "com.unity.modules.unitywebrequestassetbundle": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.ext.nunit": {
       "version": "1.0.6",
       "depth": 1,
@@ -52,6 +66,13 @@
       "dependencies": {
         "com.unity.ext.nunit": "1.0.6"
       },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.scriptablebuildpipeline": {
+      "version": "1.21.25",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {
@@ -89,6 +110,18 @@
       "source": "builtin",
       "dependencies": {}
     },
+    "com.unity.modules.assetbundle": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.imageconversion": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {}
+    },
     "com.unity.modules.imgui": {
       "version": "1.0.0",
       "depth": 1,
@@ -106,6 +139,21 @@
       "depth": 2,
       "source": "builtin",
       "dependencies": {}
+    },
+    "com.unity.modules.unitywebrequest": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.unitywebrequestassetbundle": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.assetbundle": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0"
+      }
     }
   }
 }
