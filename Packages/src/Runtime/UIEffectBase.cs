@@ -34,6 +34,7 @@ namespace Coffee.UIEffects
         private Matrix4x4 _prevTransformHash;
         private Canvas _canvas;
         private bool _canvasCached = false;
+        private bool _isContextDirty;
 
         public Material effectMaterial => _material;
         public Graphic graphic => _graphic ? _graphic : _graphic = GetComponent<Graphic>();
@@ -137,6 +138,13 @@ namespace Coffee.UIEffects
         private void OnAfterCanvasRebuild()
         {
             if (!_material || !graphic || !canvas || context == null) return;
+
+            if (_isContextDirty)
+            {
+                _isContextDirty = false;
+                ApplyContextToMaterial(GetCurrentMaterial());
+            }
+
             if (!context.useViewMatrix) return;
 
             context.UpdateViewMatrix(GetCurrentMaterial(), transitionRoot, canvas.rootCanvas);
@@ -256,8 +264,14 @@ namespace Coffee.UIEffects
             if (graphic)
             {
                 graphic.SetMaterialDirty();
+                SetMaterialContextDirty();
                 Misc.QueuePlayerLoopUpdate();
             }
+        }
+
+        public virtual void SetMaterialContextDirty()
+        {
+            _isContextDirty = true;
         }
 
         internal void ReleaseMaterial()
@@ -271,6 +285,7 @@ namespace Coffee.UIEffects
         {
             if (!isActiveAndEnabled || context == null || !material) return;
 
+            _isContextDirty = false;
             context.ApplyToMaterial(material, actualSamplingScale);
 
 #if UNITY_EDITOR
