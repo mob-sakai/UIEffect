@@ -3,7 +3,8 @@
     "rootNamespace": "",
     "references": [
         "GUID:6055be8ebefd69e48b49212b09b47b2f",
-        "GUID:f06555f75b070af458a003d92f9efb00"
+        "GUID:f06555f75b070af458a003d92f9efb00",
+        "GUID:6572381e8157783499bf6ce8f56b9292"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -32,6 +33,11 @@
             "name": "com.unity.textmeshpro",
             "expression": "[1.0.0,3.2.0-pre.1)",
             "define": "LEGACY_TMP_ENABLE"
+        },
+        {
+            "name": "media.lightside.unitext",
+            "expression": "",
+            "define": "UNITEXT_ENABLE"
         }
     ],
     "noEngineReferences": false

@@ -8,6 +8,7 @@
     "com.unity.ide.rider": "3.0.38",
     "com.unity.test-framework": "1.1.33",
     "com.unity.textmeshpro": "3.0.9",
+    "media.lightside.unitext": "https://github.com/mob-sakai/UniText.git",
     "com.unity.modules.animation": "1.0.0"
   }
 }

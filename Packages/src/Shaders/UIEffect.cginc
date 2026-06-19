@@ -8,7 +8,9 @@
 #ifndef CANVAS_SHADERGRAPH
 uniform const int _SrcBlend;
 uniform const int _DstBlend;
+#ifndef UIEFFECT_UNITEXT
 uniform const float4 _MainTex_TexelSize;
+#endif
 #endif
 
 uniform const float _ToneIntensity;

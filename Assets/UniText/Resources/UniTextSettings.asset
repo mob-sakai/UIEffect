@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1f8983beb12bb84796c28939f4596ab, type: 3}
+  m_Name: UniTextSettings
+  m_EditorClassIdentifier: 
+  gradients: {fileID: 11400000, guid: 25571032a92321f4997329d90f499d06, type: 2}
+  defaultFontStack: {fileID: 11400000, guid: 72f6e3edfbc82804791ebe8e4814fa46, type: 2}
+  defaultAppearance: {fileID: 11400000, guid: 36ee3940d360ced43a59dd530844bf3d, type: 2}

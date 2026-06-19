@@ -51,6 +51,11 @@
       "displayName": "ShaderGraph Support (Unity 6 URP)",
       "description": "ShaderGraph Support (Unity 6 URP)",
       "path": "Samples~/ShaderGraph Support (Unity 6 URP)~"
+    },
+    {
+      "displayName": "UniText Support",
+      "description": "UniText Support",
+      "path": "Samples~/UniText Support~"
     }
   ]
 }

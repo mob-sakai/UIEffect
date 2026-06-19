@@ -120,7 +120,10 @@ namespace Coffee.UIEffects
 
                 // ShaderGraph Support
                 ("Shader Graphs/UISample (UIEffect)", "ShaderGraph Support (Unity 6 BuiltIn)", "v5.9.0"),
-                ("Shader Graphs/UISampleURP (UIEffect)", "ShaderGraph Support (Unity 6 URP)", "v5.9.0")
+                ("Shader Graphs/UISampleURP (UIEffect)", "ShaderGraph Support (Unity 6 URP)", "v5.9.0"),
+
+                // UniText Support
+                ("Hidden/UniText/Mobile/SDF (UIEffect)", "UniText Support", "v5.9.0")
             });
             ShaderSampleImporter.RegisterShaderAliases(new[]
             {

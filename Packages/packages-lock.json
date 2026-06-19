@@ -104,6 +104,16 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
+    "media.lightside.unitext": {
+      "version": "https://github.com/mob-sakai/UniText.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.modules.ui": "1.0.0"
+      },
+      "hash": "5fd42d0037fab4467a82299391ae54cd7faf8466"
+    },
     "com.unity.modules.animation": {
       "version": "1.0.0",
       "depth": 0,
@@ -136,7 +146,7 @@
     },
     "com.unity.modules.ui": {
       "version": "1.0.0",
-      "depth": 2,
+      "depth": 1,
       "source": "builtin",
       "dependencies": {}
     },

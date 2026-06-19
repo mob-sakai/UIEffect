@@ -19,6 +19,11 @@
                 "m_From": "Assets/TextMeshPro Support (Unity 6)",
                 "m_To": "../Packages/src/Samples~/TextMeshPro Support (Unity 6)~",
                 "m_Define": "UNITY_2023_2_OR_NEWER"
+            },
+            {
+                "m_From": "Assets/UniText Support",
+                "m_To": "../Packages/src/Samples~/UniText Support~",
+                "m_Define": ""
             }
         ]
     }
