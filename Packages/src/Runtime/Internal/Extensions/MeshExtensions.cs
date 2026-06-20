@@ -80,6 +80,15 @@ namespace Coffee.UIEffectInternal
             InternalListPool<int>.Return(ref intList);
         }
 
+        public static void CopyTo(this VertexHelper self, Mesh dst)
+        {
+            if (self == null || dst == null) return;
+
+            dst.Clear(false);
+            self.FillMesh(dst);
+            dst.RecalculateBounds();
+        }
+
         public static void CopyTo(this Mesh self, VertexHelper dst)
         {
             if (!self || dst == null) return;

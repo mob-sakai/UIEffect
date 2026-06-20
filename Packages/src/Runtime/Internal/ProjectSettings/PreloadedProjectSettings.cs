@@ -36,6 +36,7 @@ namespace Coffee.UIEffectInternal
 
             void IPreprocessBuildWithReport.OnPreprocessBuild(BuildReport report)
             {
+                Initialize();
                 s_BuildingPlayer = true;
 
                 foreach (var t in TypeCache.GetTypesDerivedFrom(typeof(PreloadedProjectSettings<>)))
@@ -52,24 +53,12 @@ namespace Coffee.UIEffectInternal
                               $"({t.Name}) from PreloadedAssets. " +
                               $"It will be restored after build completes.");
                 }
-
-                Initialize();
             }
 
             void IPostprocessBuildWithReport.OnPostprocessBuild(BuildReport report)
             {
                 s_BuildingPlayer = false;
-
                 Initialize();
-
-                foreach (var t in TypeCache.GetTypesDerivedFrom(typeof(PreloadedProjectSettings<>)))
-                {
-                    var settings = GetDefaultSettings(t);
-                    if (!settings || settings.m_PreLoadSettingsInBuild) continue;
-
-                    Debug.Log($"[PreloadedProjectSettings] Build finished: restored '{settings.name}' " +
-                              $"({t.Name}) to PreloadedAssets.");
-                }
             }
         }
 
