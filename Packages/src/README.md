@@ -60,6 +60,7 @@ Apply professional-grade filters like grayscale, blur, and dissolve directly fro
   - [Usage with SoftMaskForUGUI](#usage-with-softmaskforugui)
   - [Usage with ShaderGraph](#usage-with-shadergraph)
   - [Usage with Timeline](#usage-with-timeline)
+  - [Usage with Custom Shader](#usage-with-custom-shader)
   - [Runtime/Editor Preset for UIEffect](#runtimeeditor-preset-for-uieffect)
   - [Usage with Code](#usage-with-code)
   - [Project Settings](#project-settings)
@@ -542,6 +543,25 @@ Timeline is a powerful animation tool that can control UIEffect using `ControlTr
 - `Control Track`: One of the built-in tracks. When you assign a GameObject with `UIEffect`, `UIEffect` will be enabled during the clip duration.
 - `UIEffect Tracks`: Tracks for UIEffect. They control `float` or `Color` type properties.
   - Supports blending, extrapolation, and tween.
+
+<br><br>
+
+### Usage with Custom Shader
+
+To make your custom shader support UIEffect, it must satisfy the following requirements.
+Refer to the sections enclosed by `==== UIEFFECT START ===` and `==== UIEFFECT END ====` in the built-in `Hidden/UI/Default (UIEffect)` shader included in the package.
+
+https://github.com/mob-sakai/UIEffect/blob/main/Packages/src/Shaders/UIEffect.shader
+
+- Blend: `Blend [_SrcBlend] [_DstBlend]`
+- Shader variants: `#pragma shader_feature_local_fragment ***`
+- Vertex shader input structure: `float4 uvMask : TEXCOORD***;`
+- Vertex shader: `OUT.uvMask = v.uvMask;` and `OUT.worldPosition = v.vertex;`
+- Pixel shader input structure: `float4 uvMask : TEXCOORD***;` and `float4 worldPosition : TEXCOORD***;`
+- UIEffect micro pixel shader: a function that returns the color of the specified pixel and has the signature `half4 uieffect_frag(v2f IN, float2 uv)`.
+- Pixel shader input structure name definition: `#define UIEFFECT_FRAG_STRUCT v2f`
+- Include the UIEffect library: `#include "Packages/com.coffee.ui-effect/Shaders/UIEffect.cginc"`
+- Pixel shader: `half4 c = uieffect(IN.texcoord, IN.uvMask, IN.worldPosition, IN);`
 
 <br><br>
 

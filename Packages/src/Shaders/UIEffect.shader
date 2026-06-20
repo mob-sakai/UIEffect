@@ -42,7 +42,9 @@ Shader "Hidden/UI/Default (UIEffect)"
         Lighting Off
         ZWrite Off
         ZTest [unity_GUIZTestMode]
+        // ==== UIEFFECT START ====
         Blend [_SrcBlend] [_DstBlend]
+        // ==== UIEFFECT END ====
         ColorMask [_ColorMask]
 
         Pass
@@ -117,7 +119,6 @@ Shader "Hidden/UI/Default (UIEffect)"
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
                 float4 vPosition = UnityObjectToClipPos(v.vertex);
-                OUT.worldPosition = v.vertex;
                 OUT.vertex = vPosition;
 
                 float2 pixelSize = vPosition.w;
@@ -141,20 +142,20 @@ Shader "Hidden/UI/Default (UIEffect)"
 
                 // ==== UIEFFECT START ====
                 OUT.uvMask = v.uvMask;
+                OUT.worldPosition = v.vertex;
                 // ==== UIEFFECT END ====
 
                 return OUT;
             }
 
             // ==== UIEFFECT START ====
-            fixed4 uieffect_frag(v2f IN, float2 uv)
+            half4 uieffect_frag(v2f IN, float2 uv)
             {
                 half4 color = (tex2D(_MainTex, uv) + _TextureSampleAdd);
                 color.rgb *= IN.color.rgb;
                 color.rgb *= color.a;
                 return color;
             }
-
             #define UIEFFECT_FRAG_STRUCT v2f
             #include "Packages/com.coffee.ui-effect/Shaders/UIEffect.cginc"
             // ==== UIEFFECT END ====
@@ -168,7 +169,9 @@ Shader "Hidden/UI/Default (UIEffect)"
                 const half invAlphaPrecision = half(1.0 / alphaPrecision);
                 IN.color.a = round(IN.color.a * alphaPrecision) * invAlphaPrecision;
 
+                // ==== UIEFFECT START ====
                 half4 c = uieffect(IN.texcoord, IN.uvMask, IN.worldPosition, IN);
+                // ==== UIEFFECT END ====
                 c *= IN.color.a;
 
                 #ifdef UNITY_UI_CLIP_RECT
