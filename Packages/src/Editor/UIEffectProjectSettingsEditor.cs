@@ -10,27 +10,24 @@ using UnityEditorInternal;
 namespace Coffee.UIEffects.Editors
 {
     [CustomEditor(typeof(UIEffectProjectSettings))]
-    public class UIEffectProjectSettingsEditor : Editor
+    internal class UIEffectProjectSettingsEditor : PreloadedProjectSettingsEditor
     {
         private ReorderableList _reorderableList;
         private SerializedProperty _runtimePresets;
         private SerializedProperty _runtimePresetsV2;
         private SerializedProperty _useHDRColorPicker;
-        private SerializedProperty _preLoadSettingsInBuild;
-        private bool _isInitialized;
         private ShaderVariantRegistryEditor _shaderVariantRegistryEditor;
         private UIEffect[] _legacyPresets;
         private bool _expandRuntimePresets;
         private bool _expandLegacyPrefabs;
 
-        private void InitializeIfNeeded()
+        protected override void OnEnable()
         {
-            if (_isInitialized) return;
-
+            base.OnEnable();
+            _legacyPresets = UIEffectProjectSettings.LoadEditorPresets();
             _useHDRColorPicker = serializedObject.FindProperty("m_UseHDRColorPicker");
             _runtimePresets = serializedObject.FindProperty("m_RuntimePresets");
             _runtimePresetsV2 = serializedObject.FindProperty("m_RuntimePresetsV2");
-            _preLoadSettingsInBuild = serializedObject.FindProperty("m_PreLoadSettingsInBuild");
 
             _reorderableList = new ReorderableList(serializedObject, _runtimePresetsV2, true, true, true, true);
             _reorderableList.drawHeaderCallback = rect => EditorGUI.LabelField(rect, "Runtime Presets");
@@ -51,24 +48,12 @@ namespace Coffee.UIEffects.Editors
                     x => !UIEffectProjectSettings.instance.m_RuntimePresetsV2.Contains(x.preset),
                     UIEffectProjectSettings.RegisterRuntimePreset);
             };
-
-            _isInitialized = true;
-        }
-
-        private void OnEnable()
-        {
-            _legacyPresets = UIEffectProjectSettings.LoadEditorPresets();
-        }
-
-        private void OnDisable()
-        {
-            _isInitialized = false;
         }
 
         public override void OnInspectorGUI()
         {
-            serializedObject.Update();
-            InitializeIfNeeded();
+            EditorGUIUtility.labelWidth = 180;
+            base.OnInspectorGUI();
 
             // Settings
             // Runtime Presets
@@ -79,7 +64,6 @@ namespace Coffee.UIEffects.Editors
 
             // Editor
             // Use HDR color pickers.
-            EditorGUIUtility.labelWidth = 200;
             EditorGUILayout.PropertyField(_useHDRColorPicker);
 
             // Shader
@@ -99,24 +83,8 @@ namespace Coffee.UIEffects.Editors
 
             _shaderVariantRegistryEditor.Draw();
 
-            EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Advanced", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(_preLoadSettingsInBuild);
-            if (!_preLoadSettingsInBuild.boolValue)
-            {
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.HelpBox("UIEffectProjectSettings asset will not be built in." +
-                                        "please load manually from Resources, AssetBundle, or Addressables before using UIEffect.",
-                    MessageType.Warning);
-                if (GUILayout.Button("Ping"))
-                {
-                    EditorGUIUtility.PingObject(target);
-                }
+            DrawPreLoadSettingsInBuild("UIEffect");
 
-                EditorGUILayout.EndHorizontal();
-            }
-
-            GUILayout.FlexibleSpace();
             serializedObject.ApplyModifiedProperties();
         }
 

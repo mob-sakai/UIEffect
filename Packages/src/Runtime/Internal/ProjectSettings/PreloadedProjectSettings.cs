@@ -18,6 +18,8 @@ namespace Coffee.UIEffectInternal
                  "When disable, you should load this settings via Resources, AssetBundles or " +
                  "Addressables to use UIEffect.")]
         [SerializeField]
+        [Header("Advanced")]
+        [HideInInspector]
         private bool m_PreLoadSettingsInBuild = true;
 
         protected static bool s_BuildingPlayer;
@@ -36,6 +38,7 @@ namespace Coffee.UIEffectInternal
 
             void IPreprocessBuildWithReport.OnPreprocessBuild(BuildReport report)
             {
+                AssetDatabase.Refresh();
                 Initialize();
                 s_BuildingPlayer = true;
 
@@ -69,9 +72,12 @@ namespace Coffee.UIEffectInternal
                 var defaultSettings = GetDefaultSettings(t);
                 if (defaultSettings == null)
                 {
-                    // When create a new instance, automatically set it as default settings.
-                    defaultSettings = CreateInstance(t) as PreloadedProjectSettings;
-                    if (!s_BuildingPlayer) SetDefaultSettings(defaultSettings);
+                    if (!s_BuildingPlayer)
+                    {
+                        // When create a new instance, automatically set it as default settings.
+                        defaultSettings = CreateInstance(t) as PreloadedProjectSettings;
+                        SetDefaultSettings(defaultSettings);
+                    }
                 }
                 else if (GetPreloadedSettings(t).Length != 1)
                 {
@@ -103,7 +109,7 @@ namespace Coffee.UIEffectInternal
         protected static PreloadedProjectSettings GetDefaultSettings(Type type)
         {
             return GetPreloadedSettings(type).FirstOrDefault() as PreloadedProjectSettings
-                   ?? AssetDatabase.FindAssets($"t:{nameof(PreloadedProjectSettings)}")
+                   ?? AssetDatabase.FindAssets($"t:{type.Name}")
                        .Select(AssetDatabase.GUIDToAssetPath)
                        .Select(AssetDatabase.LoadAssetAtPath<PreloadedProjectSettings>)
                        .FirstOrDefault(x => x != null && x.GetType() == type);
@@ -148,6 +154,35 @@ namespace Coffee.UIEffectInternal
 
         protected virtual void OnInitialize()
         {
+        }
+    }
+
+    internal abstract class PreloadedProjectSettingsEditor : Editor
+    {
+        private SerializedProperty _preLoadSettingsInBuild;
+
+        protected virtual void OnEnable()
+        {
+            _preLoadSettingsInBuild = serializedObject.FindProperty("m_PreLoadSettingsInBuild");
+        }
+
+        protected void DrawPreLoadSettingsInBuild(string packageName)
+        {
+            EditorGUILayout.PropertyField(_preLoadSettingsInBuild);
+            if (!_preLoadSettingsInBuild.boolValue)
+            {
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.HelpBox(
+                    $"{target.GetType().Name} asset will not be built in.\n" +
+                    $"please load manually from Resources, AssetBundle, or Addressables before using {packageName}.",
+                    MessageType.Warning);
+                if (GUILayout.Button("Ping"))
+                {
+                    EditorGUIUtility.PingObject(target);
+                }
+
+                EditorGUILayout.EndHorizontal();
+            }
         }
     }
 #else

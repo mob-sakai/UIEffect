@@ -13,6 +13,8 @@ namespace Coffee.UIEffectInternal
 
         public static int count => s_Repository.count;
 
+        public static Func<string, Shader> onShaderFind = Shader.Find;
+
 #if UNITY_EDITOR
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         public static void Clear()
@@ -48,7 +50,7 @@ namespace Coffee.UIEffectInternal
         public static void Get(Hash128 hash, ref Material material, string shaderName)
         {
             Profiler.BeginSample("(COF)[MaterialRepository] Get");
-            s_Repository.Get(hash, ref material, x => new Material(Shader.Find(x))
+            s_Repository.Get(hash, ref material, x => new Material(onShaderFind(x))
             {
                 hideFlags = HideFlags.DontSave | HideFlags.NotEditable
             }, shaderName);
@@ -61,7 +63,7 @@ namespace Coffee.UIEffectInternal
         public static void Get(Hash128 hash, ref Material material, string shaderName, string[] keywords)
         {
             Profiler.BeginSample("(COF)[MaterialRepository] Get");
-            s_Repository.Get(hash, ref material, x => new Material(Shader.Find(x.shaderName))
+            s_Repository.Get(hash, ref material, x => new Material(onShaderFind(x.shaderName))
             {
                 hideFlags = HideFlags.DontSave | HideFlags.NotEditable,
                 shaderKeywords = x.keywords

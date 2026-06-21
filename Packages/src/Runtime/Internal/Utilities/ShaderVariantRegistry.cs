@@ -188,6 +188,7 @@ namespace Coffee.UIEffectInternal
         /// </summary>
         public void RegisterOptionalShaders(Object owner)
         {
+            if (owner == null) return;
             var shaderPaths = ShaderUtil.GetAllShaderInfo()
                 .Select(s => AssetDatabase.GetAssetPath(Shader.Find(s.name)))
                 .Where(path => !string.IsNullOrEmpty(path) && path.EndsWith(".shader"))
@@ -204,6 +205,7 @@ namespace Coffee.UIEffectInternal
         /// </summary>
         private void RegisterOptionalShaders(Object owner, string path)
         {
+            if (owner == null) return;
             if (!File.Exists(path) || !path.EndsWith(".shader")) return;
 
             var packageName = PackageInfo.FindForAssembly(typeof(ShaderVariantRegistry).Assembly)?.name;
@@ -236,6 +238,7 @@ namespace Coffee.UIEffectInternal
 
         public void InitializeIfNeeded(Object owner)
         {
+            if (owner == null) return;
             Profiler.BeginSample("(EDITOR/COF)[ShaderVariantRegistry] InitializeIfNeeded");
 
             if (!m_Asset && AssetDatabase.IsMainAsset(owner))
@@ -272,6 +275,7 @@ namespace Coffee.UIEffectInternal
         /// </summary>
         private void SyncRegisteredShaders(Object owner)
         {
+            if (owner == null) return;
             var so = new SerializedObject(m_Asset);
             var shaders = so.FindProperty("m_Shaders");
             m_RegisteredShaders.Clear();
