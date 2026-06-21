@@ -43,6 +43,46 @@ ShaderVariantCollection:
         passType: 0
       - keywords: GLOW_ON TRANSITION_SHINY UNDERLAY_ON
         passType: 0
+      - keywords: GLOW_ON TONE_RETRO UNDERLAY_ON
+        passType: 0
+      - keywords: COLOR_FILTER GLOW_ON UNDERLAY_ON
+        passType: 0
+      - keywords: GLOW_ON SAMPLING_BLUR_DETAIL UNDERLAY_ON
+        passType: 0
+      - keywords: GLOW_ON SAMPLING_PIXELATION UNDERLAY_ON
+        passType: 0
+      - keywords: SAMPLING_PIXELATION TONE_RETRO
+        passType: 0
+      - keywords: GLOW_ON SAMPLING_RGB_SHIFT UNDERLAY_ON
+        passType: 0
+      - keywords: GLOW_ON SAMPLING_EDGE_LUMINANCE UNDERLAY_ON
+        passType: 0
+      - keywords: TRANSITION_DISSOLVE
+        passType: 0
+      - keywords: GLOW_ON TRANSITION_DISSOLVE UNDERLAY_ON
+        passType: 0
+      - keywords: TRANSITION_SHINY
+        passType: 0
+      - keywords: GLOW_ON TRANSITION_SHINY UNDERLAY_ON
+        passType: 0
+      - keywords: TRANSITION_MELT
+        passType: 0
+      - keywords: GLOW_ON TRANSITION_MELT UNDERLAY_ON
+        passType: 0
+      - keywords: TRANSITION_BURN
+        passType: 0
+      - keywords: GLOW_ON TRANSITION_BURN UNDERLAY_ON
+        passType: 0
+      - keywords: COLOR_FILTER GLOW_ON TRANSITION_BURN UNDERLAY_ON
+        passType: 0
+      - keywords: TRANSITION_PATTERN
+        passType: 0
+      - keywords: GLOW_ON TRANSITION_PATTERN UNDERLAY_ON
+        passType: 0
+      - keywords: EDGE_PLAIN GLOW_ON UNDERLAY_ON
+        passType: 0
+      - keywords: COLOR_FILTER GLOW_ON GRADATION_GRADIENT UNDERLAY_ON
+        passType: 0
   - first: {fileID: 4800000, guid: 96246b1ead49a4c5a996fd477bc5a117, type: 3}
     second:
       variants:
@@ -160,6 +200,114 @@ ShaderVariantCollection:
         passType: 0
       - keywords: TRANSITION_SHINY UNITY_UI_CLIP_RECT
         passType: 0
+      - keywords: TONE_GRAYSCALE
+        passType: 0
+      - keywords: TONE_SEPIA
+        passType: 0
+      - keywords: TONE_NEGATIVE
+        passType: 0
+      - keywords: TONE_RETRO
+        passType: 0
+      - keywords: TONE_POSTERIZE
+        passType: 0
+      - keywords: COLOR_FILTER
+        passType: 0
+      - keywords: SAMPLING_BLUR_FAST
+        passType: 0
+      - keywords: COLOR_FILTER SAMPLING_BLUR_FAST
+        passType: 0
+      - keywords: COLOR_FILTER SAMPLING_BLUR_FAST UNITY_UI_CLIP_RECT
+        passType: 0
+      - keywords: COLOR_FILTER SAMPLING_BLUR_FAST TONE_GRAYSCALE
+        passType: 0
+      - keywords: SAMPLING_BLUR_MEDIUM
+        passType: 0
+      - keywords: SAMPLING_BLUR_DETAIL
+        passType: 0
+      - keywords: SAMPLING_PIXELATION
+        passType: 0
+      - keywords: SAMPLING_PIXELATION TONE_RETRO
+        passType: 0
+      - keywords: SAMPLING_PIXELATION TONE_RETRO UNITY_UI_CLIP_RECT
+        passType: 0
+      - keywords: SAMPLING_RGB_SHIFT
+        passType: 0
+      - keywords: SAMPLING_EDGE_LUMINANCE
+        passType: 0
+      - keywords: SAMPLING_EDGE_ALPHA
+        passType: 0
+      - keywords: TRANSITION_FADE
+        passType: 0
+      - keywords: TRANSITION_CUTOFF
+        passType: 0
+      - keywords: TRANSITION_DISSOLVE
+        passType: 0
+      - keywords: TRANSITION_DISSOLVE UNITY_UI_CLIP_RECT
+        passType: 0
+      - keywords: COLOR_FILTER SAMPLING_BLUR_FAST TONE_GRAYSCALE TRANSITION_DISSOLVE
+        passType: 0
+      - keywords: TRANSITION_SHINY
+        passType: 0
+      - keywords: TRANSITION_SHINY UNITY_UI_CLIP_RECT
+        passType: 0
+      - keywords: TRANSITION_MASK
+        passType: 0
+      - keywords: SAMPLING_EDGE_LUMINANCE TRANSITION_MASK
+        passType: 0
+      - keywords: TRANSITION_MELT
+        passType: 0
+      - keywords: TRANSITION_MELT UNITY_UI_CLIP_RECT
+        passType: 0
+      - keywords: COLOR_FILTER TRANSITION_MELT
+        passType: 0
+      - keywords: TRANSITION_BURN
+        passType: 0
+      - keywords: TRANSITION_BURN UNITY_UI_CLIP_RECT
+        passType: 0
+      - keywords: TRANSITION_PATTERN
+        passType: 0
+      - keywords: TRANSITION_PATTERN UNITY_UI_CLIP_RECT
+        passType: 0
+      - keywords: TRANSITION_BLAZE
+        passType: 0
+      - keywords: EDGE_PLAIN
+        passType: 0
+      - keywords: COLOR_FILTER EDGE_PLAIN
+        passType: 0
+      - keywords: EDGE_PLAIN TRANSITION_PATTERN
+        passType: 0
+      - keywords: COLOR_FILTER EDGE_PLAIN TRANSITION_PATTERN
+        passType: 0
+      - keywords: EDGE_SHINY
+        passType: 0
+      - keywords: COLOR_FILTER EDGE_SHINY
+        passType: 0
+      - keywords: EDGE_SHINY SAMPLING_EDGE_ALPHA
+        passType: 0
+      - keywords: EDGE_SHINY TRANSITION_PATTERN
+        passType: 0
+      - keywords: DETAIL_MASKING
+        passType: 0
+      - keywords: DETAIL_MULTIPLY
+        passType: 0
+      - keywords: DETAIL_ADDITIVE
+        passType: 0
+      - keywords: DETAIL_SUBTRACTIVE
+        passType: 0
+      - keywords: DETAIL_REPLACE
+        passType: 0
+      - keywords: DETAIL_MULTIPLY_ADDITIVE
+        passType: 0
+      - keywords: COLOR_FILTER TARGET_HUE
+        passType: 0
+      - keywords: COLOR_FILTER TARGET_LUMINANCE
+        passType: 0
+      - keywords: GRADATION_GRADIENT
+        passType: 0
+      - keywords: GRADATION_COLOR2
+        passType: 0
+      - keywords: GRADATION_COLOR4
+        passType: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,7 +320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d43f626d9b5f4d729097092ded48bdb, type: 3}
   m_Name: UIEffectProjectSettings
   m_EditorClassIdentifier: 
-  m_PreLoadSettingsInBuild: 1
+  m_PreLoadSettingsInBuild: 0
   m_RuntimePresets: []
   m_RuntimePresetsV2:
   - {fileID: 11400000, guid: 460881a8263ce454799a8c689c28d8c9, type: 2}
