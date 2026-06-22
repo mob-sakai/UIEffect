@@ -82,7 +82,9 @@ uniform const matrix _CanvasToWorldMatrix;
 #endif
 
 #ifndef UIEFFECT_FRAG_STRUCT
-struct uieffect_v2f{};
+struct uieffect_v2f
+{
+};
 #define UIEFFECT_FRAG_STRUCT uieffect_v2f
 #endif
 
@@ -540,7 +542,7 @@ float edge(float2 uv, const float4 uvMask, float width)
     e = min(e, (TEX_SAMPLE_CLAMP((uv + d * float2(0.0, -1.0)), uvMask)).a);
     e = min(e, (TEX_SAMPLE_CLAMP((uv + d * float2(0.5, -0.866025)), uvMask)).a);
     e = min(e, (TEX_SAMPLE_CLAMP((uv + d * float2(0.866025, -0.5)), uvMask)).a);
-    
+
     return 1 - inv_lerp(0.15, 0.3, e);
     #else
     return 0;

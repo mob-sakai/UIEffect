@@ -527,7 +527,9 @@ namespace Coffee.UIEffects
 #pragma warning disable CS0612 // Type or member is obsolete
                                                || m_GradationMode == GradationMode.RadialDetail
 #pragma warning restore CS0612
-                                               || m_GradationMode == GradationMode.RadialGradient ? 1 : 0);
+                                               || m_GradationMode == GradationMode.RadialGradient
+                ? 1
+                : 0);
 
             material.SetFloat(s_DetailIntensity, Mathf.Clamp01(m_DetailIntensity));
             material.SetColor(s_DetailColor, ApplyColorSpace(m_DetailColor));

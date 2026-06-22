@@ -24,7 +24,9 @@ public class HotUpdate : MonoBehaviour
     private void Start()
     {
         if (m_ExecuteOnStart)
+        {
             Execute();
+        }
     }
 
     private void AddLog(string message)
@@ -32,7 +34,9 @@ public class HotUpdate : MonoBehaviour
         Debug.Log(message);
         _sb.AppendLine(message);
         if (m_Log)
+        {
             m_Log.text = _sb.ToString();
+        }
     }
 
     public void Execute()
@@ -48,6 +52,7 @@ public class HotUpdate : MonoBehaviour
             AddLog($"*** Execution is already in progress. Please wait until it completes.");
             return;
         }
+
         _co = StartCoroutine(Co_Execute());
     }
 

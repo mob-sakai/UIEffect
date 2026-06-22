@@ -305,7 +305,8 @@ namespace Coffee.UIEffects
             Misc.QueuePlayerLoopUpdate();
         }
 
-        private static TMP_SubMeshUI GetSubMeshUI(List<TMP_SubMeshUI> subMeshes, Material material, Mesh mesh, int start)
+        private static TMP_SubMeshUI GetSubMeshUI(List<TMP_SubMeshUI> subMeshes, Material material, Mesh mesh,
+            int start)
         {
             var count = subMeshes.Count;
             if (mesh)

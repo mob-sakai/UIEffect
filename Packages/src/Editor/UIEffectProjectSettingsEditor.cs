@@ -48,6 +48,13 @@ namespace Coffee.UIEffects.Editors
                     x => !UIEffectProjectSettings.instance.m_RuntimePresetsV2.Contains(x.preset),
                     UIEffectProjectSettings.RegisterRuntimePreset);
             };
+
+            _shaderVariantRegistryEditor = ShaderVariantRegistryEditor.Create(serializedObject, "(UIEffect)",
+                () =>
+                {
+                    UIEffectProjectSettings.shaderRegistry
+                        .RegisterOptionalShaders(UIEffectProjectSettings.instance);
+                });
         }
 
         public override void OnInspectorGUI()
@@ -70,22 +77,11 @@ namespace Coffee.UIEffects.Editors
             // Shader registry
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Shader", EditorStyles.boldLabel);
-            if (_shaderVariantRegistryEditor == null)
-            {
-                var property = serializedObject.FindProperty("m_ShaderVariantRegistry");
-                _shaderVariantRegistryEditor = new ShaderVariantRegistryEditor(property, "(UIEffect)",
-                    () =>
-                    {
-                        UIEffectProjectSettings.shaderRegistry
-                            .RegisterOptionalShaders(UIEffectProjectSettings.instance);
-                    });
-            }
-
             _shaderVariantRegistryEditor.Draw();
 
             DrawPreLoadSettingsInBuild("UIEffect");
-
             serializedObject.ApplyModifiedProperties();
+            GUILayout.FlexibleSpace();
         }
 
         private void DrawLegacyPresets()

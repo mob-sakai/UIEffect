@@ -156,6 +156,7 @@ Shader "Hidden/UI/Default (UIEffect)"
                 color.rgb *= color.a;
                 return color;
             }
+
             #define UIEFFECT_FRAG_STRUCT v2f
             #include "Packages/com.coffee.ui-effect/Shaders/UIEffect.cginc"
             // ==== UIEFFECT END ====
@@ -186,7 +187,7 @@ Shader "Hidden/UI/Default (UIEffect)"
                 // ==== SOFTMASKABLE END ====
 
                 #ifdef UNITY_UI_ALPHACLIP
-                clip (c.a - 0.001);
+                clip(c.a - 0.001);
                 #endif
 
                 return c;

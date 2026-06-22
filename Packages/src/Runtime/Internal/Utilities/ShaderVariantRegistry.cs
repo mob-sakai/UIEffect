@@ -398,13 +398,84 @@ namespace Coffee.UIEffectInternal
         private bool _expandOptionalShaders;
         private bool _expandUnregisteredVariants;
 
-        public ShaderVariantRegistryEditor(SerializedProperty property, string optionName, Action onFindOptions)
+        public static ShaderVariantRegistryEditor CreateWithoutOption(SerializedObject so)
+        {
+            var property = so.FindProperty("m_ShaderVariantRegistry");
+            return new ShaderVariantRegistryEditor(property, null, null);
+        }
+
+        public static ShaderVariantRegistryEditor CreateWithoutOption(SerializedProperty property)
+        {
+            return new ShaderVariantRegistryEditor(property, null, null);
+        }
+
+        public static ShaderVariantRegistryEditor Create(SerializedObject so, string optionName, Action onFindOptions)
+        {
+            var property = so.FindProperty("m_ShaderVariantRegistry");
+            return new ShaderVariantRegistryEditor(property, optionName, onFindOptions);
+        }
+
+        public static ShaderVariantRegistryEditor Create(SerializedProperty property, string optionName,
+            Action onFindOptions)
+        {
+            return new ShaderVariantRegistryEditor(property, optionName, onFindOptions);
+        }
+
+        private ShaderVariantRegistryEditor(SerializedProperty property, string optionName, Action onFindOptions)
         {
             var so = property.serializedObject;
             var optionalShaders = property.FindPropertyRelative("m_OptionalShaders");
             var unregisteredVariants = property.FindPropertyRelative("m_UnregisteredVariants");
             _errorOnUnregisteredVariant = property.FindPropertyRelative("m_ErrorOnUnregisteredVariant");
             _asset = property.FindPropertyRelative("m_Asset");
+
+            _rlUnregisteredVariants = new ReorderableList(so, unregisteredVariants, false, true, false, true);
+            _rlUnregisteredVariants.drawHeaderCallback = rect =>
+            {
+                var rWarning = new Rect(rect.x, rect.y, 20, rect.height);
+                var icon = EditorGUIUtility.TrIconContent("warning",
+                    "These variants are not registered.\nRegister them to use in player.");
+                EditorGUI.LabelField(rWarning, icon);
+
+                var rLabel = new Rect(rect.x + 20, rect.y, 200, rect.height);
+                EditorGUI.LabelField(rLabel, "Unregistered Shader Variants");
+
+                var rButton = new Rect(rect.x + rect.width - 60, rect.y, 60, rect.height - 4);
+                if (GUI.Button(rButton, "Clear All", EditorStyles.miniButton))
+                {
+                    unregisteredVariants.ClearArray();
+                }
+            };
+            _rlUnregisteredVariants.elementHeight = EditorGUIUtility.singleLineHeight * 2 + 4;
+            _rlUnregisteredVariants.drawElementCallback = (r, index, isActive, isFocused) =>
+            {
+                if (unregisteredVariants.arraySize <= index) return;
+
+                var element = unregisteredVariants.GetArrayElementAtIndex(index);
+                if (element == null) return;
+
+                var key = element.FindPropertyRelative("key");
+                var value = element.FindPropertyRelative("value");
+
+                var h = EditorGUIUtility.singleLineHeight;
+                var rKey = new Rect(r.x, r.y + 2, r.width, h);
+                EditorGUI.LabelField(rKey, key.stringValue, EditorStyles.popup);
+
+                var rValue = new Rect(r.x + 20, r.y + h + 5, r.width - 40, 14);
+                var keywords = string.IsNullOrEmpty(value.stringValue) ? "<no keywords>" : value.stringValue;
+                EditorGUI.TextField(rValue, GUIContent.none, keywords, "LODRenderersText");
+
+                var rButton = new Rect(r.x + r.width - 20, r.y + h + 4, 20, h);
+                if (GUI.Button(rButton, EditorGUIUtility.IconContent("icons/toolbar plus.png"), "iconbutton"))
+                {
+                    var collection = _asset.objectReferenceValue as ShaderVariantCollection;
+                    AddVariant(collection, key.stringValue, value.stringValue);
+                    unregisteredVariants.DeleteArrayElementAtIndex(index);
+                }
+            };
+
+            // Optional shaders.
+            if (string.IsNullOrEmpty(optionName)) return;
 
             _rlOptionalShaders = new ReorderableList(so, optionalShaders, true, true, true, true);
             _rlOptionalShaders.drawHeaderCallback = rect =>
@@ -452,56 +523,15 @@ namespace Coffee.UIEffectInternal
                     ShowShaderDropdown(value);
                 }
             };
-
-            _rlUnregisteredVariants = new ReorderableList(so, unregisteredVariants, false, true, false, true);
-            _rlUnregisteredVariants.drawHeaderCallback = rect =>
-            {
-                var rWarning = new Rect(rect.x, rect.y, 20, rect.height);
-                var icon = EditorGUIUtility.TrIconContent("warning",
-                    "These variants are not registered.\nRegister them to use in player.");
-                EditorGUI.LabelField(rWarning, icon);
-
-                var rLabel = new Rect(rect.x + 20, rect.y, 200, rect.height);
-                EditorGUI.LabelField(rLabel, "Unregistered Shader Variants");
-
-                var rButton = new Rect(rect.x + rect.width - 60, rect.y, 60, rect.height - 4);
-                if (GUI.Button(rButton, "Clear All", EditorStyles.miniButton))
-                {
-                    unregisteredVariants.ClearArray();
-                }
-            };
-            _rlUnregisteredVariants.elementHeight = EditorGUIUtility.singleLineHeight * 2 + 4;
-            _rlUnregisteredVariants.drawElementCallback = (r, index, isActive, isFocused) =>
-            {
-                if (unregisteredVariants.arraySize <= index) return;
-
-                var element = unregisteredVariants.GetArrayElementAtIndex(index);
-                if (element == null) return;
-
-                var key = element.FindPropertyRelative("key");
-                var value = element.FindPropertyRelative("value");
-
-                var h = EditorGUIUtility.singleLineHeight;
-                var rKey = new Rect(r.x, r.y + 2, r.width, h);
-                EditorGUI.LabelField(rKey, key.stringValue, EditorStyles.popup);
-
-                var rValue = new Rect(r.x + 20, r.y + h + 5, r.width - 40, 14);
-                var keywords = string.IsNullOrEmpty(value.stringValue) ? "<no keywords>" : value.stringValue;
-                EditorGUI.TextField(rValue, GUIContent.none, keywords, "LODRenderersText");
-
-                var rButton = new Rect(r.x + r.width - 20, r.y + h + 4, 20, h);
-                if (GUI.Button(rButton, EditorGUIUtility.IconContent("icons/toolbar plus.png"), "iconbutton"))
-                {
-                    var collection = _asset.objectReferenceValue as ShaderVariantCollection;
-                    AddVariant(collection, key.stringValue, value.stringValue);
-                    unregisteredVariants.DeleteArrayElementAtIndex(index);
-                }
-            };
         }
 
         public void Draw()
         {
-            DrawOptionalShaders(ref _expandOptionalShaders, _rlOptionalShaders);
+            if (_rlOptionalShaders != null)
+            {
+                DrawOptionalShaders(ref _expandOptionalShaders, _rlOptionalShaders);
+            }
+
             DrawRegisteredShaderVariants(ref _expandUnregisteredVariants, _asset, ref _editor);
             if (0 < _rlUnregisteredVariants.serializedProperty.arraySize)
             {

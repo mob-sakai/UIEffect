@@ -15,8 +15,7 @@ namespace Coffee.UIEffectInternal
 #if UNITY_EDITOR
     {
         [Tooltip("When enabled, this settings asset will be added to PlayerSettings.preloadedAssets in build.\n\n" +
-                 "When disable, you should load this settings via Resources, AssetBundles or " +
-                 "Addressables to use UIEffect.")]
+                 "When disable, you should load this settings via Resources, AssetBundles or Addressables to use.")]
         [SerializeField]
         [Header("Advanced")]
         [HideInInspector]
