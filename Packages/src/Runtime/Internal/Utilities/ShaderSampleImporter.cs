@@ -16,19 +16,6 @@ namespace Coffee.UIEffectInternal
         private static readonly Dictionary<string, string> s_SampleNames = new Dictionary<string, string>();
         private static readonly Dictionary<string, string> s_ShaderAliases = new Dictionary<string, string>();
 
-#if UNITY_2019_3_OR_NEWER
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-#else
-        [InitializeOnLoadMethod]
-#endif
-        private static void InitializeOnLoad()
-        {
-            s_Samples = null;
-            s_DeprecatedShaders = null;
-            s_SampleNames.Clear();
-            s_ShaderAliases.Clear();
-        }
-
         public static void RegisterShaderSamples((string shaderName, string sampleName, string version)[] samples)
         {
             if (IsBatchOrBuilding()) return;
