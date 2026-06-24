@@ -37,7 +37,7 @@ namespace Coffee.UIEffects
         private bool _isContextDirty;
 
         public Material effectMaterial => _material;
-        public Graphic graphic => _graphic ? _graphic : _graphic = GetComponent<Graphic>();
+        public Graphic graphic => _graphic != null ? _graphic : _graphic = GetComponent<Graphic>();
         public virtual uint effectId => (uint)GetHashCode();
         public virtual float actualSamplingScale => 1;
         public virtual bool canModifyShape => true;
@@ -50,7 +50,7 @@ namespace Coffee.UIEffects
 
                 _canvasCached = true;
                 _canvas = GetComponentInParent<Canvas>();
-                if (!_canvas || !_canvas.isActiveAndEnabled)
+                if (_canvas == null || !_canvas.isActiveAndEnabled)
                 {
                     _canvas = null;
                     _canvasCached = false;
@@ -79,10 +79,10 @@ namespace Coffee.UIEffects
             if (!isActiveAndEnabled) return null;
 
             var g = graphic;
-            if (!g) return null;
+            if (g == null) return null;
 
             var canvasRenderer = g.canvasRenderer;
-            if (!canvasRenderer || canvasRenderer.materialCount == 0) return null;
+            if (canvasRenderer == null || canvasRenderer.materialCount == 0) return null;
 
             return canvasRenderer.GetMaterial();
         }
@@ -137,7 +137,7 @@ namespace Coffee.UIEffects
 
         private void OnAfterCanvasRebuild()
         {
-            if (!_material || !graphic || !canvas || context == null) return;
+            if (_material == null || graphic == null || canvas == null || context == null) return;
 
             if (_isContextDirty)
             {
@@ -173,7 +173,7 @@ namespace Coffee.UIEffects
 
         private bool CanModifyMesh()
         {
-            if (!graphic || !graphic.isActiveAndEnabled) return false;
+            if (graphic == null || !graphic.isActiveAndEnabled) return false;
             if (!isActiveAndEnabled) return false;
 
             // The transitionRoot is same as the transform => true.
@@ -196,7 +196,7 @@ namespace Coffee.UIEffects
 
             Profiler.BeginSample("(UIE)[UIEffect] GetModifiedMaterial");
             var samplingScaleId = (uint)(Mathf.InverseLerp(0.01f, 100, actualSamplingScale) * uint.MaxValue);
-            var rootId = (uint)(transitionRoot ? transitionRoot.GetHashCode() : 0);
+            var rootId = (uint)(transitionRoot != null ? transitionRoot.GetHashCode() : 0);
             var hash = new Hash128((uint)baseMaterial.GetHashCode(), effectId, samplingScaleId, rootId);
             if (!MaterialRepository.Valid(hash, _material))
             {
@@ -251,7 +251,7 @@ namespace Coffee.UIEffects
 
         public virtual void SetVerticesDirty()
         {
-            if (graphic)
+            if (graphic != null)
             {
                 graphic.SetVerticesDirty();
                 GraphicProxy.Find(graphic).SetVerticesDirty(graphic, enabled);
@@ -261,7 +261,7 @@ namespace Coffee.UIEffects
 
         public virtual void SetMaterialDirty()
         {
-            if (graphic)
+            if (graphic != null)
             {
                 graphic.SetMaterialDirty();
                 SetMaterialContextDirty();
@@ -283,7 +283,7 @@ namespace Coffee.UIEffects
 
         public virtual void ApplyContextToMaterial(Material material)
         {
-            if (!isActiveAndEnabled || context == null || !material) return;
+            if (!isActiveAndEnabled || context == null || material == null) return;
 
             _isContextDirty = false;
             context.ApplyToMaterial(material, actualSamplingScale);
@@ -310,7 +310,7 @@ namespace Coffee.UIEffects
 
         public void OnControlTimeStart()
         {
-            if (this)
+            if (this != null)
             {
                 enabled = true;
             }
@@ -318,7 +318,7 @@ namespace Coffee.UIEffects
 
         public void OnControlTimeStop()
         {
-            if (this)
+            if (this != null)
             {
                 enabled = false;
             }

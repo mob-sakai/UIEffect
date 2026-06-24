@@ -14,7 +14,7 @@ namespace Coffee.UIEffects.Timeline
         public override void DrawBackground(TimelineClip clip, ClipBackgroundRegion region)
         {
             var director = TimelineEditor.inspectedDirector;
-            if (!director) return;
+            if (director == null) return;
 
             var viewDuration = region.endTime - region.startTime;
             var inDuration = (float)Math.Max(clip.easeInDuration, clip.blendInDuration);
@@ -38,7 +38,7 @@ namespace Coffee.UIEffects.Timeline
             }
 
             var floatClip = clip.asset as UIEffectFloatClip;
-            if (floatClip)
+            if (floatClip != null)
             {
                 if (track is GradationRotationTrack || track is GradationOffsetTrack)
                 {
@@ -60,7 +60,7 @@ namespace Coffee.UIEffects.Timeline
         protected override void DrawBackground(Rect rect, TimelineClip clip)
         {
             var asset = clip.asset as UIEffectFloatClip;
-            if (!asset) return;
+            if (asset == null) return;
 
             if (s_FromStyle == null)
             {
@@ -97,7 +97,7 @@ namespace Coffee.UIEffects.Timeline
         protected override void DrawBackground(Rect p, TimelineClip clip)
         {
             var asset = clip.asset as UIEffectColorClip;
-            if (!asset) return;
+            if (asset == null) return;
 
             var d = asset.m_Data;
             if (d.m_Tween)

@@ -62,7 +62,7 @@ namespace Coffee.UIEffects.Timeline
         public override void GatherProperties(PlayableDirector director, IPropertyCollector driver)
         {
             var trackBinding = director.GetGenericBinding(this) as UIEffect;
-            if (!trackBinding) return;
+            if (trackBinding == null) return;
 
             driver.AddFromName<UIEffect>(trackBinding.gameObject, fieldName);
             base.GatherProperties(director, driver);
@@ -113,7 +113,7 @@ namespace Coffee.UIEffects.Timeline
         public override void ProcessFrame(Playable playable, FrameData info, object playerData)
         {
             InitializeIfNeeded(playerData as UIEffect);
-            if (!effect) return;
+            if (effect == null) return;
 
             var inputCount = playable.GetInputCount();
             var value = default(T);
@@ -137,7 +137,7 @@ namespace Coffee.UIEffects.Timeline
 
         public override void OnPlayableDestroy(Playable playable)
         {
-            if (effect)
+            if (effect != null)
             {
                 currentValue = _defaultValue;
             }
@@ -159,13 +159,13 @@ namespace Coffee.UIEffects.Timeline
         {
             if (effect == newEffect) return;
 
-            if (effect)
+            if (effect != null)
             {
                 currentValue = _defaultValue;
             }
 
             effect = newEffect;
-            _defaultValue = newEffect ? currentValue : default;
+            _defaultValue = newEffect != null ? currentValue : default;
         }
 
         protected abstract T Add(T current, T value, float weight);

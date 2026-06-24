@@ -120,7 +120,7 @@ namespace Coffee.UIEffectInternal
             if (string.IsNullOrEmpty(shaderName)) return null;
 
             var shader = Shader.Find(shaderName);
-            if (!shader) return null;
+            if (shader == null) return null;
 
             var path = AssetDatabase.GetAssetPath(shader);
             if (string.IsNullOrEmpty(path)) return null;
@@ -131,7 +131,7 @@ namespace Coffee.UIEffectInternal
         private static void DeleteShader(string shaderName)
         {
             var shader = Shader.Find(shaderName);
-            if (shader)
+            if (shader != null)
             {
                 AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(shader));
             }

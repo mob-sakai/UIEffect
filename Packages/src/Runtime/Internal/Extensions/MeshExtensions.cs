@@ -19,7 +19,7 @@ namespace Coffee.UIEffectInternal
             mesh => mesh,
             mesh =>
             {
-                if (mesh)
+                if (mesh != null)
                 {
                     mesh.Clear();
                 }
@@ -37,7 +37,7 @@ namespace Coffee.UIEffectInternal
 
         public static void CopyTo(this Mesh self, Mesh dst)
         {
-            if (!self || !dst) return;
+            if (self == null || dst == null) return;
 
             var vector3List = InternalListPool<Vector3>.Rent();
             var vector4List = InternalListPool<Vector4>.Rent();
@@ -91,7 +91,7 @@ namespace Coffee.UIEffectInternal
 
         public static void CopyTo(this Mesh self, VertexHelper dst)
         {
-            if (!self || dst == null) return;
+            if (self == null || dst == null) return;
 
             var vertexCount = self.vertexCount;
             var indexCount = self.triangles.Length;
@@ -100,7 +100,7 @@ namespace Coffee.UIEffectInternal
 
         public static void CopyTo(this Mesh self, VertexHelper dst, int vertexCount, int indexCount)
         {
-            if (!self || dst == null) return;
+            if (self == null || dst == null) return;
 
             var positions = InternalListPool<Vector3>.Rent();
             var normals = InternalListPool<Vector3>.Rent();

@@ -1451,7 +1451,7 @@ namespace Coffee.UIEffects
             }
         }
 
-        public override RectTransform transitionRoot => m_CustomRoot
+        public override RectTransform transitionRoot => m_CustomRoot != null
             ? m_CustomRoot
             : transform as RectTransform;
 
@@ -1489,12 +1489,12 @@ namespace Coffee.UIEffects
         {
             var selected = 0 < selection.Length
                            && (selection.Contains(gameObject)
-                               || replicas.Any(x => x && selection.Contains(x.gameObject)));
+                               || replicas.Any(x => x != null && selection.Contains(x.gameObject)));
 
             context.SetEnablePreview(selected, effectMaterial);
             foreach (var r in replicas)
             {
-                if (!r || !r.isActiveAndEnabled || r.context == null) continue;
+                if (r == null || !r.isActiveAndEnabled || r.context == null) continue;
                 r.context.SetEnablePreview(selected, r.effectMaterial);
             }
         }
@@ -1506,7 +1506,7 @@ namespace Coffee.UIEffects
             var count = replicas.Count;
             for (var i = 0; i < count; i++)
             {
-                if (!replicas[i]) continue;
+                if (replicas[i] == null) continue;
                 replicas[i].SetVerticesDirty();
             }
         }
@@ -1517,7 +1517,7 @@ namespace Coffee.UIEffects
             var count = replicas.Count;
             for (var i = 0; i < count; i++)
             {
-                if (!replicas[i]) continue;
+                if (replicas[i] == null) continue;
                 replicas[i].SetMaterialDirty();
             }
         }
@@ -1528,7 +1528,7 @@ namespace Coffee.UIEffects
             var count = replicas.Count;
             for (var i = 0; i < count; i++)
             {
-                if (!replicas[i]) continue;
+                if (replicas[i] == null) continue;
                 replicas[i].SetMaterialContextDirty();
             }
         }
@@ -1716,7 +1716,7 @@ namespace Coffee.UIEffects
         /// </summary>
         public void LoadPreset(UIEffect src, bool append)
         {
-            if (!src) return;
+            if (src == null) return;
 
             var dst = this;
             if (!append || src.m_ToneFilter != ToneFilter.None)
@@ -1848,7 +1848,7 @@ namespace Coffee.UIEffects
         /// </summary>
         public void LoadPreset(UIEffectPreset src, bool append)
         {
-            if (!src) return;
+            if (src == null) return;
 
             var dst = this;
             if (!append || src.m_ToneFilter != ToneFilter.None)
@@ -1977,7 +1977,7 @@ namespace Coffee.UIEffects
 
         public void SavePreset(UIEffectPreset dst, bool append)
         {
-            if (!dst) return;
+            if (dst == null) return;
 
             var src = this;
             if (!append || src.m_ToneFilter != ToneFilter.None)

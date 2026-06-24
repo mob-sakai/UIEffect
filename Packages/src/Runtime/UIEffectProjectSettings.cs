@@ -45,7 +45,7 @@ namespace Coffee.UIEffects
         public static void RegisterRuntimePreset(UIEffectPreset preset)
         {
             // Already registered.
-            if (!preset || instance.m_RuntimePresetsV2.Contains(preset)) return;
+            if (preset == null || instance.m_RuntimePresetsV2.Contains(preset)) return;
 
             instance.m_RuntimePresetsV2.Add(preset);
 #if UNITY_EDITOR
@@ -59,7 +59,7 @@ namespace Coffee.UIEffects
             for (var i = 0; i < instance.m_RuntimePresets.Count; i++)
             {
                 var preset = instance.m_RuntimePresets[i];
-                if (preset && preset.name == presetName)
+                if (preset != null && preset.name == presetName)
                 {
                     return preset;
                 }
@@ -73,7 +73,7 @@ namespace Coffee.UIEffects
             for (var i = 0; i < instance.m_RuntimePresetsV2.Count; i++)
             {
                 var preset = instance.m_RuntimePresetsV2[i];
-                if (preset && preset.name == presetName)
+                if (preset != null && preset.name == presetName)
                 {
                     return preset;
                 }

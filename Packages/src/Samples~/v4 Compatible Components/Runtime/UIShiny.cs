@@ -207,7 +207,7 @@ namespace Coffee.UIEffects
 
         private void LoadDefaultTransitionTextureIfNeeded()
         {
-            if (m_TransitionTexture) return;
+            if (m_TransitionTexture != null) return;
             var preset = UIEffectProjectSettings.LoadPreset("Legacy-UIShiny");
             if (preset is UIEffect presetV1)
             {

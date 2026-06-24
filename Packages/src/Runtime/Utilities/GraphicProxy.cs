@@ -27,7 +27,7 @@ namespace Coffee.UIEffects
 
         public static GraphicProxy Find(Graphic graphic)
         {
-            if (!graphic) return null;
+            if (graphic == null) return null;
 
             var count = s_Proxies.Count;
             for (var i = count - 1; i >= 0; i--)
@@ -44,7 +44,7 @@ namespace Coffee.UIEffects
         /// </summary>
         protected virtual bool IsValid(Graphic graphic)
         {
-            return graphic;
+            return graphic != null;
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Coffee.UIEffects
             ShadowUtil.onMarkAsShadow = s_OnMarkAsShadow;
             UIEffectContext.onModifyVertex = s_OnModifyVertex;
 
-            if (canvas)
+            if (canvas != null)
             {
                 canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord1;
             }

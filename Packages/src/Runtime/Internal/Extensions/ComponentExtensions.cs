@@ -99,7 +99,7 @@ namespace Coffee.UIEffectInternal
         {
             T component = null;
             var transform = self.transform;
-            while (transform)
+            while (transform != null)
             {
                 if (transform.TryGetComponent<T>(out var c))
                 {
@@ -120,7 +120,7 @@ namespace Coffee.UIEffectInternal
             where T : Component
         {
             var tr = includeSelf ? self.transform : self.transform.parent;
-            while (tr)
+            while (tr != null)
             {
                 if (tr.TryGetComponent<T>(out var c) && valid(c)) return c;
                 if (tr == stopAfter) return null;
@@ -197,7 +197,7 @@ namespace Coffee.UIEffectInternal
             if (!includeInactive) return self.GetComponentInParent<T>();
 
             var current = self.transform;
-            while (current)
+            while (current != null)
             {
                 if (current.TryGetComponent<T>(out var c)) return c;
                 current = current.parent;

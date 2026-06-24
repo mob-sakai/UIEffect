@@ -90,7 +90,7 @@ namespace Coffee.UIEffects.Editors
 
         private void DrawPlayer(UIEffectTweener tweener)
         {
-            if (!tweener) return;
+            if (tweener == null) return;
 
             EditorGUILayout.Space(4);
             GUILayout.Label(GUIContent.none, "sv_iconselector_sep", GUILayout.ExpandWidth(true));

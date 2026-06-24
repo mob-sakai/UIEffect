@@ -99,9 +99,9 @@ namespace Coffee.UIEffects
 
         public override bool canModifyShape => m_AllowToModifyMeshShape;
 
-        public override uint effectId => target
+        public override uint effectId => target != null
             ? target.effectId
-            : preset
+            : preset != null
                 ? (uint)preset.GetHashCode()
                 : (uint)GetHashCode();
 
@@ -111,10 +111,10 @@ namespace Coffee.UIEffects
             get
             {
                 // Following the preset/preset-target.
-                if (preset || (target && !isTargetInScene)) return base.context;
+                if (preset != null || (target != null && !isTargetInScene)) return base.context;
 
                 // Following the instantiated target.
-                return target && target.isActiveAndEnabled && isTargetInScene
+                return target != null && target.isActiveAndEnabled && isTargetInScene
                     ? target.context
                     : null;
             }
@@ -126,7 +126,7 @@ namespace Coffee.UIEffects
             {
                 if (useTargetTransform)
                 {
-                    if (preset && !m_CustomRoot && graphic && canvas)
+                    if (preset != null && m_CustomRoot == null && graphic != null && canvas != null)
                     {
                         return canvas.transform as RectTransform;
                     }
@@ -137,15 +137,15 @@ namespace Coffee.UIEffects
                     }
                 }
 
-                return m_CustomRoot ? m_CustomRoot : transform as RectTransform;
+                return m_CustomRoot != null ? m_CustomRoot : transform as RectTransform;
             }
         }
 
-        private bool isTargetInScene => target && target.gameObject.scene.IsValid();
+        private bool isTargetInScene => target != null && target.gameObject.scene.IsValid();
 
         protected override void OnEnable()
         {
-            if (!preset)
+            if (preset == null)
             {
                 RefreshTarget(target);
             }
@@ -170,7 +170,7 @@ namespace Coffee.UIEffects
         {
             RefreshTarget(target);
 
-            if (preset || (target && !isTargetInScene))
+            if (preset != null || (target != null && !isTargetInScene))
             {
                 context?.SetGradationDirty();
                 context?.SetTransitionGradationDirty();
@@ -197,12 +197,12 @@ namespace Coffee.UIEffects
         private void RefreshTarget(UIEffect newTarget)
         {
             if (_currentTarget == newTarget) return;
-            if (_currentTarget)
+            if (_currentTarget != null)
             {
                 _currentTarget.replicas.Remove(this);
             }
 
-            if (newTarget)
+            if (newTarget != null)
             {
                 _currentTarget = newTarget;
                 if (isTargetInScene)
@@ -219,12 +219,12 @@ namespace Coffee.UIEffects
         internal override void UpdateContext(UIEffectContext dst)
         {
             // Following the preset.
-            if (preset)
+            if (preset != null)
             {
                 preset.UpdateContext(dst);
             }
             // Following the preset-target.
-            else if (target && !isTargetInScene)
+            else if (target != null && !isTargetInScene)
             {
                 target.UpdateContext(dst);
             }
@@ -232,10 +232,10 @@ namespace Coffee.UIEffects
 
         public override void ApplyContextToMaterial(Material material)
         {
-            if (!isActiveAndEnabled && !preset && !target) return;
+            if (!isActiveAndEnabled && preset == null && target == null) return;
 
             // Following the preset/preset-target.
-            if (preset || (target && !isTargetInScene))
+            if (preset != null || (target != null && !isTargetInScene))
             {
                 base.ApplyContextToMaterial(material);
             }
@@ -264,11 +264,11 @@ namespace Coffee.UIEffects
 
         public void OnAfterDeserialize()
         {
-            if (m_Preset)
+            if (m_Preset != null)
             {
                 m_Target = null;
             }
-            else if (m_Target)
+            else if (m_Target != null)
             {
                 m_Preset = null;
             }

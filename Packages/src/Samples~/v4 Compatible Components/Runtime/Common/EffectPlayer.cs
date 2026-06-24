@@ -82,7 +82,7 @@ namespace Coffee.UIEffects
         {
             play = true;
             SetupProperty();
-            if (reset && _tweener)
+            if (reset && _tweener != null)
             {
                 _tweener.direction = UIEffectTweener.Direction.Forward;
                 _tweener.SetTime(0);
@@ -93,7 +93,7 @@ namespace Coffee.UIEffects
         {
             play = true;
             SetupProperty();
-            if (reset && _tweener)
+            if (reset && _tweener != null)
             {
                 _tweener.direction = UIEffectTweener.Direction.Reverse;
                 _tweener.SetTime(_tweener.totalTime);
@@ -106,7 +106,7 @@ namespace Coffee.UIEffects
         public void Stop(bool reset)
         {
             play = false;
-            if (reset && _tweener)
+            if (reset && _tweener != null)
             {
                 SetupProperty();
                 _tweener.SetTime(0);
@@ -121,7 +121,7 @@ namespace Coffee.UIEffects
 
         private void SetupProperty()
         {
-            if (!_target) return;
+            if (_target == null) return;
             _tweener = _target.GetOrAddComponent<UIEffectTweener>();
             _tweener.enabled = play;
             _tweener.duration = duration;

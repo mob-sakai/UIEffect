@@ -41,11 +41,11 @@ namespace Coffee.UIEffectInternal
                 foreach (var t in TypeCache.GetTypesDerivedFrom(typeof(PreloadedProjectSettings<>)))
                 {
                     var settings = GetDefaultSettings(t);
-                    if (!settings || settings.m_PreLoadSettingsInBuild) continue;
+                    if (settings == null || settings.m_PreLoadSettingsInBuild) continue;
 
                     PlayerSettings.SetPreloadedAssets(
                         PlayerSettings.GetPreloadedAssets()
-                            .Where(x => x && x.GetType() != t)
+                            .Where(x => x != null && x.GetType() != t)
                             .ToArray());
 
                     Debug.Log($"[PreloadedProjectSettings] Build started: removed '{settings.name}' " +
@@ -238,7 +238,7 @@ namespace Coffee.UIEffectInternal
 
         private void OnPlayModeStateChanged(PlayModeStateChange state)
         {
-            if (!this) return;
+            if (this == null) return;
 
             switch (state)
             {
@@ -280,7 +280,7 @@ namespace Coffee.UIEffectInternal
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
 #else
-            if (s_Instance && s_Instance != this)
+            if (s_Instance != null && s_Instance != this)
             {
                 Destroy(s_Instance);
             }
@@ -315,7 +315,7 @@ namespace Coffee.UIEffectInternal
             {
                 if (_target == null)
                 {
-                    if (_editor)
+                    if (_editor != null)
                     {
                         DestroyImmediate(_editor);
                         _editor = null;

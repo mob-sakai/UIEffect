@@ -20,7 +20,7 @@ namespace Coffee.UIEffects
         /// </summary>
         protected override bool IsValid(Graphic graphic)
         {
-            if (!graphic) return false;
+            if (graphic == null) return false;
             if (graphic is Image) return true;
             return false;
         }

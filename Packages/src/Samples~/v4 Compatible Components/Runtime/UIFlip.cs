@@ -20,7 +20,7 @@ namespace Coffee.UIEffects
         private bool m_Vertical = false;
 
         private Graphic _graphic;
-        public Graphic graphic => _graphic ? _graphic : _graphic = GetComponent<Graphic>();
+        public Graphic graphic => _graphic != null ? _graphic : _graphic = GetComponent<Graphic>();
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="Coffee.UIEffects.UIFlip"/> should be flipped horizontally.
@@ -64,7 +64,7 @@ namespace Coffee.UIEffects
 
         public void SetVerticesDirty()
         {
-            if (graphic)
+            if (graphic != null)
             {
                 graphic.SetVerticesDirty();
                 GraphicProxy.Find(graphic).SetVerticesDirty(graphic, enabled);
@@ -78,7 +78,7 @@ namespace Coffee.UIEffects
 
         public void ModifyMesh(VertexHelper vh)
         {
-            if (!isActiveAndEnabled || !graphic || !graphic.IsActive() || (!horizontal && !vertical)) return;
+            if (!isActiveAndEnabled || graphic == null || !graphic.IsActive() || (!horizontal && !vertical)) return;
 
             var count = vh.currentVertCount;
             var vt = default(UIVertex);

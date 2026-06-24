@@ -17,12 +17,12 @@ namespace Coffee.UIEffects
         /// </summary>
         protected override bool IsValid(Graphic graphic)
         {
-            if (!graphic) return false;
+            if (graphic == null) return false;
             if (graphic is TextMeshProUGUI) return true;
             if (graphic is TMP_SubMeshUI sub)
             {
                 // If TMP_SubMeshUI is used for text
-                return !sub.spriteAsset
+                return sub.spriteAsset == null
                        || sub.sharedMaterial != sub.spriteAsset.material;
             }
 
@@ -46,7 +46,7 @@ namespace Coffee.UIEffects
             ShadowUtil.onMarkAsShadow = s_OnMarkAsShadow;
             UIEffectContext.onModifyVertex = s_OnModifyVertex;
 
-            if (canvas)
+            if (canvas != null)
             {
                 canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord2;
             }
@@ -145,7 +145,7 @@ namespace Coffee.UIEffects
                 var toRemove = InternalListPool<TextMeshProUGUI>.Rent();
                 foreach (var textMeshProUGUI in s_RegisteredInstances)
                 {
-                    if (textMeshProUGUI
+                    if (textMeshProUGUI != null
                         && textMeshProUGUI.isActiveAndEnabled
                         && !textMeshProUGUI.isTextObjectScaleStatic)
                     {
@@ -183,7 +183,7 @@ namespace Coffee.UIEffects
             {
                 foreach (var textMeshProUGUI in s_ChangedInstances)
                 {
-                    if (!textMeshProUGUI || !textMeshProUGUI.isActiveAndEnabled) continue;
+                    if (textMeshProUGUI == null || !textMeshProUGUI.isActiveAndEnabled) continue;
                     if (!textMeshProUGUI.TryGetComponent<IMeshModifier>(out var _)) continue;
 
                     s_RegisteredInstances.Add(textMeshProUGUI);
@@ -198,7 +198,7 @@ namespace Coffee.UIEffects
             {
                 foreach (var textMeshProUGUI in s_RegisteredInstances)
                 {
-                    if (!textMeshProUGUI || !textMeshProUGUI.isActiveAndEnabled) continue;
+                    if (textMeshProUGUI == null || !textMeshProUGUI.isActiveAndEnabled) continue;
                     if (textMeshProUGUI.TryGetComponent<UIEffectBase>(out var effect) && effect.isActiveAndEnabled)
                     {
                         effect.ReleaseMaterial();
@@ -213,7 +213,7 @@ namespace Coffee.UIEffects
 
         private static void ModifyMesh(TextMeshProUGUI textMeshProUGUI)
         {
-            if (!s_Mesh)
+            if (s_Mesh == null)
             {
                 s_Mesh = new Mesh();
                 s_Mesh.MarkDynamic();
@@ -240,7 +240,7 @@ namespace Coffee.UIEffects
                     else
                     {
                         var subMeshUI = GetSubMeshUI(subMeshes, meshInfo.material, meshInfo.mesh, i - 1);
-                        if (subMeshUI)
+                        if (subMeshUI != null)
                         {
                             subMeshUI.canvasRenderer.SetMesh(s_Mesh);
                         }
@@ -270,7 +270,7 @@ namespace Coffee.UIEffects
                     }
 
                     var subMeshUI = GetSubMeshUI(subMeshes, meshInfo.material, meshInfo.mesh, i - 1);
-                    if (!subMeshUI) break;
+                    if (subMeshUI == null) break;
 
                     // fix: TMP Text sprite submesh lost when changing fontMaterial (#368)
                     if (!subMeshUI.TryGetComponent<UIEffectReplica>(out var replica))
@@ -278,7 +278,7 @@ namespace Coffee.UIEffects
                         replica = subMeshUI.gameObject.AddComponent<UIEffectReplica>();
                         textMeshProUGUI.RegisterDirtyMaterialCallback(() =>
                         {
-                            if (subMeshUI) subMeshUI.SetMaterialDirty();
+                            if (subMeshUI != null) subMeshUI.SetMaterialDirty();
                         });
                     }
 
@@ -309,12 +309,12 @@ namespace Coffee.UIEffects
             int start)
         {
             var count = subMeshes.Count;
-            if (mesh)
+            if (mesh != null)
             {
                 for (var j = 0; j < count; j++)
                 {
                     var s = subMeshes[(j + start + count) % count];
-                    if (!s) continue;
+                    if (s == null) continue;
                     if (s.mesh == mesh) return s;
                 }
             }
@@ -322,7 +322,7 @@ namespace Coffee.UIEffects
             for (var j = 0; j < count; j++)
             {
                 var s = subMeshes[(j + start + count) % count];
-                if (!s) continue;
+                if (s == null) continue;
                 if (s.sharedMaterial == material) return s;
             }
 

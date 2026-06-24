@@ -8,11 +8,24 @@ namespace Coffee.UIEffects
     [ExecuteAlways]
     public class UIEffectPreset : ScriptableObject
     {
-        internal static UIEffectPreset s_DefaultPreset;
+        private static UIEffectPreset s_DefaultPreset;
+
+#if UNITY_EDITOR && UNITY_2019_3_OR_NEWER
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void OnDomainReload()
+        {
+            if (s_DefaultPreset != null)
+            {
+                Misc.DestroyImmediate(s_DefaultPreset);
+            }
+
+            s_DefaultPreset = null;
+        }
+#endif
 
         internal static UIEffectPreset GetDefaultPreset()
         {
-            if (!s_DefaultPreset)
+            if (s_DefaultPreset == null)
             {
                 s_DefaultPreset = CreateInstance<UIEffectPreset>();
                 s_DefaultPreset.hideFlags = HideFlags.HideAndDontSave;

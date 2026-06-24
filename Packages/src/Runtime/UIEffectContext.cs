@@ -290,7 +290,7 @@ namespace Coffee.UIEffects
             get
             {
                 if (m_GradationGradient == null) return null;
-                if (!_gradationRampTex) _gradationRampTex = s_TexturePool.Rent();
+                if (_gradationRampTex == null) _gradationRampTex = s_TexturePool.Rent();
                 if (!_isGradientDirty) return _gradationRampTex;
                 _isGradientDirty = false;
 
@@ -317,7 +317,7 @@ namespace Coffee.UIEffects
             get
             {
                 if (m_TransitionGradient == null) return null;
-                if (!_transitionRampTex) _transitionRampTex = s_TexturePool.Rent();
+                if (_transitionRampTex == null) _transitionRampTex = s_TexturePool.Rent();
                 if (!_isTransitionGradientDirty) return _transitionRampTex;
                 _isTransitionGradientDirty = false;
 
@@ -449,7 +449,7 @@ namespace Coffee.UIEffects
 
         public void ApplyToMaterial(Material material, float actualSamplingScale = 1f)
         {
-            if (!material) return;
+            if (material == null) return;
 
             Profiler.BeginSample("(UIE)[UIEffect] ApplyToMaterial");
 
@@ -580,7 +580,7 @@ namespace Coffee.UIEffects
 
         public void SetEnablePreview(bool enable, Material material)
         {
-            if (!material) return;
+            if (material == null) return;
             material.SetVector(s_TransitionTex_Speed, enable ? (Vector4)m_TransitionTexSpeed : Vector4.zero);
             material.SetVector(s_DetailTex_Speed, enable ? (Vector4)m_DetailTexSpeed : Vector4.zero);
             material.SetFloat(s_TransitionAutoPlaySpeed, enable ? m_TransitionAutoPlaySpeed : 0);
@@ -589,7 +589,7 @@ namespace Coffee.UIEffects
 
         public void UpdateViewMatrix(Material material, RectTransform transitionRoot, Canvas canvas)
         {
-            if (!material) return;
+            if (material == null) return;
 
             var size = transitionRoot.rect.size;
             var scale = new Vector3(1f / size.x, 1f / size.y, 1f);

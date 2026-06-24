@@ -36,7 +36,7 @@ namespace Coffee.UIEffectInternal
             foreach (var shaderName in s_ShaderNames)
             {
                 var shader = Shader.Find(shaderName);
-                if (!shader) continue;
+                if (shader == null) continue;
 
                 var hasCgincError = ShaderUtil.GetShaderMessages(shader)
                     .Any(x => Regex.IsMatch(x.message, $"Couldn't open include file.*{s_CgincPattern}"));

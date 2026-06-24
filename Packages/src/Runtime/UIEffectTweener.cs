@@ -134,7 +134,7 @@ namespace Coffee.UIEffects
         /// <summary>
         /// The target UIMaterialPropertyInjector to tween.
         /// </summary>
-        private UIEffectBase target => _target ? _target : _target = GetComponent<UIEffectBase>();
+        private UIEffectBase target => _target != null ? _target : _target = GetComponent<UIEffectBase>();
 
         /// <summary>
         /// The culling mask of the tween.
@@ -167,7 +167,7 @@ namespace Coffee.UIEffects
 
                 _rate = value;
 
-                if (!target || cullingMask == 0) return;
+                if (target == null || cullingMask == 0) return;
 
                 var currentCurve = curve;
                 if (separateReverseCurve)

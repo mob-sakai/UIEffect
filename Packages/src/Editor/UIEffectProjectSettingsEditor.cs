@@ -38,7 +38,7 @@ namespace Coffee.UIEffects.Editors
                 rect.y += 2;
                 rect.height = EditorGUIUtility.singleLineHeight;
 
-                EditorGUI.BeginDisabledGroup(effect && effect.hideFlags == HideFlags.NotEditable);
+                EditorGUI.BeginDisabledGroup(effect != null && effect.hideFlags == HideFlags.NotEditable);
                 EditorGUI.PropertyField(rect, element, GUIContent.none);
                 EditorGUI.EndDisabledGroup();
             };
@@ -88,7 +88,7 @@ namespace Coffee.UIEffects.Editors
         {
             for (var i = _runtimePresets.arraySize - 1; 0 <= i; i--)
             {
-                if (!_runtimePresets.GetArrayElementAtIndex(i).objectReferenceValue)
+                if (_runtimePresets.GetArrayElementAtIndex(i).objectReferenceValue == null)
                 {
                     _runtimePresets.DeleteArrayElementAtIndex(i);
                 }

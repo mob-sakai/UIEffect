@@ -25,29 +25,29 @@ public class UIEffect_TweenerControler : MonoBehaviour
 
     private void Update()
     {
-        if (m_Info)
+        if (m_Info != null)
         {
             var tw = tweener;
             m_Info.text =
                 $"{tw.time:F2}/{tw.totalTime:F2} ({tw.rate:F2}), {tw.direction}, isTweening={tw.isTweening}, isDelaying={tw.isDelaying}, isPaused={tw.isPaused}";
         }
 
-        if (m_SeekBar)
+        if (m_SeekBar != null)
         {
             m_SeekBar.value = tweener.time / tweener.totalTime;
         }
 
-        if (m_SeekBarBgInterval1)
+        if (m_SeekBarBgInterval1 != null)
         {
             m_SeekBarBgInterval1.SetActive(UIEffectTweener.WrapMode.Loop <= tweener.wrapMode);
         }
 
-        if (m_SeekBarBgDuration2)
+        if (m_SeekBarBgDuration2 != null)
         {
             m_SeekBarBgDuration2.SetActive(UIEffectTweener.WrapMode.PingPongOnce <= tweener.wrapMode);
         }
 
-        if (m_SeekBarBgInterval2)
+        if (m_SeekBarBgInterval2 != null)
         {
             m_SeekBarBgInterval2.SetActive(UIEffectTweener.WrapMode.PingPongLoop <= tweener.wrapMode);
         }

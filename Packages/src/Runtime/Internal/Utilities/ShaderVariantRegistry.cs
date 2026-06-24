@@ -90,7 +90,7 @@ namespace Coffee.UIEffectInternal
             for (var i = 0; i < count; i++)
             {
                 var s = m_RegisteredShaders[i];
-                if (s)
+                if (s != null)
                 {
                     _shaderByName[s.name] = s;
                 }
@@ -105,7 +105,7 @@ namespace Coffee.UIEffectInternal
         /// </summary>
         public Shader FindShaderByName(string name)
         {
-            if (_shaderByName != null && _shaderByName.TryGetValue(name, out var shader) && shader)
+            if (_shaderByName != null && _shaderByName.TryGetValue(name, out var shader) && shader != null)
             {
                 return shader;
             }
@@ -118,7 +118,7 @@ namespace Coffee.UIEffectInternal
             string format,
             string defaultOptionalShaderName)
         {
-            if (!shader) return null;
+            if (shader == null) return null;
 
             // Already cached.
             var id = shader.GetHashCode();
@@ -143,7 +143,7 @@ namespace Coffee.UIEffectInternal
                 var pair = m_OptionalShaders[i];
                 if (pair.key != shaderName) continue;
                 optionalShader = FindShaderByName(pair.value);
-                if (!optionalShader) continue;
+                if (optionalShader == null) continue;
                 _cachedOptionalShaders[id] = pair.value;
                 return optionalShader;
             }
@@ -151,7 +151,7 @@ namespace Coffee.UIEffectInternal
             // Find optional shader by format.
             optionalShaderName = string.Format(format, shaderName);
             optionalShader = FindShaderByName(optionalShaderName);
-            if (optionalShader)
+            if (optionalShader != null)
             {
                 _cachedOptionalShaders[id] = optionalShaderName;
                 return optionalShader;
@@ -224,7 +224,7 @@ namespace Coffee.UIEffectInternal
             {
                 // Find shader.
                 var shader = AssetDatabase.LoadAssetAtPath<Shader>(path);
-                if (!shader) return;
+                if (shader == null) return;
 
                 var shaderName = shader.name;
                 foreach (var key in keys)
@@ -241,12 +241,12 @@ namespace Coffee.UIEffectInternal
             if (owner == null) return;
             Profiler.BeginSample("(EDITOR/COF)[ShaderVariantRegistry] InitializeIfNeeded");
 
-            if (!m_Asset && AssetDatabase.IsMainAsset(owner))
+            if (m_Asset == null && AssetDatabase.IsMainAsset(owner))
             {
                 // Find ShaderVariantCollection in owner.
                 var path = AssetDatabase.GetAssetPath(owner);
                 var collection = AssetDatabase.LoadAssetAtPath<ShaderVariantCollection>(path);
-                if (collection)
+                if (collection != null)
                 {
                     m_Asset = collection;
                 }
@@ -284,7 +284,7 @@ namespace Coffee.UIEffectInternal
                 var shaderRef = shaders.GetArrayElementAtIndex(i)
                     .FindPropertyRelative("first")
                     .objectReferenceValue as Shader;
-                if (shaderRef && !m_RegisteredShaders.Contains(shaderRef))
+                if (shaderRef != null && !m_RegisteredShaders.Contains(shaderRef))
                 {
                     m_RegisteredShaders.Add(shaderRef);
                 }
@@ -295,7 +295,7 @@ namespace Coffee.UIEffectInternal
 
         internal void RegisterVariant(Material material, string path)
         {
-            if (!material || !material.shader || !m_Asset) return;
+            if (material == null || material.shader == null || m_Asset == null) return;
 
             Profiler.BeginSample("(EDITOR/COF)[ShaderVariantRegistry] RegisterVariant");
             var (variant, pair) = GetVariant(material);
@@ -548,7 +548,7 @@ namespace Coffee.UIEffectInternal
             if (collection == null) return;
 
             var shader = Shader.Find(shaderName);
-            if (!shader) return;
+            if (shader == null) return;
 
             collection.Add(new ShaderVariantCollection.ShaderVariant
             {

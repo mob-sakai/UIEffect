@@ -34,7 +34,7 @@ namespace Coffee.UIEffects.Editors
 
             var r = EditorGUILayout.GetControlRect();
             r.width -= 120;
-            if (_preset.objectReferenceValue)
+            if (_preset.objectReferenceValue != null)
             {
                 EditorGUI.PropertyField(r, _preset);
             }
@@ -81,7 +81,7 @@ namespace Coffee.UIEffects.Editors
             EditorGUILayout.PropertyField(_allowToModifyMeshShape);
 
             var parent = _target.objectReferenceValue ?? _preset.objectReferenceValue;
-            if (parent)
+            if (parent != null)
             {
                 EditorGUI.BeginDisabledGroup(true);
                 CreateCachedEditor(parent, null, ref _uiEffectEditor);
