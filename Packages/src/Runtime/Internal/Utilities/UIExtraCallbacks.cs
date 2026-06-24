@@ -82,10 +82,13 @@ namespace Coffee.UIEffectInternal
                 message: "InitializeAfterCanvasRebuild");
         }
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR && UNITY_2019_3_OR_NEWER
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+#elif UNITY_EDITOR
         [InitializeOnLoadMethod]
-#endif
+#else
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+#endif
         private static void InitializeOnLoad()
         {
             Canvas.willRenderCanvases -= OnAfterCanvasRebuild;

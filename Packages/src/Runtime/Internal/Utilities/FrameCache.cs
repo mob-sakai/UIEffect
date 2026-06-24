@@ -8,19 +8,19 @@ namespace Coffee.UIEffectInternal
     {
         private static readonly Dictionary<Type, IFrameCache> s_Caches = new Dictionary<Type, IFrameCache>();
 
-        static FrameCache()
-        {
-            s_Caches.Clear();
-            UIExtraCallbacks.onLateAfterCanvasRebuild += ClearAllCache;
-        }
-
-#if UNITY_EDITOR
+#if UNITY_EDITOR && UNITY_2019_3_OR_NEWER
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+#elif UNITY_EDITOR
+        [InitializeOnLoadMethod]
+#else
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+#endif
         private static void Clear()
         {
             s_Caches.Clear();
+            UIExtraCallbacks.onLateAfterCanvasRebuild -= ClearAllCache;
+            UIExtraCallbacks.onLateAfterCanvasRebuild += ClearAllCache;
         }
-#endif
 
         /// <summary>
         /// Tries to retrieve a value from the frame cache with a specified key.

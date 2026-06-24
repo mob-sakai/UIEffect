@@ -15,7 +15,7 @@ namespace Coffee.UIEffectInternal
 
         public static Func<string, Shader> onShaderFind = Shader.Find;
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR && UNITY_2019_3_OR_NEWER
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         public static void Clear()
         {

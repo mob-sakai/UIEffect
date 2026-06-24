@@ -1,5 +1,4 @@
 #if UNITY_EDITOR
-using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -17,12 +16,26 @@ namespace Coffee.UIEffectInternal
         private static readonly Dictionary<string, string> s_SampleNames = new Dictionary<string, string>();
         private static readonly Dictionary<string, string> s_ShaderAliases = new Dictionary<string, string>();
 
+#if UNITY_2019_3_OR_NEWER
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+#else
+        [InitializeOnLoadMethod]
+#endif
+        private static void InitializeOnLoad()
+        {
+            s_Samples = null;
+            s_DeprecatedShaders = null;
+            s_SampleNames.Clear();
+            s_ShaderAliases.Clear();
+        }
+
         public static void RegisterShaderSamples((string shaderName, string sampleName, string version)[] samples)
         {
             if (IsBatchOrBuilding()) return;
 
             // Collect sample names.
             s_Samples = samples;
+            s_SampleNames.Clear();
             foreach (var (shaderName, sampleName, _) in samples)
             {
                 s_SampleNames[shaderName] = sampleName;
@@ -156,12 +169,15 @@ namespace Coffee.UIEffectInternal
             }
 
             // Remove deprecated shaders.
-            foreach (var (guid, fileName) in s_DeprecatedShaders)
+            if (s_DeprecatedShaders != null)
             {
-                var path = AssetDatabase.GUIDToAssetPath(guid);
-                if (!string.IsNullOrEmpty(path) && Path.GetFileName(path) == fileName)
+                foreach (var (guid, fileName) in s_DeprecatedShaders)
                 {
-                    AssetDatabase.DeleteAsset(path);
+                    var path = AssetDatabase.GUIDToAssetPath(guid);
+                    if (!string.IsNullOrEmpty(path) && Path.GetFileName(path) == fileName)
+                    {
+                        AssetDatabase.DeleteAsset(path);
+                    }
                 }
             }
 
