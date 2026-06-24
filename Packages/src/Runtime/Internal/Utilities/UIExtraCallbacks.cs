@@ -90,6 +90,7 @@ namespace Coffee.UIEffectInternal
         {
             Canvas.willRenderCanvases -= OnAfterCanvasRebuild;
             s_IsInitializedAfterCanvasRebuild = false;
+            s_LastScreenSize = default;
         }
 
         /// <summary>

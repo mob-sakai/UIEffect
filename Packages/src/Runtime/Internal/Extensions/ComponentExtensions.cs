@@ -12,6 +12,33 @@ namespace Coffee.UIEffectInternal
     /// </summary>
     internal static class ComponentExtensions
     {
+#if !UNITY_2019_2_OR_NEWER
+        public static bool TryGetComponent<T>(this GameObject self, out T component)
+            where T : Component
+        {
+            if (self == null)
+            {
+                component = null;
+                return false;
+            }
+
+            component = self.GetComponent<T>();
+            return component != null;
+        }
+
+        public static bool TryGetComponent<T>(this Component self, out T component)
+            where T : Component
+        {
+            if (self == null)
+            {
+                component = null;
+                return false;
+            }
+
+            return self.gameObject.TryGetComponent(out component);
+        }
+#endif
+
         /// <summary>
         /// Get components in children of a specific type in the hierarchy of a GameObject.
         /// </summary>

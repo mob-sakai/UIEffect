@@ -66,11 +66,6 @@ namespace Coffee.UIEffectInternal
                 node = node.Next;
             }
         }
-
-        public void Clear()
-        {
-            _delegates.Clear();
-        }
     }
 
     /// <summary>

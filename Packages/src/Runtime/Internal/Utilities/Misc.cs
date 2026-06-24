@@ -48,15 +48,10 @@ namespace Coffee.UIEffectInternal
         {
             if (obj == null) return;
 #if UNITY_EDITOR
-            if (Application.isEditor)
-            {
-                Object.DestroyImmediate(obj);
-            }
-            else
+            Object.DestroyImmediate(obj, true);
+#else
+            Object.Destroy(obj);
 #endif
-            {
-                Object.Destroy(obj);
-            }
         }
 
         [Conditional("UNITY_EDITOR")]
@@ -114,7 +109,7 @@ namespace Coffee.UIEffectInternal
         {
             if (Misc.isBatchOrBuilding) return;
 
-            var types = TypeCache.GetTypesWithAttribute<IconAttribute>();
+            var types = TypeCache.GetTypesWithAttribute(typeof(IconAttribute));
             var scripts = MonoImporter.GetAllRuntimeMonoScripts();
             foreach (var type in types)
             {
