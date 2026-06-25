@@ -1,3 +1,19 @@
+# [5.11.0](https://github.com/mob-sakai/UIEffect/compare/5.10.9...5.11.0) (2026-06-25)
+
+
+### Bug Fixes
+
+* enable/disable Gameobject break effect with 'TrueShadow' ([730aa2b](https://github.com/mob-sakai/UIEffect/commit/730aa2bb4d872ddab63f2dad611a063cefa07064)), closes [#400](https://github.com/mob-sakai/UIEffect/issues/400)
+* select TMP submesh by mesh before material ([f538ef2](https://github.com/mob-sakai/UIEffect/commit/f538ef2cba3d4d76f6683bccee65d5a9694dad37))
+* some fix ([b6b538f](https://github.com/mob-sakai/UIEffect/commit/b6b538f64f0b06ddfb4ad2edd6b7db6dc1d067d8))
+* Support for skipping "reload domain" ([ec3fb13](https://github.com/mob-sakai/UIEffect/commit/ec3fb13c111638781bf852e2a4a4747fbfeb7d3a))
+
+
+### Features
+
+* add option to remove from preloadedAssets when build player ([e955715](https://github.com/mob-sakai/UIEffect/commit/e955715c99c474881e0b27ecc325061ce0d866a0)), closes [#393](https://github.com/mob-sakai/UIEffect/issues/393)
+* support XBOX One/Series ([72bb1c5](https://github.com/mob-sakai/UIEffect/commit/72bb1c51318829e7ced3b1436892a5969aedd9a3)), closes [#385](https://github.com/mob-sakai/UIEffect/issues/385) [#394](https://github.com/mob-sakai/UIEffect/issues/394)
+
 ## [5.10.9](https://github.com/mob-sakai/UIEffect/compare/5.10.8...5.10.9) (2026-06-08)
 
 
