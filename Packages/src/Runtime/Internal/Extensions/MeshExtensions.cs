@@ -84,9 +84,7 @@ namespace Coffee.UIEffectInternal
         {
             if (self == null || dst == null) return;
 
-            dst.Clear(false);
             self.FillMesh(dst);
-            dst.RecalculateBounds();
         }
 
         public static void CopyTo(this Mesh self, VertexHelper dst)
@@ -106,6 +104,8 @@ namespace Coffee.UIEffectInternal
             var normals = InternalListPool<Vector3>.Rent();
             var uv0 = InternalListPool<Vector4>.Rent();
             var uv1 = InternalListPool<Vector4>.Rent();
+            var uv2 = InternalListPool<Vector4>.Rent();
+            var uv3 = InternalListPool<Vector4>.Rent();
             var tangents = InternalListPool<Vector4>.Rent();
             var colors = InternalListPool<Color32>.Rent();
             var indices = InternalListPool<int>.Rent();
@@ -113,6 +113,8 @@ namespace Coffee.UIEffectInternal
             self.GetColors(colors);
             self.GetUVs(0, uv0);
             self.GetUVs(1, uv1);
+            self.GetUVs(2, uv1);
+            self.GetUVs(3, uv1);
             self.GetNormals(normals);
             self.GetTangents(tangents);
             self.GetIndices(indices, 0);
@@ -121,7 +123,7 @@ namespace Coffee.UIEffectInternal
             for (var i = 0; i < vertexCount; i++)
             {
                 dst.AddVert(positions.GetOrDefault(i), colors.GetOrDefault(i), uv0.GetOrDefault(i), uv1.GetOrDefault(i),
-                    normals.GetOrDefault(i), tangents.GetOrDefault(i));
+                    uv2.GetOrDefault(i), uv3.GetOrDefault(i), normals.GetOrDefault(i), tangents.GetOrDefault(i));
             }
 
             var count = Mathf.Clamp(indexCount, 0, indices.Count);
@@ -134,6 +136,8 @@ namespace Coffee.UIEffectInternal
             InternalListPool<Vector3>.Return(ref normals);
             InternalListPool<Vector4>.Return(ref uv0);
             InternalListPool<Vector4>.Return(ref uv1);
+            InternalListPool<Vector4>.Return(ref uv2);
+            InternalListPool<Vector4>.Return(ref uv3);
             InternalListPool<Vector4>.Return(ref tangents);
             InternalListPool<Color32>.Return(ref colors);
             InternalListPool<int>.Return(ref indices);
