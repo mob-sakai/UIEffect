@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace Coffee.UIEffectInternal
@@ -9,6 +10,7 @@ namespace Coffee.UIEffectInternal
         private static readonly Dictionary<Type, IFrameCache> s_Caches = new Dictionary<Type, IFrameCache>();
 
 #if UNITY_EDITOR && UNITY_2019_3_OR_NEWER
+        [InitializeOnLoadMethod]
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
 #elif UNITY_EDITOR
         [InitializeOnLoadMethod]

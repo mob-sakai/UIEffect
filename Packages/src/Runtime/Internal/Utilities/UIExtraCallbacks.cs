@@ -18,12 +18,6 @@ namespace Coffee.UIEffectInternal
         private static readonly FastAction s_OnScreenSizeChangedAction = new FastAction();
         private static Vector2Int s_LastScreenSize;
 
-        static UIExtraCallbacks()
-        {
-            Canvas.willRenderCanvases += OnBeforeCanvasRebuild;
-            Logger.LogMulticast(typeof(Canvas), "willRenderCanvases", message: "ctor");
-        }
-
         /// <summary>
         /// Event that occurs after canvas rebuilds.
         /// </summary>
@@ -72,7 +66,7 @@ namespace Coffee.UIEffectInternal
             CanvasUpdateRegistry.IsRebuildingLayout();
 #if TMP_ENABLE
             // Explicitly set `Canvas.willRenderCanvases += TMP_UpdateManager.DoRebuilds`.
-            typeof(TMPro.TMP_UpdateManager)
+            var _ = typeof(TMPro.TMP_UpdateManager)
                 .GetProperty("instance", BindingFlags.NonPublic | BindingFlags.Static)
                 .GetValue(null);
 #endif
@@ -83,6 +77,7 @@ namespace Coffee.UIEffectInternal
         }
 
 #if UNITY_EDITOR && UNITY_2019_3_OR_NEWER
+        [InitializeOnLoadMethod]
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
 #elif UNITY_EDITOR
         [InitializeOnLoadMethod]
@@ -91,9 +86,17 @@ namespace Coffee.UIEffectInternal
 #endif
         private static void InitializeOnLoad()
         {
+#if UNITY_2019_4 || UNITY_2020_2_OR_NEWER
+            Canvas.preWillRenderCanvases -= OnBeforeCanvasRebuild;
+            Canvas.preWillRenderCanvases += OnBeforeCanvasRebuild;
+#else
+            Canvas.willRenderCanvases -= OnBeforeCanvasRebuild;
+            Canvas.willRenderCanvases += OnBeforeCanvasRebuild;
+#endif
             Canvas.willRenderCanvases -= OnAfterCanvasRebuild;
             s_IsInitializedAfterCanvasRebuild = false;
             s_LastScreenSize = default;
+            Logger.LogMulticast(typeof(Canvas), "willRenderCanvases", message: "ctor");
         }
 
         /// <summary>
