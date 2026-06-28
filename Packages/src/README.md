@@ -211,9 +211,10 @@ If upgrading from UIEffect v4 to v5, note the following breaking changes:
    ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1744308178360.gif)
 
 5. From the top menu, you can load/append preset.  
-   > [!TIP]  
-   > `Load` overwrites all properties with the preset, while `Append` only overwrites enabled filters and modes with the preset.  
-   > You can easily build effects by combining them with `Append`.
+> [!TIP]
+>
+> `Load` overwrites all properties with the preset, while `Append` only overwrites enabled filters and modes with the preset.  
+> You can easily build effects by combining them with `Append`.
 
    ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1744800851739.gif)
 
@@ -459,8 +460,8 @@ You can preview the animation using the seek bar and play button.
 The `UIEffectReplica` component applies visual effects to UI elements by replicating the settings of another `UIEffect` component. This allows the same effect to be applied across multiple UI elements simultaneously.
 
 - **Target**: The target `UIEffect` component to replicate.
-  > [!TIP]
-  > You can specify a preset as well as an instance as the target for `UIEffectReplica`.
+> [!TIP]
+> You can specify a preset as well as an instance as the target for `UIEffectReplica`.
 - **Use Target Transform**: Use the target's transform for some effects.  
   ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/uieffect5.7.0-sample-custom-root.gif)
 - **Custom Root**: Use the custom transform for some effects.
