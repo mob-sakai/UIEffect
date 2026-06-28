@@ -25,7 +25,7 @@ jobs:
       tag: ${{ steps.release.outputs.new_release_git_tag }}
     steps:
       - name: 🚚 Checkout (${{ github.ref_name }})
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: 🔖 Run semantic release
         uses: cycjimmy/semantic-release-action@v6

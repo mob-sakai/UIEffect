@@ -85,10 +85,10 @@ jobs:
         unityVersion: ${{ fromJson(needs.setup.outputs.unityVersions) }}
     steps:
       - name: 🚚 Checkout ($${{ github.ref }})
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: 📥 Cache library
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ${{ env.PROJECT_PATH }}/Library
           key: ${{ env.PROJECT_PATH }}-Library-${{ matrix.unityVersion }}-${{ github.event.pull_request.head.sha || github.sha }}
@@ -97,7 +97,7 @@ jobs:
             ${{ env.PROJECT_PATH }}-Library-
 
       - name: 🛠️ Build Unity Project (Test)
-        uses: game-ci/unity-builder@v5
+        uses: game-ci/unity-builder@main
         timeout-minutes: 45
         with:
           customImage: ghcr.io/mob-sakai/unity3d:${{ matrix.unityVersion }}
@@ -111,7 +111,7 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
       - name: 🧪 Run tests
-        uses: game-ci/unity-test-runner@v4
+        uses: game-ci/unity-test-runner@main
         timeout-minutes: 45
         with:
           customImage: ghcr.io/mob-sakai/unity3d:${{ matrix.unityVersion }}
