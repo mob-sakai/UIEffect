@@ -1,3 +1,10 @@
+## [5.11.1](https://github.com/mob-sakai/UIEffect/compare/5.11.0...5.11.1) (2026-06-29)
+
+
+### Bug Fixes
+
+* support "disable domain reload" on Unity 6.6 or later ([a556c28](https://github.com/mob-sakai/UIEffect/commit/a556c282210303d9e7a7c284bb4b41ef3a35e3e1))
+
 # [5.11.0](https://github.com/mob-sakai/UIEffect/compare/5.10.9...5.11.0) (2026-06-25)
 
 
