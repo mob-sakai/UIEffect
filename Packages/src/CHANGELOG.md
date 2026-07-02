@@ -1,3 +1,10 @@
+## [5.11.2](https://github.com/mob-sakai/UIEffect/compare/5.11.1...5.11.2) (2026-07-02)
+
+
+### Bug Fixes
+
+* add null check ([161fc54](https://github.com/mob-sakai/UIEffect/commit/161fc546cad251ad798c2fd9e9472d687aa7f2c3))
+
 ## [5.11.1](https://github.com/mob-sakai/UIEffect/compare/5.11.0...5.11.1) (2026-06-29)
 
 
