@@ -276,6 +276,7 @@ namespace Coffee.UIEffectInternal
         private void SyncRegisteredShaders(Object owner)
         {
             if (owner == null) return;
+            if (m_Asset == null) return;
             var so = new SerializedObject(m_Asset);
             var shaders = so.FindProperty("m_Shaders");
             m_RegisteredShaders.Clear();
