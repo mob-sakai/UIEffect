@@ -843,7 +843,7 @@ namespace Coffee.UIEffects
                 if (m_ShadowMode == value) return;
                 context.m_ShadowMode = m_ShadowMode = value;
                 SetVerticesDirty();
-                SetVerticesDirty();
+                SetMaterialDirty();
             }
         }
 
