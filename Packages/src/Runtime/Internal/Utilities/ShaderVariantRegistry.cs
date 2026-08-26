@@ -288,8 +288,10 @@ namespace Coffee.UIEffectInternal
                 .Distinct()
                 .ToList();
 
-            // If the registered shaders are already in sync with the SVC, no need to update.
-            if (m_RegisteredShaders.SequenceEqual(shadersInSVC))
+            // ShaderVariantCollection entry order is not stable between editor sessions.
+            // The registry is a lookup set, so an order-only difference is already in sync.
+            if (m_RegisteredShaders.Count == shadersInSVC.Count &&
+                new HashSet<Shader>(m_RegisteredShaders).SetEquals(shadersInSVC))
             {
                 return;
             }
