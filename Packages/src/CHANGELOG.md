@@ -1,3 +1,10 @@
+## [5.11.7](https://github.com/mob-sakai/UIEffect/compare/5.11.6...5.11.7) (2026-08-27)
+
+
+### Bug Fixes
+
+* ignore shader registry order changes ([014bba3](https://github.com/mob-sakai/UIEffect/commit/014bba3f5687ecfe41caa00d454f196baf7e3483)), closes [#407](https://github.com/mob-sakai/UIEffect/issues/407)
+
 ## [5.11.6](https://github.com/mob-sakai/UIEffect/compare/5.11.5...5.11.6) (2026-08-17)
 
 
