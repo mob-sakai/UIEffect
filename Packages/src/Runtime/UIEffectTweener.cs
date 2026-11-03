@@ -2,7 +2,6 @@
 using Coffee.UIEffectInternal;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 namespace Coffee.UIEffects
 {
@@ -94,7 +93,6 @@ namespace Coffee.UIEffects
         [Range(0f, 10)]
         private float m_Interval;
 
-        [FormerlySerializedAs("m_ResetTimeOnEnable")]
         [Tooltip("Play the tween when the component is enabled.")]
         [SerializeField]
         private PlayOnEnable m_PlayOnEnable = PlayOnEnable.Forward;
