@@ -1,3 +1,10 @@
+## [5.11.8](https://github.com/mob-sakai/UIEffect/compare/5.11.7...5.11.8) (2026-11-06)
+
+
+### Bug Fixes
+
+* remove conflicting FormerlySerializedAs on UIEffectTweener.m_PlayOnEnable ([55a7f27](https://github.com/mob-sakai/UIEffect/commit/55a7f272042e869e6659f7a2603f9a16dbb3ab65))
+
 ## [5.11.7](https://github.com/mob-sakai/UIEffect/compare/5.11.6...5.11.7) (2026-08-27)
 
 
