@@ -8,17 +8,28 @@ run-name: 🧪 Test URP (${{ github.event.pull_request.title || github.ref_name 
 env:
   # MINIMUM_VERSION: The minimum version of Unity.
   MINIMUM_VERSION: 6000.0
+  MAXIMUM_VERSION: 
   # EXCLUDE_FILTER: The excluded versions of Unity.
   EXCLUDE_FILTER: "(2017|2018|2023.3)"
+  IGNORE_ALPHA: false
+  IGNORE_BETA: false
   PROJECT_PATH: UIEffectURP
 
 on:
   workflow_dispatch:
     inputs:
+      unityVersions:
+        description: 'Specify the Unity versions to test. (eg. [ "2019.4.41f2", "2020.3.15f2" ])'
+        required: false
+        default: '[ "6000.0.0f1", "6000.1.0f1" ]'
       usePeriodVersions:
-        description: "Use the period versions (.0f1, .10f1, 20f1, ...)."
+        description: 'Use the period versions (.0f1, .10f1, 20f1, ...).'
         required: false
         default: "true"
+      overrideFindOptions:
+        description: 'Specify options for unity-changeset. (eg. --ignore-alpha --max 2020.3 )'
+        required: false
+        default: '--min 6000.0 --max 9999.9 --ignore-alpha --ignore-beta'
   push:
     branches:
       - develop
@@ -60,9 +71,27 @@ jobs:
         id: setup
         run: |
           echo "==== Target Unity Versions ===="
-          LATEST_VERSIONS=`npx -y unity-changeset@latest list --json --versions --all --latest-patch --min ${MINIMUM_VERSION}`
+
+          # Check if specific Unity versions are provided via inputs (for workflow_dispatch)
+          if [ -n "${{ inputs.unityVersions }}" ]; then
+            echo "* Using specified Unity versions" | tee $GITHUB_OUTPUT
+            echo 'unityVersions=${{ inputs.unityVersions }}' | tee $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Formulate find options based on inputs and environment variables
+          FIND_OPTIONS=""
+          [ "${{ env.IGNORE_ALPHA }}" = "true" ] && FIND_OPTIONS+=" --ignore-alpha"
+          [ "${{ env.IGNORE_BETA }}" = "true" ] && FIND_OPTIONS+=" --ignore-beta"
+          [ -n "${{ env.MINIMUM_VERSION }}" ] && FIND_OPTIONS+=" --min ${MINIMUM_VERSION}"
+          [ -n "${{ env.MAXIMUM_VERSION }}" ] && FIND_OPTIONS+=" --max ${MAXIMUM_VERSION}"
+          [ -n "${{ inputs.overrideFindOptions }}" ] && FIND_OPTIONS="${inputs.overrideFindOptions}"
+          echo "find options: $FIND_OPTIONS"
+
+          # Find the latest Unity versions if no specific versions are provided
+          LATEST_VERSIONS=`npx -y unity-changeset@latest list --json --versions --all --latest-patch $FIND_OPTIONS`
           if [ "${{ inputs.usePeriodVersions }}" = "true" ]; then
-            ADDITIONAL_VERSIONS=`npx -y unity-changeset@latest list --json --versions --min ${MINIMUM_VERSION} --grep '0f'`
+            ADDITIONAL_VERSIONS=`npx -y unity-changeset@latest list --json --versions $FIND_OPTIONS --grep '0f'`
           else
             ADDITIONAL_VERSIONS=[]
           fi
