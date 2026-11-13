@@ -1606,7 +1606,7 @@ namespace Coffee.UIEffects
             for (var i = 0; i < count; i++)
             {
                 if (!replicas[i]) continue;
-                replicas[i].ApplyContextToMaterial(material);
+                replicas[i].ApplyContextToMaterial(replicas[i].effectMaterial);
             }
         }
 
