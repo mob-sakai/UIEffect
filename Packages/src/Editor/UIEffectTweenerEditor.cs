@@ -92,6 +92,7 @@ namespace Coffee.UIEffects.Editors
         {
             if (tweener == null) return;
 
+            EditorGUI.BeginDisabledGroup(!tweener.enabled);
             EditorGUILayout.Space(4);
             GUILayout.Label(GUIContent.none, "sv_iconselector_sep", GUILayout.ExpandWidth(true));
 
@@ -101,6 +102,7 @@ namespace Coffee.UIEffects.Editors
             if (GUI.Button(rResetTimeButton, EditorGUIUtility.IconContent("animation.firstkey"), "IconButton"))
             {
                 ResetTime();
+                EditorApplication.QueuePlayerLoopUpdate();
             }
 
             var rPlayButton = new Rect(r.x + 20, r.y, 20, r.height);
@@ -148,12 +150,15 @@ namespace Coffee.UIEffects.Editors
             if (EditorGUI.EndChangeCheck())
             {
                 SetTime(time);
+                EditorApplication.QueuePlayerLoopUpdate();
             }
 
             if (Application.isPlaying && tweener.isActiveAndEnabled)
             {
                 Repaint();
             }
+
+            EditorGUI.EndDisabledGroup();
         }
 
         private static float DrawBackground(Rect r, float width, Color color)
@@ -168,6 +173,7 @@ namespace Coffee.UIEffects.Editors
         {
             foreach (var tweener in targets.OfType<UIEffectTweener>())
             {
+                if (!tweener.enabled) continue;
                 tweener.SetTime(time);
             }
         }
@@ -176,6 +182,7 @@ namespace Coffee.UIEffects.Editors
         {
             foreach (var tweener in targets.OfType<UIEffectTweener>())
             {
+                if (!tweener.enabled) continue;
                 tweener.ResetTime(tweener.direction);
             }
         }
@@ -210,6 +217,7 @@ namespace Coffee.UIEffects.Editors
             _lastTime = EditorApplication.timeSinceStartup;
             foreach (var tweener in targets.OfType<UIEffectTweener>())
             {
+                if (!tweener.enabled) continue;
                 tweener.UpdateTime(tweener.direction == UIEffectTweener.Direction.Forward ? delta : -delta);
             }
 

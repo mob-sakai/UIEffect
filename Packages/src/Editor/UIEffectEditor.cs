@@ -24,8 +24,8 @@ namespace Coffee.UIEffects.Editors
 
         private static bool expandOthers
         {
-            set => UIEffectEditorSettings.instance.m_ExpandOthers = value;
             get => UIEffectEditorSettings.instance.m_ExpandOthers;
+            set => UIEffectEditorSettings.instance.m_ExpandOthers = value;
         }
 
         protected override void OnEnable()
