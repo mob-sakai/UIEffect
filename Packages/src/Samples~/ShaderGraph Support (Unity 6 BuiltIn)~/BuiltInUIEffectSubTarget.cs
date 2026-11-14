@@ -170,7 +170,12 @@ namespace UnityEditor.Rendering.BuiltIn.ShaderGraph
                 BlockFields.SurfaceDescription.Alpha,
                 BlockFields.SurfaceDescription.AlphaClipThreshold
             };
+
+#if UNITY_6000_6_OR_NEWER
+            ProjectWindowUtil.StartNameEditingIfProjectWindowExists(EntityId.None, graphItem, name, null, null);
+#else
             ProjectWindowUtil.StartNameEditingIfProjectWindowExists(0, graphItem, name, null, null);
+#endif
         }
     }
 }
