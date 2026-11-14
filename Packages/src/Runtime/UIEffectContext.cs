@@ -849,7 +849,7 @@ namespace Coffee.UIEffects
 
         private static Color ApplyColorSpace(Color color)
         {
-            return QualitySettings.activeColorSpace == ColorSpace.Linear ? color.linear : color;
+            return QualitySettings.activeColorSpace == ColorSpace.Linear ? color : color.gamma;
         }
     }
 }
