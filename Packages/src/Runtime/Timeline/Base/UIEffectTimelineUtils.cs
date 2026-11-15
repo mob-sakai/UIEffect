@@ -88,7 +88,7 @@ namespace Coffee.UIEffects.Timeline
 
         public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
         {
-            var playable = ScriptPlayable<T>.Create(graph, m_Data);
+            var playable = ScriptPlayable<T>.Create(graph, m_Data ??= new T());
             var behaviour = playable.GetBehaviour();
             behaviour.clip = this;
             return playable;
@@ -126,7 +126,11 @@ namespace Coffee.UIEffects.Timeline
 
                 var playableInput = (ScriptPlayable<TBehavior>)playable.GetInput(i);
                 var input = playableInput.GetBehaviour();
-                var normalizedTime = (float)(playableInput.GetTime() / input.clip.timelineClip.duration);
+                var clip = input != null ? input.clip : null;
+                var timelineClip = clip != null ? clip.timelineClip : null;
+                if (timelineClip == null || timelineClip.duration <= 0) return;
+
+                var normalizedTime = (float)(playableInput.GetTime() / timelineClip.duration);
 
                 value = Add(value, input.Get(normalizedTime), weight / totalWeight);
                 totalWeight += weight;

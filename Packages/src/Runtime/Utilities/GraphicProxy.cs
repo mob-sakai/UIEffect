@@ -14,6 +14,8 @@ namespace Coffee.UIEffects
 
         public static void Register(GraphicProxy proxy)
         {
+            if (proxy == null) throw new ArgumentNullException(nameof(proxy));
+
             // Register only once.
             var count = s_Proxies.Count;
             for (var i = 0; i < count; i++)

@@ -313,7 +313,7 @@ namespace Coffee.UIEffects
         /// </summary>
         public AnimationCurve curve
         {
-            get => m_Curve;
+            get => m_Curve ??= AnimationCurve.Linear(0, 0, 1, 1);
             set => m_Curve = value;
         }
 
@@ -325,19 +325,19 @@ namespace Coffee.UIEffects
 
         public AnimationCurve reverseCurve
         {
-            get => m_ReverseCurve;
+            get => m_ReverseCurve ??= AnimationCurve.Linear(0, 0, 1, 1);
             set => m_ReverseCurve = value;
         }
 
         /// <summary>
         /// Event to invoke when the tween has completed.
         /// </summary>
-        public UnityEvent onComplete => m_OnComplete;
+        public UnityEvent onComplete => m_OnComplete ??= new UnityEvent();
 
         /// <summary>
         /// Event to invoke when the rate was changed.
         /// </summary>
-        public TweenerEvent onChangedRate => m_OnChangedRate;
+        public TweenerEvent onChangedRate => m_OnChangedRate ??= new TweenerEvent();
 
         /// <summary>
         /// Is the tween playing?
@@ -421,7 +421,7 @@ namespace Coffee.UIEffects
 
             if (!isTweening)
             {
-                m_OnComplete.Invoke();
+                onComplete.Invoke();
             }
         }
 
@@ -442,7 +442,7 @@ namespace Coffee.UIEffects
 
             if (!isTweening)
             {
-                m_OnComplete.Invoke();
+                onComplete.Invoke();
             }
         }
 
@@ -463,7 +463,7 @@ namespace Coffee.UIEffects
 
             if (!isTweening)
             {
-                m_OnComplete.Invoke();
+                onComplete.Invoke();
             }
         }
 
@@ -540,7 +540,7 @@ namespace Coffee.UIEffects
 
                 if (prevTweening && !isTweening)
                 {
-                    m_OnComplete.Invoke();
+                    onComplete.Invoke();
                 }
 
                 return;
@@ -574,7 +574,7 @@ namespace Coffee.UIEffects
 
             if (prevTweening && !isTweening)
             {
-                m_OnComplete.Invoke();
+                onComplete.Invoke();
             }
         }
     }

@@ -121,6 +121,8 @@ namespace Coffee.UIEffects
 
         public void UpdateContext(UIEffectContext dst)
         {
+            if (dst == null) return;
+
             var src = this;
             dst.m_ToneFilter = src.m_ToneFilter;
             dst.m_ToneIntensity = src.m_ToneIntensity;

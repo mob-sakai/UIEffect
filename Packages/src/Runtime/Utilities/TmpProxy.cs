@@ -213,6 +213,12 @@ namespace Coffee.UIEffects
 
         private static void ModifyMesh(TextMeshProUGUI textMeshProUGUI)
         {
+            if (!textMeshProUGUI || !textMeshProUGUI.isActiveAndEnabled) return;
+            if (textMeshProUGUI.textInfo == null || textMeshProUGUI.textInfo.meshInfo == null) return;
+
+            var canvasRenderer = textMeshProUGUI.canvasRenderer;
+            if (canvasRenderer == null) return;
+
             if (s_Mesh == null)
             {
                 s_Mesh = new Mesh();
@@ -229,18 +235,18 @@ namespace Coffee.UIEffects
             for (var i = 0; i < textMeshProUGUI.textInfo.meshInfo.Length; i++)
             {
                 var meshInfo = textMeshProUGUI.textInfo.meshInfo[i];
-                if (meshInfo.vertexCount == 0)
+                if (meshInfo.vertexCount == 0 || meshInfo.mesh == null)
                 {
                     // Clear mesh if no vertices.
                     s_Mesh.Clear(false);
                     if (i == 0)
                     {
-                        textMeshProUGUI.canvasRenderer.SetMesh(s_Mesh);
+                        canvasRenderer.SetMesh(s_Mesh);
                     }
                     else
                     {
                         var subMeshUI = GetSubMeshUI(subMeshes, meshInfo.material, meshInfo.mesh, i - 1);
-                        if (subMeshUI != null)
+                        if (subMeshUI != null && subMeshUI.canvasRenderer != null)
                         {
                             subMeshUI.canvasRenderer.SetMesh(s_Mesh);
                         }
@@ -259,7 +265,7 @@ namespace Coffee.UIEffects
                     }
 
                     s_VertexHelper.FillMesh(s_Mesh);
-                    textMeshProUGUI.canvasRenderer.SetMesh(s_Mesh);
+                    canvasRenderer.SetMesh(s_Mesh);
                 }
                 else if (i - 1 < subMeshes.Count)
                 {
@@ -290,7 +296,10 @@ namespace Coffee.UIEffects
                     }
 
                     s_VertexHelper.FillMesh(s_Mesh);
-                    subMeshUI.canvasRenderer.SetMesh(s_Mesh);
+                    if (subMeshUI.canvasRenderer != null)
+                    {
+                        subMeshUI.canvasRenderer.SetMesh(s_Mesh);
+                    }
                 }
                 else
                 {

@@ -137,7 +137,10 @@ namespace Coffee.UIEffects
 
         private void OnAfterCanvasRebuild()
         {
-            if (_material == null || graphic == null || canvas == null || context == null) return;
+            var g = graphic;
+            var c = canvas;
+            var ctx = context;
+            if (_material == null || g == null || c == null || ctx == null) return;
 
             if (_isContextDirty)
             {
@@ -145,9 +148,14 @@ namespace Coffee.UIEffects
                 ApplyContextToMaterial(GetCurrentMaterial());
             }
 
-            if (!context.useViewMatrix) return;
+            if (!ctx.useViewMatrix) return;
 
-            context.UpdateViewMatrix(GetCurrentMaterial(), transitionRoot, canvas.rootCanvas);
+            var material = GetCurrentMaterial();
+            var root = transitionRoot;
+            var rootCanvas = c.rootCanvas;
+            if (material == null || root == null || rootCanvas == null) return;
+
+            ctx.UpdateViewMatrix(material, root, rootCanvas);
         }
 
         protected override void OnCanvasHierarchyChanged()
@@ -162,12 +170,17 @@ namespace Coffee.UIEffects
 
         public virtual void ModifyMesh(VertexHelper vh)
         {
-            if (!isActiveAndEnabled || context == null) return;
+            if (!isActiveAndEnabled || vh == null) return;
+
+            var g = graphic;
+            var ctx = context;
+            var root = transitionRoot;
+            if (g == null || ctx == null || root == null) return;
 
             _canModifyMesh = CanModifyMesh();
             if (_canModifyMesh)
             {
-                context.ModifyMesh(graphic, canvas, transitionRoot, vh, canModifyShape);
+                ctx.ModifyMesh(g, canvas, root, vh, canModifyShape);
             }
         }
 
@@ -178,6 +191,7 @@ namespace Coffee.UIEffects
 
             // The transitionRoot is same as the transform => true.
             var root = transitionRoot;
+            if (root == null) return false;
             if (transform == root) return true;
 
             // The transitionRoot is not visible => false.
@@ -251,22 +265,22 @@ namespace Coffee.UIEffects
 
         public virtual void SetVerticesDirty()
         {
-            if (graphic != null)
-            {
-                graphic.SetVerticesDirty();
-                GraphicProxy.Find(graphic).SetVerticesDirty(graphic, enabled);
-                Misc.QueuePlayerLoopUpdate();
-            }
+            var g = graphic;
+            if (g == null) return;
+
+            g.SetVerticesDirty();
+            GraphicProxy.Find(g)?.SetVerticesDirty(g, enabled);
+            Misc.QueuePlayerLoopUpdate();
         }
 
         public virtual void SetMaterialDirty()
         {
-            if (graphic != null)
-            {
-                graphic.SetMaterialDirty();
-                SetMaterialContextDirty();
-                Misc.QueuePlayerLoopUpdate();
-            }
+            var g = graphic;
+            if (g == null) return;
+
+            g.SetMaterialDirty();
+            SetMaterialContextDirty();
+            Misc.QueuePlayerLoopUpdate();
         }
 
         public virtual void SetMaterialContextDirty()

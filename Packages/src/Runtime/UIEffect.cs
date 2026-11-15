@@ -1488,6 +1488,8 @@ namespace Coffee.UIEffects
 
         internal override void SetEnablePreviewIfSelected(GameObject[] selection)
         {
+            if (selection == null) return;
+
             var selected = 0 < selection.Length
                            && (selection.Contains(gameObject)
                                || replicas.Any(x => x != null && selection.Contains(x.gameObject)));
@@ -1539,6 +1541,7 @@ namespace Coffee.UIEffects
         /// </summary>
         public void SetGradientKeys(Gradient gradient)
         {
+            if (gradient == null) return;
             SetGradientKeys(gradient.colorKeys, gradient.alphaKeys, gradient.mode);
         }
 
@@ -1558,6 +1561,7 @@ namespace Coffee.UIEffects
         /// </summary>
         public void SetTransitionGradientKeys(Gradient gradient)
         {
+            if (gradient == null) return;
             SetTransitionGradientKeys(gradient.colorKeys, gradient.alphaKeys, gradient.mode);
         }
 
@@ -2021,9 +2025,13 @@ namespace Coffee.UIEffects
                 dst.m_TransitionColorGlow = src.m_TransitionColorGlow;
                 dst.m_TransitionPatternReverse = src.m_TransitionPatternReverse;
                 dst.m_TransitionAutoPlaySpeed = src.m_TransitionAutoPlaySpeed;
-                dst.m_TransitionGradient.SetKeys(src.m_TransitionGradient.colorKeys,
-                    src.m_TransitionGradient.alphaKeys);
-                dst.m_TransitionGradient.mode = src.m_TransitionGradient.mode;
+                if (src.m_TransitionGradient != null)
+                {
+                    dst.m_TransitionGradient ??= new Gradient();
+                    dst.m_TransitionGradient.SetKeys(src.m_TransitionGradient.colorKeys,
+                        src.m_TransitionGradient.alphaKeys);
+                    dst.m_TransitionGradient.mode = src.m_TransitionGradient.mode;
+                }
             }
 
             if (!append || src.m_TargetMode != TargetMode.None)
@@ -2076,8 +2084,13 @@ namespace Coffee.UIEffects
                 dst.m_GradationColor2 = src.m_GradationColor2;
                 dst.m_GradationColor3 = src.m_GradationColor3;
                 dst.m_GradationColor4 = src.m_GradationColor4;
-                dst.m_GradationGradient.SetKeys(src.m_GradationGradient.colorKeys, src.m_GradationGradient.alphaKeys);
-                dst.m_GradationGradient.mode = src.m_GradationGradient.mode;
+                if (src.m_GradationGradient != null)
+                {
+                    dst.m_GradationGradient ??= new Gradient();
+                    dst.m_GradationGradient.SetKeys(src.m_GradationGradient.colorKeys,
+                        src.m_GradationGradient.alphaKeys);
+                    dst.m_GradationGradient.mode = src.m_GradationGradient.mode;
+                }
                 dst.m_GradationOffset = src.m_GradationOffset;
                 dst.m_GradationScale = src.m_GradationScale;
                 dst.m_GradationRotation = src.m_GradationRotation;

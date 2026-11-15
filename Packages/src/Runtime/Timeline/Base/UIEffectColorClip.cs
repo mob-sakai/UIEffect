@@ -22,7 +22,7 @@ namespace Coffee.UIEffects.Timeline
         public Color Get(float time)
         {
             return m_Tween
-                ? Color.Lerp(m_From, m_Value, m_Curve.Evaluate(time))
+                ? Color.Lerp(m_From, m_Value, m_Curve != null ? m_Curve.Evaluate(time) : time)
                 : m_Value;
         }
     }

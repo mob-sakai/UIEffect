@@ -20,7 +20,7 @@ namespace Coffee.UIEffects.Timeline
         public float Get(float time)
         {
             return m_Tween
-                ? Mathf.Lerp(m_From, m_Value, m_Curve.Evaluate(time))
+                ? Mathf.Lerp(m_From, m_Value, m_Curve != null ? m_Curve.Evaluate(time) : time)
                 : m_Value;
         }
     }

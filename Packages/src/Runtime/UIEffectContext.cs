@@ -589,7 +589,7 @@ namespace Coffee.UIEffects
 
         public void UpdateViewMatrix(Material material, RectTransform transitionRoot, Canvas canvas)
         {
-            if (material == null) return;
+            if (material == null || transitionRoot == null || canvas == null) return;
 
             var size = transitionRoot.rect.size;
             var scale = new Vector3(1f / size.x, 1f / size.y, 1f);
@@ -715,6 +715,8 @@ namespace Coffee.UIEffects
         public void ModifyMesh(Graphic graphic, Canvas canvas, RectTransform transitionRoot, VertexHelper vh,
             bool canModifyShape)
         {
+            if (graphic == null || transitionRoot == null || vh == null) return;
+
             // Apply flip (without effect).
             ApplyFlipWithoutEffect(vh, m_Flip);
 
@@ -722,6 +724,7 @@ namespace Coffee.UIEffects
             if (!willModifyVertex || count == 0) return;
 
             var effectProxy = GraphicProxy.Find(graphic);
+            if (effectProxy == null) return;
             var isText = effectProxy.IsText(graphic);
             effectProxy.OnPreModifyMesh(graphic, canvas);
 
