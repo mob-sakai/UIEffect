@@ -13,12 +13,27 @@
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
     [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "node ./Samples~/sync-sample-package-versions.js ${nextRelease.version}"
+      }
+    ],
+    [
       "@semantic-release/npm",
       {
         "npmPublish": false
       }
     ],
-    "@semantic-release/git",
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "CHANGELOG.md",
+          "package.json",
+          "Samples~/**/package.json"
+        ]
+      }
+    ],
     "@semantic-release/github"
   ]
 }
