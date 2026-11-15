@@ -34,6 +34,7 @@ jobs:
           working_directory: Packages/src
           extra_plugins: |
             @semantic-release/changelog
+            @semantic-release/exec
             @semantic-release/git
         env:
           GITHUB_TOKEN: ${{ github.token }}

@@ -1,0 +1,24 @@
+{
+  "name": "com.coffee.ui-effect.textmeshpro",
+  "displayName": "UI Effect - TextMeshPro Support (Unity 6)",
+  "description": "An extension for UI Effect that adds TextMeshPro support (Unity 6).",
+  "version": "5.11.9",
+  "unity": "2020.3",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mob-sakai/UIEffect.git"
+  },
+  "author": {
+    "name": "mob-sakai",
+    "email": "sakai861104@gmail.com",
+    "url": "https://github.com/mob-sakai"
+  },
+  "dependencies": {
+    "com.coffee.ui-effect": "5.11.9"
+  },
+  "keywords": [
+    "ui",
+    "effect"
+  ]
+}

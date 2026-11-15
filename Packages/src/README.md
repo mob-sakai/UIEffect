@@ -123,7 +123,7 @@ _This package requires **Unity 2020.3 or later**._
   ```
 - To update the package, use Package Manager UI (`Window > Package Manager`) or run the following command with `@{version}`:
   ```
-  openupm add com.coffee.ui-effect@5.9.0
+  openupm add com.coffee.ui-effect@5.12.0
   ```
 
 ### Install via UPM (with Package Manager UI)
@@ -132,7 +132,7 @@ _This package requires **Unity 2020.3 or later**._
 - Click `+ > Add package from git URL...` and input the repository URL: `https://github.com/mob-sakai/UIEffect.git?path=Packages/src`  
   ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/upm-add-from-url.png)
 - To update the package, change suffix `#{version}` to the target version.
-    - e.g. `https://github.com/mob-sakai/UIEffect.git?path=Packages/src#5.9.0`
+    - e.g. `https://github.com/mob-sakai/UIEffect.git?path=Packages/src#5.12.0`
 
 ### Install via UPM (Manually)
 
@@ -147,7 +147,7 @@ _This package requires **Unity 2020.3 or later**._
   ```
 
 - To update the package, change suffix `#{version}` to the target version.
-    - e.g. `"com.coffee.ui-effect": "https://github.com/mob-sakai/UIEffect.git?path=Packages/src#5.9.0",`
+    - e.g. `"com.coffee.ui-effect": "https://github.com/mob-sakai/UIEffect.git?path=Packages/src#5.12.0",`
 
 ### Install as Embedded Package
 
@@ -167,6 +167,53 @@ Additional resources can be imported to extend functionality.
 - [Usage with TextMeshPro](#usage-with-textmeshpro)
 - [Usage with ShaderGraph](#usage-with-shadergraph)
 
+#### Install Additional Resources as Packages
+
+Starting with v5.12.0, you can install optional resources as separate UPM packages instead of importing them as samples.  
+This lets you use the features you need without adding their assets to your project's `Assets/Samples` directory.
+
+> [!TIP]
+> Use the **same version as the UIEffect package**.  
+> If you have already imported a resource as a sample, delete its corresponding sample from `Assets/Samples/UI Effect/{version}` before installing the package.
+
+The following optional packages are available from the OpenUPM registry.  
+Choose the package that matches your Unity version and render pipeline, then replace `5.12.0` with your UIEffect package version if needed.
+
+```sh
+# TextMeshPro support (Unity 2023.2 or earlier)
+openupm add com.coffee.ui-effect.textmeshpro-legacy@5.12.0
+# TextMeshPro support (Unity 2023.3 or later)
+openupm add com.coffee.ui-effect.textmeshpro@5.12.0
+# ShaderGraph support (Unity 6, Built-in Render Pipeline)
+openupm add com.coffee.ui-effect.shadergraph-builtin@5.12.0
+# ShaderGraph support (Unity 6, URP)
+openupm add com.coffee.ui-effect.shadergraph-urp@5.12.0
+# v4 compatible components
+openupm add com.coffee.ui-effect.v4-compatible-components@5.12.0
+```
+
+For manual installation, add the desired package entries to your `Packages/manifest.json` file, install the package through Package Manager, or embed the package in your project.  
+The following is a valid `manifest.json` dependencies example; remove entries for resources you do not need.  
+Use only one TextMeshPro support package, and select the ShaderGraph package for your render pipeline.
+
+```json
+{
+  "dependencies": {
+    // TextMeshPro Support (2023.2 or earlier):
+    "com.coffee.ui-effect.textmeshpro-legacy": "https://github.com/mob-sakai/UIEffect.git?path=Packages/src/Samples~/com.coffee.ui-effect.textmeshpro-legacy#5.12.0",
+    // TextMeshPro Support (2023.3, 6000.0 or later):
+    "com.coffee.ui-effect.textmeshpro": "https://github.com/mob-sakai/UIEffect.git?path=Packages/src/Samples~/com.coffee.ui-effect.textmeshpro#5.12.0",
+    // ShaderGraph Support (Unity 6, Builtin):
+    "com.coffee.ui-effect.shadergraph-builtin": "https://github.com/mob-sakai/UIEffect.git?path=Packages/src/Samples~/com.coffee.ui-effect.shadergraph-builtin#5.12.0",
+    // ShaderGraph Support (Unity 6, URP):
+    "com.coffee.ui-effect.shadergraph-urp": "https://github.com/mob-sakai/UIEffect.git?path=Packages/src/Samples~/com.coffee.ui-effect.shadergraph-urp#5.12.0",
+    // v4 Compatible Components:
+    "com.coffee.ui-effect.v4-compatible-components": "https://github.com/mob-sakai/UIEffect.git?path=Packages/src/Samples~/com.coffee.ui-effect.v4-compatible-components#5.12.0",
+    ...
+  }
+}
+```
+
 <br><br>
 
 ## 🔄 Upgrading from v4 to v5
@@ -185,6 +232,10 @@ If upgrading from UIEffect v4 to v5, note the following breaking changes:
    ```
 
 2. Import the `v4 Compatible Components` sample from the Package Manager window.  
+   > [!TIP]
+   > "Additional Resources" can be installed as a package from v5.12.0 or later.  
+   > For more information, please refer to the [Install Additional Resources](#import-additional-resources) section.
+
 
 3. All v4 components are obsolete.  
 - v4 `UIEffect` component is now `UIEffectV4` component. Change the reference in the code.
@@ -472,6 +523,10 @@ The `UIEffectReplica` component applies visual effects to UI elements by replica
 
 ### Usage with TextMeshPro
 
+> [!TIP]
+> "Additional Resources" can be installed as a package from v5.12.0 or later.  
+> For more information, please refer to the [Install Additional Resources](#import-additional-resources) section.
+
 To use UIEffect with TextMeshPro, you need to import additional resources.  
 When a shader included in the samples is requested, an import dialog will automatically appear.  
 Click the `Import` button.
@@ -515,6 +570,10 @@ Click the `Import` button.
 <br><br>
 
 ### Usage with ShaderGraph
+
+> [!TIP]
+> "Additional Resources" can be installed as a package from v5.12.0 or later.  
+> For more information, please refer to the [Install Additional Resources](#import-additional-resources) section.
 
 ⚠️ ShaderGraph support is available only in Unity 2023.2/6.0 or later.
 

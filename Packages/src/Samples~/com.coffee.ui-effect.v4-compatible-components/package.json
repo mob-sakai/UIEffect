@@ -1,0 +1,25 @@
+{
+  "name": "com.coffee.ui-effect.v4-compatible-components",
+  "displayName": "UI Effect - v4 Compatible Components",
+  "description": "An extension for UI Effect that adds v4 compatible components.",
+  "version": "5.11.9",
+  "unity": "2020.3",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mob-sakai/UIEffect.git"
+  },
+  "author": {
+    "name": "mob-sakai",
+    "email": "sakai861104@gmail.com",
+    "url": "https://github.com/mob-sakai"
+  },
+  "dependencies": {
+    "com.coffee.ui-effect": "5.11.9",
+    "com.unity.modules.animation": "1.0.0"
+  },
+  "keywords": [
+    "ui",
+    "effect"
+  ]
+}
