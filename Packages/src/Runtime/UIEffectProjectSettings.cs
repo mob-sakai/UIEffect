@@ -13,15 +13,17 @@ namespace Coffee.UIEffects
 {
     public class UIEffectProjectSettings : PreloadedProjectSettings<UIEffectProjectSettings>
     {
-        [Header("Setting")]
+        [HideInInspector]
         [SerializeField]
         internal List<UIEffect> m_RuntimePresets = new List<UIEffect>();
 
+        [HideInInspector]
         [SerializeField]
         internal List<UIEffectPreset> m_RuntimePresetsV2 = new List<UIEffectPreset>();
 
         [Header("Editor")]
         [Tooltip("Use HDR color pickers on color fields.")]
+        [HideInInspector]
         [SerializeField] private bool m_UseHDRColorPicker = true;
 
         [HideInInspector]
