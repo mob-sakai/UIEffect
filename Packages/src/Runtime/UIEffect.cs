@@ -2091,6 +2091,7 @@ namespace Coffee.UIEffects
                         src.m_GradationGradient.alphaKeys);
                     dst.m_GradationGradient.mode = src.m_GradationGradient.mode;
                 }
+
                 dst.m_GradationOffset = src.m_GradationOffset;
                 dst.m_GradationScale = src.m_GradationScale;
                 dst.m_GradationRotation = src.m_GradationRotation;

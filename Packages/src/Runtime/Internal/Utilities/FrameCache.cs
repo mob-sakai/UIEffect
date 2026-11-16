@@ -29,6 +29,12 @@ namespace Coffee.UIEffectInternal
         /// </summary>
         public static bool TryGet<T>(object key1, string key2, out T result)
         {
+            if (key1 == null || key2 == null)
+            {
+                result = default;
+                return false;
+            }
+
             return GetFrameCache<T>().TryGet((key1.GetHashCode(), key2.GetHashCode()), out result);
         }
 
@@ -37,6 +43,12 @@ namespace Coffee.UIEffectInternal
         /// </summary>
         public static bool TryGet<T>(object key1, string key2, int key3, out T result)
         {
+            if (key1 == null || key2 == null)
+            {
+                result = default;
+                return false;
+            }
+
             return GetFrameCache<T>().TryGet((key1.GetHashCode(), key2.GetHashCode() + key3), out result);
         }
 
@@ -45,6 +57,8 @@ namespace Coffee.UIEffectInternal
         /// </summary>
         public static void Set<T>(object key1, string key2, T result)
         {
+            if (key1 == null || key2 == null) return;
+
             GetFrameCache<T>().Set((key1.GetHashCode(), key2.GetHashCode()), result);
         }
 
@@ -53,6 +67,8 @@ namespace Coffee.UIEffectInternal
         /// </summary>
         public static void Set<T>(object key1, string key2, int key3, T result)
         {
+            if (key1 == null || key2 == null) return;
+
             GetFrameCache<T>().Set((key1.GetHashCode(), key2.GetHashCode() + key3), result);
         }
 

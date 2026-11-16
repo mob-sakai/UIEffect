@@ -49,6 +49,8 @@ namespace Coffee.UIEffectInternal
         /// </summary>
         public static void Get(Hash128 hash, ref Material material, string shaderName)
         {
+            if (onShaderFind == null) return;
+
             Profiler.BeginSample("(COF)[MaterialRepository] Get");
             s_Repository.Get(hash, ref material, x => new Material(onShaderFind(x))
             {
@@ -62,6 +64,8 @@ namespace Coffee.UIEffectInternal
         /// </summary>
         public static void Get(Hash128 hash, ref Material material, string shaderName, string[] keywords)
         {
+            if (onShaderFind == null) return;
+
             Profiler.BeginSample("(COF)[MaterialRepository] Get");
             s_Repository.Get(hash, ref material, x => new Material(onShaderFind(x.shaderName))
             {

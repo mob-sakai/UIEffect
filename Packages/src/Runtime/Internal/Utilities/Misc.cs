@@ -3,6 +3,7 @@ using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using Debug = UnityEngine.Debug;
 #if UNITY_EDITOR
 using System.IO;
 using System.Linq;
@@ -67,7 +68,7 @@ namespace Coffee.UIEffectInternal
         public static T[] GetAllComponentsInPrefabStage<T>() where T : Component
         {
             var prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
-            if (prefabStage == null) return Array.Empty<T>();
+            if (prefabStage == null || prefabStage.prefabContentsRoot == null) return Array.Empty<T>();
 
             return prefabStage.prefabContentsRoot.GetComponentsInChildren<T>(true);
         }
@@ -102,12 +103,17 @@ namespace Coffee.UIEffectInternal
 #if UNITY_EDITOR
         private static Action<Object, Texture2D> s_SetIconForObject = typeof(EditorGUIUtility)
             .GetMethod("SetIconForObject", BindingFlags.Static | BindingFlags.NonPublic)
-            .CreateDelegate(typeof(Action<Object, Texture2D>), null) as Action<Object, Texture2D>;
+            ?.CreateDelegate(typeof(Action<Object, Texture2D>), null) as Action<Object, Texture2D>;
 
         [InitializeOnLoadMethod]
         private static void InitializeOnLoadMethod()
         {
             if (Misc.isBatchOrBuilding) return;
+            if (s_SetIconForObject == null)
+            {
+                Debug.LogError("Could not retrieve the object icon API.");
+                return;
+            }
 
             var types = TypeCache.GetTypesWithAttribute(typeof(IconAttribute));
             var scripts = MonoImporter.GetAllRuntimeMonoScripts();

@@ -58,7 +58,10 @@ namespace Coffee.UIEffectInternal
         public static void GetComponentsInChildren<T>(this Component self, List<T> results, int depth)
             where T : Component
         {
+            if (results == null) return;
+
             results.Clear();
+            if (self == null) return;
             self.GetComponentsInChildren_Internal(results, depth);
         }
 
@@ -97,6 +100,8 @@ namespace Coffee.UIEffectInternal
         /// </summary>
         public static T GetRootComponent<T>(this Component self) where T : Component
         {
+            if (self == null) return null;
+
             T component = null;
             var transform = self.transform;
             while (transform != null)
@@ -119,6 +124,8 @@ namespace Coffee.UIEffectInternal
             Predicate<T> valid)
             where T : Component
         {
+            if (self == null || valid == null) return null;
+
             var tr = includeSelf ? self.transform : self.transform.parent;
             while (tr != null)
             {

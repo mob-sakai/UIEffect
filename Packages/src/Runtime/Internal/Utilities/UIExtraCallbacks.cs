@@ -66,9 +66,16 @@ namespace Coffee.UIEffectInternal
             CanvasUpdateRegistry.IsRebuildingLayout();
 #if TMP_ENABLE
             // Explicitly set `Canvas.willRenderCanvases += TMP_UpdateManager.DoRebuilds`.
-            var _ = typeof(TMPro.TMP_UpdateManager)
-                .GetProperty("instance", BindingFlags.NonPublic | BindingFlags.Static)
-                .GetValue(null);
+            var property = typeof(TMPro.TMP_UpdateManager)
+                .GetProperty("instance", BindingFlags.NonPublic | BindingFlags.Static);
+            if (property == null)
+            {
+                Debug.LogError("Could not retrieve the TextMeshPro update manager.");
+            }
+            else
+            {
+                var _ = property.GetValue(null);
+            }
 #endif
             Canvas.willRenderCanvases -= OnAfterCanvasRebuild;
             Canvas.willRenderCanvases += OnAfterCanvasRebuild;

@@ -71,6 +71,8 @@ namespace Coffee.UIEffectInternal
         /// </summary>
         public void Get(Hash128 hash, ref T obj, Func<T> onCreate)
         {
+            if (onCreate == null) return;
+
             if (GetFromCache(hash, ref obj)) return;
             Add(hash, ref obj, onCreate());
         }
@@ -80,6 +82,8 @@ namespace Coffee.UIEffectInternal
         /// </summary>
         public void Get<TS>(Hash128 hash, ref T obj, Func<TS, T> onCreate, TS source)
         {
+            if (onCreate == null) return;
+
             if (GetFromCache(hash, ref obj)) return;
             Add(hash, ref obj, onCreate(source));
         }
@@ -92,7 +96,7 @@ namespace Coffee.UIEffectInternal
             {
                 if (entry.storedObject == null)
                 {
-                    Release(ref entry.storedObject);
+                    Remove(entry);
                     Profiler.EndSample();
                     return false;
                 }
@@ -127,10 +131,11 @@ namespace Coffee.UIEffectInternal
             Profiler.BeginSample("(COF)[ObjectRepository] Add");
             var newEntry = 0 < _pool.Count ? _pool.Pop() : new Entry();
             newEntry.storedObject = newObject;
+            newEntry.objectId = newObject.GetHashCode();
             newEntry.hash = hash;
             newEntry.reference = 1;
             _cache[hash] = newEntry;
-            _objectKey[newObject.GetHashCode()] = hash;
+            _objectKey[newEntry.objectId] = hash;
             Logger.Log(_name, $"<color=#03c700>Add</color>(total#{count}): {newEntry}");
             Release(ref obj);
             obj = newObject;
@@ -175,7 +180,7 @@ namespace Coffee.UIEffectInternal
 
             Profiler.BeginSample("(COF)[ObjectRepository] Remove");
             _cache.Remove(entry.hash);
-            _objectKey.Remove(entry.storedObject.GetHashCode());
+            _objectKey.Remove(entry.objectId);
             _pool.Push(entry);
             entry.reference = 0;
             Logger.Log(_name, $"<color=#f29e03>Remove</color>(total#{_cache.Count}): {entry}");
@@ -186,12 +191,14 @@ namespace Coffee.UIEffectInternal
         private class Entry
         {
             public Hash128 hash;
+            public int objectId;
             public int reference;
             public T storedObject;
 
             public void Release(Action<T> onRelease)
             {
                 reference = 0;
+                objectId = 0;
                 if (storedObject != null)
                 {
                     onRelease?.Invoke(storedObject);

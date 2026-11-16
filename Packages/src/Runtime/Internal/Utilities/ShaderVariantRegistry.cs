@@ -75,18 +75,18 @@ namespace Coffee.UIEffectInternal
         /// </summary>
         public void InitializeShaderLookup()
         {
-            var count = m_RegisteredShaders.Count;
-            if (count == 0) return;
-
             if (_shaderByName == null)
             {
-                _shaderByName = new Dictionary<string, Shader>(count);
+                _shaderByName = new Dictionary<string, Shader>();
             }
             else
             {
                 _shaderByName.Clear();
             }
 
+            if (m_RegisteredShaders == null) return;
+
+            var count = m_RegisteredShaders.Count;
             for (var i = 0; i < count; i++)
             {
                 var s = m_RegisteredShaders[i];
@@ -105,6 +105,8 @@ namespace Coffee.UIEffectInternal
         /// </summary>
         public Shader FindShaderByName(string name)
         {
+            if (string.IsNullOrEmpty(name)) return null;
+
             if (_shaderByName != null && _shaderByName.TryGetValue(name, out var shader) && shader != null)
             {
                 return shader;
@@ -119,6 +121,16 @@ namespace Coffee.UIEffectInternal
             string defaultOptionalShaderName)
         {
             if (shader == null) return null;
+
+            if (_cachedOptionalShaders == null)
+            {
+                _cachedOptionalShaders = new Dictionary<int, string>();
+            }
+
+            if (m_OptionalShaders == null)
+            {
+                m_OptionalShaders = new List<StringPair>();
+            }
 
             // Already cached.
             var id = shader.GetHashCode();
@@ -141,6 +153,8 @@ namespace Coffee.UIEffectInternal
             for (var i = 0; i < count; i++)
             {
                 var pair = m_OptionalShaders[i];
+                if (pair == null) continue;
+
                 if (pair.key != shaderName) continue;
                 optionalShader = FindShaderByName(pair.value);
                 if (optionalShader == null) continue;
@@ -178,7 +192,15 @@ namespace Coffee.UIEffectInternal
 
         public void ClearCache()
         {
-            _cachedOptionalShaders.Clear();
+            if (_cachedOptionalShaders == null)
+            {
+                _cachedOptionalShaders = new Dictionary<int, string>();
+            }
+            else
+            {
+                _cachedOptionalShaders.Clear();
+            }
+
             _cachedVariants.Clear();
         }
 
@@ -213,7 +235,10 @@ namespace Coffee.UIEffectInternal
 
             // Register optional shader names by shader comment.
             var pattern = $"// \\[OptionalShader\\] {packageName}: (.*)$";
-            var registeredKeys = new HashSet<string>(m_OptionalShaders.Select(x => x.key));
+            m_OptionalShaders = m_OptionalShaders ?? new List<StringPair>();
+            var registeredKeys = new HashSet<string>(m_OptionalShaders
+                .Where(x => x != null)
+                .Select(x => x.key));
             var keys = File.ReadLines(path)
                 .Take(10)
                 .Select(line => Regex.Match(line, pattern))
@@ -279,6 +304,7 @@ namespace Coffee.UIEffectInternal
             if (m_Asset == null) return;
             var so = new SerializedObject(m_Asset);
             var shaders = so.FindProperty("m_Shaders");
+            if (shaders == null) return;
 
             // Get all shaders in the SVC, ignoring nulls and duplicates.
             var shadersInSVC = Enumerable.Range(0, shaders.arraySize)
@@ -290,6 +316,7 @@ namespace Coffee.UIEffectInternal
 
             // ShaderVariantCollection entry order is not stable between editor sessions.
             // The registry is a lookup set, so an order-only difference is already in sync.
+            m_RegisteredShaders = m_RegisteredShaders ?? new List<Shader>();
             if (m_RegisteredShaders.Count == shadersInSVC.Count &&
                 new HashSet<Shader>(m_RegisteredShaders).SetEquals(shadersInSVC))
             {
@@ -304,6 +331,7 @@ namespace Coffee.UIEffectInternal
         internal void RegisterVariant(Material material, string path)
         {
             if (material == null || material.shader == null || m_Asset == null) return;
+            m_UnregisteredVariants = m_UnregisteredVariants ?? new List<StringPair>();
 
             Profiler.BeginSample("(EDITOR/COF)[ShaderVariantRegistry] RegisterVariant");
             var (variant, pair) = GetVariant(material);
