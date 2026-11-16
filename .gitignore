@@ -26,4 +26,5 @@ bin/
 UserSettings/
 *.app/
 Build/
-Assets/TextMeshPro Support*
+Assets/Samples*
+Packages/src/Samples~/*.meta

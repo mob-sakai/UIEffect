@@ -26,9 +26,7 @@ bin/
 UserSettings/
 *.app/
 Build/
-Assets/TextMeshPro Support*
+.utmp/
 Assets/Demos
 Assets/Demos.meta
 Assets/Samples*
-Assets/ShaderGraph*
-.utmp/

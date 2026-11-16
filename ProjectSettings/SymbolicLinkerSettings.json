@@ -6,18 +6,23 @@
         "m_EditorClassIdentifier": "",
         "m_SymbolicLinks": [
             {
-                "m_From": "Assets/Samples",
-                "m_To": "../Packages/src/Samples~",
+                "m_From": "Assets/Samples/Demo",
+                "m_To": "../../Packages/src/Samples~/Demo",
                 "m_Define": ""
             },
             {
-                "m_From": "Assets/TextMeshPro Support",
-                "m_To": "../Packages/src/Samples~/TextMeshPro Support~",
+                "m_From": "Assets/Samples/com.coffee.ui-effect.v4-compatible-components",
+                "m_To": "../../Packages/src/Samples~/com.coffee.ui-effect.v4-compatible-components",
+                "m_Define": ""
+            },
+            {
+                "m_From": "Assets/Samples/com.coffee.ui-effect.textmeshpro-legacy",
+                "m_To": "../../Packages/src/Samples~/com.coffee.ui-effect.textmeshpro-legacy",
                 "m_Define": "!UNITY_2023_2_OR_NEWER"
             },
             {
-                "m_From": "Assets/TextMeshPro Support (Unity 6)",
-                "m_To": "../Packages/src/Samples~/TextMeshPro Support (Unity 6)~",
+                "m_From": "Assets/Samples/com.coffee.ui-effect.textmeshpro",
+                "m_To": "../../Packages/src/Samples~/com.coffee.ui-effect.textmeshpro",
                 "m_Define": "UNITY_2023_2_OR_NEWER"
             }
         ]

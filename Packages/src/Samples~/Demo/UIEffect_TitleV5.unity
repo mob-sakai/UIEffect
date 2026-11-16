@@ -631,16 +631,16 @@ MonoBehaviour:
   m_SamplingWidth: 1
   m_SamplingScale: 1
   m_TransitionFilter: 7
-  m_TransitionRate: 0.25
+  m_TransitionRate: 0.187
   m_TransitionReverse: 1
   m_TransitionTex: {fileID: 2800000, guid: 54e40a17ecd6a4b5a8a73a28042cdaa0, type: 3}
-  m_TransitionTexScale: {x: 1.46, y: 2.46}
+  m_TransitionTexScale: {x: 1.46, y: 2.4}
   m_TransitionTexOffset: {x: 0, y: 0}
-  m_TransitionTexSpeed: {x: 0.02, y: 0}
+  m_TransitionTexSpeed: {x: 0.05, y: 0}
   m_TransitionRotation: 0
   m_TransitionKeepAspectRatio: 1
-  m_TransitionWidth: 0.709
-  m_TransitionSoftness: 0.39
+  m_TransitionWidth: 1
+  m_TransitionSoftness: 0.592
   m_TransitionRange:
     m_Min: 0
     m_Max: 1

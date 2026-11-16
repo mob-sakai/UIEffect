@@ -1,35 +1,40 @@
 {
-  "MonoBehaviour": {
-    "m_Enabled": true,
-    "m_EditorHideFlags": 0,
-    "m_Name": "",
-    "m_EditorClassIdentifier": "",
-    "m_SymbolicLinks": [
-      {
-        "m_From": "Assets/Samples",
-        "m_To": "../../Packages/src/Samples~",
-        "m_Define": ""
-      },
-      {
-        "m_From": "Assets/Demos",
-        "m_To": "../../Assets/Demos",
-        "m_Define": ""
-      },
-      {
-        "m_From": "Assets/TextMeshPro Support (Unity 6)",
-        "m_To": "../../Packages/src/Samples~/TextMeshPro Support (Unity 6)~",
-        "m_Define": ""
-      },
-      {
-        "m_From": "Assets/ShaderGraph Support (Unity 6 BuiltIn)",
-        "m_To": "../../Packages/src/Samples~/ShaderGraph Support (Unity 6 BuiltIn)~",
-        "m_Define": ""
-      },
-      {
-        "m_From": "Assets/ShaderGraph Support (Unity 6 URP)",
-        "m_To": "../../Packages/src/Samples~/ShaderGraph Support (Unity 6 URP)~",
-        "m_Define": ""
-      }
-    ]
-  }
+    "MonoBehaviour": {
+        "m_Enabled": true,
+        "m_EditorHideFlags": 0,
+        "m_Name": "",
+        "m_EditorClassIdentifier": "",
+        "m_SymbolicLinks": [
+            {
+                "m_From": "Assets/Demos",
+                "m_To": "../../Assets/Demos",
+                "m_Define": ""
+            },
+            {
+                "m_From": "Assets/Samples/Demo",
+                "m_To": "../../../Packages/src/Samples~/Demo",
+                "m_Define": ""
+            },
+            {
+                "m_From": "Assets/Samples/com.coffee.ui-effect.textmeshpro",
+                "m_To": "../../../Packages/src/Samples~/com.coffee.ui-effect.textmeshpro",
+                "m_Define": ""
+            },
+            {
+                "m_From": "Assets/Samples/com.coffee.ui-effect.shadergraph-builtin",
+                "m_To": "../../../Packages/src/Samples~/com.coffee.ui-effect.shadergraph-builtin",
+                "m_Define": ""
+            },
+            {
+                "m_From": "Assets/Samples/com.coffee.ui-effect.shadergraph-urp",
+                "m_To": "../../../Packages/src/Samples~/com.coffee.ui-effect.shadergraph-urp",
+                "m_Define": ""
+            },
+            {
+                "m_From": "Assets/Samples/com.coffee.ui-effect.v4-compatible-components",
+                "m_To": "../../../Packages/src/Samples~/com.coffee.ui-effect.v4-compatible-components",
+                "m_Define": ""
+            }
+        ]
+    }
 }

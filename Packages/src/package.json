@@ -30,27 +30,27 @@
     {
       "displayName": "v4 Compatible Components",
       "description": "v4 Compatible Components",
-      "path": "Samples~/v4 Compatible Components"
+      "path": "Samples~/com.coffee.ui-effect.v4-compatible-components"
     },
     {
       "displayName": "TextMeshPro Support",
       "description": "TextMeshPro Support",
-      "path": "Samples~/TextMeshPro Support~"
+      "path": "Samples~/com.coffee.ui-effect.textmeshpro-legacy"
     },
     {
       "displayName": "TextMeshPro Support (Unity 6)",
       "description": "TextMeshPro Support (Unity 6)",
-      "path": "Samples~/TextMeshPro Support (Unity 6)~"
+      "path": "Samples~/com.coffee.ui-effect.textmeshpro"
     },
     {
       "displayName": "ShaderGraph Support (Unity 6 BuiltIn)",
       "description": "ShaderGraph Support (Unity 6 BuiltIn)",
-      "path": "Samples~/ShaderGraph Support (Unity 6 BuiltIn)~"
+      "path": "Samples~/com.coffee.ui-effect.shadergraph-builtin"
     },
     {
       "displayName": "ShaderGraph Support (Unity 6 URP)",
       "description": "ShaderGraph Support (Unity 6 URP)",
-      "path": "Samples~/ShaderGraph Support (Unity 6 URP)~"
+      "path": "Samples~/com.coffee.ui-effect.shadergraph-urp"
     }
   ]
 }

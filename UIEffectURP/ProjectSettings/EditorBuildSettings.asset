@@ -6,8 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/ShaderGraph Support (Unity 6 URP)/UIEffect_ShaderGraph Support (Unity
-      6 URP).unity
-    guid: 9d5fb70c6201e408ebe2e8941a0e5944
+    path: Assets/Samples/Demo/UIEffect_TitleV5.unity
+    guid: 423d95626aa6c4e4d9cc46aada552a2c
+  - enabled: 1
+    path: Assets/Samples/com.coffee.ui-effect.shadergraph-urp/UIEffect_ShaderGraph
+      Support (Unity 6 URP).unity
+    guid: 1982008f495034475a69725f8ac1e89f
+  - enabled: 1
+    path: Assets/Samples/com.coffee.ui-effect.shadergraph-builtin/UIEffect_ShaderGraph
+      Support (Unity 6 BuiltIn).unity
+    guid: c31b8bd7d68a64b23b8c505bd7871154
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
