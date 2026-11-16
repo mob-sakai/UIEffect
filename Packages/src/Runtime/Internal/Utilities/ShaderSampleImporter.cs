@@ -11,10 +11,16 @@ namespace Coffee.UIEffectInternal
 {
     internal static class ShaderSampleImporter
     {
+        private static string s_ReadmeUrl;
         private static (string shaderName, string sampleName, string version)[] s_Samples;
         private static (string guid, string fileName)[] s_DeprecatedShaders;
         private static readonly Dictionary<string, string> s_SampleNames = new Dictionary<string, string>();
         private static readonly Dictionary<string, string> s_ShaderAliases = new Dictionary<string, string>();
+
+        public static void RegisterReadmeUrl(string url)
+        {
+            s_ReadmeUrl = url;
+        }
 
         public static void RegisterShaderSamples((string shaderName, string sampleName, string version)[] samples)
         {
@@ -62,6 +68,10 @@ namespace Coffee.UIEffectInternal
             if (s_SampleNames.TryGetValue(shaderName, out var sampleName))
             {
                 var message = $"Import the sample '{sampleName}' to use the shader '{shaderName}'.";
+                if (!string.IsNullOrWhiteSpace(s_ReadmeUrl))
+                {
+                    message += "\n\nFor details, please see the readme.";
+                }
                 return ImportSampleIfSelected(sampleName, message);
             }
 
@@ -85,8 +95,21 @@ namespace Coffee.UIEffectInternal
             // Import the sample if selected.
             if (!string.IsNullOrEmpty(message))
             {
-                var selected = EditorUtility.DisplayDialog($"Import {sampleName}", message, "Import", "Cancel");
-                if (!selected) return false;
+                if (!string.IsNullOrWhiteSpace(s_ReadmeUrl))
+                {
+                    var selected = EditorUtility.DisplayDialogComplex(
+                        $"Import {sampleName}", message, "Import", "Cancel", "Show Readme");
+                    if (selected == 2)
+                    {
+                        Application.OpenURL(s_ReadmeUrl);
+                        return false;
+                    }
+                    if (selected != 0) return false;
+                }
+                else if (!EditorUtility.DisplayDialog($"Import {sampleName}", message, "Import", "Cancel"))
+                {
+                    return false;
+                }
             }
 
             // Remove the imported sample name from the list.

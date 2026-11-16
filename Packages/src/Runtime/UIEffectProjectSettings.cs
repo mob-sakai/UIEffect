@@ -106,6 +106,7 @@ namespace Coffee.UIEffects
             const string tmpSupport = "TextMeshPro Support";
             const string version = "v5.11.0";
 #endif
+            ShaderSampleImporter.RegisterReadmeUrl("https://github.com/mob-sakai/UIEffect#import-additional-resources");
             ShaderSampleImporter.RegisterShaderSamples(new[]
             {
                 // TextMeshPro Support/TextMeshPro Support (Unity 6)
