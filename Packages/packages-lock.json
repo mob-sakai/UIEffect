@@ -5,14 +5,14 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "4a182298bd6293c4e6e33dd40bb7a050847190d8"
+      "hash": "d5d12cb14184509b0d4ab12fa22dd3e6f6b50f16"
     },
     "com.coffee.minimal-resource": {
       "version": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/MinimalResource",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "4a182298bd6293c4e6e33dd40bb7a050847190d8"
+      "hash": "d5d12cb14184509b0d4ab12fa22dd3e6f6b50f16"
     },
     "com.coffee.nano-monitor": {
       "version": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/NanoMonitor",
@@ -21,14 +21,14 @@
       "dependencies": {
         "com.unity.ugui": "1.0.0"
       },
-      "hash": "4a182298bd6293c4e6e33dd40bb7a050847190d8"
+      "hash": "d5d12cb14184509b0d4ab12fa22dd3e6f6b50f16"
     },
     "com.coffee.symbolic-linker": {
       "version": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/SymbolicLinker",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "6b154cb5f485aa1d5b727e08a6e6ec2ba7c1a36d"
+      "hash": "d5d12cb14184509b0d4ab12fa22dd3e6f6b50f16"
     },
     "com.coffee.ui-effect": {
       "version": "file:src",
