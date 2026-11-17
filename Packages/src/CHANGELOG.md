@@ -1,3 +1,14 @@
+## [5.11.10](https://github.com/mob-sakai/UIEffect/compare/5.11.9...5.11.10) (2026-11-17)
+
+
+### Bug Fixes
+
+* added "Show Readme" to the auto-import menu ([27629cd](https://github.com/mob-sakai/UIEffect/commit/27629cdd7c9dd64c053a92fcd69119efffe4a127))
+* fix font path in demo ([3ca1214](https://github.com/mob-sakai/UIEffect/commit/3ca121423382668eee335fbb8bf8308b7f04159b))
+* fix potential NPE in code ([6e8aaf3](https://github.com/mob-sakai/UIEffect/commit/6e8aaf36f00e4a42f7b9d6f79e065d4022b567c2))
+* fix potential NPE in code ([d41d1ad](https://github.com/mob-sakai/UIEffect/commit/d41d1ad21f3b4ce38bb1fae870cf8621ed61a1e8))
+* fix project setting inspector ([d359086](https://github.com/mob-sakai/UIEffect/commit/d359086ed4baaf2bc0bfb64742492e3ea6d6d4b6))
+
 ## [5.11.9](https://github.com/mob-sakai/UIEffect/compare/5.11.8...5.11.9) (2026-11-14)
 
 
