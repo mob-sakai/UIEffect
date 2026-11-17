@@ -1,3 +1,10 @@
+# [5.12.0](https://github.com/mob-sakai/UIEffect/compare/5.11.10...5.12.0) (2026-11-17)
+
+
+### Features
+
+* "Additional Resource" can be installed as a package instead of importing as a sample ([afbfcdd](https://github.com/mob-sakai/UIEffect/commit/afbfcdd40c5775390643d9c649e2bc1f223148f8))
+
 ## [5.11.10](https://github.com/mob-sakai/UIEffect/compare/5.11.9...5.11.10) (2026-11-17)
 
 
