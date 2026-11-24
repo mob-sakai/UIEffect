@@ -288,6 +288,13 @@ namespace Coffee.UIEffects
             _isContextDirty = true;
         }
 
+        public void SetMaterialContextAllDirty()
+        {
+            _isContextDirty = true;
+            context.SetGradationDirty();
+            context.SetTransitionGradationDirty();
+        }
+
         internal void ReleaseMaterial()
         {
             MaterialRepository.Release(ref _material);

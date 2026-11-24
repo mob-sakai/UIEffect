@@ -21,6 +21,12 @@ namespace Coffee.UIEffects
         [SerializeField]
         internal List<UIEffectPreset> m_RuntimePresetsV2 = new List<UIEffectPreset>();
 
+        [Header("Settings")]
+        [Tooltip("Whether to enable the color correction feature added in v5.11.9.\n" +
+                 "If disabled, the color picker will not display the correct colors, but compatibility with previous versions can be maintained.")]
+        [HideInInspector]
+        [SerializeField] private bool m_EnableColorCorrection = true;
+
         [Header("Editor")]
         [Tooltip("Use HDR color pickers on color fields.")]
         [HideInInspector]
@@ -38,6 +44,16 @@ namespace Coffee.UIEffects
 
         public static ShaderVariantCollection shaderVariantCollection => shaderRegistry.shaderVariantCollection;
 
+        /// <summary>
+        /// Whether to enable the color correction feature added in v5.11.9.
+        /// If disabled, the color picker will not display the correct colors, but compatibility with previous
+        /// versions can be maintained.
+        /// </summary>
+        public static bool enableColorCorrection => instance.m_EnableColorCorrection;
+
+        /// <summary>
+        /// Whether to use HDR color pickers on color fields.
+        /// </summary>
         public static bool useHdrColorPicker
         {
             get => instance.m_UseHDRColorPicker;

@@ -16,6 +16,7 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _runtimePresets;
         private SerializedProperty _runtimePresetsV2;
         private SerializedProperty _useHDRColorPicker;
+        private SerializedProperty _enableColorCorrection;
         private ShaderVariantRegistryEditor _shaderVariantRegistryEditor;
         private UIEffect[] _legacyPresets;
         private bool _expandRuntimePresets;
@@ -25,6 +26,7 @@ namespace Coffee.UIEffects.Editors
         {
             base.OnEnable();
             _legacyPresets = UIEffectProjectSettings.LoadEditorPresets();
+            _enableColorCorrection = serializedObject.FindProperty("m_EnableColorCorrection");
             _useHDRColorPicker = serializedObject.FindProperty("m_UseHDRColorPicker");
             _runtimePresets = serializedObject.FindProperty("m_RuntimePresets");
             _runtimePresetsV2 = serializedObject.FindProperty("m_RuntimePresetsV2");
@@ -68,6 +70,17 @@ namespace Coffee.UIEffects.Editors
 
             // Legacy Presets
             DrawLegacyPresets();
+
+            // Settings
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.PropertyField(_enableColorCorrection);
+            if (EditorGUI.EndChangeCheck())
+            {
+                foreach (var g in Misc.FindObjectsOfType<UIEffect>())
+                {
+                    g.SetMaterialContextAllDirty();
+                }
+            }
 
             // Editor
             // Use HDR color pickers.

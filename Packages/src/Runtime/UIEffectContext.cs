@@ -852,7 +852,15 @@ namespace Coffee.UIEffects
 
         private static Color ApplyColorSpace(Color color)
         {
-            return QualitySettings.activeColorSpace == ColorSpace.Linear ? color : color.gamma;
+            // v5.11.9 or later, color correction is applied to the color filter and gradation colors.
+            if (UIEffectProjectSettings.enableColorCorrection)
+            {
+                return QualitySettings.activeColorSpace == ColorSpace.Linear ? color : color.gamma;
+            }
+            else
+            {
+                return QualitySettings.activeColorSpace == ColorSpace.Linear ? color.linear : color;
+            }
         }
     }
 }
