@@ -1,3 +1,10 @@
+## [5.12.1](https://github.com/mob-sakai/UIEffect/compare/5.12.0...5.12.1) (2026-11-24)
+
+
+### Bug Fixes
+
+* Added an option to Project Settings to disable color correction and revert to the color output used in version 5.11.8 or earlier ([aa0bf72](https://github.com/mob-sakai/UIEffect/commit/aa0bf72bd429eb2aa173f316e5863bb9bee2eb4e)), closes [#414](https://github.com/mob-sakai/UIEffect/issues/414)
+
 # [5.12.0](https://github.com/mob-sakai/UIEffect/compare/5.11.10...5.12.0) (2026-11-17)
 
 
