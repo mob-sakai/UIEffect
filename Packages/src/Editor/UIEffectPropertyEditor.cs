@@ -1,4 +1,4 @@
-﻿using UnityEditor;
+using UnityEditor;
 using UnityEngine;
 using System;
 using System.Reflection;
@@ -20,6 +20,10 @@ namespace Coffee.UIEffects.Editors
                 s_PiGradient.SetMethod);
 
         private static GUIContent s_ReverseGradientContent;
+        private static GUIContent s_PasteColorContent;
+        private static GUIContent s_PasteGradientContent;
+        private static readonly GUIContent s_RotationLabel = new GUIContent("* Rotation");
+        private static readonly GUIContent s_KeepAspectRatioLabel = new GUIContent("* Keep Aspect Ratio");
 
         private SerializedProperty _toneFilter;
         private SerializedProperty _toneIntensity;
@@ -107,8 +111,6 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _detailTexSpeed;
 
         private SerializedProperty _flip;
-        private static GUIContent s_RotationLabel = new GUIContent("* Rotation");
-        private static GUIContent s_KeepAspectRatioLabel = new GUIContent("* Keep Aspect Ratio");
 
         protected virtual void OnEnable()
         {
@@ -116,6 +118,10 @@ namespace Coffee.UIEffects.Editors
             {
                 var iconDir = "Packages/com.coffee.ui-effect/Editor/Icons";
                 s_ReverseGradientContent = Misc.GetIconContent($"{iconDir}/ReverseIcon.png", "Reverse gradient");
+                s_PasteColorContent = Misc.GetIconContent($"{iconDir}/PasteIcon.png",
+                    $"Paste {PasteColorUtil.SupportedFormats} or CSS background/background-color declarations.");
+                s_PasteGradientContent = Misc.GetIconContent($"{iconDir}/PasteIcon.png",
+                    "Paste CSS linear-gradient(...) or radial-gradient(...).");
             }
 
             _toneFilter = serializedObject.FindProperty("m_ToneFilter");
@@ -511,11 +517,20 @@ namespace Coffee.UIEffects.Editors
             var hdr = UIEffectProjectSettings.useHdrColorPicker;
             EditorGUI.showMixedValue = color.hasMultipleDifferentValues;
 
+            const float pasteWidth = 20f;
+            var colorRect = new Rect(rect.x, rect.y, rect.width - pasteWidth - 2, rect.height);
+            var pasteRect = new Rect(colorRect.xMax + 2, rect.y, pasteWidth, rect.height);
+
             EditorGUI.BeginChangeCheck();
-            var colorValue = EditorGUI.ColorField(rect, label, color.colorValue, true, showAlpha, hdr);
+            var colorValue = EditorGUI.ColorField(colorRect, label, color.colorValue, true, showAlpha, hdr);
             if (EditorGUI.EndChangeCheck())
             {
                 color.colorValue = colorValue;
+            }
+
+            if (GUI.Button(pasteRect, s_PasteColorContent, "IconButton"))
+            {
+                PasteColorUtil.PasteFromClipboard(color);
             }
         }
 
@@ -523,8 +538,10 @@ namespace Coffee.UIEffects.Editors
         {
             var r = EditorGUILayout.GetControlRect();
             const float reverseWidth = 20f;
-            var gradientRect = new Rect(r.x, r.y, r.width - reverseWidth - 2, r.height);
+            const float pasteWidth = 20f;
+            var gradientRect = new Rect(r.x, r.y, r.width - reverseWidth - pasteWidth - 4, r.height);
             var reverseRect = new Rect(gradientRect.xMax + 2, r.y, reverseWidth, r.height);
+            var pasteRect = new Rect(reverseRect.xMax + 2, r.y, pasteWidth, r.height);
             var label = EditorGUIUtility.TrTempContent(gradient.displayName);
             label.tooltip = gradient.tooltip;
             var hdr = UIEffectProjectSettings.useHdrColorPicker;
@@ -540,6 +557,11 @@ namespace Coffee.UIEffects.Editors
             if (GUI.Button(reverseRect, s_ReverseGradientContent, "IconButton"))
             {
                 ReverseGradient(gradient);
+            }
+
+            if (GUI.Button(pasteRect, s_PasteGradientContent, "IconButton"))
+            {
+                PasteGradientUtil.PasteFromClipboard(gradient, s_GetGradient, s_SetGradient);
             }
         }
 
