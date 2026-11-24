@@ -19,7 +19,11 @@ namespace Coffee.UIEffectInternal
 #endif
         private static void Clear()
         {
-            s_Caches.Clear();
+            lock (s_Caches)
+            {
+                s_Caches.Clear();
+            }
+
             UIExtraCallbacks.onLateAfterCanvasRebuild -= ClearAllCache;
             UIExtraCallbacks.onLateAfterCanvasRebuild += ClearAllCache;
         }
@@ -74,21 +78,27 @@ namespace Coffee.UIEffectInternal
 
         private static void ClearAllCache()
         {
-            foreach (var cache in s_Caches.Values)
+            lock (s_Caches)
             {
-                cache.Clear();
+                foreach (var cache in s_Caches.Values)
+                {
+                    cache.Clear();
+                }
             }
         }
 
         private static FrameCacheContainer<T> GetFrameCache<T>()
         {
-            var t = typeof(T);
-            if (s_Caches.TryGetValue(t, out var frameCache)) return frameCache as FrameCacheContainer<T>;
+            lock (s_Caches)
+            {
+                var t = typeof(T);
+                if (s_Caches.TryGetValue(t, out var frameCache)) return frameCache as FrameCacheContainer<T>;
 
-            frameCache = new FrameCacheContainer<T>();
-            s_Caches.Add(t, frameCache);
+                frameCache = new FrameCacheContainer<T>();
+                s_Caches.Add(t, frameCache);
 
-            return (FrameCacheContainer<T>)frameCache;
+                return (FrameCacheContainer<T>)frameCache;
+            }
         }
 
         private interface IFrameCache
@@ -102,17 +112,26 @@ namespace Coffee.UIEffectInternal
 
             public void Clear()
             {
-                _caches.Clear();
+                lock (_caches)
+                {
+                    _caches.Clear();
+                }
             }
 
             public bool TryGet((int, int) key, out T result)
             {
-                return _caches.TryGetValue(key, out result);
+                lock (_caches)
+                {
+                    return _caches.TryGetValue(key, out result);
+                }
             }
 
             public void Set((int, int) key, T result)
             {
-                _caches[key] = result;
+                lock (_caches)
+                {
+                    _caches[key] = result;
+                }
             }
         }
     }
