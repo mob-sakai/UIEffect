@@ -2,6 +2,7 @@
 using UnityEngine;
 using System;
 using System.Reflection;
+using Coffee.UIEffectInternal;
 
 namespace Coffee.UIEffects.Editors
 {
@@ -17,6 +18,8 @@ namespace Coffee.UIEffects.Editors
         private static readonly Action<SerializedProperty, Gradient> s_SetGradient =
             (Action<SerializedProperty, Gradient>)Delegate.CreateDelegate(typeof(Action<SerializedProperty, Gradient>),
                 s_PiGradient.SetMethod);
+
+        private static GUIContent s_ReverseGradientContent;
 
         private SerializedProperty _toneFilter;
         private SerializedProperty _toneIntensity;
@@ -109,6 +112,12 @@ namespace Coffee.UIEffects.Editors
 
         protected virtual void OnEnable()
         {
+            if (s_ReverseGradientContent == null)
+            {
+                var iconDir = "Packages/com.coffee.ui-effect/Editor/Icons";
+                s_ReverseGradientContent = Misc.GetIconContent($"{iconDir}/ReverseIcon.png", "Reverse gradient");
+            }
+
             _toneFilter = serializedObject.FindProperty("m_ToneFilter");
             _toneIntensity = serializedObject.FindProperty("m_ToneIntensity");
 
@@ -513,17 +522,48 @@ namespace Coffee.UIEffects.Editors
         private static void DrawGradientField(SerializedProperty gradient)
         {
             var r = EditorGUILayout.GetControlRect();
+            const float reverseWidth = 20f;
+            var gradientRect = new Rect(r.x, r.y, r.width - reverseWidth - 2, r.height);
+            var reverseRect = new Rect(gradientRect.xMax + 2, r.y, reverseWidth, r.height);
             var label = EditorGUIUtility.TrTempContent(gradient.displayName);
             label.tooltip = gradient.tooltip;
             var hdr = UIEffectProjectSettings.useHdrColorPicker;
             EditorGUI.showMixedValue = gradient.hasMultipleDifferentValues;
 
             EditorGUI.BeginChangeCheck();
-            var gradientValue = EditorGUI.GradientField(r, label, s_GetGradient(gradient), hdr);
+            var gradientValue = EditorGUI.GradientField(gradientRect, label, s_GetGradient(gradient), hdr);
             if (EditorGUI.EndChangeCheck())
             {
                 s_SetGradient(gradient, gradientValue);
             }
+
+            if (GUI.Button(reverseRect, s_ReverseGradientContent, "IconButton"))
+            {
+                ReverseGradient(gradient);
+            }
+        }
+
+        private static void ReverseGradient(SerializedProperty property)
+        {
+            var source = s_GetGradient(property);
+            var colorKeys = source.colorKeys;
+            var alphaKeys = source.alphaKeys;
+            for (var i = 0; i < colorKeys.Length; i++)
+            {
+                colorKeys[i].time = 1f - colorKeys[i].time;
+            }
+
+            for (var i = 0; i < alphaKeys.Length; i++)
+            {
+                alphaKeys[i].time = 1f - alphaKeys[i].time;
+            }
+
+            Array.Reverse(colorKeys);
+            Array.Reverse(alphaKeys);
+
+            var reversed = new Gradient { mode = source.mode };
+            reversed.SetKeys(colorKeys, alphaKeys);
+            s_SetGradient(property, reversed);
         }
 
         private static void DrawColor(SerializedProperty color, ColorFilter filter, ColorFilter prevFilter,

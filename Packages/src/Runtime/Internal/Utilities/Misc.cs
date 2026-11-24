@@ -87,6 +87,28 @@ namespace Coffee.UIEffectInternal
             }
 #endif
         }
+
+#if UNITY_EDITOR
+        public static GUIContent GetIconContent(string iconPath, string tooltip = null)
+        {
+            if (string.IsNullOrEmpty(iconPath))
+            {
+                return new GUIContent(tooltip);
+            }
+
+            if (EditorGUIUtility.isProSkin)
+            {
+                var darkIconPath = $"{Path.GetDirectoryName(iconPath)}/d_{Path.GetFileName(iconPath)}";
+                if (File.Exists(darkIconPath))
+                {
+                    iconPath = darkIconPath;
+                }
+            }
+
+            var icon = AssetDatabase.LoadAssetAtPath<Texture2D>(iconPath);
+            return new GUIContent(icon, tooltip);
+        }
+#endif
     }
 
 #if !UNITY_2021_2_OR_NEWER
