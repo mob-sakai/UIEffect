@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Coffee.UIEffects
 {
-    [Icon("Packages/com.coffee.ui-effect/Editor/UIEffectIconIcon.png")]
+    [Icon("Packages/com.coffee.ui-effect/Editor/Icons/UIEffectIconIcon.png")]
     public class UIEffectReplica : UIEffectBase, ISerializationCallbackReceiver
     {
         [SerializeField] private UIEffect m_Target;

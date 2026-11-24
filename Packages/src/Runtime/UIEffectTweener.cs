@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace Coffee.UIEffects
 {
-    [Icon("Packages/com.coffee.ui-effect/Editor/UIEffectIconIcon.png")]
+    [Icon("Packages/com.coffee.ui-effect/Editor/Icons/UIEffectIconIcon.png")]
     [ExecuteAlways]
     [RequireComponent(typeof(UIEffectBase))]
     public class UIEffectTweener : MonoBehaviour
