@@ -2,7 +2,7 @@
   "name": "com.coffee.ui-effect.shadergraph-urp",
   "displayName": "UI Effect - ShaderGraph Support (Unity 6 URP)",
   "description": "An extension for UI Effect that adds ShaderGraph support (Unity 6 URP).",
-  "version": "5.12.1",
+  "version": "5.13.0",
   "unity": "2020.3",
   "license": "MIT",
   "repository": {
@@ -15,8 +15,8 @@
     "url": "https://github.com/mob-sakai"
   },
   "dependencies": {
-    "com.coffee.ui-effect": "5.12.1",
-    "com.coffee.ui-effect-shadergraph-builtin": "5.12.1"
+    "com.coffee.ui-effect": "5.13.0",
+    "com.coffee.ui-effect-shadergraph-builtin": "5.13.0"
   },
   "keywords": [
     "ui",

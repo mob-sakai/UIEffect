@@ -1,3 +1,11 @@
+# [5.13.0](https://github.com/mob-sakai/UIEffect/compare/5.12.1...5.13.0) (2026-11-25)
+
+
+### Features
+
+* add gradient reverse button ([78f7c2f](https://github.com/mob-sakai/UIEffect/commit/78f7c2f789fb4af0ad2eb7accfb111eb9adccd4e))
+* add paste color/gradient button (from css code) ([fd1e9bc](https://github.com/mob-sakai/UIEffect/commit/fd1e9bcaf2fc4a620c7902243df1115306c43c70)), closes [#389](https://github.com/mob-sakai/UIEffect/issues/389)
+
 ## [5.12.1](https://github.com/mob-sakai/UIEffect/compare/5.12.0...5.12.1) (2026-11-24)
 
 
