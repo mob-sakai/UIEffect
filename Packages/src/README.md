@@ -38,6 +38,7 @@ Apply professional-grade filters like grayscale, blur, and dissolve directly fro
   - [Install via UPM (Manually)](#install-via-upm-manually)
   - [Install as Embedded Package](#install-as-embedded-package)
   - [Import Additional Resources](#import-additional-resources)
+    - [Install Additional Resources as Packages](#install-additional-resources-as-packages)
 - [🔄 Upgrading from v4 to v5](#-upgrading-from-v4-to-v5)
 - [🚀 Usage](#-usage)
   - [Getting Started](#getting-started)
@@ -67,6 +68,7 @@ Apply professional-grade filters like grayscale, blur, and dissolve directly fro
     - [Settings](#settings)
     - [Editor](#editor)
     - [Shader](#shader)
+    - [Advanced](#advanced)
   - [:warning: Limitations](#warning-limitations)
 - [🤝 Contributing](#-contributing)
   - [Issues](#issues)
@@ -297,12 +299,16 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 
 #### Color Filter
 
-![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/uieffect5.7.0-inspector-color.png)
+![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1795598277160.png)
 
 - **Color Filter**: `None`, `Multiply`, `Additive`, `Subtractive`, `Replace`, `Multiply Luminance`, `Multiply Additive`, `Hsv Modifier`, `Contrast`  
   ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/uieffect5.7.0-sample-color.png)
 - **Color Intensity**: 0.0 (no effect) - 1.0 (full effect).
 - **Color Glow**: Set the color to glow.
+
+> [!TIP]
+> The paste button beside a color field accepts hex values (`#RGB`, `#RRGGBB`, `#RGBA`, `#RRGGBBAA`), Unity-supported color names, `transparent`, `rgb()`, and `rgba()`. It also accepts CSS `background` or `background-color` declarations containing one of these values.
+> This is useful when copying and pasting color codes from CSS, USS, Figma, Photoshop, etc.
 
 <br>
 
@@ -389,7 +395,7 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 
 #### Gradation Mode
 
-![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1744305109784.png)
+![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1795598315442.png)
 
 - **Gradation Mode**: `None`, `Horizontal`, `HorizontalGradient`, `Vertical`, `VerticalGradient`, `Radial`, `RadialGradient`, `Diagonal`, `DiagonalToRightBottom`, `DiagonalToLeftBottom`, `Angle`, `AngleGradient`  
   ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1749461050342.png)
@@ -406,6 +412,13 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 - **Gradation Reverse**: Reverse the gradient.
 - **Keep Aspect Ratio**: 
   - ⚠️ NOTE: `Keep Aspect Ratio` is shared with `Transition Filter` and `Gradation Mode` and `Detail Filter`.
+
+> [!TIP]
+> The paste button beside a gradient field accepts CSS `linear-gradient(...)` and `radial-gradient(...)` values, importing their color stops and positions. CSS direction and shape are not applied.  
+> This is useful when copying and pasting color codes from CSS, USS, Figma, Photoshop, etc.
+
+> [!TIP]
+> Click the reverse button beside a gradient field to reverse its color and alpha stops.
 
 <br>
 
