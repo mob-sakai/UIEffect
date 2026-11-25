@@ -299,7 +299,7 @@ namespace Coffee.UIEffects
                 {
                     var x = m_GradationReverse ? w - 1 - i : i;
                     var t = (float)i / (w - 1);
-                    s_Colors[x] = ApplyColorSpace(m_GradationGradient.Evaluate(t));
+                    s_Colors[x] = ApplyColorSpaceForGradient(m_GradationGradient.Evaluate(t));
                 }
 
                 _gradationRampTex.wrapMode = m_GradationWrapMode;
@@ -325,7 +325,7 @@ namespace Coffee.UIEffects
                 for (var i = 0; i < w; i++)
                 {
                     var t = (float)i / (w - 1);
-                    s_Colors[i] = ApplyColorSpace(m_TransitionGradient.Evaluate(t));
+                    s_Colors[i] = ApplyColorSpaceForGradient(m_TransitionGradient.Evaluate(t));
                 }
 
                 s_Colors[w - 1].a = 0;
@@ -861,6 +861,11 @@ namespace Coffee.UIEffects
             {
                 return QualitySettings.activeColorSpace == ColorSpace.Linear ? color.linear : color;
             }
+        }
+
+        private static Color ApplyColorSpaceForGradient(Color color)
+        {
+            return QualitySettings.activeColorSpace == ColorSpace.Linear ? color.linear : color;
         }
     }
 }
