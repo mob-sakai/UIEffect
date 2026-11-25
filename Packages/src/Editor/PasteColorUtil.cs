@@ -20,7 +20,7 @@ namespace Coffee.UIEffects.Editors
                 return;
             }
 
-            color.colorValue = value;
+            color.colorValue = ApplyPasteColorCorrection(value);
         }
 
         internal static bool TryParseColor(string text, out Color color)
@@ -84,6 +84,11 @@ namespace Coffee.UIEffects.Editors
 
             color = new Color(red, green, blue, alpha);
             return true;
+        }
+
+        private static Color ApplyPasteColorCorrection(Color color)
+        {
+            return UIEffectProjectSettings.enableColorCorrection ? color.linear : color;
         }
 
         private static bool TryExtractCssColorValue(string text, out string value)
