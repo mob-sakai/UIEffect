@@ -525,7 +525,7 @@ namespace Coffee.UIEffects.Editors
             var colorValue = EditorGUI.ColorField(colorRect, label, color.colorValue, true, showAlpha, hdr);
             if (EditorGUI.EndChangeCheck())
             {
-                color.colorValue = colorValue;
+                color.colorValue = UIEffectProjectSettings.enableColorCorrection ? colorValue : colorValue.gamma;
             }
 
             if (GUI.Button(pasteRect, s_PasteColorContent, "IconButton"))
