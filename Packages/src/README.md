@@ -414,11 +414,8 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
   - ⚠️ NOTE: `Keep Aspect Ratio` is shared with `Transition Filter` and `Gradation Mode` and `Detail Filter`.
 
 > [!TIP]
-> The paste button beside a gradient field accepts CSS `linear-gradient(...)` and `radial-gradient(...)` values, importing their color stops and positions. CSS direction and shape are not applied.  
+> The paste button beside the Gradation Mode selector accepts CSS `linear-gradient(...)` and `radial-gradient(...)` values, including gradients in CSS `background` declarations. It imports the color stops and positions, selects `AngleGradient` or `RadialGradient`, and resets the gradation offset and scale. Explicit linear-gradient directions and angles (`deg`, `grad`, `rad`, or `turn`) are applied to the rotation. CSS radial-gradient shape, size, and position are not imported.
 > This is useful when copying and pasting color codes from CSS, USS, Figma, Photoshop, etc.
-
-> [!TIP]
-> Click the reverse button beside a gradient field to reverse its color and alpha stops.
 
 <br>
 
