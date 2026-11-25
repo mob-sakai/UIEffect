@@ -12,7 +12,8 @@ namespace Coffee.UIEffects.Editors
 
         internal static void PasteFromClipboard(SerializedProperty color)
         {
-            if (!TryParseColor(GUIUtility.systemCopyBuffer, out var value))
+            var clipboard = GUIUtility.systemCopyBuffer;
+            if (!TryParseColor(clipboard, out var value))
             {
                 EditorUtility.DisplayDialog("Paste Color",
                     $"Supported formats are {SupportedFormats}, or CSS background/background-color declarations containing one of these values.",

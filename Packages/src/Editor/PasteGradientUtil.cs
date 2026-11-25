@@ -15,10 +15,16 @@ namespace Coffee.UIEffects.Editors
         }
 
         internal static void PasteFromClipboard(SerializedProperty property,
-            Func<SerializedProperty, Gradient> getGradient,
-            Action<SerializedProperty, Gradient> setGradient)
+            Action<SerializedProperty, Gradient> setGradient,
+            SerializedProperty gradationMode,
+            SerializedProperty gradationRotation,
+            SerializedProperty gradationOffset,
+            SerializedProperty gradationScale,
+            SerializedProperty gradationWrapMode,
+            SerializedProperty gradationReverse)
         {
-            if (!TryParseCssGradient(GUIUtility.systemCopyBuffer, out var value))
+            var clipboard = GUIUtility.systemCopyBuffer;
+            if (!TryParseCssGradient(clipboard, out var value, out var mode, out var rotation))
             {
                 EditorUtility.DisplayDialog("Paste Gradient",
                     "The clipboard does not contain a supported CSS linear-gradient(...) or radial-gradient(...) value.",
@@ -26,13 +32,28 @@ namespace Coffee.UIEffects.Editors
                 return;
             }
 
-            value.mode = getGradient(property).mode;
+            value.mode = GradientMode.Blend;
             setGradient(property, value);
+            gradationMode.intValue = (int)mode;
+            gradationWrapMode.intValue = (int)(mode == GradationMode.RadialGradient
+                ? TextureWrapMode.Clamp
+                : TextureWrapMode.Repeat);
+            if (rotation.HasValue)
+            {
+                gradationRotation.floatValue = rotation.Value;
+            }
+
+            gradationOffset.floatValue = 0;
+            gradationScale.floatValue = 1;
+            gradationReverse.boolValue = false;
         }
 
-        private static bool TryParseCssGradient(string text, out Gradient gradient)
+        private static bool TryParseCssGradient(string text, out Gradient gradient, out GradationMode mode,
+            out float? rotation)
         {
             gradient = null;
+            mode = GradationMode.None;
+            rotation = null;
             if (string.IsNullOrWhiteSpace(text))
             {
                 return false;
@@ -64,6 +85,8 @@ namespace Coffee.UIEffects.Editors
             {
                 return false;
             }
+
+            mode = isRadial ? GradationMode.RadialGradient : GradationMode.AngleGradient;
 
             var depth = 0;
             var closeIndex = -1;
@@ -106,6 +129,10 @@ namespace Coffee.UIEffects.Editors
                 && (isRadial || IsGradientDirection(arguments[0])))
             {
                 firstStopIndex = 1;
+                if (!isRadial && TryParseLinearGradientAngle(arguments[0], out var cssAngle))
+                {
+                    rotation = Mathf.Repeat(cssAngle - 90, 360);
+                }
             }
 
             var stops = new List<GradientStop>();
@@ -281,6 +308,73 @@ namespace Coffee.UIEffects.Editors
                 }
             }
 
+            return false;
+        }
+
+        private static bool TryParseLinearGradientAngle(string text, out float degrees)
+        {
+            text = text.Trim();
+            switch (text.ToLowerInvariant())
+            {
+                case "to top":
+                    degrees = 0;
+                    return true;
+                case "to top right":
+                case "to right top":
+                    degrees = 45;
+                    return true;
+                case "to right":
+                    degrees = 90;
+                    return true;
+                case "to bottom right":
+                case "to right bottom":
+                    degrees = 135;
+                    return true;
+                case "to bottom":
+                    degrees = 180;
+                    return true;
+                case "to bottom left":
+                case "to left bottom":
+                    degrees = 225;
+                    return true;
+                case "to left":
+                    degrees = 270;
+                    return true;
+                case "to top left":
+                case "to left top":
+                    degrees = 315;
+                    return true;
+            }
+
+            var suffixes = new[] { "deg", "grad", "rad", "turn" };
+            foreach (var suffix in suffixes)
+            {
+                if (!text.EndsWith(suffix, StringComparison.OrdinalIgnoreCase)
+                    || !float.TryParse(text.Substring(0, text.Length - suffix.Length),
+                        NumberStyles.Float, CultureInfo.InvariantCulture, out var value)
+                    || float.IsNaN(value) || float.IsInfinity(value))
+                {
+                    continue;
+                }
+
+                switch (suffix)
+                {
+                    case "grad":
+                        degrees = value * 0.9f;
+                        return true;
+                    case "rad":
+                        degrees = value * Mathf.Rad2Deg;
+                        return true;
+                    case "turn":
+                        degrees = value * 360;
+                        return true;
+                    default:
+                        degrees = value;
+                        return true;
+                }
+            }
+
+            degrees = 0;
             return false;
         }
 
