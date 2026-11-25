@@ -395,7 +395,7 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 
 #### Gradation Mode
 
-![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1795598315442.png)
+![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1795615744853.png)
 
 - **Gradation Mode**: `None`, `Horizontal`, `HorizontalGradient`, `Vertical`, `VerticalGradient`, `Radial`, `RadialGradient`, `Diagonal`, `DiagonalToRightBottom`, `DiagonalToLeftBottom`, `Angle`, `AngleGradient`  
   ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1749461050342.png)
