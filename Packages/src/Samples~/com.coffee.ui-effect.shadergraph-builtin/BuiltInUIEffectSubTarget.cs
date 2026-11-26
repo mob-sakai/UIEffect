@@ -48,6 +48,7 @@ namespace UnityEditor.Rendering.BuiltIn.ShaderGraph
                 .AddKeywordForUIEffect("DETAIL", "s_DetailKeywords") // add detail keywords
                 .AddKeywordForUIEffect("TARGET", "s_TargetKeywords") // add target keywords
                 .AddKeywordForUIEffect("GRADATION", "s_GradationKeywords") // add gradation keywords
+                .AddKeywordForUIEffect("ROUND_CORNER", "s_RoundCornerKeywords") // add round corner keywords
                 .AddKeywordForUIEffect("UIEFFECT_EDITOR", KeywordScope.Global) // add UIEffect editor keywords
                 .AddKeywordForUIEffect("SOFTMASK_EDITOR", KeywordScope.Global) // add softmask editor keywords
                 .AddKeywordForUIEffect("SOFTMASKABLE"); // add softmaskable keywords

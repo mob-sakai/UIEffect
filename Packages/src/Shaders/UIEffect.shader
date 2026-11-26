@@ -69,6 +69,7 @@ Shader "Hidden/UI/Default (UIEffect)"
             #pragma shader_feature_local_fragment _ DETAIL_MASKING DETAIL_MULTIPLY DETAIL_ADDITIVE DETAIL_SUBTRACTIVE DETAIL_REPLACE DETAIL_MULTIPLY_ADDITIVE
             #pragma shader_feature_local_fragment _ TARGET_HUE TARGET_LUMINANCE
             #pragma shader_feature_local_fragment _ GRADATION_GRADIENT GRADATION_COLOR2 GRADATION_COLOR4
+            #pragma shader_feature_local_fragment _ ROUND_CORNER_ON
             #pragma shader_feature_fragment _ UIEFFECT_EDITOR
             // ==== UIEFFECT END ====
 

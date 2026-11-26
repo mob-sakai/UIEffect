@@ -38,6 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
+  m_IndirectSpecularColor: {r: 0.37311918, g: 0.3807396, b: 0.35872662, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -192,7 +193,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -226,7 +226,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 986199155}
   m_RootOrder: 3
@@ -249,6 +248,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Target: {fileID: 1567169363}
+  m_Preset: {fileID: 0}
   m_UseTargetTransform: 1
   m_SamplingScale: 1
   m_AllowToModifyMeshShape: 1
@@ -321,7 +321,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SendPointerHoverToParent: 1
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
@@ -354,7 +353,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -395,7 +393,6 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 27
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -450,7 +447,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
-  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1120943171}
   - {fileID: 1242517204}
@@ -493,7 +489,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
-  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 986199155}
   m_RootOrder: 0
@@ -517,7 +512,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ToneFilter: 1
   m_ToneIntensity: 0.5
-  m_ToneParams: {x: 0, y: 0, z: 0, w: 0}
   m_ColorFilter: 6
   m_ColorIntensity: 0.5
   m_Color: {r: 0.5377358, g: 0, b: 0.09190052, a: 1}
@@ -545,6 +539,35 @@ MonoBehaviour:
   m_TransitionColorGlow: 0
   m_TransitionPatternReverse: 0
   m_TransitionAutoPlaySpeed: 0
+  m_TransitionGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
   m_TargetMode: 0
   m_TargetColor: {r: 0.15686275, g: 0.72156864, b: 0.8509804, a: 1}
   m_TargetRange: 0.033
@@ -600,6 +623,8 @@ MonoBehaviour:
   m_GradationOffset: 0
   m_GradationScale: 0.15
   m_GradationRotation: 135
+  m_GradationWrapMode: 0
+  m_GradationReverse: 0
   m_AllowToModifyMeshShape: 1
   m_EdgeMode: 2
   m_EdgeWidth: 0.05
@@ -615,10 +640,13 @@ MonoBehaviour:
   m_DetailThreshold:
     m_Min: 0
     m_Max: 1
+  m_DetailColor: {r: 1, g: 1, b: 1, a: 1}
   m_DetailTex: {fileID: 0}
   m_DetailTexScale: {x: 1, y: 1}
   m_DetailTexOffset: {x: 0, y: 0}
   m_DetailTexSpeed: {x: 0, y: 0}
+  m_RoundCornerMode: 0
+  m_RoundCornerRadius: {x: 20, y: 20, z: 20, w: 20}
   m_CustomRoot: {fileID: 0}
   m_Flip: 0
 --- !u!114 &1120943173
@@ -689,7 +717,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2125393230}
   m_Father: {fileID: 986199155}
@@ -790,7 +817,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ToneFilter: 1
   m_ToneIntensity: 0.875
-  m_ToneParams: {x: 0, y: 0, z: 0, w: 0}
   m_ColorFilter: 1
   m_ColorIntensity: 0.7
   m_Color: {r: 1, g: 0.08701122, b: 0, a: 1}
@@ -818,6 +844,35 @@ MonoBehaviour:
   m_TransitionColorGlow: 1
   m_TransitionPatternReverse: 0
   m_TransitionAutoPlaySpeed: 0
+  m_TransitionGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
   m_TargetMode: 1
   m_TargetColor: {r: 0.22352943, g: 0.87843144, b: 0.9450981, a: 1}
   m_TargetRange: 0.118
@@ -873,6 +928,8 @@ MonoBehaviour:
   m_GradationOffset: 0
   m_GradationScale: 1
   m_GradationRotation: 60
+  m_GradationWrapMode: 0
+  m_GradationReverse: 0
   m_AllowToModifyMeshShape: 1
   m_EdgeMode: 2
   m_EdgeWidth: 0.5
@@ -888,10 +945,13 @@ MonoBehaviour:
   m_DetailThreshold:
     m_Min: 0.25
     m_Max: 0.5
+  m_DetailColor: {r: 1, g: 1, b: 1, a: 1}
   m_DetailTex: {fileID: 2800000, guid: dee1cb6c2ee294c6087ea9d89d368417, type: 3}
   m_DetailTexScale: {x: 1, y: 1}
   m_DetailTexOffset: {x: 0, y: 0}
   m_DetailTexSpeed: {x: 0, y: 0}
+  m_RoundCornerMode: 1
+  m_RoundCornerRadius: {x: 20, y: 20, z: 20, w: 20}
   m_CustomRoot: {fileID: 2125393230}
   m_Flip: 1
 --- !u!114 &1242517207
@@ -962,7 +1022,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 986199155}
   m_RootOrder: 2
@@ -986,7 +1045,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ToneFilter: 1
   m_ToneIntensity: 1
-  m_ToneParams: {x: 0, y: 0, z: 0, w: 0}
   m_ColorFilter: 0
   m_ColorIntensity: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1014,6 +1072,35 @@ MonoBehaviour:
   m_TransitionColorGlow: 0
   m_TransitionPatternReverse: 0
   m_TransitionAutoPlaySpeed: 0
+  m_TransitionGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
   m_TargetMode: 0
   m_TargetColor: {r: 1, g: 1, b: 1, a: 1}
   m_TargetRange: 0.1
@@ -1069,6 +1156,8 @@ MonoBehaviour:
   m_GradationOffset: 0
   m_GradationScale: 1
   m_GradationRotation: 0
+  m_GradationWrapMode: 0
+  m_GradationReverse: 0
   m_AllowToModifyMeshShape: 1
   m_EdgeMode: 0
   m_EdgeWidth: 0.5
@@ -1084,10 +1173,13 @@ MonoBehaviour:
   m_DetailThreshold:
     m_Min: 0
     m_Max: 1
+  m_DetailColor: {r: 1, g: 1, b: 1, a: 1}
   m_DetailTex: {fileID: 0}
   m_DetailTexScale: {x: 1, y: 1}
   m_DetailTexOffset: {x: 0, y: 0}
   m_DetailTexSpeed: {x: 0, y: 0}
+  m_RoundCornerMode: 0
+  m_RoundCornerRadius: {x: 20, y: 20, z: 20, w: 20}
   m_CustomRoot: {fileID: 0}
   m_Flip: 0
 --- !u!114 &1567169364
@@ -1230,7 +1322,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1242517204}
   m_RootOrder: 0

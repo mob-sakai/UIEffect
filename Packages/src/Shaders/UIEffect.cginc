@@ -54,6 +54,8 @@ uniform const half4 _DetailColor;
 uniform const sampler2D _DetailTex;
 uniform const float4 _DetailTex_ST;
 uniform const float2 _DetailTex_Speed;
+uniform const float4 _RoundCornerRadius;
+uniform const float2 _RoundCornerRectSize;
 uniform const float _GradationIntensity;
 uniform const int _GradationColorFilter;
 uniform const half4 _GradationColor1;
@@ -64,8 +66,10 @@ uniform const sampler2D _GradationTex;
 uniform const float4 _GradationTex_ST;
 uniform const int _GradationRadial;
 uniform const matrix _RootViewMatrix;
+uniform const matrix _RoundCornerViewMatrix;
 uniform const matrix _GradViewMatrix;
 uniform const matrix _MirrorRootViewMatrix;
+uniform const matrix _MirrorRoundCornerViewMatrix;
 uniform const matrix _MirrorGradViewMatrix;
 uniform const matrix _CanvasToWorldMatrix;
 
@@ -95,8 +99,9 @@ struct uieffect_v2f
 #define EDGE_NONE (!EDGE_PLAIN && !EDGE_SHINY)
 #define DETAIL_NONE (!DETAIL_MASKING && !DETAIL_MULTIPLY && !DETAIL_ADDITIVE && !DETAIL_SUBTRACTIVE && !DETAIL_REPLACE && !DETAIL_MULTIPLY_ADDITIVE)
 #define GRADATION_NONE (!GRADATION_GRADIENT && !GRADATION_RADIAL && !GRADATION_COLOR2 && !GRADATION_COLOR4)
+#define ROUND_CORNER_OFF (!ROUND_CORNER_ON)
 
-#if TONE_NONE && !COLOR_FILTER && SAMPLING_NONE && TRANSITION_NONE && TARGET_NONE && EDGE_NONE && DETAIL_NONE && GRADATION_NONE
+#if TONE_NONE && !COLOR_FILTER && SAMPLING_NONE && TRANSITION_NONE && TARGET_NONE && EDGE_NONE && DETAIL_NONE && GRADATION_NONE && ROUND_CORNER_OFF
 #define NO_UIEFFECT
 #endif
 
@@ -559,20 +564,45 @@ float is_edge_shiny(const float2 uvLocal)
     #endif
 }
 
-half4 uieffect_internal(UIEFFECT_FRAG_STRUCT IN, float2 uv, float4 uvMask, const float2 uvLocal, const float2 uvGrad, const float isShadow)
+float round_corner_mask(const float2 uvLocal)
 {
-    const half alpha = transition_alpha(uvLocal);
+#if ROUND_CORNER_ON
+    const float radius = uvLocal.y > 0.5
+        ? (uvLocal.x < 0.5 ? _RoundCornerRadius.x : _RoundCornerRadius.y)
+        : (uvLocal.x < 0.5 ? _RoundCornerRadius.w : _RoundCornerRadius.z);
+    if (radius <= 0)
+    {
+        return 1;
+    }
+
+    const float2 halfSize = _RoundCornerRectSize * 0.5;
+    const float clampedRadius = min(radius, min(halfSize.x, halfSize.y));
+    const float2 localPosition = (uvLocal - 0.5) * _RoundCornerRectSize;
+    const float2 corner = abs(localPosition) - (halfSize - clampedRadius);
+    const float signedDistance = length(max(corner, 0)) + min(max(corner.x, corner.y), 0) - clampedRadius;
+    const float antialias = max(fwidth(signedDistance), 1e-5);
+    return 1 - smoothstep(-antialias, antialias, signedDistance);
+#else
+    return 1;
+#endif
+}
+
+half4 uieffect_internal(UIEFFECT_FRAG_STRUCT IN, float2 uv, float4 uvMask, const float2 uvLocal,
+    const float2 uvEffect, const float2 uvGrad, const float isShadow, const bool applyRoundCornerMask)
+{
+    const half alpha = transition_alpha(uvEffect);
     const float edgeFactor = edge(uv, uvMask, _EdgeWidth);
     uv += move_transition_filter(uvMask, alpha);
     half4 color = apply_sampling_filter(IN, uv, uvMask, isShadow);
     color = apply_gradation_filter(color, uvGrad);
     color = apply_tone_filter(color);
-    color = apply_transition_filter(color, alpha, uvLocal, edgeFactor);
-    color = apply_detail_filter(color, uvLocal);
+    color = apply_transition_filter(color, alpha, uvEffect, edgeFactor);
+    color = apply_detail_filter(color, uvEffect);
 
+    half4 result;
     if (0 < isShadow)
     {
-        return apply_color_filter(_ShadowColorFilter, color, _ShadowColor, 1, _ShadowColorGlow);
+        result = apply_color_filter(_ShadowColorFilter, color, _ShadowColor, 1, _ShadowColorGlow);
     }
     else
     {
@@ -580,21 +610,27 @@ half4 uieffect_internal(UIEFFECT_FRAG_STRUCT IN, float2 uv, float4 uvMask, const
         {
             color = apply_color_filter(_ColorFilter, color, _ColorValue, _ColorIntensity, _ColorGlow);
             const half4 edgeColor = apply_color_filter(_EdgeColorFilter, color, _EdgeColor, 1, _EdgeColorGlow);
-            const float isEdgeShiny = is_edge_shiny(uvLocal);
-            return lerp(color, edgeColor, edgeFactor * isEdgeShiny);
+            const float isEdgeShiny = is_edge_shiny(uvEffect);
+            result = lerp(color, edgeColor, edgeFactor * isEdgeShiny);
         }
         #else
         {
-            return apply_color_filter(_ColorFilter, color, _ColorValue, _ColorIntensity, _ColorGlow);
+            result = apply_color_filter(_ColorFilter, color, _ColorValue, _ColorIntensity, _ColorGlow);
         }
         #endif
     }
+
+    return applyRoundCornerMask ? result * round_corner_mask(uvLocal) : result;
 }
 
 half4 uieffect(half4 origin, float2 uv, float4 uvMask, float4 wpos, UIEFFECT_FRAG_STRUCT IN)
 {
     #ifdef NO_UIEFFECT
-    return origin;
+    if (max(max(_RoundCornerRadius.x, _RoundCornerRadius.y),
+            max(_RoundCornerRadius.z, _RoundCornerRadius.w)) <= 0)
+    {
+        return origin;
+    }
     #endif
 
     #ifndef CANVAS_SHADERGRAPH
@@ -605,14 +641,35 @@ half4 uieffect(half4 origin, float2 uv, float4 uvMask, float4 wpos, UIEFFECT_FRA
     wpos = mul(_CanvasToWorldMatrix, wpos);
     #endif
     const half rate = get_target_rate(origin.rgb);
-    float2 uvLocal = saturate(mul(_RootViewMatrix, wpos)).xy;
+    float2 uvEffect = saturate(mul(_RootViewMatrix, wpos)).xy;
+
+    #if !ROUND_CORNER_OFF
+    float2 uvLocal = saturate(mul(_RoundCornerViewMatrix, wpos)).xy;
+    #else
+    float2 uvLocal = float2(0, 0);
+    #endif
+
+    #if !GRADATION_NONE
     float2 uvGrad = mul(_GradViewMatrix, wpos).xy;
+    #else
+    float2 uvGrad = float2(0, 0);
+    #endif
+
+    const bool isShadowMesh = uvMask.x < -1;
 
     // Mirror
     if (uvMask.x < -3)
     {
-        uvLocal = saturate(mul(_MirrorRootViewMatrix, wpos)).xy;
+        uvEffect = saturate(mul(_MirrorRootViewMatrix, wpos)).xy;
+
+        #if !ROUND_CORNER_OFF
+        uvLocal = saturate(mul(_MirrorRoundCornerViewMatrix, wpos)).xy;
+        #endif
+
+        #if !GRADATION_NONE
         uvGrad = saturate(mul(_MirrorGradViewMatrix, wpos)).xy;
+        #endif
+
         uvMask.x += 4;
     }
 
@@ -629,10 +686,11 @@ half4 uieffect(half4 origin, float2 uv, float4 uvMask, float4 wpos, UIEFFECT_FRA
     #elif SAMPLING_RGB_SHIFT
     {
         const half2 offset = half2(_SamplingIntensity * texel_size().x * 20, 0);
-        const half2 r = uieffect_internal(IN, uv + offset, uvMask, uvLocal, uvGrad, isShadow).ra;
-        const half2 g = uieffect_internal(IN, uv, uvMask, uvLocal, uvGrad, isShadow).ga;
-        const half2 b = uieffect_internal(IN, uv - offset, uvMask, uvLocal, uvGrad, isShadow).ba;
-        return half4(r.x * r.y, g.x * g.y, b.x * b.y, (r.y + g.y + b.y) / 3);
+        const half2 r = uieffect_internal(IN, uv + offset, uvMask, uvLocal, uvEffect, uvGrad, isShadow, false).ra;
+        const half2 g = uieffect_internal(IN, uv, uvMask, uvLocal, uvEffect, uvGrad, isShadow, false).ga;
+        const half2 b = uieffect_internal(IN, uv - offset, uvMask, uvLocal, uvEffect, uvGrad, isShadow, false).ba;
+        const half4 color = half4(r.x * r.y, g.x * g.y, b.x * b.y, (r.y + g.y + b.y) / 3);
+        return isShadowMesh ? color : color * round_corner_mask(uvLocal);
     }
     // Sampling.EdgeLuminance/EdgeAlpha
     #elif SAMPLING_EDGE_LUMINANCE || SAMPLING_EDGE_ALPHA
@@ -655,11 +713,14 @@ half4 uieffect(half4 origin, float2 uv, float4 uvMask, float4 wpos, UIEFFECT_FRA
         half sobel_v = v00 * -1.0 + v10 * -2.0 + v20 * -1.0 + v02 * 1.0 + v12 * 2.0 + v22 * 1.0;
 
         const half sobel = sqrt(sobel_h * sobel_h + sobel_v * sobel_v) * _SamplingIntensity;
-        return lerp(half4(0, 0, 0, 0), uieffect_internal(IN, uv, uvMask, uvLocal, uvGrad, isShadow), inv_lerp(0.5, 1, sobel));
+        return lerp(half4(0, 0, 0, 0),
+            uieffect_internal(IN, uv, uvMask, uvLocal, uvEffect, uvGrad, isShadow, !isShadowMesh),
+            inv_lerp(0.5, 1, sobel));
     }
     #endif
 
-    return lerp(origin, uieffect_internal(IN, uv, uvMask, uvLocal, uvGrad, isShadow), rate);
+    return lerp(origin, uieffect_internal(IN, uv, uvMask, uvLocal, uvEffect, uvGrad, isShadow, !isShadowMesh),
+        rate);
 }
 
 

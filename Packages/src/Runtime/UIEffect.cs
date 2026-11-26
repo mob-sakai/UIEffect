@@ -267,6 +267,12 @@ namespace Coffee.UIEffects
         protected Vector2 m_DetailTexSpeed = new Vector2(0, 0);
 
         [SerializeField]
+        protected RoundCornerMode m_RoundCornerMode = RoundCornerMode.Off;
+
+        [SerializeField]
+        protected Vector4 m_RoundCornerRadius = new Vector4(20, 20, 20, 20);
+
+        [SerializeField]
         protected RectTransform m_CustomRoot = null;
 
         [SerializeField]
@@ -1423,6 +1429,71 @@ namespace Coffee.UIEffects
             }
         }
 
+        public Vector4 roundCornerRadius
+        {
+            get => m_RoundCornerRadius;
+            set
+            {
+                value = new Vector4(
+                    Mathf.Max(0, value.x),
+                    Mathf.Max(0, value.y),
+                    Mathf.Max(0, value.z),
+                    Mathf.Max(0, value.w));
+                if (m_RoundCornerRadius.x == value.x
+                    && m_RoundCornerRadius.y == value.y
+                    && m_RoundCornerRadius.z == value.z
+                    && m_RoundCornerRadius.w == value.w)
+                {
+                    return;
+                }
+
+                context.m_RoundCornerRadius = m_RoundCornerRadius = value;
+                SetMaterialDirty();
+            }
+        }
+
+        public RoundCornerMode roundCornerMode
+        {
+            get => m_RoundCornerMode;
+            set
+            {
+                if (m_RoundCornerMode == value) return;
+                context.m_RoundCornerMode = m_RoundCornerMode = value;
+                SetMaterialDirty();
+            }
+        }
+
+        public float roundCornerRadiusTopLeft
+        {
+            get => m_RoundCornerRadius.x;
+            set => SetRoundCornerRadius(0, value);
+        }
+
+        public float roundCornerRadiusTopRight
+        {
+            get => m_RoundCornerRadius.y;
+            set => SetRoundCornerRadius(1, value);
+        }
+
+        public float roundCornerRadiusBottomRight
+        {
+            get => m_RoundCornerRadius.z;
+            set => SetRoundCornerRadius(2, value);
+        }
+
+        public float roundCornerRadiusBottomLeft
+        {
+            get => m_RoundCornerRadius.w;
+            set => SetRoundCornerRadius(3, value);
+        }
+
+        private void SetRoundCornerRadius(int index, float value)
+        {
+            var radius = m_RoundCornerRadius;
+            radius[index] = value;
+            roundCornerRadius = radius;
+        }
+
         public bool allowToModifyMeshShape
         {
             get => m_AllowToModifyMeshShape;
@@ -1837,6 +1908,12 @@ namespace Coffee.UIEffects
                 dst.m_DetailTexSpeed = src.m_DetailTexSpeed;
             }
 
+            if (!append || src.m_RoundCornerMode != RoundCornerMode.Off)
+            {
+                dst.m_RoundCornerMode = src.m_RoundCornerMode;
+                dst.m_RoundCornerRadius = src.m_RoundCornerRadius;
+            }
+
             if (!append || src.m_Flip != 0)
             {
                 dst.m_Flip = append ? dst.m_Flip | src.m_Flip : src.m_Flip;
@@ -1967,6 +2044,12 @@ namespace Coffee.UIEffects
                 dst.m_DetailTexScale = src.m_DetailTexScale;
                 dst.m_DetailTexOffset = src.m_DetailTexOffset;
                 dst.m_DetailTexSpeed = src.m_DetailTexSpeed;
+            }
+
+            if (!append || src.m_RoundCornerMode != RoundCornerMode.Off)
+            {
+                dst.m_RoundCornerMode = src.m_RoundCornerMode;
+                dst.m_RoundCornerRadius = src.m_RoundCornerRadius;
             }
 
             if (!append || src.m_Flip != 0)
@@ -2111,6 +2194,12 @@ namespace Coffee.UIEffects
                 dst.m_DetailTexSpeed = src.m_DetailTexSpeed;
             }
 
+            if (!append || src.m_RoundCornerMode != RoundCornerMode.Off)
+            {
+                dst.m_RoundCornerMode = src.m_RoundCornerMode;
+                dst.m_RoundCornerRadius = src.m_RoundCornerRadius;
+            }
+
             if (!append || src.m_Flip != 0)
             {
                 dst.m_Flip = append ? dst.m_Flip | src.m_Flip : src.m_Flip;
@@ -2203,6 +2292,9 @@ namespace Coffee.UIEffects
             dst.m_DetailTexScale = src.m_DetailTexScale;
             dst.m_DetailTexOffset = src.m_DetailTexOffset;
             dst.m_DetailTexSpeed = src.m_DetailTexSpeed;
+
+            dst.m_RoundCornerMode = src.m_RoundCornerMode;
+            dst.m_RoundCornerRadius = src.m_RoundCornerRadius;
 
             dst.m_Flip = src.m_Flip;
         }

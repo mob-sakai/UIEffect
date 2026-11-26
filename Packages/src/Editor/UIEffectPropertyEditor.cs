@@ -109,6 +109,12 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _detailTexOffset;
         private SerializedProperty _detailTexSpeed;
 
+        private SerializedProperty _roundCornerMode;
+        private SerializedProperty _roundCornerRadiusTopLeft;
+        private SerializedProperty _roundCornerRadiusTopRight;
+        private SerializedProperty _roundCornerRadiusBottomRight;
+        private SerializedProperty _roundCornerRadiusBottomLeft;
+
         private SerializedProperty _flip;
 
         protected virtual void OnEnable()
@@ -209,6 +215,13 @@ namespace Coffee.UIEffects.Editors
             _detailTexScale = serializedObject.FindProperty("m_DetailTexScale");
             _detailTexOffset = serializedObject.FindProperty("m_DetailTexOffset");
             _detailTexSpeed = serializedObject.FindProperty("m_DetailTexSpeed");
+
+            _roundCornerMode = serializedObject.FindProperty("m_RoundCornerMode");
+            var roundCornerRadius = serializedObject.FindProperty("m_RoundCornerRadius");
+            _roundCornerRadiusTopLeft = roundCornerRadius.FindPropertyRelative("x");
+            _roundCornerRadiusTopRight = roundCornerRadius.FindPropertyRelative("y");
+            _roundCornerRadiusBottomRight = roundCornerRadius.FindPropertyRelative("z");
+            _roundCornerRadiusBottomLeft = roundCornerRadius.FindPropertyRelative("w");
 
             _flip = serializedObject.FindProperty("m_Flip");
         }
@@ -489,6 +502,18 @@ namespace Coffee.UIEffects.Editors
                 EditorGUI.indentLevel--;
             }
 
+            // Round Corner
+            DrawSeparator();
+            if (DrawHeaderPopup(_roundCornerMode))
+            {
+                EditorGUI.indentLevel++;
+                DrawRoundCornerRadiusField(_roundCornerRadiusTopLeft, "Top Left");
+                DrawRoundCornerRadiusField(_roundCornerRadiusTopRight, "Top Right");
+                DrawRoundCornerRadiusField(_roundCornerRadiusBottomRight, "Bottom Right");
+                DrawRoundCornerRadiusField(_roundCornerRadiusBottomLeft, "Bottom Left");
+                EditorGUI.indentLevel--;
+            }
+
             // Flip
             DrawSeparator();
             DrawHeaderPopup(_flip);
@@ -512,6 +537,16 @@ namespace Coffee.UIEffects.Editors
             // Swap colors button
             SwapColorsButton(new Rect(r.x + r.width + 4, r.y, 20, 20), color1, color2);
             EditorGUI.indentLevel = indentLevel;
+        }
+
+        private static void DrawRoundCornerRadiusField(SerializedProperty property, string label)
+        {
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.PropertyField(property, EditorGUIUtility.TrTempContent(label));
+            if (EditorGUI.EndChangeCheck())
+            {
+                property.floatValue = Mathf.Max(0, property.floatValue);
+            }
         }
 
         private static void DrawColorPickerField(Rect rect, SerializedProperty color, bool showAlpha)

@@ -117,6 +117,9 @@ namespace Coffee.UIEffects
         public Vector2 m_DetailTexOffset = new Vector2(0, 0);
         public Vector2 m_DetailTexSpeed = new Vector2(0, 0);
 
+        public RoundCornerMode m_RoundCornerMode = RoundCornerMode.Off;
+        public Vector4 m_RoundCornerRadius = new Vector4(20, 20, 20, 20);
+
         public Flip m_Flip = 0;
 
         public void UpdateContext(UIEffectContext dst)
@@ -205,6 +208,9 @@ namespace Coffee.UIEffects
             dst.m_DetailTexScale = src.m_DetailTexScale;
             dst.m_DetailTexOffset = src.m_DetailTexOffset;
             dst.m_DetailTexSpeed = src.m_DetailTexSpeed;
+
+            dst.m_RoundCornerMode = src.m_RoundCornerMode;
+            dst.m_RoundCornerRadius = src.m_RoundCornerRadius;
 
             dst.m_Flip = src.m_Flip;
         }

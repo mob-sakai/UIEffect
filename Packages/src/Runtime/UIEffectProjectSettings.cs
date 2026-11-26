@@ -119,10 +119,10 @@ namespace Coffee.UIEffects
         {
 #if !LEGACY_TMP_ENABLE
             const string tmpSupport = "TextMeshPro Support (Unity 6)";
-            const string version = "v5.11.0 (Unity 6)";
+            const string version = "v5.15.0 (Unity 6)";
 #else
             const string tmpSupport = "TextMeshPro Support";
-            const string version = "v5.11.0";
+            const string version = "v5.15.0";
 #endif
             ShaderSampleImporter.RegisterReadmeUrl("https://github.com/mob-sakai/UIEffect#import-additional-resources");
             ShaderSampleImporter.RegisterShaderSamples(new[]
@@ -138,8 +138,8 @@ namespace Coffee.UIEffects
                 ("Hidden/TextMeshPro/Mobile/Distance Field (UIEffect)", tmpSupport, version),
 
                 // ShaderGraph Support
-                ("Shader Graphs/UISample (UIEffect)", "ShaderGraph Support (Unity 6 BuiltIn)", "v5.11.0"),
-                ("Shader Graphs/UISampleURP (UIEffect)", "ShaderGraph Support (Unity 6 URP)", "v5.11.0")
+                ("Shader Graphs/UISample (UIEffect)", "ShaderGraph Support (Unity 6 BuiltIn)", "v5.15.0"),
+                ("Shader Graphs/UISampleURP (UIEffect)", "ShaderGraph Support (Unity 6 URP)", "v5.15.0")
             });
             ShaderSampleImporter.RegisterShaderAliases(new[]
             {

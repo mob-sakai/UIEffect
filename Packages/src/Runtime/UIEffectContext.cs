@@ -57,6 +57,8 @@ namespace Coffee.UIEffects
         private static readonly int s_DetailTex = Shader.PropertyToID("_DetailTex");
         private static readonly int s_DetailTex_ST = Shader.PropertyToID("_DetailTex_ST");
         private static readonly int s_DetailTex_Speed = Shader.PropertyToID("_DetailTex_Speed");
+        private static readonly int s_RoundCornerRadius = Shader.PropertyToID("_RoundCornerRadius");
+        private static readonly int s_RoundCornerRectSize = Shader.PropertyToID("_RoundCornerRectSize");
         private static readonly int s_GradationIntensity = Shader.PropertyToID("_GradationIntensity");
         private static readonly int s_GradationColorFilter = Shader.PropertyToID("_GradationColorFilter");
         private static readonly int s_GradationColor1 = Shader.PropertyToID("_GradationColor1");
@@ -67,8 +69,11 @@ namespace Coffee.UIEffects
         private static readonly int s_GradationTex_ST = Shader.PropertyToID("_GradationTex_ST");
         private static readonly int s_GradationRadial = Shader.PropertyToID("_GradationRadial");
         private static readonly int s_RootViewMatrix = Shader.PropertyToID("_RootViewMatrix");
+        private static readonly int s_RoundCornerViewMatrix = Shader.PropertyToID("_RoundCornerViewMatrix");
         private static readonly int s_GradViewMatrix = Shader.PropertyToID("_GradViewMatrix");
         private static readonly int s_MirrorRootViewMatrix = Shader.PropertyToID("_MirrorRootViewMatrix");
+        private static readonly int s_MirrorRoundCornerViewMatrix =
+            Shader.PropertyToID("_MirrorRoundCornerViewMatrix");
         private static readonly int s_MirrorGradViewMatrix = Shader.PropertyToID("_MirrorGradViewMatrix");
         private static readonly int s_CanvasToWorldMatrix = Shader.PropertyToID("_CanvasToWorldMatrix");
 
@@ -145,6 +150,12 @@ namespace Coffee.UIEffects
             "GRADATION_GRADIENT",
             "GRADATION_COLOR2",
             "GRADATION_COLOR4"
+        };
+
+        private static readonly string[] s_RoundCornerKeywords =
+        {
+            "",
+            "ROUND_CORNER_ON"
         };
 
         private static readonly Vector2[][] s_ShadowVectors = new[]
@@ -243,7 +254,16 @@ namespace Coffee.UIEffects
         public Vector2 m_DetailTexOffset;
         public Vector2 m_DetailTexSpeed;
 
+        public RoundCornerMode m_RoundCornerMode;
+        public Vector4 m_RoundCornerRadius;
+
         public Flip m_Flip;
+
+        private bool hasRoundCorner => m_RoundCornerMode == RoundCornerMode.On
+                                       && (0 < m_RoundCornerRadius.x
+                                           || 0 < m_RoundCornerRadius.y
+                                           || 0 < m_RoundCornerRadius.z
+                                           || 0 < m_RoundCornerRadius.w);
 
         public bool willModifyMaterial => m_ToneFilter != ToneFilter.None
                                           || m_ColorFilter != ColorFilter.None
@@ -254,14 +274,16 @@ namespace Coffee.UIEffects
                                           || m_ShadowMode != ShadowMode.None
                                           || m_EdgeMode != EdgeMode.None
                                           || m_DetailFilter != DetailFilter.None
-                                          || m_GradationMode != GradationMode.None;
+                                          || m_GradationMode != GradationMode.None
+                                          || hasRoundCorner;
 
         public bool willModifyVertex => willModifyMaterial;
 
         public bool useViewMatrix => m_TransitionFilter != TransitionFilter.None
                                      || m_GradationMode != GradationMode.None
                                      || m_DetailFilter != DetailFilter.None
-                                     || m_EdgeMode == EdgeMode.Shiny;
+                                     || m_EdgeMode == EdgeMode.Shiny
+                                     || hasRoundCorner;
 
         private Texture2D _gradationRampTex;
         private Texture2D _transitionRampTex;
@@ -434,6 +456,9 @@ namespace Coffee.UIEffects
             dst.m_DetailTexOffset = src.m_DetailTexOffset;
             dst.m_DetailTexSpeed = src.m_DetailTexSpeed;
 
+            dst.m_RoundCornerMode = src.m_RoundCornerMode;
+            dst.m_RoundCornerRadius = src.m_RoundCornerRadius;
+
             dst.m_Flip = src.m_Flip;
         }
 
@@ -539,6 +564,8 @@ namespace Coffee.UIEffects
                 new Vector4(m_DetailTexScale.x, m_DetailTexScale.y,
                     m_DetailTexOffset.x, m_DetailTexOffset.y));
             material.SetVector(s_DetailTex_Speed, m_DetailTexSpeed);
+            material.SetVector(s_RoundCornerRadius, Vector4.zero);
+            material.SetVector(s_RoundCornerRectSize, Vector2.one);
 
             SetKeyword(material, s_ToneKeywords, (int)m_ToneFilter);
             SetKeyword(material, s_ColorKeywords, m_ColorFilter != 0 || m_ShadowMode != 0 ? 1 : 0);
@@ -547,6 +574,7 @@ namespace Coffee.UIEffects
             SetKeyword(material, s_EdgeKeywords, (int)m_EdgeMode);
             SetKeyword(material, s_DetailKeywords, (int)m_DetailFilter);
             SetKeyword(material, s_TargetKeywords, (int)m_TargetMode);
+            SetKeyword(material, s_RoundCornerKeywords, (int)m_RoundCornerMode);
 
             switch (m_GradationMode)
             {
@@ -608,6 +636,26 @@ namespace Coffee.UIEffects
             var offset = (transitionRoot.pivot - (Vector2)pivot) * size;
             var w2LMat = Matrix4x4.Translate(offset) * transitionRoot.worldToLocalMatrix;
 
+            var roundCornerNormalization = Mathf.Min(size.x, size.y);
+            var roundCornerRectSize = Vector2.one;
+            var roundCornerRadius = Vector4.zero;
+            if (m_RoundCornerMode == RoundCornerMode.On && 0 < roundCornerNormalization)
+            {
+                roundCornerRectSize = size / roundCornerNormalization;
+                roundCornerRadius = new Vector4(
+                    Mathf.Clamp(m_RoundCornerRadius.x / roundCornerNormalization, 0, 0.5f),
+                    Mathf.Clamp(m_RoundCornerRadius.y / roundCornerNormalization, 0, 0.5f),
+                    Mathf.Clamp(m_RoundCornerRadius.z / roundCornerNormalization, 0, 0.5f),
+                    Mathf.Clamp(m_RoundCornerRadius.w / roundCornerNormalization, 0, 0.5f));
+            }
+
+            material.SetVector(s_RoundCornerRadius, roundCornerRadius);
+            material.SetVector(s_RoundCornerRectSize, roundCornerRectSize);
+
+            var roundCornerScale = new Vector3(1f / size.x, 1f / size.y, 1f);
+            material.SetMatrix(s_RoundCornerViewMatrix,
+                Matrix4x4.TRS(pivot, Quaternion.identity, roundCornerScale) * w2LMat);
+
             var rootRotation = Quaternion.Euler(0, 0, m_TransitionRotation);
             var rootScale = 1f / GetMultiplier(m_TransitionRotation);
             material.SetMatrix(s_RootViewMatrix, Matrix4x4.TRS(pivot, rootRotation, scale * rootScale) * w2LMat);
@@ -624,6 +672,8 @@ namespace Coffee.UIEffects
                 var mirrorScale = new Vector3(1, mirrorInv, 1);
                 var udScale = new Vector3(scale.x, -scale.y, scale.z);
                 var mirrorTranslation = Matrix4x4.TRS(mirrorOffset, Quaternion.identity, mirrorScale) * w2LMat;
+                material.SetMatrix(s_MirrorRoundCornerViewMatrix,
+                    Matrix4x4.TRS(pivot, Quaternion.identity, roundCornerScale) * mirrorTranslation);
                 material.SetMatrix(
                     s_MirrorRootViewMatrix,
                     Matrix4x4.TRS(pivot, rootRotation, udScale * rootScale) * mirrorTranslation

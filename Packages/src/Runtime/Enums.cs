@@ -90,6 +90,12 @@ namespace Coffee.UIEffects
         Mirror
     }
 
+    public enum RoundCornerMode
+    {
+        Off = 0,
+        On = 1
+    }
+
     public enum EdgeMode
     {
         None = 0,
