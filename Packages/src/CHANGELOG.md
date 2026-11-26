@@ -1,3 +1,10 @@
+## [5.15.1](https://github.com/mob-sakai/UIEffect/compare/5.15.0...5.15.1) (2026-11-26)
+
+
+### Bug Fixes
+
+* improve round corner inspector ([d9fa364](https://github.com/mob-sakai/UIEffect/commit/d9fa3641e36b84c976b6282ca5013c4d5248df41))
+
 # [5.15.0](https://github.com/mob-sakai/UIEffect/compare/5.14.1...5.15.0) (2026-11-26)
 
 
