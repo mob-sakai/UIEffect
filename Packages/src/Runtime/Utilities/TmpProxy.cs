@@ -54,6 +54,13 @@ namespace Coffee.UIEffects
 
         public override void SetVerticesDirty(Graphic graphic, bool enabled)
         {
+            // TMP submeshes are updated only when the parent is rebuilt, so queue the parent even if the replica is disabled. (#416) 
+            if (graphic is TMP_SubMeshUI subMeshUI)
+            {
+                graphic = subMeshUI.textComponent as TextMeshProUGUI;
+                enabled = true;
+            }
+
             if (graphic is TextMeshProUGUI textMeshProUGUI && textMeshProUGUI.isActiveAndEnabled)
             {
                 if (enabled)
