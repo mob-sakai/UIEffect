@@ -108,6 +108,14 @@ namespace Coffee.UIEffectInternal
             var icon = AssetDatabase.LoadAssetAtPath<Texture2D>(iconPath);
             return new GUIContent(icon, tooltip);
         }
+
+        public static void DrawIconContent(Rect rect, GUIContent content, float angle = 0f)
+        {
+            var matrix = GUI.matrix;
+            GUIUtility.RotateAroundPivot(angle, rect.center);
+            GUI.Label(rect, content);
+            GUI.matrix = matrix;
+        }
 #endif
     }
 

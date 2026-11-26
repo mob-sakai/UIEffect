@@ -21,6 +21,7 @@ namespace Coffee.UIEffects.Editors
 
         private static GUIContent s_PasteColorContent;
         private static GUIContent s_PasteGradientContent;
+        private static GUIContent s_RoundCornerIconContent;
         private static readonly GUIContent s_RotationLabel = new GUIContent("* Rotation");
         private static readonly GUIContent s_KeepAspectRatioLabel = new GUIContent("* Keep Aspect Ratio");
 
@@ -110,22 +111,29 @@ namespace Coffee.UIEffects.Editors
         private SerializedProperty _detailTexSpeed;
 
         private SerializedProperty _roundCornerMode;
-        private SerializedProperty _roundCornerRadiusTopLeft;
-        private SerializedProperty _roundCornerRadiusTopRight;
-        private SerializedProperty _roundCornerRadiusBottomRight;
-        private SerializedProperty _roundCornerRadiusBottomLeft;
+        private SerializedProperty _roundCornerRadius;
+        private SerializedProperty _roundCornerRadiusTL;
+        private SerializedProperty _roundCornerRadiusTR;
+        private SerializedProperty _roundCornerRadiusBR;
+        private SerializedProperty _roundCornerRadiusBL;
+        private bool _roundCornerRadiiLinked;
 
         private SerializedProperty _flip;
 
         protected virtual void OnEnable()
         {
+            const string iconDir = "Packages/com.coffee.ui-effect/Editor/Icons";
             if (s_PasteColorContent == null)
             {
-                var iconDir = "Packages/com.coffee.ui-effect/Editor/Icons";
                 s_PasteColorContent = Misc.GetIconContent($"{iconDir}/PasteIcon.png",
                     $"Paste {PasteColorUtil.SupportedFormats} or CSS background/background-color declarations.");
                 s_PasteGradientContent = Misc.GetIconContent($"{iconDir}/PasteIcon.png",
                     "Paste CSS linear-gradient(...) or radial-gradient(...).");
+            }
+
+            if (s_RoundCornerIconContent == null)
+            {
+                s_RoundCornerIconContent = Misc.GetIconContent($"{iconDir}/RoundCornerIcon.png");
             }
 
             _toneFilter = serializedObject.FindProperty("m_ToneFilter");
@@ -217,11 +225,21 @@ namespace Coffee.UIEffects.Editors
             _detailTexSpeed = serializedObject.FindProperty("m_DetailTexSpeed");
 
             _roundCornerMode = serializedObject.FindProperty("m_RoundCornerMode");
-            var roundCornerRadius = serializedObject.FindProperty("m_RoundCornerRadius");
-            _roundCornerRadiusTopLeft = roundCornerRadius.FindPropertyRelative("x");
-            _roundCornerRadiusTopRight = roundCornerRadius.FindPropertyRelative("y");
-            _roundCornerRadiusBottomRight = roundCornerRadius.FindPropertyRelative("z");
-            _roundCornerRadiusBottomLeft = roundCornerRadius.FindPropertyRelative("w");
+            _roundCornerRadius = serializedObject.FindProperty("m_RoundCornerRadius");
+            _roundCornerRadiusTL = _roundCornerRadius.FindPropertyRelative("x");
+            _roundCornerRadiusTR = _roundCornerRadius.FindPropertyRelative("y");
+            _roundCornerRadiusBR = _roundCornerRadius.FindPropertyRelative("z");
+            _roundCornerRadiusBL = _roundCornerRadius.FindPropertyRelative("w");
+            _roundCornerRadiiLinked = !_roundCornerRadiusTL.hasMultipleDifferentValues
+                                      && !_roundCornerRadiusTR.hasMultipleDifferentValues
+                                      && !_roundCornerRadiusBR.hasMultipleDifferentValues
+                                      && !_roundCornerRadiusBL.hasMultipleDifferentValues
+                                      && Mathf.Approximately(_roundCornerRadiusTL.floatValue,
+                                          _roundCornerRadiusTR.floatValue)
+                                      && Mathf.Approximately(_roundCornerRadiusTL.floatValue,
+                                          _roundCornerRadiusBR.floatValue)
+                                      && Mathf.Approximately(_roundCornerRadiusTL.floatValue,
+                                          _roundCornerRadiusBL.floatValue);
 
             _flip = serializedObject.FindProperty("m_Flip");
         }
@@ -507,10 +525,7 @@ namespace Coffee.UIEffects.Editors
             if (DrawHeaderPopup(_roundCornerMode))
             {
                 EditorGUI.indentLevel++;
-                DrawRoundCornerRadiusField(_roundCornerRadiusTopLeft, "Top Left");
-                DrawRoundCornerRadiusField(_roundCornerRadiusTopRight, "Top Right");
-                DrawRoundCornerRadiusField(_roundCornerRadiusBottomRight, "Bottom Right");
-                DrawRoundCornerRadiusField(_roundCornerRadiusBottomLeft, "Bottom Left");
+                DrawRoundCornerRadii();
                 EditorGUI.indentLevel--;
             }
 
@@ -539,13 +554,72 @@ namespace Coffee.UIEffects.Editors
             EditorGUI.indentLevel = indentLevel;
         }
 
-        private static void DrawRoundCornerRadiusField(SerializedProperty property, string label)
+        private void DrawRoundCornerRadii()
         {
-            EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(property, EditorGUIUtility.TrTempContent(label));
-            if (EditorGUI.EndChangeCheck())
+            var radii = _roundCornerRadius;
+            var lineH = EditorGUIUtility.singleLineHeight;
+            var r = EditorGUILayout.GetControlRect(false, lineH * 2 + 2);
+            var labelW = EditorGUIUtility.labelWidth;
+            var controlX = r.x + labelW;
+            var controlW = r.width - labelW;
+            var fieldW = (controlW - 48) / 2;
+            var leftIconX = controlX;
+            var leftFieldX = leftIconX + 4;
+            var linkX = leftFieldX + fieldW + 10;
+            var rightFieldX = linkX + 14;
+            var rightIconX = rightFieldX + fieldW + 2;
+            var bottomY = r.y + lineH + 2;
+            var prefixPos = new Rect(r.x, r.y, r.width, lineH);
+
+            // Label
             {
-                property.floatValue = Mathf.Max(0, property.floatValue);
+                var label = EditorGUIUtility.TrTempContent("Corner Radii");
+                label = EditorGUI.BeginProperty(prefixPos, label, _roundCornerRadius);
+                EditorGUI.PrefixLabel(prefixPos, label);
+            }
+
+            // Link toggle
+            {
+                var linkRect = new Rect(linkX, r.y + (r.height - 22) * 0.5f, 22, 22);
+                var linkContent = EditorGUIUtility.IconContent(_roundCornerRadiiLinked ? "Linked" : "Unlinked");
+                EditorGUI.BeginChangeCheck();
+                _roundCornerRadiiLinked = GUI.Toggle(linkRect, _roundCornerRadiiLinked, linkContent, "IconButton");
+                if (EditorGUI.EndChangeCheck())
+                {
+                    var v = Mathf.Max(0, _roundCornerRadiusTL.floatValue);
+                    radii.vector4Value = new Vector4(v, v, v, v);
+                }
+            }
+
+            // Draw fields
+            var linked = _roundCornerRadiiLinked;
+            Misc.DrawIconContent(new Rect(leftIconX, r.y, 18, 18), s_RoundCornerIconContent, 0);
+            DrawRadiusField(new Rect(leftFieldX, r.y, fieldW, lineH), _roundCornerRadiusTL, radii, linked);
+
+            Misc.DrawIconContent(new Rect(rightIconX, r.y, 18, 18), s_RoundCornerIconContent, 90);
+            DrawRadiusField(new Rect(rightFieldX, r.y, fieldW, lineH), _roundCornerRadiusTR, radii, linked);
+
+            Misc.DrawIconContent(new Rect(rightIconX, bottomY, 18, 18), s_RoundCornerIconContent, 180);
+            DrawRadiusField(new Rect(leftFieldX, bottomY, fieldW, lineH), _roundCornerRadiusBL, radii, linked);
+
+            Misc.DrawIconContent(new Rect(leftIconX, bottomY, 18, 18), s_RoundCornerIconContent, 270);
+            DrawRadiusField(new Rect(rightFieldX, bottomY, fieldW, lineH), _roundCornerRadiusBR, radii, linked);
+
+            EditorGUI.EndProperty();
+            return;
+
+            static void DrawRadiusField(Rect rect, SerializedProperty radius, SerializedProperty radii, bool linked)
+            {
+                EditorGUI.BeginChangeCheck();
+                EditorGUI.PropertyField(rect, radius, GUIContent.none);
+                if (!EditorGUI.EndChangeCheck()) return;
+
+                var v = Mathf.Max(0, radius.floatValue);
+                radius.floatValue = v;
+                if (linked)
+                {
+                    radii.vector4Value = new Vector4(v, v, v, v);
+                }
             }
         }
 

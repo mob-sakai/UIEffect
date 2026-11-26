@@ -72,8 +72,10 @@ namespace Coffee.UIEffects
         private static readonly int s_RoundCornerViewMatrix = Shader.PropertyToID("_RoundCornerViewMatrix");
         private static readonly int s_GradViewMatrix = Shader.PropertyToID("_GradViewMatrix");
         private static readonly int s_MirrorRootViewMatrix = Shader.PropertyToID("_MirrorRootViewMatrix");
+
         private static readonly int s_MirrorRoundCornerViewMatrix =
             Shader.PropertyToID("_MirrorRoundCornerViewMatrix");
+
         private static readonly int s_MirrorGradViewMatrix = Shader.PropertyToID("_MirrorGradViewMatrix");
         private static readonly int s_CanvasToWorldMatrix = Shader.PropertyToID("_CanvasToWorldMatrix");
 

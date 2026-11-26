@@ -455,10 +455,10 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 
 #### Round Corner
 
-![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1795682060095.png)
+![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1795709212318.png)
 
 - **Mode**: `Off` or `On`. The default is `Off`.
-- **Top Left**, **Top Right**, **Bottom Right**, **Bottom Left**: Set each corner radius independently.  
+- **Corner Radii**: Set each corner radius independently.  
   ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1795681588650.png)
 - Radius values use `transitionRoot` local units. They are normalized against its shorter dimension and clamped to half that dimension; `0` keeps a corner square.
 - The mask applies to the main UI surface; Shadow and Mirror outputs are left unchanged to avoid shadow-edge artifacts.
@@ -491,7 +491,7 @@ The `UIEffect` component applies visual effects to UI elements, allowing various
 > [!TIP]  
 > `Transition Filter`, `Gradation Filter`, `Detail Filter`, and `Round Corner` use their effect root for local-coordinate calculations.
 > For example, if the mesh shape exceeds the `RectTransform` boundaries, the effect may not be applied correctly.  
-> By specifying `Custom Root`, you can refer to the specified transform.
+> By specifying `Custom Root`, you can refer to the specified transform.  
 > ![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/uieffect5.7.0-sample-custom-root.gif)
 
 <br><br>
