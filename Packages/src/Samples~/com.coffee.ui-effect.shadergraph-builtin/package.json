@@ -2,7 +2,7 @@
   "name": "com.coffee.ui-effect.shadergraph-builtin",
   "displayName": "UI Effect - ShaderGraph Support (Unity 6 BuiltIn)",
   "description": "An extension for UI Effect that adds ShaderGraph support (Unity 6 BuiltIn).",
-  "version": "5.14.0",
+  "version": "5.14.1",
   "unity": "2020.3",
   "license": "MIT",
   "repository": {
@@ -15,7 +15,7 @@
     "url": "https://github.com/mob-sakai"
   },
   "dependencies": {
-    "com.coffee.ui-effect": "5.14.0"
+    "com.coffee.ui-effect": "5.14.1"
   },
   "keywords": [
     "ui",

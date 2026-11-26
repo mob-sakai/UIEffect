@@ -1,3 +1,10 @@
+## [5.14.1](https://github.com/mob-sakai/UIEffect/compare/5.14.0...5.14.1) (2026-11-26)
+
+
+### Bug Fixes
+
+* queue TextMeshPro parent for submesh rebuild ([240ac6b](https://github.com/mob-sakai/UIEffect/commit/240ac6b206229dfcdba7a3f38341ae9b198aff6f)), closes [#416](https://github.com/mob-sakai/UIEffect/issues/416)
+
 # [5.14.0](https://github.com/mob-sakai/UIEffect/compare/5.13.0...5.14.0) (2026-11-25)
 
 
