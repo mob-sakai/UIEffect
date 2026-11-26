@@ -1,3 +1,10 @@
+# [5.15.0](https://github.com/mob-sakai/UIEffect/compare/5.14.1...5.15.0) (2026-11-26)
+
+
+### Features
+
+* add `Round Corner` feature ([417e92c](https://github.com/mob-sakai/UIEffect/commit/417e92cebadfcbd0063d32aa8fc32716d94dbc2f)), closes [#403](https://github.com/mob-sakai/UIEffect/issues/403)
+
 ## [5.14.1](https://github.com/mob-sakai/UIEffect/compare/5.14.0...5.14.1) (2026-11-26)
 
 
